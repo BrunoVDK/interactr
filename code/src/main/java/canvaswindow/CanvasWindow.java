@@ -31,7 +31,7 @@ import javax.swing.JPanel;
  * A window for custom drawing.
  *
  * To use this class, create a subclass, say MyCanvasWindow, that overrides
- * methods {@link #paint(Graphics)}, {@link #handleMouseEvent(MouseEvent)}, and {@link #handleKeyEvent(KeyEvent)}, and then launch
+ * methods {paint(Graphics)}, {handleMouseEvent(MouseEvent)}, and {handleKeyEvent(KeyEvent)}, and then launch
  * it from your main method as follows:
  * 
  * <pre>
