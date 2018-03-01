@@ -1,6 +1,5 @@
-package canvaswindow;
+package main.java.ui;
 
-import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;

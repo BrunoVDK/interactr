@@ -1,3 +1,5 @@
+package main.java.domain;
+
 import java.util.Iterator;
 
 /**
