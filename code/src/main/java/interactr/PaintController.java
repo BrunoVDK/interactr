@@ -1,4 +1,4 @@
 package main.java.interactr;
 
-public class Label {
+public class PaintController {
 }

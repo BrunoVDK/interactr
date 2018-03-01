@@ -1,6 +1,7 @@
+package main.java.interactr;
+
 import canvaswindow.CanvasWindow;
 
-import javax.swing.text.Document;
 import java.awt.*;
 
 /**
@@ -8,10 +9,7 @@ import java.awt.*;
  */
 public class DocumentWindow extends CanvasWindow {
 
-    int width = 600;
-    int height = 600;
     String title;
-    private String recordingPath;
 
     /**
      * The main method
@@ -32,7 +30,14 @@ public class DocumentWindow extends CanvasWindow {
 
     protected DocumentWindow(String title) {
         super(title);
+        this.eventController = new EventController();
+
     }
+
+    /**
+     * This is a controller that handles all the IO
+     */
+    private EventController eventController;
 
 
 
@@ -59,7 +64,7 @@ public class DocumentWindow extends CanvasWindow {
      */
     @Override
     protected void handleMouseEvent(int id, int x, int y, int clickCount) {
-
+        eventController.interpretMouseEvent(id,x,y,clickCount);
     }
 
     /**
