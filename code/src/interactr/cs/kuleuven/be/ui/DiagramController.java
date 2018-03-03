@@ -1,7 +1,6 @@
 package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.domain.Party;
-import jdk.jshell.Diag;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -10,25 +9,24 @@ import java.util.ArrayList;
  * A class of diagram handlers for intercepting and interpreting mouse and key events.
  *  Each instance has a sequence view and a communication view.
  */
-public class DiagramHandler {
+public class DiagramController {
 
     /**
      * Initialize a new diagram handler.
      *
      */
-    public DiagramHandler() {
+    public DiagramController() {
         this.diagram = new Diagram();
         views.add(new SequenceView(diagram));
         views.add(new CommunicationView(diagram));
         java.awt.EventQueue.invokeLater(() -> {
-            this.window = new DiagramWindow("test", diagram);
+            this.window = new DiagramWindow("test", this);
             this.window.show();
         });
     }
 
     public void repaint(Graphics context) {
-
-
+        views.get(activeViewIndex).draw(this.diagram);
     }
 
     /**
@@ -50,7 +48,6 @@ public class DiagramHandler {
     }
 
     public void editLabelOfParty(Party part) {
-
     }
 
     private Party activeParty = null;
@@ -72,7 +69,7 @@ public class DiagramHandler {
 
 
     public static void main(String[] args) {
-        new DiagramHandler();
+        new DiagramController();
     }
 
 }

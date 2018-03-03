@@ -23,13 +23,13 @@ public class DiagramWindow extends CanvasWindow {
      * Initializes this new window with given title and diagram handler.
      *
      * @param title The title for the new window.
-     * @param diagramHandler The diagram handler associated with this window.
+     * @param diagramController The diagram handler associated with this window.
      * @post The title of this window equals the given one.
      * @post The diagram handler associated with this window equals the given one.
      */
-    public DiagramWindow(String title, DiagramHandler diagramHandler) {
+    public DiagramWindow(String title, DiagramController diagramController) {
         super(title);
-        setDiagramHandler(diagramHandler);
+        setDiagramController(diagramController);
     }
 
     /**
@@ -39,7 +39,8 @@ public class DiagramWindow extends CanvasWindow {
      */
     @Override
     protected void paint(Graphics context) {
-        if (this.diagramHandler != null) this.diagramHandler.repaint(null);
+        if (getDiagramController() != null)
+            getDiagramController().repaint(null);
     }
 
     /**
@@ -54,7 +55,8 @@ public class DiagramWindow extends CanvasWindow {
      */
     @Override
     protected void handleMouseEvent(int id, int x, int y, int clickCount) {
-        if (this.diagramHandler != null) this.diagramHandler.repaint(null);
+        if (getDiagramController() != null)
+            getDiagramController().repaint(null);
     }
 
     /**
@@ -67,28 +69,29 @@ public class DiagramWindow extends CanvasWindow {
      */
     @Override
     protected void handleKeyEvent(int id, int keyCode, char keyChar) {
-        if (this.diagramHandler != null) this.diagramHandler.repaint(null);
+        if (getDiagramController() != null)
+            getDiagramController().repaint(null);
     }
 
     /**
      * Returns the diagram handler of this diagram window.
      */
-    public DiagramHandler getDiagramHandler() {
-        return this.diagramHandler;
+    public DiagramController getDiagramController() {
+        return this.diagramController;
     }
 
     /**
      * Associate this diagram window with the given diagram handler.
      *
-     * @param diagramHandler The diagram handler that is to be associated with this window.
+     * @param diagramController The diagram handler that is to be associated with this window.
      */
-    public void setDiagramHandler(DiagramHandler diagramHandler) {
-        this.diagramHandler = diagramHandler;
+    public void setDiagramController(DiagramController diagramController) {
+        this.diagramController = diagramController;
     }
 
     /**
      * Variable registering this diagram window's diagram handler.
      */
-    private DiagramHandler diagramHandler;
+    private DiagramController diagramController;
 
 }
