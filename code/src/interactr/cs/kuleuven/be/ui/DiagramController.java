@@ -4,6 +4,7 @@ import interactr.cs.kuleuven.be.domain.Party;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 /**
@@ -30,6 +31,13 @@ public class DiagramController {
     private PaintController paintController;
 
     void handleMouseEvent(int id, int x, int y, int clickCount) {
+        switch(id){
+            case MouseEvent.MOUSE_CLICKED:
+                if(clickCount == 2){
+                    paintController.getPartyAt(getDiagram(),x,y);
+
+                }
+        }
 
     }
 

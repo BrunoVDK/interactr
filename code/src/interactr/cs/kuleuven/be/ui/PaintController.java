@@ -43,7 +43,6 @@ public class PaintController {
      */
     public void switchView(){
         activeViewIndex = (activeViewIndex + 1) % views.size();
-        this.diagramController.getWindow().repaint();
     }
 
     /**
@@ -57,12 +56,36 @@ public class PaintController {
     private ArrayList<DiagramView> views = new ArrayList<DiagramView>();
 
     /**
+     * Returns teh active View
+     */
+    private DiagramView getActiveView(){ return this.views.get(activeViewIndex); }
+
+    /**
      * The party that is selected on this moment
      */
     private Party selectedParty;
 
     public void paint(Graphics context) {
         views.get(activeViewIndex).draw(getDiagramController().getDiagram());
+    }
+
+    /**
+     * A method that that calls the active diagram to ask for the active party and g
+     * @param diagram
+     * @return
+     */
+    public Party getPartyAt(Diagram diagram, int x, int y){
+        return getActiveView().getPartyAt(diagram,x,y);
+    }
+
+    /**
+     * A method that calls the active diagram to ask if it is possible to add a party at the given coordinate
+     * @param diagram
+     * @param x
+     * @return
+     */
+    public boolean canAddPartyAt(Diagram diagram, int x, int y){
+        return getActiveView().canAddPartyAt(diagram,x,y);
     }
 
 }
