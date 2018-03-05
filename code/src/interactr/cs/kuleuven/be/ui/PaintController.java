@@ -47,7 +47,7 @@ public class PaintController {
     private ArrayList<DiagramView> views = new ArrayList<DiagramView>();
 
     /**
-     * The party that is selected on this moment    
+     * The party that is selected on this moment
      */
     private Party selectedParty;
 
