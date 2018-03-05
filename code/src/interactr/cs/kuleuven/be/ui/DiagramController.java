@@ -12,6 +12,14 @@ import java.util.ArrayList;
 public class DiagramController {
 
     /**
+     * An enumeration for diagram component statuses.
+     */
+    public enum DiagramComponentStatus {
+        SELECTED,
+        ACTIVE;
+    }
+
+    /**
      * Initialize a new diagram handler.
      *
      */
@@ -20,7 +28,7 @@ public class DiagramController {
         views.add(new SequenceView(diagram));
         views.add(new CommunicationView(diagram));
         java.awt.EventQueue.invokeLater(() -> {
-            this.window = new DiagramWindow("test", this);
+            this.window = new DiagramWindow("test/interactr/cs/kuleuven/be", this);
             this.window.show();
         });
     }
@@ -35,7 +43,7 @@ public class DiagramController {
     private int activeViewIndex = 0;
 
     /**
-     * A list of all diagram views kept by this diagram handler.
+     * The list of all diagram views kept by this diagram handler.
      */
     private ArrayList<DiagramView> views = new ArrayList<DiagramView>();
 
@@ -47,23 +55,19 @@ public class DiagramController {
         this.window.repaint();
     }
 
-    public void editLabelOfParty(Party part) {
+    public void deleteSelected() {
+        System.out.println("delete");
     }
 
     private Party activeParty = null;
 
-    public void selectParty(Party party) {
-
-    }
-
-    public void selectLabelOfParty(Party party) {
-
-    }
-
+    /**
+     * The window associated with this diagram controller.
+     */
     private DiagramWindow window;
 
     /**
-     * Register the diagram associated with this diagram handler.
+     * The diagram associated with this diagram handler.
      */
     private Diagram diagram;
 
