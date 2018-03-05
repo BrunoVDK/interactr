@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 /**
  * A class of diagram handlers for intercepting and interpreting mouse and key events.
- *  Each instance has a sequence view and a communication view.
  */
 public class DiagramController {
 
@@ -35,8 +34,10 @@ public class DiagramController {
     }
 
     void handleKeyEvent(int id, int keyCode, char keyChar) {
-        if (keyChar == KeyEvent.VK_TAB)
+        if (keyChar == KeyEvent.VK_TAB) {
             this.paintController.switchView();
+            this.getWindow().repaint();
+        }
         else if (keyChar == KeyEvent.VK_DELETE) {
 
         }
