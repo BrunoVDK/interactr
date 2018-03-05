@@ -9,10 +9,18 @@ import java.util.ArrayList;
 public class PaintController {
 
     /**
+     * The constructor of the class
+      */
+    public PaintController() {
+        views.add(new SequenceView(getDiagramController().getDiagram()));
+        views.add(new CommunicationView(getDiagramController().getDiagram()));
+    }
+
+
+    /**
      * The diagram controller
      */
     private DiagramController diagramController;
-
     /**
      * Sets the diagram controller fo this class
      * @param diagramController

@@ -18,8 +18,7 @@ public class DiagramController {
      */
     public DiagramController() {
         this.diagram = new Diagram();
-        views.add(new SequenceView(diagram));
-        views.add(new CommunicationView(diagram));
+        this.paintController = new PaintController();
         java.awt.EventQueue.invokeLater(() -> {
             this.window = new DiagramWindow("test/interactr/cs/kuleuven/be", this);
             this.window.show();
@@ -29,7 +28,7 @@ public class DiagramController {
     /**
      * Variable registering the paint controller for this diagram controller.
      */
-    private PaintController paintController = new PaintController();
+    private PaintController paintController;
 
     void handleMouseEvent(int id, int x, int y, int clickCount) {
 
@@ -52,18 +51,6 @@ public class DiagramController {
      */
     private int activeViewIndex = 0;
 
-    /**
-     * The list of all diagram views kept by this diagram handler.
-     */
-    private ArrayList<DiagramView> views = new ArrayList<DiagramView>();
-
-    /**
-     * Switch to the next diagram view.
-     */
-    public void switchView() {
-        activeViewIndex = (activeViewIndex + 1) % views.size();
-        this.window.repaint();
-    }
 
     public void deleteSelected() {
         System.out.println("delete");
