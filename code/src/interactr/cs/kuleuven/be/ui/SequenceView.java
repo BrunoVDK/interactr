@@ -1,9 +1,9 @@
 package interactr.cs.kuleuven.be.ui;
 
-public class SequenceView extends DiagramView {
+public class SequenceView implements DiagramView {
 
-    public SequenceView(Diagram diagram) {
-        super(diagram);
+    public String toString() {
+        return "Sequence View";
     }
 
     @Override
@@ -15,13 +15,4 @@ public class SequenceView extends DiagramView {
     public void getComponentAt(Diagram diagram, int x, int y) {
 
     }
-
-    public void getPartyAt(int x, int y) {
-
-    }
-
-    public String toString() {
-        return "Sequence View";
-    }
-
 }

@@ -18,7 +18,7 @@ public class DiagramController {
      */
     public DiagramController() {
         this.diagram = new Diagram();
-        this.paintController = new PaintController();
+        this.paintController = new PaintController(this);
         java.awt.EventQueue.invokeLater(() -> {
             this.window = new DiagramWindow("test/interactr/cs/kuleuven/be", this);
             this.window.show();
