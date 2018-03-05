@@ -1,3 +1,5 @@
+package interactr.cs.kuleuven.be.domain;
+
 import java.util.Iterator;
 
 /**

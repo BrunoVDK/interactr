@@ -1,6 +1,5 @@
-package canvaswindow;
+package interactr.cs.kuleuven.be.ui;
 
-import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -32,10 +31,10 @@ import javax.swing.JPanel;
  *
  * To use this class, create a subclass, say MyCanvasWindow, that overrides
  * methods {paint(Graphics)}, {handleMouseEvent(MouseEvent)}, and {handleKeyEvent(KeyEvent)}, and then launch
- * it from your main method as follows:
+ * it from your interactr.swop.cs.kuleuven.be.main method as follows:
  * 
  * <pre>
- * public static void main(String[] args) {
+ * public static void interactr.swop.cs.kuleuven.be.main(String[] args) {
  *     java.awt.EventQueue.invokeLater(() -> {
  *         new MyCanvasWindow("My Canvas Window").show();
  *     });
@@ -316,7 +315,7 @@ public class CanvasWindow {
 			setPreferredSize(new Dimension(width, height));
 			setBackground(Color.WHITE);
 			setFocusable(true);
-			
+			setFocusTraversalKeysEnabled(false);
 			addMouseListener(new MouseAdapter() {
 	
 				@Override
