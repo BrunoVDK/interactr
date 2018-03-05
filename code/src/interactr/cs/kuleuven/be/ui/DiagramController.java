@@ -46,7 +46,7 @@ public class DiagramController {
     public void paint(Graphics context) {
         this.paintController.paint(context);
     }
-    
+
 
 
     /**

@@ -10,7 +10,7 @@ public class PaintController {
 
     /**
      * The constructor of the class
-      */
+     */
     public PaintController(DiagramController controller) {
         setDiagramController(controller);
         views.add(new SequenceView());
