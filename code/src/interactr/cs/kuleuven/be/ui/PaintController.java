@@ -1,10 +1,10 @@
 package interactr.cs.kuleuven.be.ui;
 
-import interactr.cs.kuleuven.be.domain.Label;
 import interactr.cs.kuleuven.be.domain.Party;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class PaintController {
 
@@ -12,16 +12,17 @@ public class PaintController {
      * The constructor of the class
      */
     public PaintController(DiagramController controller) {
+        this.activeViewIndex = 0;
         setDiagramController(controller);
         views.add(new SequenceView());
         views.add(new CommunicationView());
     }
 
-
     /**
      * The diagram controller
      */
     private DiagramController diagramController;
+
     /**
      * Sets the diagram controller fo this class
      * @param diagramController
@@ -42,13 +43,13 @@ public class PaintController {
      * A method that switches between the method
      */
     public void switchView(){
-        activeViewIndex = (activeViewIndex + 1) % views.size();
+        this.activeViewIndex = (activeViewIndex + 1) % views.size();
     }
 
     /**
      * Registers the index of the currently active view.
      */
-    private int activeViewIndex = 0;
+    private int activeViewIndex;
 
     /**
      * The list of all diagram views kept by this diagram handler.
@@ -58,7 +59,17 @@ public class PaintController {
     /**
      * Returns teh active View
      */
-    private DiagramView getActiveView(){ return this.views.get(activeViewIndex); }
+    private DiagramView getActiveView(){
+        return this.views.get(activeViewIndex);
+    }
+
+    public Party getSelectedParty() {
+        return selectedParty;
+    }
+
+    public void setSelectedParty(Party selectedParty) {
+        this.selectedParty = selectedParty;
+    }
 
     /**
      * The party that is selected on this moment
@@ -66,26 +77,38 @@ public class PaintController {
     private Party selectedParty;
 
     public void paint(Graphics context) {
-        views.get(activeViewIndex).draw(getDiagramController().getDiagram());
+        getActiveView().draw(context);
     }
 
     /**
      * A method that that calls the active diagram to ask for the active party and g
-     * @param diagram
      * @return
      */
-    public Party getPartyAt(Diagram diagram, int x, int y){
-        return getActiveView().getPartyAt(diagram,x,y);
+    public Optional<Party> getPartyAt(int x, int y){
+        return getActiveView().getPartyAt(x,y);
     }
 
-    /**
-     * A method that calls the active diagram to ask if it is possible to add a party at the given coordinate
-     * @param diagram
-     * @param x
-     * @return
-     */
-    public boolean canAddPartyAt(Diagram diagram, int x, int y){
-        return getActiveView().canAddPartyAt(diagram,x,y);
+    public boolean canAddParty(int x, int y){
+        return getActiveView().canAddPartyAt(x,y);
     }
+
+
+    /**
+     *
+     * @param party
+     */
+    public void addNewPartyToViews(Party party,int x , int y){
+        for(DiagramView view: views){
+            view.addNewParty(party,x,y);
+        }
+
+    }
+
+    public void moveSelectedParty(int x, int y){
+        getActiveView().moveSelectedParty(getSelectedParty(), x , y);
+    }
+
+
+
 
 }

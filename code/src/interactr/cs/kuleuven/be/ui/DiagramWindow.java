@@ -41,7 +41,7 @@ public class DiagramWindow extends CanvasWindow {
     @Override
     protected void paint(Graphics context) {
         if (getDiagramController() != null)
-            getDiagramController().paint(null);
+            getDiagramController().paint(context);
     }
 
     /**
