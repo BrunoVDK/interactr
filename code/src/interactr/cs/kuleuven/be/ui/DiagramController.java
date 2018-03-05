@@ -62,6 +62,14 @@ public class DiagramController {
     private Party activeParty = null;
 
     /**
+     * Returns the canvaswindow of this class
+     * @return
+     */
+    public DiagramWindow getWindow() {
+        return window;
+    }
+
+    /**
      * The window associated with this diagram controller.
      */
     private DiagramWindow window;
