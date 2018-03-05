@@ -16,6 +16,10 @@ public class SequenceView extends DiagramView {
 
     }
 
+<<<<<<< HEAD
+=======
+    //@Override
+>>>>>>> 0f9ff999d954b893f2320f09f91f4b4c15e838cd
     public void getPartyAt(int x, int y) {
 
     }
