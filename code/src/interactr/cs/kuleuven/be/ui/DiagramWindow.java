@@ -71,7 +71,7 @@ public class DiagramWindow extends CanvasWindow {
     @Override
     protected void handleKeyEvent(int id, int keyCode, char keyChar) {
         if (getDiagramController() != null)
-            getDiagramController().handleMouseEvent(id, keyCode, keyChar);
+            getDiagramController().handleKeyEvent(id, keyCode, keyChar);
     }
 
     /**
