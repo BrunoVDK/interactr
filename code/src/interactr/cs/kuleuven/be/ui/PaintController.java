@@ -3,6 +3,7 @@ package interactr.cs.kuleuven.be.ui;
 import interactr.cs.kuleuven.be.domain.Label;
 import interactr.cs.kuleuven.be.domain.Party;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class PaintController {
@@ -50,5 +51,9 @@ public class PaintController {
      * The party that is selected on this moment
      */
     private Party selectedParty;
+
+    public void paint(Graphics context) {
+        views.get(activeViewIndex).draw(getDiagramController().getDiagram());
+    }
 
 }

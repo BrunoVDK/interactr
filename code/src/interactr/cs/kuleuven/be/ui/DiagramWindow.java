@@ -41,7 +41,7 @@ public class DiagramWindow extends CanvasWindow {
     @Override
     protected void paint(Graphics context) {
         if (getDiagramController() != null)
-            getDiagramController().repaint(null);
+            getDiagramController().paint(null);
     }
 
     /**
@@ -49,33 +49,29 @@ public class DiagramWindow extends CanvasWindow {
      *  releases (id == MouseEvent.MOUSE_RELEASED),
      *  or drags (id == MouseEvent.MOUSE_DRAGGED) the mouse.
      *
-     * @param id The type of mouseEvent (PRESSSED, RELEASED, DRAGGED)
-     * @param x The x value where the mouseEvent happened
-     * @param y The y value where the mouseEvent happened
-     * @param clickCount How many clicks there were
+     * @param id The type of mouseEvent (PRESSSED, RELEASED, DRAGGED).
+     * @param x The x value where the mouseEvent happened.
+     * @param y The y value where the mouseEvent happened.
+     * @param clickCount How many clicks there were.
      */
     @Override
     protected void handleMouseEvent(int id, int x, int y, int clickCount) {
         if (getDiagramController() != null)
-            getDiagramController().repaint(null);
+            getDiagramController().handleMouseEvent(id, x, y, clickCount);
     }
 
     /**
      * Called when the user presses a key (id == KeyEvent.KEY_PRESSED)
      *  or enters a character (id == KeyEvent.KEY_TYPED).
      *
-     * @param id the type of mouseEvent (PRESSSED, TYPED)
+     * @param id the type of mouseEvent (PRESSSED, TYPED).
      * @param keyCode The key code for the event.
      * @param keyChar The key char for the event.
      */
     @Override
     protected void handleKeyEvent(int id, int keyCode, char keyChar) {
-        if (getDiagramController() != null) {
-            if (keyChar == KeyEvent.VK_TAB)
-                getDiagramController().switchView();
-            else if (keyChar == KeyEvent.VK_DELETE)
-                getDiagramController().deleteSelected();
-        }
+        if (getDiagramController() != null)
+            getDiagramController().handleKeyEvent(id, keyCode, keyChar);
     }
 
     /**

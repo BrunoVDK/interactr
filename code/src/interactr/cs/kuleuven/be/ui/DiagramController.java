@@ -3,6 +3,7 @@ package interactr.cs.kuleuven.be.ui;
 import interactr.cs.kuleuven.be.domain.Party;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 /**
@@ -10,14 +11,6 @@ import java.util.ArrayList;
  *  Each instance has a sequence view and a communication view.
  */
 public class DiagramController {
-
-    /**
-     * An enumeration for diagram component statuses.
-     */
-    public enum DiagramComponentStatus {
-        SELECTED,
-        ACTIVE;
-    }
 
     /**
      * Initialize a new diagram handler.
@@ -33,8 +26,25 @@ public class DiagramController {
         });
     }
 
-    public void repaint(Graphics context) {
-        views.get(activeViewIndex).draw(this.diagram);
+    /**
+     * Variable registering the paint controller for this diagram controller.
+     */
+    private PaintController paintController = new PaintController();
+
+    void handleMouseEvent(int id, int x, int y, int clickCount) {
+
+    }
+
+    void handleKeyEvent(int id, int keyCode, char keyChar) {
+        if (keyChar == KeyEvent.VK_TAB)
+            this.paintController.switchView();
+        else if (keyChar == KeyEvent.VK_DELETE) {
+
+        }
+    }
+
+    public void paint(Graphics context) {
+        this.paintController.paint(context);
     }
 
     /**
@@ -73,6 +83,10 @@ public class DiagramController {
      * The window associated with this diagram controller.
      */
     private DiagramWindow window;
+
+    public Diagram getDiagram() {
+        return this.diagram;
+    }
 
     /**
      * The diagram associated with this diagram handler.
