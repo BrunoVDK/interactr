@@ -45,18 +45,8 @@ public class DiagramController {
     public void paint(Graphics context) {
         this.paintController.paint(context);
     }
+    
 
-    /**
-     * Registers the index of the currently active view.
-     */
-    private int activeViewIndex = 0;
-
-
-    public void deleteSelected() {
-        System.out.println("delete");
-    }
-
-    private Party activeParty = null;
 
     /**
      * Returns the canvaswindow of this class
