@@ -59,7 +59,7 @@ public class Party {
     /**
      * The x coordinate of this party.
      */
-    private int x;
+    private int y;
 
     /**
      * Returns whether or not this party is an actor.
