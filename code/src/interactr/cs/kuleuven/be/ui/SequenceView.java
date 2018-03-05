@@ -12,6 +12,11 @@ public class SequenceView extends DiagramView {
     }
 
     @Override
+    public void getComponentAt(Diagram diagram, int x, int y) {
+
+    }
+
+    //@Override
     public void getPartyAt(int x, int y) {
 
     }
