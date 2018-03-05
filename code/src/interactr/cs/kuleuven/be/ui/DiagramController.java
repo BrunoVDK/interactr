@@ -4,7 +4,6 @@ import interactr.cs.kuleuven.be.domain.Party;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 
 /**
  * A class of diagram handlers for intercepting and interpreting mouse and key events.

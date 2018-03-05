@@ -52,5 +52,4 @@ public class Box {
         return (x > xMin && x < xMax && y > yMin && y < yMax);
     }
 
-
 }
