@@ -10,7 +10,7 @@ public class PaintController {
 
     /**
      * The constructor of the class
-      */
+     */
     public PaintController() {
         views.add(new SequenceView(getDiagramController().getDiagram()));
         views.add(new CommunicationView(getDiagramController().getDiagram()));
