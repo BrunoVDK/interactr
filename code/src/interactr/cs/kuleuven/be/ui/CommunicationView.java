@@ -1,10 +1,6 @@
 package interactr.cs.kuleuven.be.ui;
 
-public class CommunicationView extends DiagramView {
-
-    public CommunicationView(Diagram diagram) {
-        super(diagram);
-    }
+public class CommunicationView implements DiagramView {
 
     @Override
     public void draw(Diagram diagram) {
