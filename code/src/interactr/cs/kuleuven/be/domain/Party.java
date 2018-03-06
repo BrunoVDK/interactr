@@ -17,8 +17,6 @@ public class Party {
 
     }
 
-
-
     /**
      * Returns whether or not this party is an actor.
      */
@@ -41,14 +39,24 @@ public class Party {
     private boolean isActor;
 
 
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    private String label = " ";
+
     /**
      *
-     * @param label
      * @return
      */
-    public boolean canHaveAsLabel(Label label) {
-        return label.getLength() <= 30
-                && true;
+
+    //TODO
+    public boolean checkCorrectnessLabel() {
+        return this.label.length() <= 30 && true && label != " ";
     }
 
 

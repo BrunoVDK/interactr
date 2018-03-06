@@ -15,7 +15,7 @@ public class CommunicationView implements DiagramView {
     public void draw(Graphics g) {
         for(Map.Entry<Party,HitBox> entry : parties.entrySet()) {
             if(entry.getKey().isActor()) ActorModel.draw(g,entry.getValue());
-            else if(!entry.getKey().isActor()) ObjectModel.draw(g,entry.getValue());
+            else if(!entry.getKey().isActor()) ObjectModel.draw(g,entry.getValue(),entry.getKey());
         }
     }
 

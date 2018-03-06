@@ -27,6 +27,16 @@ public class Diagram {
         party.setIsActor(!party.isActor());
     }
 
+    public void addCharToLabel(Party p, char c){
+        String previous = p.getLabel();
+        p.setLabel(previous + c);
+    }
+
+
+    public void deleteCharOfLabel(Party p){
+        p.setLabel( p.getLabel().substring(0, p.getLabel().length() - 1) );
+    }
+
 
 
 }

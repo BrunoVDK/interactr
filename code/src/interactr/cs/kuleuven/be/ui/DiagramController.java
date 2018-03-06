@@ -5,8 +5,6 @@ import interactr.cs.kuleuven.be.domain.Party;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Optional;
 
 
 /**
@@ -37,27 +35,64 @@ public class DiagramController {
     void handleMouseEvent(int id, int x, int y, int clickCount) {
         switch(id){
             case MouseEvent.MOUSE_CLICKED:
-                if(clickCount == 2 && !paintController.getPartyAt(x,y).isPresent() && paintController.canAddParty(x,y)){
-                    getDiagram().addParty(x,y);
-                    getWindow().repaint();
-                }
-                if (clickCount == 2 && paintController.getPartyAt(x,y).isPresent()){
-                    getDiagram().changePartyType(paintController.getPartyAt(x,y).get());
-                    getWindow().repaint();
-                }
+                handleMouseClicked(x,y,clickCount);
+                break;
+
             case MouseEvent.MOUSE_PRESSED:
-                if(paintController.getPartyAt(x,y).isPresent()) paintController.setSelectedParty(paintController.getPartyAt(x,y).get());
+                handleMousePressed(x,y,clickCount);
+                break;
 
             case MouseEvent.MOUSE_DRAGGED:
-                if(paintController.getSelectedParty() != null) {
-                    paintController.moveSelectedParty(x, y);
-                    getWindow().repaint();
-                }
+                handleMouseDragged(x,y,clickCount);
+                break;
 
             case MouseEvent.MOUSE_RELEASED:
-                if(paintController.getSelectedParty() != null) paintController.setSelectedParty(null);
+                handleMouseReleased();
+                break;
         }
 
+    }
+
+    private boolean notYetReleased;
+
+    void handleMouseClicked(int x, int y, int clickCount){
+        if(clickCount == 2
+                && !paintController.getPartyAt(x,y).isPresent() && paintController.canAddParty(x,y)
+                && ! paintController.isEditMode()){
+            getDiagram().addParty(x,y);
+            getWindow().repaint();
+        }
+        if (clickCount == 2 && paintController.getPartyAt(x,y).isPresent() && ! paintController.isEditMode()){
+            getDiagram().changePartyType(paintController.getPartyAt(x,y).get());
+            getWindow().repaint();
+        }
+    }
+
+    void handleMousePressed(int x, int y, int clickcount){
+        if(clickcount == 1
+                && paintController.getSelectedParty() == null
+                && paintController.getPartyAt(x,y).isPresent()
+                && ! paintController.isEditMode()) {
+
+            paintController.setSelectedParty(paintController.getPartyAt(x,y).get());
+            paintController.setPreviousSelectedPosition(new int[]{x,y});
+            this.notYetReleased = true;
+        }
+
+    }
+    void handleMouseDragged(int x, int y, int clickcount){
+        if (! paintController.isEditMode()) {
+            paintController.moveSelectedParty(x, y);
+            getWindow().repaint();
+        }
+    }
+
+    void handleMouseReleased(){
+        if(! paintController.isEditMode()) {
+            paintController.setSelectedParty(null);
+            paintController.setPreviousSelectedPosition(null);
+            this.notYetReleased = false;
+        }
     }
 
     void handleKeyEvent(int id, int keyCode, char keyChar) {
@@ -69,7 +104,23 @@ public class DiagramController {
         else if (keyChar == KeyEvent.VK_DELETE) {
 
         }
+        else if(paintController.isEditMode() && keyChar == KeyEvent.VK_BACK_SPACE && id == KeyEvent.KEY_TYPED){
+            getDiagram().deleteCharOfLabel(paintController.getSelectedParty());
+            getWindow().repaint();
+        }
+        else if(paintController.isEditMode() && keyChar == KeyEvent.VK_ENTER && id == KeyEvent.KEY_TYPED){
+            if(paintController.getSelectedParty().checkCorrectnessLabel()){
+                paintController.setEditMode(false);
+                paintController.setSelectedParty(null);
+            }
+        }
+
+        else if(paintController.isEditMode() && keyChar != KeyEvent.VK_ENTER && id == KeyEvent.KEY_TYPED){
+            getDiagram().addCharToLabel(paintController.getSelectedParty(),keyChar);
+            getWindow().repaint();
+        }
     }
+
 
     public void paint(Graphics context) {
         this.paintController.paint(context);
@@ -107,6 +158,8 @@ public class DiagramController {
      * @param p
      */
     public void addPartyToView(Party p,int x, int y){
+        paintController.setEditMode(true);
+        paintController.setSelectedParty(p);
         paintController.addNewPartyToViews(p,x,y);
     }
 

@@ -6,7 +6,7 @@ package interactr.cs.kuleuven.be.ui;
 public class HitBox {
 
 
-    public final static int width = 75;
+    public final static int width = 100;
 
     public final static int heigth = 50;
 

@@ -80,6 +80,16 @@ public class PaintController {
         getActiveView().draw(context);
     }
 
+    public int[] getPreviousSelectedPosition() {
+        return previousSelectedPosition;
+    }
+
+    public void setPreviousSelectedPosition(int[] previousSelectedPosition) {
+        this.previousSelectedPosition = previousSelectedPosition;
+    }
+
+    private int[] previousSelectedPosition;
+
     /**
      * A method that that calls the active diagram to ask for the active party and g
      * @return
@@ -91,6 +101,18 @@ public class PaintController {
     public boolean canAddParty(int x, int y){
         return getActiveView().canAddPartyAt(x,y);
     }
+
+
+
+    public boolean isEditMode() {
+        return editMode;
+    }
+
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
+    }
+
+    private boolean editMode = false;
 
 
     /**
@@ -105,7 +127,7 @@ public class PaintController {
     }
 
     public void moveSelectedParty(int x, int y){
-        getActiveView().moveSelectedParty(getSelectedParty(), x , y);
+        getActiveView().moveSelectedParty(getSelectedParty(), x, y);
     }
 
 

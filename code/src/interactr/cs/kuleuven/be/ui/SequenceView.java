@@ -25,7 +25,7 @@ public class SequenceView implements DiagramView {
         for(Map.Entry<Party,HitBox> entry : parties.entrySet()) {
 
             if(entry.getKey().isActor()) ActorModel.draw(g,entry.getValue());
-            else if(!entry.getKey().isActor()) ObjectModel.draw(g,entry.getValue());
+            else if(!entry.getKey().isActor()) ObjectModel.draw(g,entry.getValue(),entry.getKey());
 
             drawLifeline(g,entry.getValue());
         }
@@ -58,8 +58,9 @@ public class SequenceView implements DiagramView {
     }
 
     @Override
-    public void moveSelectedParty(Party party, int x, int y) {
-        parties.replace(party,new HitBox(x,activationBarHeight/4 ));
+    public void moveSelectedParty(Party party, int differenceX, int differenceY) {
+        int newX = parties.get(party).getxMin() + differenceX;
+        parties.replace(party, new HitBox(differenceX,activationBarHeight/4 ));
     }
 
     private HashMap<Party,HitBox> parties = new HashMap<>();
