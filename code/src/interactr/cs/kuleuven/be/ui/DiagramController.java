@@ -75,8 +75,6 @@ public class DiagramController {
                 && ! paintController.isEditMode()) {
 
             paintController.setSelectedParty(paintController.getPartyAt(x,y).get());
-            paintController.setPreviousSelectedPosition(new int[]{x,y});
-            this.notYetReleased = true;
         }
 
     }
@@ -90,13 +88,12 @@ public class DiagramController {
     void handleMouseReleased(){
         if(! paintController.isEditMode()) {
             paintController.setSelectedParty(null);
-            paintController.setPreviousSelectedPosition(null);
             this.notYetReleased = false;
         }
     }
 
     void handleKeyEvent(int id, int keyCode, char keyChar) {
-        if (keyChar == KeyEvent.VK_TAB && id == KeyEvent.KEY_TYPED) {
+        if (keyChar == KeyEvent.VK_TAB && id == KeyEvent.KEY_TYPED && ! paintController.isEditMode()) {
             this.paintController.switchView();
             this.getWindow().repaint();
         }
@@ -104,15 +101,19 @@ public class DiagramController {
         else if (keyChar == KeyEvent.VK_DELETE) {
 
         }
+
+        else if(paintController.isEditMode() && keyChar == KeyEvent.VK_ENTER && id == KeyEvent.KEY_TYPED){
+            if(paintController.getSelectedParty().checkCorrectnessLabel()){
+                getDiagram().deleteCursor(paintController.getSelectedParty());
+                paintController.setEditMode(false);
+                paintController.setSelectedParty(null);
+                getWindow().repaint();
+            }
+        }
+
         else if(paintController.isEditMode() && keyChar == KeyEvent.VK_BACK_SPACE && id == KeyEvent.KEY_TYPED){
             getDiagram().deleteCharOfLabel(paintController.getSelectedParty());
             getWindow().repaint();
-        }
-        else if(paintController.isEditMode() && keyChar == KeyEvent.VK_ENTER && id == KeyEvent.KEY_TYPED){
-            if(paintController.getSelectedParty().checkCorrectnessLabel()){
-                paintController.setEditMode(false);
-                paintController.setSelectedParty(null);
-            }
         }
 
         else if(paintController.isEditMode() && keyChar != KeyEvent.VK_ENTER && id == KeyEvent.KEY_TYPED){

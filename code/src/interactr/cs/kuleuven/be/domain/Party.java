@@ -47,7 +47,7 @@ public class Party {
         this.label = label;
     }
 
-    private String label = " ";
+    private String label = "|";
 
     /**
      *

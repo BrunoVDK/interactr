@@ -80,15 +80,6 @@ public class PaintController {
         getActiveView().draw(context);
     }
 
-    public int[] getPreviousSelectedPosition() {
-        return previousSelectedPosition;
-    }
-
-    public void setPreviousSelectedPosition(int[] previousSelectedPosition) {
-        this.previousSelectedPosition = previousSelectedPosition;
-    }
-
-    private int[] previousSelectedPosition;
 
     /**
      * A method that that calls the active diagram to ask for the active party and g
