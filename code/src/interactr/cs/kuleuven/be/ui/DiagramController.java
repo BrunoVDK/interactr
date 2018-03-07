@@ -113,7 +113,13 @@ public class DiagramController {
         catch (InvalidAddException addException) {
             throw addException;
         }
+        selectionManager.setEditMode(true);
     }
+
+    /**
+     * A method that returns the editing mode of the selectionManager
+     */
+    public boolean isEditing(){ return selectionManager.isEditMode();};
 
     /**
      * Switch the type of the given party.
@@ -139,29 +145,33 @@ public class DiagramController {
         DiagramComponent component = getActiveView().selectableComponentAt(getDiagram(), x, y);
     }
 
+    public Party getPartyAt(int x,int y ){
+        return getActiveView().getPartyAt(x,y);
+    }
+
+    /**
+     *
+     * @param party
+     * @param dX the offset of the x
+     * @param dY
+     */
+    public void moveParty(Party party ,int dX, int dY){
+
+    }
+
+    public void addMessageFrom(int xStart, int yStart, int xEnd, int yEnd){
+
+    }
+
+    public void editLabel(){
+
+    }
+
     /**
      * The selected manager associated with this diagram controller.
      */
     private SelectionManager selectionManager = null;
 
-    /**
-     * Returns whether or not this controller is editing.
-     */
-    public boolean isEditing() {
-        return isEditing;
-    }
-
-    /**
-     * Stop editing.
-     */
-    public void endEditing() {
-
-    }
-
-    /**
-     * Registers whether or not this controller is editing.
-     */
-    private boolean isEditing = false;
 
     /**
      * Returns the diagram associated with this diagram controller.

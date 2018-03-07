@@ -2,8 +2,12 @@ package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddException;
 
+
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import interactr.cs.kuleuven.be.domain.*;
+import interactr.cs.kuleuven.be.ui.geometry.Point;
+
 
 /**
  * A class of event handlers for interpreting incoming mouse/key events
@@ -25,6 +29,7 @@ public class EventHandler {
 
     /**
      * Handle the mouse event at given location, of given type and with given click count.
+     * Nothing can be done when in editing mode
      *
      * @param id The type of the mouse event.
      * @param x The x coordinate for the mouse event.
@@ -32,7 +37,9 @@ public class EventHandler {
      * @param clickCount The amount of clicks for this mouse events.
      */
     void handleMouseEvent(int id, int x, int y, int clickCount) {
-        if (getDiagramController() != null) {
+
+
+        if (getDiagramController() != null && ! getDiagramController().isEditing()) {
             if (id == MouseEvent.MOUSE_CLICKED) {
                 switch (clickCount) {
                     case 1: // Single click
@@ -50,6 +57,26 @@ public class EventHandler {
                 }
             }
             if(id == MouseEvent.MOUSE_PRESSED){
+                focusedParty = getDiagramController().getPartyAt(x,y);
+                focusedCoordinate = new Point(x,y);
+
+            }
+            if(id == MouseEvent.MOUSE_DRAGGED){
+                if(focusedParty != null){
+                    getDiagramController().moveParty(focusedParty, x - focusedCoordinate.getX(), y - focusedCoordinate.getY());
+                    focusedCoordinate.setX(x);
+                    focusedCoordinate.setY(y);
+                }
+            }
+
+            if(id == MouseEvent.MOUSE_RELEASED){
+                if(focusedParty == null && focusedCoordinate != null){
+                    getDiagramController().addMessageFrom(focusedCoordinate.getX()
+                            ,focusedCoordinate.getY(),x,y);
+                }else if(focusedParty != null){
+                    focusedParty = null;
+                    focusedCoordinate = null;
+                }
 
             }
         }
@@ -66,9 +93,11 @@ public class EventHandler {
         if (getDiagramController() != null) {
             switch (id) {
                 case KeyEvent.KEY_TYPED:
-                    if (keyChar == KeyEvent.VK_TAB)
+                    if (keyChar == KeyEvent.VK_TAB && !getDiagramController().isEditing())
                         getDiagramController().nextView();
                     else if (keyChar == KeyEvent.VK_DELETE) {
+
+                    }else if(getDiagramController().isEditing()){
 
                     }
                     break;
@@ -97,5 +126,9 @@ public class EventHandler {
      * Variable registering the diagram controller of this event handler.
      */
     private DiagramController diagramController;
+
+
+    private Party focusedParty = null;
+    private Point focusedCoordinate = null;
 
 }
