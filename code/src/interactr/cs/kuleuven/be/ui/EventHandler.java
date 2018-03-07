@@ -49,6 +49,9 @@ public class EventHandler {
                         break;
                 }
             }
+            if(id == MouseEvent.MOUSE_PRESSED){
+
+            }
         }
     }
 

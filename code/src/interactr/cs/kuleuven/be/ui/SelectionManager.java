@@ -85,4 +85,25 @@ public class SelectionManager {
      */
     private String temporaryLabel = "";
 
+    /**
+     * Returns of the system is in editing mode or not
+     * @return isEditMode
+     */
+    public boolean isEditMode() {
+        return isEditMode;
+    }
+
+    /**
+     * Sets the editing mode to the given boolean
+     * @param editMode
+     */
+    public void setEditMode(boolean editMode) {
+        isEditMode = editMode;
+    }
+
+    /**
+     * A boolean that knows if the system is editing a Diagram component
+     */
+    private boolean isEditMode;
+
 }
