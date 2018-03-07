@@ -1,6 +1,6 @@
 package interactr.cs.kuleuven.be.ui;
 
-import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddException;
+import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddPartyException;
 
 
 import java.awt.event.KeyEvent;
@@ -49,7 +49,7 @@ public class EventHandler {
                         try {
                             getDiagramController().addPartyAt(x,y);
                         }
-                        catch (InvalidAddException exception) {
+                        catch (InvalidAddPartyException exception) {
                             if (exception.getParty() != null)
                                 getDiagramController().switchPartyType(exception.getParty());
                         }

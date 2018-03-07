@@ -1,9 +1,8 @@
 package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.domain.*;
-import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddException;
+import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddPartyException;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -98,9 +97,9 @@ public class DiagramController {
      *
      * @param x The x coordinate for the new party.
      * @param y The y coordinate for the new party.
-     * @throws InvalidAddException The given coordinates point to a component already.
+     * @throws InvalidAddPartyException The given coordinates point to a component already.
      */
-    public void addPartyAt(int x, int y) throws InvalidAddException {
+    public void addPartyAt(int x, int y) throws InvalidAddPartyException {
         Party newParty = new ActorParty();
         try {
             getActiveView().addParty(getDiagram(), newParty, x, y);
@@ -110,7 +109,7 @@ public class DiagramController {
                     view.registerParty(newParty, x, y);
             getPaintBoard().refresh();
         }
-        catch (InvalidAddException addException) {
+        catch (InvalidAddPartyException addException) {
             throw addException;
         }
         selectionManager.setEditMode(true);

@@ -3,9 +3,8 @@ package interactr.cs.kuleuven.be.ui;
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.DiagramComponent;
 import interactr.cs.kuleuven.be.domain.Party;
-import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddException;
+import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.Figure;
-import interactr.cs.kuleuven.be.ui.geometry.Point;
 
 /**
  * A class of communication views. Communication views display diagrams
@@ -26,7 +25,7 @@ public class CommunicationView extends DiagramView {
     }
 
     @Override
-    public void addParty(Diagram diagram, Party party, int x, int y) throws InvalidAddException {
+    public void addParty(Diagram diagram, Party party, int x, int y) throws InvalidAddPartyException {
 
         super.addParty(diagram, party, x, y);
     }

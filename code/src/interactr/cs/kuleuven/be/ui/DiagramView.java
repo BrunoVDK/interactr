@@ -2,7 +2,7 @@ package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.purecollections.PMap;
-import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddException;
+import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.*;
 
 /**
@@ -29,9 +29,9 @@ public abstract class DiagramView {
      * @param party The party that is to be added.
      * @param x The x coordinate of the new party.
      * @param y The y coordinate of the new party.
-     * @throws InvalidAddException The given party cannot be added to this diagram view at the given coordinate.
+     * @throws InvalidAddPartyException The given party cannot be added to this diagram view at the given coordinate.
      */
-    public void addParty(Diagram diagram, Party party, int x, int y) throws InvalidAddException {
+    public void addParty(Diagram diagram, Party party, int x, int y) throws InvalidAddPartyException {
         if (!figures.containsKey(party))
             figures = figures.plus(party, createFigureForParty(party, x, y));
     }

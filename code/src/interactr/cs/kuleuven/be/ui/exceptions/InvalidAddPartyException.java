@@ -9,14 +9,14 @@ import interactr.cs.kuleuven.be.domain.Party;
  * @author Team 25
  * @version 1.0
  */
-public class InvalidAddException extends RuntimeException {
+public class InvalidAddPartyException extends RuntimeException {
 
     /**
      * Initialize this new invalid add exception with given party.
      *
      * @param party The party associated with this invalid add exception.
      */
-    public InvalidAddException(Party party) {
+    public InvalidAddPartyException(Party party) {
         setParty(party);
     }
 

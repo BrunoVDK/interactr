@@ -3,9 +3,8 @@ package interactr.cs.kuleuven.be.ui;
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.DiagramComponent;
 import interactr.cs.kuleuven.be.domain.Party;
-import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddException;
+import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.Figure;
-import interactr.cs.kuleuven.be.ui.geometry.Point;
 
 /**
  * A class of sequence diagram views. Sequence diagram views display diagrams
@@ -33,9 +32,9 @@ public class SequenceView extends DiagramView {
     }
 
     @Override
-    public void addParty(Diagram diagram, Party party, int x, int y) throws InvalidAddException {
+    public void addParty(Diagram diagram, Party party, int x, int y) throws InvalidAddPartyException {
         if (y >= PARTY_ROW_HEIGHT)
-            throw new InvalidAddException(null);
+            throw new InvalidAddPartyException(null);
         super.addParty(diagram, party, x, 5);
     }
 
