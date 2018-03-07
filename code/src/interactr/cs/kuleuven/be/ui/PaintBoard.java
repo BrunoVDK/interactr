@@ -97,6 +97,16 @@ public class PaintBoard {
     }
 
     /**
+     * Sets the color for this paint board.
+     *
+     * @param color The color to use for this paint board.
+     */
+    public void setColor(Color color) {
+        if (currentContext != null)
+            currentContext.setColor(color);
+    }
+
+    /**
      * Get the width of the given string when drawn in this paint board.
      *
      * @param string The string whose display width is desired.
