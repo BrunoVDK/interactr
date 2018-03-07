@@ -111,8 +111,19 @@ public abstract class DiagramView {
         return null;
     }
 
-    public Message getMessageAt(int x, int y) {
+    public void addMessage(int fromX, int fromY, int toX, int toY) {
 
+    }
+
+    /**
+     * Returns the message at the given coordinate.
+     *
+     * @param x
+     * @param y
+     * @return
+     */
+    public Message getMessageAt(int x, int y) {
+        return null;
     }
 
     protected Link linkForMessage(Message message) {
@@ -126,7 +137,14 @@ public abstract class DiagramView {
         }
         Party sender = message.getSender(), receiver = message.getReceiver();
         Figure senderFigure = figures.get(sender), receiverFigure = figures.get(receiver);
-        
+        if (senderFigure.getX() < receiverFigure.getX())
+            link.setStartX(senderFigure.getX() + senderFigure.getWidth());
+        else
+            link.setStartX(receiverFigure.getX() + receiverFigure.getWidth());
+        if (senderFigure.getY() < receiverFigure.getY())
+            link.setStartX(senderFigure.getY() + senderFigure.getHeight());
+        else
+            link.setStartX(receiverFigure.getY() + receiverFigure.getHeight());
         link.setLabel(message.getLabel());
         return link;
     }

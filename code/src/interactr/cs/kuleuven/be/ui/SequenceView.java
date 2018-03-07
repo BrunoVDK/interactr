@@ -54,6 +54,8 @@ public class SequenceView extends DiagramView {
         return "Sequence View";
     }
 
+
+
     /**
      * The height of the party row.
      */

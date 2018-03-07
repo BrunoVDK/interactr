@@ -17,6 +17,11 @@ public class Party extends DiagramComponent {
         super(":Class");
     }
 
+    @Override
+    public void delete(Diagram diagram) {
+        diagram.deleteParty(this);
+    }
+
     /**
      * Initialize this new party with the given party.
      *

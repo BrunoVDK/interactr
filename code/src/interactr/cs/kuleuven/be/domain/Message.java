@@ -67,4 +67,9 @@ public class Message extends DiagramComponent {
         return Arrow.class;
     }
 
+    @Override
+    public void delete(Diagram diagram) {
+        diagram.deleteMessage(this);
+    }
+
 }

@@ -59,4 +59,11 @@ public abstract class DiagramComponent {
      */
     private String label;
 
+    /**
+     * Delete this diagram in the given diagram.
+     *
+     * @param diagram The diagram from which this component should be deleted.
+     */
+    public abstract void delete(Diagram diagram);
+
 }

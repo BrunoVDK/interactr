@@ -37,6 +37,10 @@ public class Diagram {
             ; // Replace all
     }
 
+    public void deleteParty(Party party) {
+
+    }
+
     /**
      * Returns the parties associatd with this diagram.
      *  Parties are ordered from first added to last added.
@@ -61,6 +65,10 @@ public class Diagram {
             return null;
         else
             return messages.get(row);
+    }
+
+    public void deleteMessage(Message message) {
+        // TODO
     }
 
     /**
