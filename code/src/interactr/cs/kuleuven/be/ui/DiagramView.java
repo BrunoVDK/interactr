@@ -138,4 +138,9 @@ public abstract class DiagramView {
         return link;
     }
 
+    public void moveParty(Party party, int x ,int y){
+        figures.get(party).setX(x);
+        figures.get(party).setY(y);
+    }
+
 }

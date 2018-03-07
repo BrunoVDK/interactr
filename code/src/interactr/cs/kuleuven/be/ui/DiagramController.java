@@ -159,13 +159,13 @@ public class DiagramController {
     }
 
     /**
-     *
+     * Moves the given party to the new location that is given on the x and y coordinate.
      * @param party
-     * @param dX the offset of the x
-     * @param dY
+     * @param x The new absolut x coordinate
+     * @param y
      */
-    public void moveParty(Party party ,int dX, int dY){
-
+    public void moveParty(Party party ,int x, int y){
+        getActiveView().moveParty(party,x,y);
     }
 
     public void addMessageFrom(int xStart, int yStart, int xEnd, int yEnd){

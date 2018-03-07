@@ -63,9 +63,7 @@ public class EventHandler {
             }
             if(id == MouseEvent.MOUSE_DRAGGED){
                 if(focusedParty != null){
-                    getDiagramController().moveParty(focusedParty, x - focusedCoordinate.getX(), y - focusedCoordinate.getY());
-                    focusedCoordinate.setX(x);
-                    focusedCoordinate.setY(y);
+                    getDiagramController().moveParty(focusedParty, x, y);
                 }
             }
 

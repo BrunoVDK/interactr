@@ -65,4 +65,9 @@ public class SequenceView extends DiagramView {
      */
     private static int MESSAGE_ROW_HEIGHT = 30;
 
+    @Override
+    public void moveParty(Party party, int x, int y){
+        figures.get(party).setX(x);
+    }
+
 }
