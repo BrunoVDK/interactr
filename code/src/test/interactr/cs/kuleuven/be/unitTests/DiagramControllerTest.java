@@ -1,3 +1,4 @@
+/*
 package interactr.cs.kuleuven.be.unitTests;
 
 
@@ -65,3 +66,4 @@ public class DiagramControllerTest {
     }
 
 }
+*/

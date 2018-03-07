@@ -32,7 +32,9 @@ public class DiagramController {
      *  and an empty diagram.
      */
     public DiagramController() {
+
         this(new Diagram(), defaultViews());
+        selectionManager = new SelectionManager();
     }
 
     /**
@@ -70,7 +72,7 @@ public class DiagramController {
      * Display the currently active diagram view by making use of the given paintboard.
      */
     public void displayView() {
-        getActiveView().display(getPaintBoard(), getDiagram());
+        getActiveView().display(getPaintBoard(), getDiagram(),selectionManager);
     }
 
     /**

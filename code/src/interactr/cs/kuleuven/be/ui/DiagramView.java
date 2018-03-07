@@ -20,7 +20,7 @@ public abstract class DiagramView {
      * @param paintBoard The paintboard to use when displaying the view.
      * @param diagram The diagram that is to be displayed in this view.
      */
-    public abstract void display(PaintBoard paintBoard, Diagram diagram);
+    public abstract void display(PaintBoard paintBoard, Diagram diagram,SelectionManager selectionManager);
 
     /**
      * Adds the given party to this view at the given coordinates.
