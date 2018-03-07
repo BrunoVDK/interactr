@@ -18,7 +18,7 @@ public class Figure {
     }
 
     /**
-     * Initialize this new figure with given coordinates and size.
+     * Initialize this new figure with given coordinates and size, and en empty label.
      *
      * @param x The x coordinate for this new figure.
      * @param y The y coordinate for this new figure.
@@ -30,6 +30,7 @@ public class Figure {
         setY(y);
         setWidth(width);
         setHeight(height);
+        setLabel("");
     }
 
     /**
@@ -42,14 +43,14 @@ public class Figure {
     }
 
     /**
-     * Checks whether or not this figure encloses the given coordinate.
+     * Checks whether or not the given coordinate 'hits' this figure.
      *
      * @param x The x coordinate to check with.
      * @param y The y coordinate to check with.
      * @return True if and only if the given coordinate lies within the confines of this
      *  figure's bounds.
      */
-    public boolean encloses(int x, int y) {
+    public boolean isHit(int x, int y) {
         return (getX() <= x
                 && getY() <= y
                 && x <= getX() + getWidth()
@@ -149,24 +150,35 @@ public class Figure {
     protected int height;
 
     /**
-     * Returns the z-index for this figure.
-     */
-    public int getZIndex() {
-        return this.zIndex;
-    }
-
-    /**
-     * Set the z-index for this figure to the given index.
+     * Checks whether the given coordinate 'hits' this figure's label.
      *
-     * @param zIndex The new z-index for this figure.
+     * @param x The x coordinate to check with.
+     * @param y The y coordinate to check with.
+     * @return True if and only if the given coordinate is enclosed by this figure's label.
      */
-    public void setZIndex(int zIndex) {
-        this.zIndex = zIndex;
+    public boolean isLabelHit(int x, int y) {
+        return false;
     }
 
     /**
-     * Variable registering the z index for this figure.
+     * Returns the label of this figure.
      */
-    protected int zIndex;
+    public String getLabel() {
+        return label;
+    }
+
+    /**
+     * Sets the label of this figure to the given value.
+     *
+     * @param label The new label value for this figure.
+     */
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    /**
+     * Registers the label for this figure.
+     */
+    private String label;
 
 }

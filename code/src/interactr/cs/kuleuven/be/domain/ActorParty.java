@@ -1,6 +1,5 @@
 package interactr.cs.kuleuven.be.domain;
 
-import interactr.cs.kuleuven.be.ui.geometry.LabeledFigure;
 import interactr.cs.kuleuven.be.ui.geometry.StickFigure;
 
 /**
@@ -27,9 +26,8 @@ public class ActorParty extends Party {
 
     }
 
-    @Override
-    public LabeledFigure getProposedFigure() {
-        return new StickFigure();
+    public Class proposedFigure() {
+        return StickFigure.class;
     }
 
 }

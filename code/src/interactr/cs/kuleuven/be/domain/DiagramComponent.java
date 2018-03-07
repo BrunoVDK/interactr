@@ -1,7 +1,5 @@
 package interactr.cs.kuleuven.be.domain;
 
-import interactr.cs.kuleuven.be.ui.geometry.LabeledFigure;
-
 /**
  * A class of diagram components.
  *
@@ -60,12 +58,5 @@ public abstract class DiagramComponent {
      * Registers the label for this figure.
      */
     private String label;
-
-    /**
-     * Returns a proposal for how this component should be drawn, by returning a mock-up figure.
-     *
-     * @return A mock-up for how this component should be drawn.
-     */
-    public abstract LabeledFigure getProposedFigure();
 
 }

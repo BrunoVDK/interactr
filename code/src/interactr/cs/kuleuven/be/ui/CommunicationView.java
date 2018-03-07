@@ -20,20 +20,15 @@ public class CommunicationView extends DiagramView {
     @Override
     public void display(PaintBoard paintBoard, Diagram diagram) {
         for (Party party : diagram.getParties()) {
-            Figure partyFigure = party.getProposedFigure();
-            Point partyCoordinate = getCoordinate(party);
-            partyFigure.setX(partyCoordinate.getX());
-            partyFigure.setY(partyCoordinate.getY());
+            Figure partyFigure = figures.get(party);
             partyFigure.draw(paintBoard);
         }
     }
 
     @Override
     public void addParty(Diagram diagram, Party party, int x, int y) throws InvalidAddException {
-        for (Party p : coordinates.keySet())
-            if (p.getProposedFigure().encloses(x,y))
-                throw new InvalidAddException(p);
-        coordinates = coordinates.plus(party, new Point(x,y));
+
+        super.addParty(diagram, party, x, y);
     }
 
     @Override

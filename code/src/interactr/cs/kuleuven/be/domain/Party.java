@@ -1,7 +1,6 @@
 package interactr.cs.kuleuven.be.domain;
 
 import interactr.cs.kuleuven.be.ui.geometry.Box;
-import interactr.cs.kuleuven.be.ui.geometry.LabeledFigure;
 
 /**
  * A class of parties.
@@ -27,9 +26,13 @@ public class Party extends DiagramComponent {
         super(party.getLabel());
     }
 
-    @Override
-    public LabeledFigure getProposedFigure() {
-        return new Box();
+    /**
+     * Returns a proposal for how this component should be drawn, by returning a mock-up figure.
+     *
+     * @return A mock-up for how this component should be drawn.
+     */
+    public Class proposedFigure() {
+        return Box.class;
     }
 
 }

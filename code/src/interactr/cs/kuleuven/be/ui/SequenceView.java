@@ -22,15 +22,11 @@ public class SequenceView extends DiagramView {
     @Override
     public void display(PaintBoard paintBoard, Diagram diagram) {
         for (Party party : diagram.getParties()) {
-            Figure partyFigure = party.getProposedFigure();
-            Point partyCoordinate = getCoordinate(party);
-            partyFigure.setX(partyCoordinate.getX());
-            partyFigure.setY(partyCoordinate.getY());
-            partyFigure.setHeight(PARTY_ROW_HEIGHT - 10);
+            Figure partyFigure = figures.get(party);
             partyFigure.draw(paintBoard);
-            paintBoard.drawLine(partyCoordinate.getX() + partyFigure.getWidth() / 2,
+            paintBoard.drawLine(partyFigure.getX() + partyFigure.getWidth() / 2,
                     PARTY_ROW_HEIGHT,
-                    partyCoordinate.getX() + partyFigure.getWidth() / 2,
+                    partyFigure.getX() + partyFigure.getWidth() / 2,
                     paintBoard.getHeight());
         }
         paintBoard.drawLine(0, PARTY_ROW_HEIGHT, paintBoard.getWidth(), PARTY_ROW_HEIGHT);
@@ -40,25 +36,17 @@ public class SequenceView extends DiagramView {
     public void addParty(Diagram diagram, Party party, int x, int y) throws InvalidAddException {
         if (y >= PARTY_ROW_HEIGHT)
             throw new InvalidAddException(null);
-        for (Party p : coordinates.keySet())
-            if (p.getProposedFigure().encloses(x,y))
-                throw new InvalidAddException(p);
-        coordinates = coordinates.plus(party, new Point(x,5));
+        super.addParty(diagram, party, x, 5);
     }
 
     @Override
     public void registerParty(Party party, int x, int y) {
-        coordinates = coordinates.plus(party, new Point(x,5));
+        super.registerParty(party, x, 5);
     }
 
     @Override
     public DiagramComponent selectableComponentAt(Diagram diagram, int x, int y) {
         return null;
-    }
-
-    @Override
-    protected Point getDefaultCoordinate() {
-        return new Point(5, 5);
     }
 
     @Override
