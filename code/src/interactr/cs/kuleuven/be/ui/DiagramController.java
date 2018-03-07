@@ -1,93 +1,136 @@
 package interactr.cs.kuleuven.be.ui;
 
+import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.Party;
+import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddException;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Optional;
-
 
 /**
- * A class of diagram handlers for intercepting and interpreting mouse and key events.
+ * A class of diagram controllers for managing a diagram and associated diagram views.
+ *  Diagram controllers allow for manipulation and selection of diagram components such as parties and messages,
+ *  as well as cycling between available diagram views.
+ *
+ * @author Team 25
+ * @version 1.0
  */
 public class DiagramController {
 
     /**
-     * Initialize a new diagram handler.
+     * Returns a default list of views for diagram controllers.
      *
+     * @return An arraylist with a sequence - and a communication view.
+     */
+    private static ArrayList<DiagramView> defaultViews() {
+        ArrayList<DiagramView> views = new ArrayList<DiagramView>();
+        views.add(new SequenceView());
+        views.add(new CommunicationView());
+        return views;
+    }
+
+    /**
+     * Initialize this new diagram controller with a communication & sequence view,
+     *  and an empty diagram.
      */
     public DiagramController() {
-        this.diagram = new Diagram(this);
-        this.paintController = new PaintController(this);
+        this(new Diagram(), defaultViews());
+    }
+
+    /**
+     * Initialize this new diagram controller with given diagram and diagram views.
+     *
+     * @param diagram The diagram to initialize this controller with.
+     * @param views The views for this new diagram.
+     */
+    public DiagramController(Diagram diagram, ArrayList<DiagramView> views) {
+        this.diagram = diagram;
+        this.views = new ArrayList<DiagramView>();
+        if (views != null)
+            for (DiagramView view : views)
+                this.views.add(view);
         java.awt.EventQueue.invokeLater(() -> {
-            this.window = new DiagramWindow("test/interactr/cs/kuleuven/be", this);
-            this.window.show();
+            DiagramWindow window = new DiagramWindow("New document - Interactr");
+            PaintBoard paintBoard = new PaintBoard(window, this);
+            setPaintBoard(paintBoard);
+            window.setPaintBoard(paintBoard);
+            window.setEventHandler(new EventHandler(this));
+            window.show();
         });
     }
 
     /**
-     * Variable registering the paint controller for this diagram controller.
+     * Select the next diagram view associated with this controller and display it
+     *  in this controller's diagram window.
      */
-    private PaintController paintController;
-
-
-    //TODO de logica doorverwijzen naar een andere klassen want deze moet hier niet staan
-    void handleMouseEvent(int id, int x, int y, int clickCount) {
-        switch(id){
-            case MouseEvent.MOUSE_CLICKED:
-                if(clickCount == 2 && !paintController.getPartyAt(x,y).isPresent() && paintController.canAddParty(x,y)){
-                    getDiagram().addParty(x,y);
-                    getWindow().repaint();
-                }
-                if (clickCount == 2 && paintController.getPartyAt(x,y).isPresent()){
-                    getDiagram().changePartyType(paintController.getPartyAt(x,y).get());
-                    getWindow().repaint();
-                }
-            case MouseEvent.MOUSE_PRESSED:
-                if(paintController.getPartyAt(x,y).isPresent()) paintController.setSelectedParty(paintController.getPartyAt(x,y).get());
-
-            case MouseEvent.MOUSE_DRAGGED:
-                if(paintController.getSelectedParty() != null) {
-                    paintController.moveSelectedParty(x, y);
-                    getWindow().repaint();
-                }
-
-            case MouseEvent.MOUSE_RELEASED:
-                if(paintController.getSelectedParty() != null) paintController.setSelectedParty(null);
-        }
-
-    }
-
-    void handleKeyEvent(int id, int keyCode, char keyChar) {
-        if (keyChar == KeyEvent.VK_TAB && id == KeyEvent.KEY_TYPED) {
-            this.paintController.switchView();
-            this.getWindow().repaint();
-        }
-
-        else if (keyChar == KeyEvent.VK_DELETE) {
-
-        }
-    }
-
-    public void paint(Graphics context) {
-        this.paintController.paint(context);
+    public void nextView() {
+        activeViewIndex = (activeViewIndex + 1) % views.size();
+        getPaintBoard().refresh();
     }
 
     /**
-     * Returns the canvaswindow of this class
-     * @return
+     * Display the currently active diagram view by making use of the given paintboard.
      */
-    public DiagramWindow getWindow() {
-        return window;
+    public void displayView() {
+        getActiveView().display(getPaintBoard(), getDiagram());
     }
 
     /**
-     * The window associated with this diagram controller.
+     * Get the currently active view of this diagram controller.
+     *
+     * @return The diagram view of this controller that's currently active.
      */
-    private DiagramWindow window;
+    private DiagramView getActiveView() {
+        return views.get(activeViewIndex);
+    }
 
+    /**
+     * Registers the index of the currently active view.
+     */
+    private int activeViewIndex = 0;
+
+    /**
+     * The list of all diagram views kept by this diagram handler.
+     */
+    private ArrayList<DiagramView> views = new ArrayList<DiagramView>();
+
+    /**
+     * Add a new party at the given x and y coordinate.
+     *
+     * @param x The x coordinate for the new party.
+     * @param y The y coordinate for the new party.
+     * @throws InvalidAddException The given coordinates point to a component already.
+     */
+    public void addPartyAt(int x, int y) throws InvalidAddException {
+        Party newParty = new Party(false);
+        try {
+            getActiveView().addParty(getDiagram(), newParty, x, y);
+            getDiagram().addParty(newParty);
+            for (DiagramView view : views)
+                if (view != getActiveView())
+                    view.registerParty(newParty, x, y);
+            getPaintBoard().refresh();
+        }
+        catch (InvalidAddException addException) {
+            throw addException;
+        }
+    }
+
+    /**
+     * Switch the type of the given party.
+     *
+     * @param party The party whose type is to be switched.
+     */
+    public void switchPartyType(Party party) {
+        getDiagram().changePartyType(party);
+        getPaintBoard().refresh();
+    }
+
+    /**
+     * Returns the diagram associated with this diagram controller.
+     *
+     * @return The diagram associated with this diagram controller.
+     */
     public Diagram getDiagram() {
         return this.diagram;
     }
@@ -97,19 +140,29 @@ public class DiagramController {
      */
     private Diagram diagram;
 
-
-    public static void main(String[] args) {
-        new DiagramController();
+    /**
+     * Returns the paint board associated with this diagram controller.
+     */
+    public PaintBoard getPaintBoard() {
+        return paintBoard;
     }
 
     /**
+     * Set the paint board of this diagram controller to match the given one.
      *
-     * @param p
+     * @param paintBoard The new paint board for this controller.
      */
-    public void addPartyToView(Party p,int x, int y){
-        paintController.addNewPartyToViews(p,x,y);
+    public void setPaintBoard(PaintBoard paintBoard) {
+        this.paintBoard = paintBoard;
     }
 
+    /**
+     * Registers the paint board associated with this controller.
+     */
+    private PaintBoard paintBoard;
 
+    public static void main(String[] args) { // No documentation
+        new DiagramController();
+    }
 
 }

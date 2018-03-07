@@ -2,8 +2,11 @@ package interactr.cs.kuleuven.be.domain;
 
 /**
  * A  class of messages. Each message has a receiving - and a sender party.
+ *
+ * @author Team 25
+ * @version 1.0
  */
-public class Message {
+public class Message extends DiagramComponent {
 
     /**
      * Checks whether or not the given label is a valid label for this message.

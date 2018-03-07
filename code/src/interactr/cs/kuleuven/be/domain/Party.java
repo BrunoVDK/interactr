@@ -1,23 +1,22 @@
 package interactr.cs.kuleuven.be.domain;
 
 /**
- * A class of parties, having an x/y coordinate and a flag denoting whether
+ * A class of parties, with a flag denoting whether
  *  or not the party is an actor.
+ *
+ * @author Team 25
+ * @version 1.0
  */
-public class Party {
+public class Party extends DiagramComponent {
 
     /**
-     * Initialize this new party with given x coordinate, y coordinate,
-     *  and a flag denoting whether or not the new party is an actor.
+     * Initialize this new party with given flag denoting whether or not the new party is an actor.
      *
      * @param isActor Flag denoting whether or not the new party is an actor.
      */
     public Party(boolean isActor) {
         setIsActor(isActor);
-
     }
-
-
 
     /**
      * Returns whether or not this party is an actor.
@@ -39,18 +38,5 @@ public class Party {
      * Flag denoting whether or not this party is an actor.
      */
     private boolean isActor;
-
-
-    /**
-     *
-     * @param label
-     * @return
-     */
-    public boolean canHaveAsLabel(Label label) {
-        return label.getLength() <= 30
-                && true;
-    }
-
-
 
 }

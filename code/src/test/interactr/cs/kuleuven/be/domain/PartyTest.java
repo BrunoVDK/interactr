@@ -1,22 +1,20 @@
-package interactr.cs.kuleuven.be.domain;
+package test.interactr.cs.kuleuven.be.domain;
 
 import junit.framework.TestCase;
-//import org.junit.jupiter.api.AfterEach;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
 
 class PartyTest extends TestCase {
 
-    //@BeforeEach
+    @org.junit.jupiter.api.BeforeEach
     protected void setUp() {
     }
 
-    //@AfterEach
+    @org.junit.jupiter.api.AfterEach
     protected void tearDown() {
     }
 
-    //@Test
+    @org.junit.jupiter.api.Test
     void canHaveAsLabel() {
     }
 }

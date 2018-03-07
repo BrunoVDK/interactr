@@ -2,6 +2,9 @@ package interactr.cs.kuleuven.be.domain;
 
 /**
  * A class of labels having a string value.
+ *
+ * @author Team 25
+ * @version 1.0
  */
 public class Label {
 
