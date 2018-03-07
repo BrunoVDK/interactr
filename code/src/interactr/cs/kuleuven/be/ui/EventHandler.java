@@ -36,7 +36,7 @@ public class EventHandler {
             if (id == MouseEvent.MOUSE_CLICKED) {
                 switch (clickCount) {
                     case 1: // Single click
-                        // 4 use cases dealt with here
+                        // selectComponentAt(x,y);
                         break;
                     case 2: // Double click
                         try {

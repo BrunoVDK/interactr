@@ -8,7 +8,7 @@ import interactr.cs.kuleuven.be.ui.PaintBoard;
  * @author Team 25
  * @version 1.0
  */
-public class StickFigure extends Figure {
+public class StickFigure extends LabeledFigure {
 
     @Override
     public void draw(PaintBoard paintBoard) {

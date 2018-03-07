@@ -1,11 +1,10 @@
 package interactr.cs.kuleuven.be.domain;
 
 import interactr.cs.kuleuven.be.ui.geometry.Box;
-import interactr.cs.kuleuven.be.ui.geometry.Figure;
+import interactr.cs.kuleuven.be.ui.geometry.LabeledFigure;
 
 /**
- * A class of parties, with a flag denoting whether
- *  or not the party is an actor.
+ * A class of parties.
  *
  * @author Team 25
  * @version 1.0
@@ -13,37 +12,24 @@ import interactr.cs.kuleuven.be.ui.geometry.Figure;
 public class Party extends DiagramComponent {
 
     /**
-     * Initialize this new party with given flag denoting whether or not the new party is an actor.
+     * Initialize this new party with a label of ':Class'.
+     */
+    public Party() {
+        super(":Class");
+    }
+
+    /**
+     * Initialize this new party with the given party.
      *
-     * @param isActor Flag denoting whether or not the new party is an actor.
+     * @param party The party to initialize this party with.
      */
-    public Party(boolean isActor) {
-        setIsActor(isActor);
+    public Party(Party party) {
+        super(party.getLabel());
     }
-
-    /**
-     * Returns whether or not this party is an actor.
-     */
-    public boolean isActor() {
-        return this.isActor;
-    }
-
-    /**
-     * Set whether or not this party is an actor.
-     *
-     * @param isActor True if this party should become an actor.
-     */
-    public void setIsActor(boolean isActor) {
-        this.isActor = isActor;
-    }
-
-    /**
-     * Flag denoting whether or not this party is an actor.
-     */
-    private boolean isActor;
 
     @Override
-    public Figure getProposedFigure() {
+    public LabeledFigure getProposedFigure() {
         return new Box();
     }
+
 }

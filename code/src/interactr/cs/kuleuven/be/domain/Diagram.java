@@ -64,7 +64,7 @@ public class Diagram {
     }
 
     /**
-     * The messages held by this callstack.
+     * The messages held by this diagram.
      */
     private PList<Message> messages = PList.<Message>empty();
 

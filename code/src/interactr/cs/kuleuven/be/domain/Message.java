@@ -1,6 +1,7 @@
 package interactr.cs.kuleuven.be.domain;
 
 import interactr.cs.kuleuven.be.ui.geometry.Figure;
+import interactr.cs.kuleuven.be.ui.geometry.LabeledFigure;
 import interactr.cs.kuleuven.be.ui.geometry.Link;
 
 /**
@@ -22,7 +23,7 @@ public class Message extends DiagramComponent {
     }
 
     @Override
-    public Figure getProposedFigure() {
+    public LabeledFigure getProposedFigure() {
         return new Link();
     }
 

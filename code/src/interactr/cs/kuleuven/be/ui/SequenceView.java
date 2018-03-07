@@ -22,7 +22,7 @@ public class SequenceView extends DiagramView {
     @Override
     public void display(PaintBoard paintBoard, Diagram diagram) {
         for (Party party : diagram.getParties()) {
-            Figure partyFigure = figureForParty(party);
+            Figure partyFigure = party.getProposedFigure();
             partyFigure.draw(paintBoard);
             paintBoard.drawString(":Class",
                     partyFigure.getX() + partyFigure.getWidth()/2 - paintBoard.getWidthForString(":Class")/2,
@@ -31,7 +31,7 @@ public class SequenceView extends DiagramView {
                     PARTY_ROW_HEIGHT,
                     partyFigure.getX() + partyFigure.getWidth() / 2,
                     paintBoard.getHeight());
-            figureForParty(party).draw(paintBoard);
+            party.getProposedFigure().draw(paintBoard);
         }
         paintBoard.drawLine(0,PARTY_ROW_HEIGHT,paintBoard.getWidth(),PARTY_ROW_HEIGHT);
     }
@@ -41,7 +41,7 @@ public class SequenceView extends DiagramView {
         if (y >= PARTY_ROW_HEIGHT)
             throw new InvalidAddException(null);
         for (Party p : coordinates.keySet())
-            if (figureForParty(p).encloses(x,y))
+            if (p.getProposedFigure().encloses(x,y))
                 throw new InvalidAddException(p);
         coordinates = coordinates.plus(party, new Point(x,5));
     }
@@ -52,13 +52,13 @@ public class SequenceView extends DiagramView {
     }
 
     @Override
-    protected Point getDefaultCoordinate() {
-        return new Point(5, 5);
+    public DiagramComponent selectableComponentAt(Diagram diagram, int x, int y) {
+        return null;
     }
 
     @Override
-    public DiagramComponent componentAt(Diagram diagram, int x, int y) {
-        return null;
+    protected Point getDefaultCoordinate() {
+        return new Point(5, 5);
     }
 
     @Override

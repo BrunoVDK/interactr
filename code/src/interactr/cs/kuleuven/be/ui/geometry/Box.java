@@ -8,7 +8,7 @@ import interactr.cs.kuleuven.be.ui.PaintBoard;
  * @author Team 25
  * @version 1.0
  */
-public class Box extends Figure {
+public class Box extends LabeledFigure {
 
     @Override
     public void draw(PaintBoard paintBoard) {

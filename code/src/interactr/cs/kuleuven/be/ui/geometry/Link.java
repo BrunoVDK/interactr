@@ -6,7 +6,7 @@ package interactr.cs.kuleuven.be.ui.geometry;
  * @author Team 25
  * @version 1.0
  */
-public class Link extends Figure {
+public class Link extends LabeledFigure {
 
 
 
