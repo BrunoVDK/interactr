@@ -101,7 +101,7 @@ public class DiagramController {
      * @throws InvalidAddException The given coordinates point to a component already.
      */
     public void addPartyAt(int x, int y) throws InvalidAddException {
-        Party newParty = new ObjectParty();
+        Party newParty = new ActorParty();
         try {
             getActiveView().addParty(getDiagram(), newParty, x, y);
             getDiagram().addParty(newParty);
@@ -140,9 +140,9 @@ public class DiagramController {
     }
 
     /**
-     * Registers the selected component for this diagram controller.
+     * The selected manager associated with this diagram controller.
      */
-    private DiagramComponent selectedComponent = null;
+    private SelectionManager selectionManager = null;
 
     /**
      * Returns whether or not this controller is editing.

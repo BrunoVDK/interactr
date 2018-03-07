@@ -13,7 +13,7 @@ public class LabeledFigure extends Figure {
      *  a height of 200 and an empty label.
      */
     public LabeledFigure() {
-        this(0, 0, 100, 200, "");
+        this(0, 0, 40, 60, "");
     }
 
     /**
@@ -30,6 +30,7 @@ public class LabeledFigure extends Figure {
         setY(y);
         setWidth(width);
         setHeight(height);
+        setLabel(label);
     }
 
     /**

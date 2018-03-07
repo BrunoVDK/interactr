@@ -21,10 +21,10 @@ public class CommunicationView extends DiagramView {
     public void display(PaintBoard paintBoard, Diagram diagram) {
         for (Party party : diagram.getParties()) {
             Figure partyFigure = party.getProposedFigure();
+            Point partyCoordinate = getCoordinate(party);
+            partyFigure.setX(partyCoordinate.getX());
+            partyFigure.setY(partyCoordinate.getY());
             partyFigure.draw(paintBoard);
-            paintBoard.drawString(":Class",
-                    partyFigure.getX() + partyFigure.getWidth()/2 - paintBoard.getWidthForString(":Class")/2,
-                    partyFigure.getY() + partyFigure.getHeight() + 15);
         }
     }
 

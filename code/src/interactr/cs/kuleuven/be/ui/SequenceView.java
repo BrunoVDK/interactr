@@ -23,17 +23,17 @@ public class SequenceView extends DiagramView {
     public void display(PaintBoard paintBoard, Diagram diagram) {
         for (Party party : diagram.getParties()) {
             Figure partyFigure = party.getProposedFigure();
+            Point partyCoordinate = getCoordinate(party);
+            partyFigure.setX(partyCoordinate.getX());
+            partyFigure.setY(partyCoordinate.getY());
+            partyFigure.setHeight(PARTY_ROW_HEIGHT - 10);
             partyFigure.draw(paintBoard);
-            paintBoard.drawString(":Class",
-                    partyFigure.getX() + partyFigure.getWidth()/2 - paintBoard.getWidthForString(":Class")/2,
-                    partyFigure.getY() + partyFigure.getHeight() + 15);
-            paintBoard.drawLine(partyFigure.getX() + partyFigure.getWidth() / 2,
+            paintBoard.drawLine(partyCoordinate.getX() + partyFigure.getWidth() / 2,
                     PARTY_ROW_HEIGHT,
-                    partyFigure.getX() + partyFigure.getWidth() / 2,
+                    partyCoordinate.getX() + partyFigure.getWidth() / 2,
                     paintBoard.getHeight());
-            party.getProposedFigure().draw(paintBoard);
         }
-        paintBoard.drawLine(0,PARTY_ROW_HEIGHT,paintBoard.getWidth(),PARTY_ROW_HEIGHT);
+        paintBoard.drawLine(0, PARTY_ROW_HEIGHT, paintBoard.getWidth(), PARTY_ROW_HEIGHT);
     }
 
     @Override
