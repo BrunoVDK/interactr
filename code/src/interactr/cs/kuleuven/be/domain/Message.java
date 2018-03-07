@@ -1,5 +1,8 @@
 package interactr.cs.kuleuven.be.domain;
 
+import interactr.cs.kuleuven.be.ui.geometry.Figure;
+import interactr.cs.kuleuven.be.ui.geometry.Link;
+
 /**
  * A  class of messages. Each message has a receiving - and a sender party.
  *
@@ -16,6 +19,11 @@ public class Message extends DiagramComponent {
      */
     public boolean canHaveAsLabel(Label label) {
         return label.getLength() <= 30;
+    }
+
+    @Override
+    public Figure getProposedFigure() {
+        return new Link();
     }
 
 }

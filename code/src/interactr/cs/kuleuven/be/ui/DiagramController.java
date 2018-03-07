@@ -122,7 +122,7 @@ public class DiagramController {
      * @param party The party whose type is to be switched.
      */
     public void switchPartyType(Party party) {
-        getDiagram().changePartyType(party);
+        // getDiagram().changePartyType(party);
         getPaintBoard().refresh();
     }
 

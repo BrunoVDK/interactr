@@ -1,5 +1,8 @@
 package interactr.cs.kuleuven.be.domain;
 
+import interactr.cs.kuleuven.be.ui.geometry.Box;
+import interactr.cs.kuleuven.be.ui.geometry.Figure;
+
 /**
  * A class of parties, with a flag denoting whether
  *  or not the party is an actor.
@@ -39,4 +42,8 @@ public class Party extends DiagramComponent {
      */
     private boolean isActor;
 
+    @Override
+    public Figure getProposedFigure() {
+        return new Box();
+    }
 }

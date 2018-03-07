@@ -71,4 +71,9 @@ public class SequenceView extends DiagramView {
      */
     private static int PARTY_ROW_HEIGHT = 75;
 
+    /**
+     * The height of the party row.
+     */
+    private static int MESSAGE_ROW_HEIGHT = 30;
+
 }
