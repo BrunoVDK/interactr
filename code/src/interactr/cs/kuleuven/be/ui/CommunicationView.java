@@ -18,27 +18,27 @@ import interactr.cs.kuleuven.be.ui.geometry.Point;
 public class CommunicationView extends DiagramView {
 
     @Override
-    public DiagramComponent componentAt(Diagram diagram, int x, int y) {
-        return null;
-    }
-
-    @Override
     public void display(PaintBoard paintBoard, Diagram diagram) {
         for (Party party : diagram.getParties()) {
-            Figure partyFigure = figureForParty(party);
+            Figure partyFigure = party.getProposedFigure();
+            Point partyCoordinate = getCoordinate(party);
+            partyFigure.setX(partyCoordinate.getX());
+            partyFigure.setY(partyCoordinate.getY());
             partyFigure.draw(paintBoard);
-            paintBoard.drawString(":Class",
-                    partyFigure.getX() + partyFigure.getWidth()/2 - paintBoard.getWidthForString(":Class")/2,
-                    partyFigure.getY() + partyFigure.getHeight() + 15);
         }
     }
 
     @Override
     public void addParty(Diagram diagram, Party party, int x, int y) throws InvalidAddException {
         for (Party p : coordinates.keySet())
-            if (figureForParty(p).encloses(x,y))
+            if (p.getProposedFigure().encloses(x,y))
                 throw new InvalidAddException(p);
         coordinates = coordinates.plus(party, new Point(x,y));
+    }
+
+    @Override
+    public DiagramComponent selectableComponentAt(Diagram diagram, int x, int y) {
+        return null;
     }
 
     @Override

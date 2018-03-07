@@ -8,7 +8,7 @@ import interactr.cs.kuleuven.be.ui.PaintBoard;
  * @author Team 25
  * @version 1.0
  */
-public class TextBox extends Figure {
+public class TextBox extends LabeledFigure {
 
     /**
      * Initialize this new text box with given string value.
@@ -16,7 +16,7 @@ public class TextBox extends Figure {
      * @param string The string value for this new textbox.
      */
     public TextBox(String string) {
-        super(0,0,100, 20);
+        super();
         setString(string);
     }
 

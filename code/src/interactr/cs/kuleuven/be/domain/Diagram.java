@@ -25,12 +25,16 @@ public class Diagram {
     }
 
     /**
-     * Change the type of the given party in this diagram.
+     * Replace a party with the given party.
      *
-     * @param party The party whose type is to be changed.
+     * @param oldParty The party that is to be replaced.
+     * @param newParty The party to replace it with.
      */
-    public void changePartyType(Party party) {
-        party.setIsActor(!party.isActor());
+    public void replaceParty(Party oldParty, Party newParty) {
+        parties = parties.minus(oldParty);
+        parties = parties.plus(newParty);
+        for (Message message : messages)
+            ; // Replace all
     }
 
     /**
@@ -45,5 +49,23 @@ public class Diagram {
      * A list of parties associated with this diagram.
      */
     private PList<Party> parties = PList.<Party>empty();
+
+    /**
+     * Returns the message at the given row in this diagram.
+     *
+     * @param row The row where the message is located.
+     * @return The message in this diagram at the given row, or null if there is none.
+     */
+    public Message getMessageAtRow(int row) {
+        if (row > messages.size())
+            return null;
+        else
+            return messages.get(row);
+    }
+
+    /**
+     * The messages held by this diagram.
+     */
+    private PList<Message> messages = PList.<Message>empty();
 
 }

@@ -116,4 +116,18 @@ public class DiagramWindow extends CanvasWindow {
      */
     private EventHandler eventHandler;
 
+    /**
+     * Returns the width of this window.
+     */
+    public int getWidth() {
+        return this.panel.getWidth();
+    }
+
+    /**
+     * Returns the height of this window.
+     */
+    public int getHeight() {
+        return this.panel.getHeight();
+    }
+
 }

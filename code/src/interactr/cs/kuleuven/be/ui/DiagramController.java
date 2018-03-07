@@ -1,7 +1,6 @@
 package interactr.cs.kuleuven.be.ui;
 
-import interactr.cs.kuleuven.be.domain.Diagram;
-import interactr.cs.kuleuven.be.domain.Party;
+import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddException;
 
 import java.lang.reflect.Array;
@@ -102,7 +101,7 @@ public class DiagramController {
      * @throws InvalidAddException The given coordinates point to a component already.
      */
     public void addPartyAt(int x, int y) throws InvalidAddException {
-        Party newParty = new Party(false);
+        Party newParty = new ActorParty();
         try {
             getActiveView().addParty(getDiagram(), newParty, x, y);
             getDiagram().addParty(newParty);
@@ -122,9 +121,47 @@ public class DiagramController {
      * @param party The party whose type is to be switched.
      */
     public void switchPartyType(Party party) {
-        getDiagram().changePartyType(party);
+        Party newParty;
+        if (party instanceof ActorParty)
+            newParty = new ObjectParty(party);
+        else
+            newParty = new ActorParty(party);
         getPaintBoard().refresh();
     }
+
+    /**
+     * The x & y coordinates of the component.
+     *
+     * @param x The x coordinate of the component that is to be selected.
+     * @param y The y coordinate of the commponent that is to be selected.
+     */
+    public void selectComponentAt(int x, int y) {
+        DiagramComponent component = getActiveView().selectableComponentAt(getDiagram(), x, y);
+    }
+
+    /**
+     * The selected manager associated with this diagram controller.
+     */
+    private SelectionManager selectionManager = null;
+
+    /**
+     * Returns whether or not this controller is editing.
+     */
+    public boolean isEditing() {
+        return isEditing;
+    }
+
+    /**
+     * Stop editing.
+     */
+    public void endEditing() {
+
+    }
+
+    /**
+     * Registers whether or not this controller is editing.
+     */
+    private boolean isEditing = false;
 
     /**
      * Returns the diagram associated with this diagram controller.
