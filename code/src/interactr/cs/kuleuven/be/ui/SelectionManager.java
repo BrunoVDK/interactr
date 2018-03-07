@@ -86,7 +86,7 @@ public class SelectionManager {
      * @param temporaryLabel The new temporary label for the active component.
      */
     public void setTemporaryLabel(String temporaryLabel) {
-        this.temporaryLabel = temporaryLabel;
+        if (temporaryLabel != null) this.temporaryLabel = temporaryLabel;
     }
 
     /**

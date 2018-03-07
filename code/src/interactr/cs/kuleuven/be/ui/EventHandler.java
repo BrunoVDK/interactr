@@ -43,7 +43,7 @@ public class EventHandler {
             if (id == MouseEvent.MOUSE_CLICKED) {
                 switch (clickCount) {
                     case 1: // Single click
-                        // selectComponentAt(x,y);
+                        getDiagramController().selectComponentAt(x,y);
                         break;
                     case 2: // Double click
                         try {
@@ -101,6 +101,7 @@ public class EventHandler {
                         getDiagramController().abortEditing();
 
                     }else if( keyCode == KeyEvent.VK_BACK_SPACE){
+                        getDiagramController().removeLastChar();
 
                     }
                     else if(getDiagramController().isEditing()){

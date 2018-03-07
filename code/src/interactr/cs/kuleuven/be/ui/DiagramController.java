@@ -151,6 +151,7 @@ public class DiagramController {
      */
     public void selectComponentAt(int x, int y) {
         DiagramComponent component = getActiveView().selectableComponentAt(getDiagram(), x, y);
+        selectionManager.addToSelection(component);
     }
 
     public Party getPartyAt(int x,int y ){
@@ -172,12 +173,15 @@ public class DiagramController {
     }
 
     public void appendChar(char c){
-
+        selectionManager.setTemporaryLabel(selectionManager.getTemporaryLabel() + c);
     }
 
-    public boolean isEditingLabelValid(){
-        return false;
+    public void removeLastChar(){
+        String temp = selectionManager.getTemporaryLabel();
+        if(temp != "")
+        selectionManager.setTemporaryLabel(temp.substring(0,selectionManager.getTemporaryLabel().length() -1));
     }
+
 
     /**
      * The selected manager associated with this diagram controller.
