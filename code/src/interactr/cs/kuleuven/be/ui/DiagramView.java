@@ -1,9 +1,6 @@
 package interactr.cs.kuleuven.be.ui;
 
-import interactr.cs.kuleuven.be.domain.Diagram;
-import interactr.cs.kuleuven.be.domain.DiagramComponent;
-import interactr.cs.kuleuven.be.domain.Label;
-import interactr.cs.kuleuven.be.domain.Party;
+import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.purecollections.PMap;
 import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddException;
 import interactr.cs.kuleuven.be.ui.geometry.*;
@@ -34,7 +31,10 @@ public abstract class DiagramView {
      * @param y The y coordinate of the new party.
      * @throws InvalidAddException The given party cannot be added to this diagram view at the given coordinate.
      */
-    public abstract void addParty(Diagram diagram, Party party, int x, int y) throws InvalidAddException;
+    public void addParty(Diagram diagram, Party party, int x, int y) throws InvalidAddException {
+        if (!figures.containsKey(party))
+            figures = figures.plus(party, createFigureForParty(party, x, y));
+    }
 
     /**
      * Registers the given party at the given coordinate.
@@ -44,7 +44,8 @@ public abstract class DiagramView {
      * @param y The y coordinate of the party that is to be registered.
      */
     public void registerParty(Party party, int x, int y) {
-        coordinates = coordinates.plus(party, new Point(x,y));
+        if (!figures.containsKey(party))
+            figures = figures.plus(party, createFigureForParty(party, x, y));
     }
 
     /**
@@ -67,29 +68,67 @@ public abstract class DiagramView {
     public abstract String viewName();
 
     /**
-     * Returns the coordinate of the given party for this view.
-     *
-     * @param party The party whose coordinate is desired.
-     * @return The coordinate of the given party for this view, or null
-     *  if the given party has no coordinate.
+     * A hashmap containing figures of all parties in this diagram view.
      */
-    protected Point getCoordinate(Party party) {
-        Point coordinate = coordinates.get(party);
-        return (coordinate != null ? coordinate : getDefaultCoordinate());
+    protected PMap<Party, Figure> figures = PMap.<Party, Figure>empty();
+
+    /**
+     * Creates a figure for the given party at the given coordinates.
+     *
+     * @param party The party to make a figure for.
+     * @param x The x coordinate for the figure.
+     * @param y The y coordinate for the figure.
+     * @return A figure at given coordinates representing the given party.
+     */
+    protected Figure createFigureForParty(Party party, int x, int y) {
+        Figure figure = new Box();
+        Class figureType = party.proposedFigure();
+        try {
+            if (Figure.class.isAssignableFrom(figureType))
+                figure = (Figure) figureType.getConstructor().newInstance();
+        } catch (Exception e) {
+            System.out.println("Invalid figure type given in custom party class.");
+        }
+        figure.setX(x);
+        figure.setY(y);
+        figure.setWidth(30);
+        figure.setHeight(70);
+        figure.setLabel(party.getLabel());
+        return figure;
     }
 
     /**
-     * Returns the default coordinate for new parties added to this view.
+     * Returns the party at the given coordinate.
      *
-     * @return The default coordinate for new parties added to this view.
+     * @param x The x coordinate to look at.
+     * @param y The y coordinate to look at.
+     * @return The party at the given coordinate.
      */
-    protected Point getDefaultCoordinate() {
-        return new Point(0,0);
+    public Party getPartyAt(int x, int y) {
+        for (Party p : figures.keySet())
+            if (figures.get(p).isHit(x,y))
+                return p;
+        return null;
     }
 
-    /**
-     * A hashmap containing coordinates of all parties in this diagram view.
-     */
-    protected PMap<Party, Point> coordinates = PMap.<Party, Point>empty();
+    public Message getMessageAt(int x, int y) {
+
+    }
+
+    protected Link linkForMessage(Message message) {
+        Link link = new Arrow();
+        Class linkType = message.proposedLinkType();
+        try {
+            if (Link.class.isAssignableFrom(linkType))
+                link = (Link) linkType.getConstructor().newInstance();
+        } catch (Exception e) {
+            System.out.println("Invalid figure type given in custom party class.");
+        }
+        Party sender = message.getSender(), receiver = message.getReceiver();
+        Figure senderFigure = figures.get(sender), receiverFigure = figures.get(receiver);
+        
+        link.setLabel(message.getLabel());
+        return link;
+    }
 
 }

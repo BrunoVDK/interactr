@@ -8,14 +8,14 @@ import interactr.cs.kuleuven.be.ui.PaintBoard;
  * @author Team 25
  * @version 1.0
  */
-public class StickFigure extends LabeledFigure {
+public class StickFigure extends Figure {
 
     /**
      * Initialize this new stick figure with zero coordinates, a width of 100,
      *  a height of 200 and an empty label.
      */
     public StickFigure() {
-        super(0, 0, 30, 70, ":Class");
+        super(0, 0, 30, 70);
     }
 
     @Override
