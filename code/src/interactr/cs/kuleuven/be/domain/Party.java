@@ -43,7 +43,7 @@ public class Party extends DiagramComponent {
     @Override
     public boolean canHaveAsLabel(String label) {
         boolean validCharacters = false;
-
+        
         return (super.canHaveAsLabel(label) && validCharacters);
     }
 
