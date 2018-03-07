@@ -40,4 +40,11 @@ public class Party extends DiagramComponent {
         return Box.class;
     }
 
+    @Override
+    public boolean canHaveAsLabel(String label) {
+        boolean validCharacters = false;
+
+        return (super.canHaveAsLabel(label) && validCharacters);
+    }
+
 }

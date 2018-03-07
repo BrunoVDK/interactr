@@ -33,7 +33,7 @@ public abstract class DiagramView {
      */
     public void addParty(Diagram diagram, Party party, int x, int y) throws InvalidAddPartyException {
         if (!figures.containsKey(party))
-            figures = figures.plus(party, createFigureForParty(party, x, y));
+            figures = figures.plus(party, figureForParty(party, x, y));
     }
 
     /**
@@ -45,7 +45,7 @@ public abstract class DiagramView {
      */
     public void registerParty(Party party, int x, int y) {
         if (!figures.containsKey(party))
-            figures = figures.plus(party, createFigureForParty(party, x, y));
+            figures = figures.plus(party, figureForParty(party, x, y));
     }
 
     /**
@@ -80,7 +80,7 @@ public abstract class DiagramView {
      * @param y The y coordinate for the figure.
      * @return A figure at given coordinates representing the given party.
      */
-    protected Figure createFigureForParty(Party party, int x, int y) {
+    protected Figure figureForParty(Party party, int x, int y) {
         Figure figure = new Box();
         Class figureType = party.proposedFigure();
         try {
@@ -113,17 +113,6 @@ public abstract class DiagramView {
 
     public void addMessage(int fromX, int fromY, int toX, int toY) {
 
-    }
-
-    /**
-     * Returns the message at the given coordinate.
-     *
-     * @param x
-     * @param y
-     * @return
-     */
-    public Message getMessageAt(int x, int y) {
-        return null;
     }
 
     protected Link linkForMessage(Message message) {
