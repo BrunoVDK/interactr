@@ -21,6 +21,16 @@ public class SelectionManager {
     }
 
     /**
+     * Sets the active component for this selection manager to the given one.
+     *
+     * @param activeComponent The new active component for this manager.
+     */
+    public void setActiveComponent(DiagramComponent activeComponent) {
+        unselectAll();
+        this.activeComponent = activeComponent;
+    }
+
+    /**
      * Registers the active component for this selection manager.
      */
     private DiagramComponent activeComponent;
@@ -33,8 +43,7 @@ public class SelectionManager {
      */
     public void addToSelection(DiagramComponent component) {
         if (isSelected(component)) {
-            unselectAll();
-            this.activeComponent = component;
+            setActiveComponent(component);
             setTemporaryLabel("");
         }
         else
@@ -84,26 +93,5 @@ public class SelectionManager {
      * The temporary label for the active component of this manager.
      */
     private String temporaryLabel = "";
-
-    /**
-     * Returns of the system is in editing mode or not
-     * @return isEditMode
-     */
-    public boolean isEditMode() {
-        return isEditMode;
-    }
-
-    /**
-     * Sets the editing mode to the given boolean
-     * @param editMode
-     */
-    public void setEditMode(boolean editMode) {
-        isEditMode = editMode;
-    }
-
-    /**
-     * A boolean that knows if the system is editing a Diagram component
-     */
-    private boolean isEditMode;
 
 }

@@ -108,17 +108,26 @@ public class DiagramController {
                 if (view != getActiveView())
                     view.registerParty(newParty, x, y);
             getPaintBoard().refresh();
+            selectionManager.setActiveComponent(newParty);
         }
         catch (InvalidAddPartyException addException) {
             throw addException;
         }
-        selectionManager.setEditMode(true);
     }
 
     /**
      * A method that returns the editing mode of the selectionManager
      */
-    public boolean isEditing(){ return selectionManager.isEditMode();};
+    public boolean isEditing(){ return selectionManager.getActiveComponent() != null;};
+
+    /**
+     * A method that terminates the editing
+     */
+    public void abortEditing(){
+        if(selectionManager.getActiveComponent() != null){
+            selectionManager.getActiveComponent().setLabel(selectionManager.getTemporaryLabel());
+        }
+    }
 
     /**
      * Switch the type of the given party.
@@ -162,8 +171,12 @@ public class DiagramController {
 
     }
 
-    public void editLabel(){
+    public void appendChar(char c){
 
+    }
+
+    public boolean isEditingLabelValid(){
+        return false;
     }
 
     /**

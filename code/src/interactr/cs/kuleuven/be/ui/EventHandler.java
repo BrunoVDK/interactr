@@ -95,9 +95,16 @@ public class EventHandler {
                 case KeyEvent.KEY_TYPED:
                     if (keyChar == KeyEvent.VK_TAB && !getDiagramController().isEditing())
                         getDiagramController().nextView();
-                    else if (keyChar == KeyEvent.VK_DELETE) {
+                    else if (keyChar == KeyEvent.VK_DELETE && !getDiagramController().isEditing()) {
 
-                    }else if(getDiagramController().isEditing()){
+                    }else if (keyCode == KeyEvent.VK_ENTER){
+                        getDiagramController().abortEditing();
+
+                    }else if( keyCode == KeyEvent.VK_BACK_SPACE){
+
+                    }
+                    else if(getDiagramController().isEditing()){
+                        getDiagramController().appendChar(keyChar);
 
                     }
                     break;
