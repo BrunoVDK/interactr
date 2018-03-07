@@ -55,6 +55,15 @@ public class Diagram {
     private PList<Party> parties = PList.<Party>empty();
 
     /**
+     * Returns a list of all messages in this diagram.
+     *
+     * @return A list with all the messages in this diagram.
+     */
+    public PList<Message> getMessages() {
+        return messages;
+    }
+
+    /**
      * Returns the message at the given row in this diagram.
      *
      * @param row The row where the message is located.
