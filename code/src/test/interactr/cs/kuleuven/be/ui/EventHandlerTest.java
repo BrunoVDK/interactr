@@ -2,32 +2,35 @@ package test.interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.ui.DiagramController;
 import interactr.cs.kuleuven.be.ui.EventHandler;
-import junit.framework.TestCase;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-class EventHandlerTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+class EventHandlerTest {
 
     private EventHandler eventHandler;
 
-    @Before
+    @BeforeEach
     protected void setUp() {
         eventHandler = new EventHandler(new DiagramController());
     }
 
-    @After
+    @AfterEach
     protected void tearDown() {
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test
     void handleMouseEventWithNegativeX() throws Exception {
-        eventHandler.handleMouseEvent( 0, - 1, 1, 1);
+        assertThrows(IllegalArgumentException.class, () ->
+        eventHandler.handleMouseEvent( 0, - 1, 1, 1));
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test
     void handMouseEventWithNegativeY() throws Exception{
-        eventHandler.handleMouseEvent( 0, - 1, 1, 1);
+        assertThrows(IllegalArgumentException.class, () ->
+        eventHandler.handleMouseEvent( 0, - 1, 1, 1));
     }
 
 
