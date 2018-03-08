@@ -156,6 +156,13 @@ public class DiagramController {
         selectionManager.addToSelection(component);
     }
 
+    /**
+     * A method that returns the party in the active view on the given location
+     * @param x the x coordinate where to look
+     * @param y the y coordinate where to look
+     * @return getActiveView().getPartyAt(x,y);
+     *      the party in the active view on the given location
+     */
     public Party getPartyAt(int x,int y ){
         return getActiveView().getPartyAt(x,y);
     }
@@ -170,14 +177,29 @@ public class DiagramController {
         getActiveView().moveParty(party,x,y);
     }
 
+    /**
+     * A method that adds a message from a start location to an end location
+     * @param xStart x coordinate of the start location
+     * @param yStart y coordinate of the start location
+     * @param xEnd x coordinate of the end location
+     * @param yEnd y coordinate of the end location
+     */
     public void addMessageFrom(int xStart, int yStart, int xEnd, int yEnd){
 
     }
 
+    /**
+     * A method that appends a char to the temporary label
+     * @param c
+     *      the character to append
+     */
     public void appendChar(char c){
         selectionManager.setTemporaryLabel(selectionManager.getTemporaryLabel() + c);
     }
 
+    /**
+     * A method remove the last character of the temporary label
+     */
     public void removeLastChar(){
         String temp = selectionManager.getTemporaryLabel();
         if(temp != "")
@@ -225,6 +247,7 @@ public class DiagramController {
      * Registers the paint board associated with this controller.
      */
     private PaintBoard paintBoard;
+
 
     public static void main(String[] args) { // No documentation
         new DiagramController();

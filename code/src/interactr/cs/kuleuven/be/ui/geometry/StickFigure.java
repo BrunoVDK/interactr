@@ -18,6 +18,11 @@ public class StickFigure extends Figure {
         super(0, 0, 30, 70);
     }
 
+    /**
+     * Draws a stick figure
+     *
+     * @param paintBoard The paint board on which to draw.
+     */
     @Override
     public void draw(PaintBoard paintBoard) {
 

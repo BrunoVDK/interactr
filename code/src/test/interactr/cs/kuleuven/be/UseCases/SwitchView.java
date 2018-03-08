@@ -4,7 +4,7 @@ import interactr.cs.kuleuven.be.ui.DiagramController;
 import interactr.cs.kuleuven.be.ui.DiagramWindow;
 import interactr.cs.kuleuven.be.ui.EventHandler;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
-//import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 
@@ -13,7 +13,7 @@ public class SwitchView {
 
     private DiagramWindow diagramWindow = new DiagramWindow();
 
-    //@Test
+    @Test
     public void switchViewTest() throws NoSuchFieldException, IllegalAccessException {
         diagramWindow.setEventHandler(new EventHandler(new DiagramController()));
         diagramWindow.setPaintBoard(new PaintBoard(diagramWindow, diagramWindow.getEventHandler().getDiagramController()));

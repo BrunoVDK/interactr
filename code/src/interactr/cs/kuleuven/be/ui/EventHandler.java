@@ -134,7 +134,13 @@ public class EventHandler {
     private DiagramController diagramController;
 
 
+    /**
+     * A global variable that holds the focused party, which is a party after a MOUSE.PRESS
+     */
     private Party focusedParty = null;
+    /**
+     * A global variable that holds a coordinate of the last Mouse.PRESS
+     */
     private Point focusedCoordinate = null;
 
 }

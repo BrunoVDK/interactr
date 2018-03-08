@@ -26,6 +26,10 @@ public class ActorParty extends Party {
 
     }
 
+    /**
+     * The class that represents the model of this class
+     * @return StickFigure.class;
+     */
     public Class proposedFigure() {
         return StickFigure.class;
     }

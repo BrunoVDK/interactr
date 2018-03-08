@@ -54,44 +54,88 @@ public class Link {
         return isLabelHit(x, y);
     }
 
+    /**
+     * Returns the startX of this class
+     * @return start X
+     */
     public int getStartX() {
         return startX;
     }
 
+    /**
+     * Sets the startX of this class to the given int
+     * @param startX the new x coordinate
+     */
     public void setStartX(int startX) {
         this.startX = startX;
     }
 
+    /**
+     * The x coordinate where the links starts
+     */
     private int startX;
 
+    /**
+     * Returns the startY of this class
+     * @return startY
+     */
     public int getStartY() {
         return startY;
     }
 
+    /**
+     * Sets the startY of this class to the given int
+     * @param startY the new y coordinate
+     */
     public void setStartY(int startY) {
         this.startY = startY;
     }
 
+    /**
+     * The y coordinate where the links starts
+     */
     private int startY;
 
+    /**
+     * Returns the endX of this class
+     * @return endX
+     */
     public int getEndX() {
         return endX;
     }
 
+    /**
+     * Sets the endX of this class to the given int
+     * @param endX the new x coordinate
+     */
     public void setEndX(int endX) {
         this.endX = endX;
     }
 
+    /**
+     * The x coordinate where the link ends
+     */
     private int endX;
 
+    /**
+     * Returns the endY of this class
+     * @return endY
+     */
     public int getEndY() {
         return endY;
     }
 
+    /**
+     * Sets the endY of this class to the given int
+     * @param endY the new y coordinate
+     */
     public void setEndY(int endY) {
         this.endY = endY;
     }
 
+    /**
+     * The x coordinate where the link ends
+     */
     private int endY;
 
     /**

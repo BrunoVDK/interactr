@@ -68,7 +68,7 @@ public class Diagram {
     }
 
     public void deleteMessage(Message message) {
-        // TODO
+        // TODO Moet dit wel want message verwijderd zijn eigen denk ik???
     }
 
     /**
