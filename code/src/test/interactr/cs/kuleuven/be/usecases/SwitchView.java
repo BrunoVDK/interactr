@@ -14,9 +14,11 @@ public class SwitchView {
     private DiagramWindow diagramWindow = new DiagramWindow();
 
     @Test
-    public void switchViewTest() throws NoSuchFieldException, IllegalAccessException {
+    public void switchViewTest() throws InterruptedException, NoSuchFieldException, IllegalAccessException {
         diagramWindow.setEventHandler(new EventHandler(new DiagramController()));
         diagramWindow.setPaintBoard(new PaintBoard(diagramWindow, diagramWindow.getEventHandler().getDiagramController()));
+        // weird race condition idk
+        Thread.sleep(500);
         DiagramWindow.replayRecording("tabkey.txt", diagramWindow);
         Field f = diagramWindow.getEventHandler().getDiagramController().getClass().getDeclaredField("activeViewIndex"); //NoSuchFieldException
         f.setAccessible(true);
