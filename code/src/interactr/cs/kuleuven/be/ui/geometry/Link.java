@@ -14,7 +14,7 @@ public class Link extends Model {
      * Initialize this new figure with zero coordinates and a width and height of 20.
      */
     public Link() {
-        this(0, 0, 20, 20);
+        this(100, 200, 300, 200);
     }
 
     /**

@@ -24,7 +24,7 @@ public class SwitchPartyType {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        DiagramWindow.replayRecording("doubleClick.txt", diagramWindow);
+        DiagramWindow.replayRecording("addPartyLegalLabel.txt", diagramWindow);
 
     }
 
@@ -37,7 +37,8 @@ public class SwitchPartyType {
 
     @Test
     void SwitchFromActorToObjectSequence(){
-        DiagramWindow.replayRecording("doubleClickTwice.txt", diagramWindow);
+        DiagramWindow.replayRecording("doubleClick.txt", diagramWindow);
+        DiagramWindow.replayRecording("doubleClick.txt", diagramWindow);
         assert (diagramWindow.getEventHandler().getDiagramController().getDiagram().getParties().getFirst() instanceof ObjectParty);
 
     }

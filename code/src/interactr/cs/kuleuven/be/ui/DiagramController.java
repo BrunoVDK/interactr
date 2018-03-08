@@ -82,7 +82,7 @@ public class DiagramController {
      *
      * @return The diagram view of this controller that's currently active.
      */
-    private DiagramView getActiveView() {
+    public DiagramView getActiveView() {
         return views.get(activeViewIndex);
     }
 

@@ -10,6 +10,7 @@ import interactr.cs.kuleuven.be.ui.PaintBoard;
  */
 public class Arrow extends Link {
 
+
     @Override
     public void draw(PaintBoard paintBoard) {
 
@@ -17,9 +18,25 @@ public class Arrow extends Link {
         paintBoard.drawLine(getStartX(), getStartY(), getEndX(), getEndY());
 
         // Arrow head
-        paintBoard.drawLine(getEndX(), getEndY(), getEndX() - 5, getEndY());
-        paintBoard.drawLine(getEndX(), getEndY(), getEndX(), getEndY() - 5);
+        int d = 5;
+        int xDif = getEndX() -getStartX();
+        int yDif = getEndY() - getStartY();
+        double l = Math.sqrt(Math.pow(xDif,2) + Math.pow(yDif , 2));
+
+        double n = Math.tan(Math.PI/4);
+
+
+        double Cx = getEndX() - (((xDif - ( n* yDif)) / Math.sqrt(1 + Math.pow(n,2))) * d/l);
+        double Cy = getEndY() - (((yDif + ( n* xDif)) / Math.sqrt(1 + Math.pow(n,2))) * d/l);
+        n *= -1;
+
+        double Dx = getEndX() - (((xDif - ( n* yDif)) / Math.sqrt(1 + Math.pow(n,2))) * d/l);
+        double Dy = getEndY() - (((yDif + ( n* xDif)) / Math.sqrt(1 + Math.pow(n,2))) * d/l);
+
+        paintBoard.drawLine((int) Math.floor(Cx),(int) Math.floor(Cy),getEndX(),getEndY());
+        paintBoard.drawLine((int) Math.floor(Dx),(int) Math.floor(Dy),getEndX(),getEndY());
 
     }
+
 
 }
