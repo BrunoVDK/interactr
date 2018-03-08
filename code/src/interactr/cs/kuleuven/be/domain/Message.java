@@ -49,16 +49,6 @@ public class Message extends DiagramComponent {
     private Party receiver;
 
     /**
-     * Checks whether or not the given label is a valid label for this message.
-     *
-     * @param label The label whose validity is to be checked.
-     * @return True if and only if the given label has a length of at most 30 characters.
-     */
-    public boolean canHaveAsLabel(Label label) {
-        return label.getLength() <= 30;
-    }
-
-    /**
      * Returns a proposal link type for drawing this message.
      *
      * @return A link type for drawing this message.
@@ -67,10 +57,11 @@ public class Message extends DiagramComponent {
         return Arrow.class;
     }
 
-    /**
-     * Deletes itself from the given diagram
-     * @param diagram The diagram from which this component should be deleted.
-     */
+    @Override
+    public boolean canHaveAsLabel(String label) {
+        return label.length() <= 30;
+    }
+
     @Override
     public void delete(Diagram diagram) {
         diagram.deleteMessage(this);

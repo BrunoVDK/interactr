@@ -20,10 +20,10 @@ public class Link {
     /**
      * Initialize this new link with given start coordinate and end coordinate.
      *
-     * @param startX
-     * @param startY
-     * @param endX
-     * @param endY
+     * @param startX The start x coordinate for this new linke.
+     * @param startY The start y coordinate for this new linke.
+     * @param endX The end x coordinate for this new linke.
+     * @param endY The end y coordinate for this new linke.
      */
     public Link(int startX, int startY, int endX, int endY) {
         setStartX(startX);

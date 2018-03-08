@@ -53,6 +53,7 @@ public class SequenceView extends DiagramView {
     @Override
     public DiagramComponent selectableComponentAt(Diagram diagram, int x, int y) {
         // todo
+        return null;
     }
 
     @Override
