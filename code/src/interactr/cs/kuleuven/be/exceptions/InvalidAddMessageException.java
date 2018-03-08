@@ -1,6 +1,4 @@
-package interactr.cs.kuleuven.be.ui.exceptions;
-
-import interactr.cs.kuleuven.be.domain.Party;
+package interactr.cs.kuleuven.be.exceptions;
 
 /**
  * A class of exceptions for use when attempting to add a message at an invalid position

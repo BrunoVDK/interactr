@@ -1,6 +1,5 @@
 package interactr.cs.kuleuven.be.domain;
 
-import interactr.cs.kuleuven.be.ui.exceptions.InvalidLabelException;
 import interactr.cs.kuleuven.be.ui.geometry.Box;
 
 /**

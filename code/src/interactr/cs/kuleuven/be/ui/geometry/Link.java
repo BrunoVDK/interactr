@@ -138,4 +138,32 @@ public class Link extends Model {
         return super.getLabelBounds();
     }
 
+    /**
+     * Checks whether this link crosses the given one.
+     *
+     * @param other The other link to check with.
+     * @return True if and only if this link crosses the given one.
+     */
+    public boolean crosses(Link other) {
+        int o1 = orientation(getStartX(), getStartY(), getEndX(), getEndY(), other.getStartX(), other.getStartY());
+        int o2 = orientation(getStartX(), getStartY(), getEndX(), getEndY(), other.getEndX(), other.getEndY());
+        int o3 = orientation(other.getStartX(), other.getStartY(), other.getEndX(), other.getEndY(), getStartX(), getStartY());
+        int o4 = orientation(other.getStartX(), other.getStartY(), other.getEndX(), other.getEndY(), getEndX(), getEndY());
+        if (o1 != o2 && o3 != o4)
+            return true;
+        return false;
+    }
+
+    /**
+     * Convenience method for checking line intersections.
+     *
+     * @note https://stackoverflow.com/questions/25830932/how-to-find-if-two-line-segments-intersect-or-not-in-java
+     */
+    private static int orientation(int x1, int y1, int x2, int y2, int x3, int y3) {
+        double val = (y2 - y1) * (x3 - x2) - (x2 - x1) * (y3 - y2);
+        if (val == 0.0)
+            return 0;
+        return (val > 0 ? 1 : 2);
+    }
+
 }

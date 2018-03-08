@@ -1,7 +1,7 @@
 package test.interactr.cs.kuleuven.be.domain;
 
 import interactr.cs.kuleuven.be.domain.ObjectParty;
-import interactr.cs.kuleuven.be.ui.exceptions.InvalidLabelException;
+import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

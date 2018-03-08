@@ -1,7 +1,6 @@
 package interactr.cs.kuleuven.be.UseCases;
 
 import interactr.cs.kuleuven.be.ui.*;
-import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddPartyException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
