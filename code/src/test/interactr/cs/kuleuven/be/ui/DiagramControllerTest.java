@@ -15,15 +15,15 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-public class DiagramControllerTest {
+class DiagramControllerTest {
 
-    DiagramController diagramController;
-    Diagram diagram;
-    ArrayList<DiagramView> views;
-    PaintBoard paintBoard;
+    private DiagramController diagramController;
+    private Diagram diagram;
+    private ArrayList<DiagramView> views;
+    private PaintBoard paintBoard;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         diagram = mock(Diagram.class);
         views = new ArrayList<>();
         views.add(mock(DiagramView.class));
@@ -34,31 +34,26 @@ public class DiagramControllerTest {
     }
 
     @Test
-    public void testGetPaintboard() {
-        assert(diagramController.getPaintBoard() == paintBoard);
-    }
-
-    @Test
-    public void testSetPaintBoard() {
+    void testSetPaintBoard() {
         PaintBoard paintBoard = mock(PaintBoard.class);
         diagramController.setPaintBoard(paintBoard);
         assert(diagramController.getPaintBoard() == paintBoard);
     }
 
     @Test
-    public void testDiagram() {
+    void testDiagram() {
         assert(diagramController.getDiagram() == diagram);
     }
 
     @Test
-    public void testView() {
+    void testView() {
         diagramController.nextView();
         diagramController.displayView();
         verify(views.get(1)).display(diagramController.getPaintBoard(),diagram);
     }
 
     @Test
-    public void testAddParty() {
+    void testAddParty() {
         diagramController.addPartyAt(5,5);
         verify(views.get(0)).addParty(eq(diagram),argThat(x -> true),eq(5),eq(5));
         verify(views.get(1)).registerParty(argThat(x -> true),eq(5),eq(5));

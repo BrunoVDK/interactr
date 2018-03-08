@@ -2,23 +2,35 @@ package test.interactr.cs.kuleuven.be.domain;
 
 import interactr.cs.kuleuven.be.domain.ActorParty;
 import interactr.cs.kuleuven.be.ui.exceptions.InvalidLabelException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ActorTest {
 
-    @Before
-    protected void setUp() {
+    @BeforeEach
+    void setUp() {
     }
 
-    @After
-    protected void tearDown() {
+    @AfterEach
+    void tearDown() {
     }
 
-    @Test(expected=InvalidLabelException.class)
-    void constructorTestValid() throws Exception {
-        ActorParty party = new ActorParty();
+    @Test
+    void constructorTestInvalid() {
+        assertThrows(InvalidLabelException.class, () ->
+        {ActorParty party = new ActorParty("no");});
+    }
+
+    @Test
+    void constructorTestValid() {
+        try {
+            new ActorParty("some:Actor");
+        } catch(InvalidLabelException e) {
+            assert(false);
+        }
     }
 
 }

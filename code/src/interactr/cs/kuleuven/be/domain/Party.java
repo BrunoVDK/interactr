@@ -58,7 +58,6 @@ public class Party extends DiagramComponent {
         }
         else
             validCharacters = false;
-        System.out.println(label + (validCharacters ? "ok" : "nok"));
         return (validCharacters && super.canHaveAsLabel(label));
     }
 

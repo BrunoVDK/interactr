@@ -218,7 +218,7 @@ public abstract class DiagramView {
             if (Link.class.isAssignableFrom(linkType))
                 link = (Link) linkType.getConstructor().newInstance();
         } catch (Exception e) {
-            System.out.println("Invalid link type given in custom message class.");
+            System.err.println("Invalid link type given in custom message class.");
         }
         Party sender = message.getSender(), receiver = message.getReceiver();
         Figure senderFigure = figures.get(sender), receiverFigure = figures.get(receiver);

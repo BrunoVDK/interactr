@@ -16,6 +16,18 @@ import interactr.cs.kuleuven.be.ui.geometry.Figure;
  */
 public class CommunicationView extends DiagramView {
 
+    @Override
+    public void display(PaintBoard paintBoard, Diagram diagram,SelectionManager selectionManager) {
+        for (Party party : diagram.getParties()) {
+            Figure partyFigure = figures.get(party);
+            partyFigure.draw(paintBoard);
+        }
+    }
+
+    @Override
+    public DiagramComponent selectableComponentAt(Diagram diagram, int x, int y) {
+        return null;
+    }
 
     @Override
     public String viewName() {
