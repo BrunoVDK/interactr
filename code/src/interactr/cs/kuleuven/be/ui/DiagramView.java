@@ -6,6 +6,7 @@ import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.*;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * An abstract interface for diagram views. Diagram views can display diagrams in
@@ -48,7 +49,7 @@ public abstract class DiagramView {
     /**
      * Adds the given party to this view at the given coordinates.
      *
-     * @param diagram The diagram the party is gonna be addded to.
+     * @param diagram The diagram the party is gonna be added to.
      * @param party The party that is to be added.
      * @param x The x coordinate of the new party.
      * @param y The y coordinate of the new party.
@@ -238,6 +239,34 @@ public abstract class DiagramView {
         link.setEndY(receiverFigure.getY() + receiverFigure.getHeight()/2);
         link.setLabel(message.getLabel());
         return link;
+    }
+
+    public abstract boolean canAddMessage(Party sender, Party receiver, int y);
+
+    public void initializeCallStack(Party sender, Party receiver, int y){}
+
+    public ArrayList<MessageY> getMessagesOnYCo(){return null;}
+
+    public void updateCallStack(Party sender, Party receiver, int y){}
+
+    public void setOffSet(int height){};
+
+    public class MessageY{
+        private Message m;
+        private int y;
+
+        public MessageY(Message m , int y){
+            this.m = m;
+            this.y = y;
+        }
+
+        public int getY(){
+            return this.y;
+        }
+        public Message getMessage(){
+            return m;
+        }
+
     }
 
 }
