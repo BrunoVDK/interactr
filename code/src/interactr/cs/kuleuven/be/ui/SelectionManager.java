@@ -46,7 +46,7 @@ public class SelectionManager {
             setActiveComponent(component);
             setTemporaryLabel("");
         }
-        else
+        else if (component != null)
             selection = selection.plus(component);
     }
 

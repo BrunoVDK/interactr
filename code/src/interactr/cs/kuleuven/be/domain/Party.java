@@ -54,9 +54,6 @@ public class Party extends DiagramComponent {
         boolean validCharacters = true;
         String[] parts = label.split(":");
         if (parts.length == 2) {
-            // Not alphanumeric
-            if (!parts[0].matches("[A-Za-z0-9]+") || !parts[1].matches("[A-Za-z0-9]+"))
-                validCharacters = false;
             // Instance doesn't start with lowercase letter
             if (parts[0].length() != 0 && (!Character.isLowerCase(parts[0].charAt(0)) || !Character.isLetter(parts[0].charAt(0))))
                 validCharacters = false;

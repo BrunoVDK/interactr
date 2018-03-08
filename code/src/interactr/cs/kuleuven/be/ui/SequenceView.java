@@ -6,6 +6,8 @@ import interactr.cs.kuleuven.be.domain.Party;
 import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.Figure;
 
+import java.awt.*;
+
 /**
  * A class of sequence diagram views. Sequence diagram views display diagrams
  *  as a composite of parties with messages sent between them.
@@ -27,8 +29,13 @@ public class SequenceView extends DiagramView {
     @Override
     public void display(PaintBoard paintBoard, Diagram diagram, SelectionManager selectionManager) {
         for (Party party : diagram.getParties()) {
+            if (selectionManager.isSelected(party))
+                paintBoard.setColor(Color.BLUE);
+            else
+                paintBoard.setColor(Color.BLACK);
             Figure partyFigure = figures.get(party);
             partyFigure.draw(paintBoard);
+            paintBoard.setColor(Color.BLACK);
             paintBoard.drawLine(partyFigure.getX() + partyFigure.getWidth() / 2,
                     PARTY_ROW_HEIGHT,
                     partyFigure.getX() + partyFigure.getWidth() / 2,
