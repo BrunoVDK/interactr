@@ -27,6 +27,7 @@ public class SelectionManager {
      */
     public void setActiveComponent(DiagramComponent activeComponent) {
         unselectAll();
+        setTemporaryLabel("");
         this.activeComponent = activeComponent;
     }
 
@@ -83,10 +84,13 @@ public class SelectionManager {
     /**
      * Sets the temporary label for the active component to the given one.
      *
-     * @param temporaryLabel The new temporary label for the active component.
+     * @param label The new temporary label for the active component.
+     * @throws IllegalArgumentException If the given label is null.
      */
-    public void setTemporaryLabel(String temporaryLabel) {
-        if (temporaryLabel != null) this.temporaryLabel = temporaryLabel;
+    public void setTemporaryLabel(String label) {
+        if (label == null)
+            throw new IllegalArgumentException("Invalid temporary label (null).");
+        this.temporaryLabel = label;
     }
 
     /**

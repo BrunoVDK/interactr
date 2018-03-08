@@ -33,19 +33,13 @@ public class Figure extends Model {
         setHeight(height);
     }
 
-    /**
-     * Checks whether or not the given coordinate 'hits' this figure.
-     *
-     * @param x The x coordinate to check with.
-     * @param y The y coordinate to check with.
-     * @return True if and only if the given coordinate lies within the confines of this
-     *  figure's bounds.
-     */
+    @Override
     public boolean isHit(int x, int y) {
-        return (getX() <= x
+        boolean encloses = (getX() <= x
                 && getY() <= y
                 && x <= getX() + getWidth()
                 && y <= getY() + getHeight());
+        return encloses || isLabelHit(x, y);
     }
 
     /**

@@ -2,8 +2,10 @@ package interactr.cs.kuleuven.be.ui.geometry;
 
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 
+import java.awt.*;
+
 /**
- * A class of basic geometrical figures.
+ * A class of models for drawing. Each model has a label.
  *
  * @author Team 25
  * @version 1.0
@@ -33,14 +35,26 @@ public abstract class Model {
     }
 
     /**
-     * Checks whether the given coordinate 'hits' this figure's label.
+     * Checks whether or not the given coordinate 'hits' this model.
      *
      * @param x The x coordinate to check with.
      * @param y The y coordinate to check with.
-     * @return True if and only if the given coordinate is enclosed by this figure's label.
+     * @return True if and only if the given coordinate lies within the confines of this
+     *  model's bounds.
+     */
+    public boolean isHit(int x, int y) {
+        return isLabelHit(x, y);
+    }
+
+    /**
+     * Checks whether the given coordinate 'hits' this model's label.
+     *
+     * @param x The x coordinate to check with.
+     * @param y The y coordinate to check with.
+     * @return True if and only if the given coordinate is enclosed by this model's label.
      */
     public boolean isLabelHit(int x, int y) {
-        return getLabelBounds().encloses(x, y);
+        return getLabelBounds().enclosesNegative(x, y);
     }
 
     /**
@@ -49,37 +63,50 @@ public abstract class Model {
      * @return The bounds of the label for this model.
      */
     public Rectangle getLabelBounds() {
-        return new Rectangle(0, 0, getLabel().length() * charWidth, charHeight);
+        int length = 0;
+        if (getLabel() != null)
+            length = getLabel().length();
+        return new Rectangle(0, 0, length * charWidth, charHeight);
     }
 
     /**
-     * Returns the label of this figure.
+     * Returns the label of this model.
      */
     public String getLabel() {
         return label;
     }
 
     /**
-     * Sets the label of this figure to the given value.
+     * Sets the label of this model to the given value.
      *
-     * @param label The new label value for this figure.
+     * @param label The new label value for this model.
      */
     public void setLabel(String label) {
         this.label = label;
     }
 
     /**
-     * Registers the label for this figure.
+     * Registers the label for this model.
      */
     private String label;
 
     /**
-     * Draw this figure in the given paintboard.
+     * Draw this model in the given paintboard.
      *
      * @param paintBoard The paint board on which to draw.
      */
     public void draw(PaintBoard paintBoard) {
-        // To be overridden
+        if (label != null)
+            drawLabel(paintBoard);
+    }
+
+    /**
+     * Draws this model's label in the given paintboard.
+     *
+     * @param paintBoard The board in which to draw the label.
+     */
+    protected void drawLabel(PaintBoard paintBoard) {
+        paintBoard.drawString(getLabel(), getLabelBounds().getX(), getLabelBounds().getY());
     }
 
 }

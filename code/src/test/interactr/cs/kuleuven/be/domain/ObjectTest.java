@@ -12,7 +12,7 @@ public class ObjectTest {
 
     @BeforeEach
     public void setUp() {
-        
+
     }
 
     @AfterEach
