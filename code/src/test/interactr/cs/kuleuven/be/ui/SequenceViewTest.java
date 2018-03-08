@@ -27,6 +27,12 @@ public class SequenceViewTest {
     }
 
     @Test
+    public void selectableTest() {
+        sequenceView.addParty(diagram,party,5,5);
+        assert(sequenceView.selectableComponentAt(diagram,5,5) == party);
+    }
+
+    @Test
     public void registerPartyTest() {
         sequenceView.registerParty(party,5,5);
         assert(sequenceView.getPartyAt(5,5) == party);

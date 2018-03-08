@@ -14,7 +14,7 @@ public class SwitchView {
     private DiagramWindow diagramWindow = new DiagramWindow();
 
     @Test
-    public void switchViewTest() throws NoSuchFieldException, IllegalAccessException {
+    public void switchViewTest() throws InterruptedException, NoSuchFieldException, IllegalAccessException {
         diagramWindow.setEventHandler(new EventHandler(new DiagramController()));
         diagramWindow.setPaintBoard(new PaintBoard(diagramWindow, diagramWindow.getEventHandler().getDiagramController()));
 
@@ -23,6 +23,7 @@ public class SwitchView {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         DiagramWindow.replayRecording("tabkey.txt", diagramWindow);
 
 

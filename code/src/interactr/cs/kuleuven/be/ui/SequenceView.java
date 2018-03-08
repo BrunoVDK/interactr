@@ -1,12 +1,11 @@
 package interactr.cs.kuleuven.be.ui;
 
-import interactr.cs.kuleuven.be.domain.Diagram;
-import interactr.cs.kuleuven.be.domain.DiagramComponent;
-import interactr.cs.kuleuven.be.domain.Party;
+import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.Figure;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * A class of sequence diagram views. Sequence diagram views display diagrams
@@ -33,7 +32,7 @@ public class SequenceView extends DiagramView {
     @Override
     public void display(PaintBoard paintBoard, Diagram diagram, SelectionManager selectionManager) {
         super.displayFigures(paintBoard, diagram, selectionManager);
-        paintBoard.setColor(Color.GRAY);
+        paintBoard.setColor(Color.LIGHT_GRAY);
         for (Party party : figures.keySet()) {
             Figure partyFigure = figures.get(party);
             paintBoard.drawLine(partyFigure.getX() + partyFigure.getWidth() / 2,
@@ -75,7 +74,51 @@ public class SequenceView extends DiagramView {
 
     @Override
     public void moveParty(Diagram diagram, Party party, int x, int y){
-        super.moveParty(diagram, party, x, figures.get(party).getY());
+        super.moveParty(diagram, party, x, 5);
     }
 
+    public boolean canAddMessage(Party sender, Party receiver, int y){
+
+        return true;
+    }
+
+    public ArrayList<MessageY> getMessagesOnYCo(){
+        return messagesOnYCo;
+    }
+
+    private ArrayList<MessageY> messagesOnYCo = new ArrayList<>();
+
+    public void initializeCallStack(Party sender, Party receiver, int y){
+        MessageY invoc = new MessageY(new InvocationMessage(sender, receiver), y);
+        MessageY result = new MessageY(new ResultMessage(sender, receiver), y+20);
+
+        getMessagesOnYCo().add(invoc);
+        getMessagesOnYCo().add(result);
+    }
+
+    public void updateCallStack(Party sender, Party receiver, int y){
+        Message previous = null;
+        for(int i = 0; i < getMessagesOnYCo().size(); i++){
+            if(getMessagesOnYCo().get(i).getY() > y){
+                previous = getMessagesOnYCo().get(i-1).getMessage();
+                break;
+            }
+        }
+        if(!(previous.equals(null)) && previous.getReceiver() == sender){
+            MessageY invoc = new MessageY(new InvocationMessage(sender, receiver), y);
+            MessageY result = new MessageY(new ResultMessage(sender, receiver), y+20);
+
+            getMessagesOnYCo().add(invoc);
+            getMessagesOnYCo().add(result);
+        }
+    }
+
+    private int height;
+
+    public void setOffSet(int height, int width){
+        this.height = height;
+    }
+    public int getOffSet(){
+        return 0;
+    }
 }
