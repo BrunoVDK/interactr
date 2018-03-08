@@ -1,5 +1,7 @@
 package interactr.cs.kuleuven.be.ui.geometry;
 
+import interactr.cs.kuleuven.be.ui.PaintBoard;
+
 /**
  * A class of basic geometrical figures.
  *
@@ -70,5 +72,14 @@ public abstract class Model {
      * Registers the label for this figure.
      */
     private String label;
+
+    /**
+     * Draw this figure in the given paintboard.
+     *
+     * @param paintBoard The paint board on which to draw.
+     */
+    public void draw(PaintBoard paintBoard) {
+
+    }
 
 }

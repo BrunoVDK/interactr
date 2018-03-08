@@ -34,15 +34,6 @@ public class Link extends Model {
     }
 
     /**
-     * Draw this figure in the given paintboard.
-     *
-     * @param paintBoard The paint board on which to draw.
-     */
-    public void draw(PaintBoard paintBoard) {
-
-    }
-
-    /**
      * Checks whether or not the given coordinate 'hits' this figure.
      *
      * @param x The x coordinate to check with.
