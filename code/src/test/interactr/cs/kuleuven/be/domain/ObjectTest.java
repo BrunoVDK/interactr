@@ -20,9 +20,18 @@ public class ObjectTest {
     }
 
     @Test
-    public void constructorTestValid() throws Exception {
+    public void constructorTestInvalid() {
         assertThrows(InvalidLabelException.class, () ->
-        {ObjectParty party = new ObjectParty("kzajrmazj");});
+        {new ObjectParty("kzajrmazj");});
+    }
+
+    @Test
+    public void constructorTestValid() {
+        try {
+            new ObjectParty("valid:Label");
+        } catch(InvalidLabelException e) {
+            assert(false);
+        }
     }
 
 }
