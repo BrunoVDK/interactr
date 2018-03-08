@@ -6,6 +6,7 @@ import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.*;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * An abstract interface for diagram views. Diagram views can display diagrams in
@@ -48,7 +49,7 @@ public abstract class DiagramView {
     /**
      * Adds the given party to this view at the given coordinates.
      *
-     * @param diagram The diagram the party is gonna be addded to.
+     * @param diagram The diagram the party is gonna be added to.
      * @param party The party that is to be added.
      * @param x The x coordinate of the new party.
      * @param y The y coordinate of the new party.
@@ -97,7 +98,7 @@ public abstract class DiagramView {
     }
 
     /**
-     * Returns a selectable diagram's component at given location, or null
+     * Returns a selectable diagram component at given location, or null
      *  if no component is selectable at that coordinate.
      *
      * @param diagram The diagram whose components are to be considered.
@@ -107,8 +108,47 @@ public abstract class DiagramView {
      *  or null if no such component is visible at the given coordinate.
      */
     public DiagramComponent selectableComponentAt(Diagram diagram, int x, int y) {
-        for (Party party : diagram.getParties()) {
+        for (Party party : figures.keySet()) {
             if (figureForParty(party).isLabelHit(x,y))
+                return party;
+        }
+        return null;
+    }
+
+    /**
+     * Returns the diagram component at given location, or null
+     *  if no component is present at that coordinate.
+     *
+     * @param diagram The diagram whose components are to be considered.
+     * @param x The x coordinate to look at.
+     * @param y The y coordinate to look at.
+     * @return The diagram component at given location in this view,
+     *  or null if no such component is visible at the given coordinate.
+     */
+    public DiagramComponent componentAt(Diagram diagram, int x, int y) {
+        for (Party party : diagram.getParties()) {
+            if (figureForParty(party).isHit(x,y))
+                return party;
+        }
+        return null;
+    }
+
+    /**
+     * Returns the diagram component at given location, or null
+     *  if no component is present at that coordinate.
+     *  The given excluded component, if not null, is ignored.
+     *
+     * @param diagram The diagram whose components are to be considered.
+     * @param x The x coordinate to look at.
+     * @param y The y coordinate to look at.
+     * @param excludedComponent The component to ignore when look for the component at given coordinate.
+     * @return The diagram component at given location in this view,
+     *  or null if no such component is visible at the given coordinate.
+     * @note This method can be used when looking for a place to move a certain component.
+     */
+    protected DiagramComponent componentAt(Diagram diagram, int x, int y, DiagramComponent excludedComponent) {
+        for (Party party : diagram.getParties()) {
+            if (party != excludedComponent && figureForParty(party).isHit(x,y))
                 return party;
         }
         return null;
@@ -191,13 +231,18 @@ public abstract class DiagramView {
     /**
      * A mehtod that moves the given party to the given coordinates
      *
+     * @param diagram The diagram in which to draw the label.
      * @param party The party that has te be moved
      * @param x The new absolute x coordinate of the given Party
      * @param y The new absolut y coordinate of the given Party
      */
-    public void moveParty(Party party, int x ,int y){
-        figures.get(party).setX(x);
-        figures.get(party).setY(y);
+    public void moveParty(Diagram diagram, Party party, int x ,int y) {
+        DiagramComponent component = componentAt(diagram, x, y, party);
+        if (component != null && component != party)
+            return;
+        Figure figure = figures.get(party);
+        figure.setX(x);
+        figure.setY(y);
     }
 
     /**
@@ -238,6 +283,35 @@ public abstract class DiagramView {
         link.setEndY(receiverFigure.getY() + receiverFigure.getHeight()/2);
         link.setLabel(message.getLabel());
         return link;
+
+    }
+
+    public abstract boolean canAddMessage(Party sender, Party receiver, int y);
+
+    public void initializeCallStack(Party sender, Party receiver, int y){}
+
+    public ArrayList<MessageY> getMessagesOnYCo(){return null;}
+
+    public void updateCallStack(Party sender, Party receiver, int y){}
+
+    public void setOffSet(int height){};
+
+    public class MessageY{
+        private Message m;
+        private int y;
+
+        public MessageY(Message m , int y){
+            this.m = m;
+            this.y = y;
+        }
+
+        public int getY(){
+            return this.y;
+        }
+        public Message getMessage(){
+            return m;
+        }
+
     }
 
 }

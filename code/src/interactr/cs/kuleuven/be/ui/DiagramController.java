@@ -21,7 +21,7 @@ public class DiagramController {
      *
      * @return An arraylist with a sequence - and a communication view.
      */
-    private static ArrayList<DiagramView> defaultViews() {
+    public static ArrayList<DiagramView> defaultViews() {
         ArrayList<DiagramView> views = new ArrayList<DiagramView>();
         views.add(new SequenceView());
         views.add(new CommunicationView());
@@ -118,6 +118,28 @@ public class DiagramController {
     }
 
     /**
+     * Adds a message using the given start and end coordinates of a drag session.
+     *
+     * @param x1 The start x coordinate for the session.
+     * @param y1 The start y coordinate for the session.
+     * @param x2 The end x coordinate for the session.
+     * @param y2 The end y coordinate for the session.
+     */
+    public void addMessageFrom(int x1, int y1, int x2, int y2){
+        int height = this.getPaintBoard().getHeight();
+
+        this.getActiveView().setOffSet(height);
+
+        Party sender = getPartyAt(x1,10);
+        Party receiver = getPartyAt(x2,10);
+
+        if(this.getActiveView().getMessagesOnYCo().isEmpty()) this.getActiveView().initializeCallStack(sender, receiver, y1);
+        else{
+            this.getActiveView().updateCallStack(sender, receiver, y1);
+        }
+    }
+
+    /**
      * A method that returns the editing mode of the selectionManager
      */
     public boolean isEditing() { return selectionManager.getActiveComponent() != null;};
@@ -161,6 +183,7 @@ public class DiagramController {
      */
     public void selectComponentAt(int x, int y) {
         DiagramComponent component = getActiveView().selectableComponentAt(getDiagram(), x, y);
+        //TODO Moet dit wel om toe te voegen want deze kan wel null zijn
         selectionManager.addToSelection(component);
         paintBoard.refresh();
     }
@@ -184,21 +207,10 @@ public class DiagramController {
      * @param y The new y coordinate for the party.
      */
     public void moveParty(Party party ,int x, int y){
-        getActiveView().moveParty(party,x,y);
+        getActiveView().moveParty(getDiagram(), party,x,y);
         getPaintBoard().refresh();
     }
 
-    /**
-     * Adds a message using the given start and end coordinates of a drag session.
-     *
-     * @param xStart The start x coordinate for the session.
-     * @param yStart The start y coordinate for the session.
-     * @param xEnd The end x coordinate for the session.
-     * @param yEnd The end y coordinate for the session.
-     */
-    public void addMessageFrom(int xStart, int yStart, int xEnd, int yEnd){
-
-    }
 
     /**
      * Append the given char to the current edit session.

@@ -1,5 +1,7 @@
 package interactr.cs.kuleuven.be.ui.geometry;
 
+import interactr.cs.kuleuven.be.ui.PaintBoard;
+
 /**
  * A class of dashed arrow links.
  *
@@ -8,6 +10,13 @@ package interactr.cs.kuleuven.be.ui.geometry;
  */
 public class DashedArrow extends Link {
 
+    @Override
+    public void draw(PaintBoard paintBoard) {
 
+        paintBoard.drawLine(getStartX(), getStartY(), getEndX(), getEndY());
+        paintBoard.drawLine(getEndX(), getEndY(), getEndX() + (getEndX() > getStartX() ? 5 : -5), getEndY());
+        paintBoard.drawLine(getEndX(), getEndY(), getEndX(), getEndY() + (getEndY() > getStartY() ? 5 : -5));
+
+    }
 
 }
