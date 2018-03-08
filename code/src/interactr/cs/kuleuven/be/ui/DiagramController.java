@@ -21,7 +21,7 @@ public class DiagramController {
      *
      * @return An arraylist with a sequence - and a communication view.
      */
-    private static ArrayList<DiagramView> defaultViews() {
+    public static ArrayList<DiagramView> defaultViews() {
         ArrayList<DiagramView> views = new ArrayList<DiagramView>();
         views.add(new SequenceView());
         views.add(new CommunicationView());
@@ -183,6 +183,7 @@ public class DiagramController {
      */
     public void selectComponentAt(int x, int y) {
         DiagramComponent component = getActiveView().selectableComponentAt(getDiagram(), x, y);
+        //TODO Moet dit wel om toe te voegen want deze kan wel null zijn
         selectionManager.addToSelection(component);
         paintBoard.refresh();
     }
