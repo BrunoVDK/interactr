@@ -97,7 +97,7 @@ public abstract class DiagramView {
     }
 
     /**
-     * Returns a selectable diagram's component at given location, or null
+     * Returns a selectable diagram component at given location, or null
      *  if no component is selectable at that coordinate.
      *
      * @param diagram The diagram whose components are to be considered.
@@ -107,8 +107,26 @@ public abstract class DiagramView {
      *  or null if no such component is visible at the given coordinate.
      */
     public DiagramComponent selectableComponentAt(Diagram diagram, int x, int y) {
-        for (Party party : diagram.getParties()) {
+        for (Party party : figures.keySet()) {
             if (figureForParty(party).isLabelHit(x,y))
+                return party;
+        }
+        return null;
+    }
+
+    /**
+     * Returns the diagram component at given location, or null
+     *  if no component is present at that coordinate.
+     *
+     * @param diagram The diagram whose components are to be considered.
+     * @param x The x coordinate to look at.
+     * @param y The y coordinate to look at.
+     * @return The diagram component at given location in this view,
+     *  or null if no such component is visible at the given coordinate.
+     */
+    public DiagramComponent componentAt(Diagram diagram, int x, int y) {
+        for (Party party : diagram.getParties()) {
+            if (figureForParty(party).isHit(x,y))
                 return party;
         }
         return null;
@@ -191,11 +209,15 @@ public abstract class DiagramView {
     /**
      * A mehtod that moves the given party to the given coordinates
      *
+     * @param diagram The diagram in which to draw the label.
      * @param party The party that has te be moved
      * @param x The new absolute x coordinate of the given Party
      * @param y The new absolut y coordinate of the given Party
      */
-    public void moveParty(Party party, int x ,int y){
+    public void moveParty(Diagram diagram, Party party, int x ,int y) {
+        DiagramComponent component = componentAt(diagram, x, y);
+        if (component != null && component != party)
+            return;
         figures.get(party).setX(x);
         figures.get(party).setY(y);
     }
@@ -238,6 +260,12 @@ public abstract class DiagramView {
         link.setEndY(receiverFigure.getY() + receiverFigure.getHeight()/2);
         link.setLabel(message.getLabel());
         return link;
+
     }
+
+    /**
+     * A hashmap containing links of all messages in this diagram view.
+     */
+    protected PMap<Message, Link> links = PMap.<Message, Link>empty();
 
 }

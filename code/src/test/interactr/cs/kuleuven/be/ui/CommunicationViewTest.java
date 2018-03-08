@@ -1,7 +1,8 @@
-package interactr.cs.kuleuven.be.ui;
+package test.interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.Party;
+import interactr.cs.kuleuven.be.ui.CommunicationView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

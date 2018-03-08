@@ -184,7 +184,7 @@ public class DiagramController {
      * @param y The new y coordinate for the party.
      */
     public void moveParty(Party party ,int x, int y){
-        getActiveView().moveParty(party,x,y);
+        getActiveView().moveParty(getDiagram(), party,x,y);
         getPaintBoard().refresh();
     }
 
