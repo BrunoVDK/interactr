@@ -8,7 +8,7 @@ import interactr.cs.kuleuven.be.ui.PaintBoard;
  * @author Team 25
  * @version 1.0
  */
-public class Link {
+public class Link extends Model {
 
     /**
      * Initialize this new figure with zero coordinates and a width and height of 20.
@@ -26,11 +26,11 @@ public class Link {
      * @param endY The end y coordinate for this new linke.
      */
     public Link(int startX, int startY, int endX, int endY) {
+        super("");
         setStartX(startX);
         setStartY(startY);
         setEndX(endX);
         setEndY(endY);
-        setLabel("");
     }
 
     /**
