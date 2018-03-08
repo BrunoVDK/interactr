@@ -2,6 +2,10 @@ package interactr.cs.kuleuven.be.domain;
 
 import interactr.cs.kuleuven.be.purecollections.PList;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.NoSuchElementException;
+
 /**
  * A class of diagrams having parties and messages sent between these parties.
  *
@@ -75,10 +79,28 @@ public class Diagram {
      * @return The message in this diagram at the given row, or null if there is none.
      */
     public Message getMessageAtIndex(int index) {
-        if (index > messages.size())
-            return null;
-        else
-            return messages.get(index);
+        return messages.get(index);
+    }
+
+    /**
+     * Returns the index of the given message for this diagram.
+     *
+     * @param message The message whose index is desired.
+     * @return The index of the message.
+     */
+    public int getIndexOfMessage(Message message) {
+        return messages.indexOf(message);
+    }
+
+    /**
+     * Returns the index of the return message for this diagram.
+     *
+     * @param message The message for which the index of its return message is desired.
+     * @return The index of the return message associated with the given message.
+     */
+    public int getIndexOfReturnMessage(Message message) {
+        int idx = getIndexOfMessage(message);
+        return 0;
     }
 
     /**
@@ -87,12 +109,17 @@ public class Diagram {
      * @param message The message that is to be removed.
      */
     public void deleteMessage(Message message) {
-        // TODO Moet dit wel want message verwijderd zijn eigen denk ik???
+        // TODO
     }
 
     /**
      * The messages held by this diagram.
      */
     private PList<Message> messages = PList.<Message>empty();
+
+    /**
+     * Registers the indices
+     */
+    private ArrayList<Integer> associatedMessageIndices = new ArrayList<Integer>();
 
 }

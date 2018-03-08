@@ -1,4 +1,3 @@
-/*
 package interactr.cs.kuleuven.be.unitTests;
 
 
@@ -49,7 +48,7 @@ class DiagramControllerTest {
     void testView() {
         diagramController.nextView();
         diagramController.displayView();
-        verify(views.get(1)).display(diagramController.getPaintBoard(),diagram);
+        verify(views.get(1)).display(argThat(x -> true),eq(diagram),eq(diagramController.getSelectionManager()));
     }
 
     @Test
@@ -61,4 +60,3 @@ class DiagramControllerTest {
     }
 
 }
-*/
