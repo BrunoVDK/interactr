@@ -37,7 +37,6 @@ public class EventHandler {
      * @param clickCount The amount of clicks for this mouse events.
      */
     public void handleMouseEvent(int id, int x, int y, int clickCount) throws IllegalArgumentException{
-        if(x < 0 || y < 0 || clickCount < 0) throw  new IllegalArgumentException();
 
         // Mouse events are ignored when the diagram controller is editing
         if (getDiagramController() != null && ! getDiagramController().isEditing()) {
@@ -53,8 +52,9 @@ public class EventHandler {
                             getDiagramController().addPartyAt(x,y);
                         }
                         catch (InvalidAddPartyException exception) {
-                            if (exception.getParty() != null)
-                                getDiagramController().switchPartyType(exception.getParty());
+                            Party party = getDiagramController().getPartyAt(x, y);
+                            if (party != null)
+                                getDiagramController().switchPartyType(party);
                         }
                         break;
                 }
@@ -64,7 +64,6 @@ public class EventHandler {
             if(id == MouseEvent.MOUSE_PRESSED){
                 focusedParty = getDiagramController().getPartyAt(x,y);
                 focusCoordinate = new Point(x,y);
-
             }
 
             // Mouse drag
@@ -102,19 +101,21 @@ public class EventHandler {
 
         if (getDiagramController() != null) {
             switch (id) {
-                case KeyEvent.KEY_TYPED:
-                    if (keyChar == KeyEvent.VK_TAB && !getDiagramController().isEditing())
-                        getDiagramController().nextView();
-                    else if (keyChar == KeyEvent.VK_DELETE && !getDiagramController().isEditing()) {
+                case KeyEvent.KEY_PRESSED:
+                    if (keyChar == KeyEvent.VK_DELETE && !getDiagramController().isEditing()) {
 
                     }
                     else if (keyCode == KeyEvent.VK_ENTER)
                         getDiagramController().abortEditing();
                     else if (keyCode == KeyEvent.VK_BACK_SPACE)
                         getDiagramController().removeLastChar();
-                    else if (getDiagramController().isEditing())
-                        getDiagramController().appendChar(keyChar);
                     break;
+                case KeyEvent.KEY_TYPED:
+                    if (keyChar == KeyEvent.VK_TAB && !getDiagramController().isEditing())
+                        getDiagramController().nextView();
+                    else if (Character.isLetter(keyChar) || Character.isDigit(keyChar) || keyChar == ':')
+                        getDiagramController().appendChar(keyChar);
+
             }
         }
 

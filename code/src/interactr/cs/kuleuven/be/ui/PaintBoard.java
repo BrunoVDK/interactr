@@ -134,17 +134,6 @@ public class PaintBoard {
     }
 
     /**
-     * Get the height of chars when drawn in this paint board.
-     *
-     * @return The height of chars when displayed in this paint board.
-     */
-    public int getHeightOfChars() {
-        if (currentContext != null)
-            return currentContext.getFont().getSize();
-        return 0;
-    }
-
-    /**
      * Returns the width for this board.
      *
      * @return The width of this paint board.

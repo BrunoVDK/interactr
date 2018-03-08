@@ -37,8 +37,13 @@ public class Diagram {
             ; // Replace all
     }
 
+    /**
+     * Deletes the given party from this diagram, as well as all its dependencies.
+     *
+     * @param party The party that is to be removed.
+     */
     public void deleteParty(Party party) {
-
+        // TODO
     }
 
     /**
@@ -76,6 +81,11 @@ public class Diagram {
             return messages.get(row);
     }
 
+    /**
+     * Removes the given message from this diagram, as well as its dependencies.
+     *
+     * @param message The message that is to be removed.
+     */
     public void deleteMessage(Message message) {
         // TODO Moet dit wel want message verwijderd zijn eigen denk ik???
     }

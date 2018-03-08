@@ -33,100 +33,109 @@ public class Link extends Model {
         setEndY(endY);
     }
 
-    /**
-     * Checks whether or not the given coordinate 'hits' this figure.
-     *
-     * @param x The x coordinate to check with.
-     * @param y The y coordinate to check with.
-     * @return True if and only if the given coordinate lies within the confines of this
-     *  figure's bounds.
-     */
+    @Override
     public boolean isHit(int x, int y) {
         return isLabelHit(x, y);
     }
 
     /**
-     * Returns the startX of this class
-     * @return start X
+     * Returns the start x coordinate of this link.
      */
     public int getStartX() {
         return startX;
     }
 
     /**
-     * Sets the startX of this class to the given int
-     * @param startX the new x coordinate
+     * Sets the start x coordinate of this link to the given int.
+     *
+     * @param startX the new start x coordinate for this link.
      */
     public void setStartX(int startX) {
         this.startX = startX;
     }
 
     /**
-     * The x coordinate where the links starts
+     * Registers the x coordinate where the link starts.
      */
     private int startX;
 
     /**
-     * Returns the startY of this class
-     * @return startY
+     * Returns the start y coordinate of this link.
      */
     public int getStartY() {
         return startY;
     }
 
     /**
-     * Sets the startY of this class to the given int
-     * @param startY the new y coordinate
+     * Sets the start y coordinate of this link to the given int.
+     *
+     * @param startY the new start y coordinate for this link.
      */
     public void setStartY(int startY) {
         this.startY = startY;
     }
 
     /**
-     * The y coordinate where the links starts
+     * Registers the y coordinate where the link starts.
      */
     private int startY;
 
     /**
-     * Returns the endX of this class
-     * @return endX
+     * Returns the end x coordinate of this link.
      */
     public int getEndX() {
         return endX;
     }
 
     /**
-     * Sets the endX of this class to the given int
-     * @param endX the new x coordinate
+     * Sets the end x coordinate of this link to the given int.
+     *
+     * @param endX the new end x coordinate for this link.
      */
     public void setEndX(int endX) {
         this.endX = endX;
     }
 
     /**
-     * The x coordinate where the link ends
+     * Registers the x coordinate where the link ends.
      */
     private int endX;
 
     /**
-     * Returns the endY of this class
-     * @return endY
+     * Returns the end y coordinate of this link.
      */
     public int getEndY() {
         return endY;
     }
 
     /**
-     * Sets the endY of this class to the given int
-     * @param endY the new y coordinate
+     * Sets the end y coordinate of this link to the given int.
+     *
+     * @param endY the new end y coordinate for this link.
      */
     public void setEndY(int endY) {
         this.endY = endY;
     }
 
     /**
-     * The x coordinate where the link ends
+     * Registers the y coordinate where the link ends.
      */
     private int endY;
+
+    @Override
+    public Rectangle getLabelBounds() {
+        Rectangle bounds = super.getLabelBounds();
+        int startX = getStartX(), endY = getEndX();
+        int startY = getStartY(), endX = getEndY();
+        bounds.setY(Math.min(startY, endY) + Math.abs(startY - endY)/2 + 5); // Above link
+        int boundsX = startX + Math.abs(startX - endX)/2 - bounds.getWidth()/2;
+        int offset = bounds.getWidth()/2 + charHeight;
+        if ((startY < endY && getStartX() < getEndX())
+                || (startY > endY && getStartX() > getEndX())) {
+            offset = -offset;
+        }
+        bounds.setX(boundsX + offset);
+        return super.getLabelBounds();
+    }
 
 }

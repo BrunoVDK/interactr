@@ -2,6 +2,7 @@ package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddPartyException;
+import interactr.cs.kuleuven.be.ui.exceptions.InvalidLabelException;
 
 import java.util.ArrayList;
 
@@ -32,7 +33,6 @@ public class DiagramController {
      *  and an empty diagram.
      */
     public DiagramController() {
-
         this(new Diagram(), defaultViews());
         selectionManager = new SelectionManager();
     }
@@ -102,7 +102,7 @@ public class DiagramController {
      * @throws InvalidAddPartyException The given coordinates point to a component already.
      */
     public void addPartyAt(int x, int y) throws InvalidAddPartyException {
-        Party newParty = new ActorParty();
+        Party newParty = new ObjectParty();
         try {
             getActiveView().addParty(getDiagram(), newParty, x, y);
             getDiagram().addParty(newParty);
@@ -120,14 +120,19 @@ public class DiagramController {
     /**
      * A method that returns the editing mode of the selectionManager
      */
-    public boolean isEditing(){ return selectionManager.getActiveComponent() != null;};
+    public boolean isEditing() { return selectionManager.getActiveComponent() != null;};
 
     /**
      * A method that terminates the editing
      */
     public void abortEditing(){
-        if(selectionManager.getActiveComponent() != null){
-            selectionManager.getActiveComponent().setLabel(selectionManager.getTemporaryLabel());
+        if (selectionManager.getActiveComponent() != null){
+            try {
+                selectionManager.getActiveComponent().setLabel(selectionManager.getTemporaryLabel());
+                selectionManager.setActiveComponent(null);
+                getPaintBoard().refresh();
+            }
+            catch (InvalidLabelException e) {}
         }
     }
 
@@ -142,6 +147,9 @@ public class DiagramController {
             newParty = new ObjectParty(party);
         else
             newParty = new ActorParty(party);
+        diagram.replaceParty(party, newParty);
+        for (DiagramView view : views)
+            view.registerPartyReplace(party, newParty);
         getPaintBoard().refresh();
     }
 
@@ -154,6 +162,7 @@ public class DiagramController {
     public void selectComponentAt(int x, int y) {
         DiagramComponent component = getActiveView().selectableComponentAt(getDiagram(), x, y);
         selectionManager.addToSelection(component);
+        paintBoard.refresh();
     }
 
     /**
@@ -168,13 +177,15 @@ public class DiagramController {
     }
 
     /**
-     * Moves the given party to the new location that is given on the x and y coordinate.
-     * @param party
-     * @param x The new absolut x coordinate
-     * @param y
+     * Moves the given party to the given x and y coordinates.
+     *
+     * @param party The party that is to be moved.
+     * @param x The new x coordinate for the party.
+     * @param y The new y coordinate for the party.
      */
     public void moveParty(Party party ,int x, int y){
         getActiveView().moveParty(party,x,y);
+        getPaintBoard().refresh();
     }
 
     /**
@@ -196,14 +207,19 @@ public class DiagramController {
      */
     public void appendChar(char c){
         selectionManager.setTemporaryLabel(selectionManager.getTemporaryLabel() + c);
+        getPaintBoard().refresh();
     }
 
-    public void removeLastChar(){
+    /**
+     * Removes the last char from the label of the active component.
+     */
+    public void removeLastChar() {
         String temp = selectionManager.getTemporaryLabel();
-        if(temp != "")
-        selectionManager.setTemporaryLabel(temp.substring(0,selectionManager.getTemporaryLabel().length() -1));
+        if (temp != "") {
+            selectionManager.setTemporaryLabel(temp.substring(0, temp.length()-1));
+            getPaintBoard().refresh();
+        }
     }
-
 
     /**
      * The selected manager associated with this diagram controller.

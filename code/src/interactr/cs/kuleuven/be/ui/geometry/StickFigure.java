@@ -18,15 +18,9 @@ public class StickFigure extends Figure {
         super(0, 0, 30, 70);
     }
 
-    /**
-     * Draws a stick figure
-     *
-     * @param paintBoard The paint board on which to draw.
-     */
     @Override
     public void draw(PaintBoard paintBoard) {
 
-        int charHeight = paintBoard.getHeightOfChars();
         int manWidth = getWidth(), manHeight = getHeight() - charHeight - 4;
         int headWidth = Math.min(getWidth(), manHeight/2) - 5;
 
@@ -52,10 +46,16 @@ public class StickFigure extends Figure {
                 getX() + manWidth/2,
                 getY() + manHeight - manWidth/2);
 
-        // Draw label
-        int widthOfLabel = paintBoard.getWidthForString(getLabel());
-        paintBoard.drawString(getLabel(), getX() + manWidth/2 - widthOfLabel/2, getY() + manHeight + charHeight + 2);
+        super.drawLabel(paintBoard);
 
+    }
+
+    @Override
+    public Rectangle getLabelBounds() {
+        Rectangle bounds = super.getLabelBounds();
+        bounds.setX(getX() + getWidth()/2 - bounds.getWidth()/2);
+        bounds.setY(getY() + getHeight() - 4);
+        return bounds;
     }
 
 }

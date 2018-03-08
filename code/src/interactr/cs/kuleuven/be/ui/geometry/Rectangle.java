@@ -125,4 +125,18 @@ public class Rectangle {
                 && y <= getY() + getHeight());
     }
 
+    /**
+     * Checks whether or not this rectangle encloses the given coordinate (swapped y axis direction).
+     *
+     * @param x The x coordinate to check for.
+     * @param y The y coordinate to check for.
+     * @return True if and only if the given coordinate is inside this rectangle.
+     */
+    public boolean enclosesNegative(int x, int y) {
+        return (x >= getX()
+                && x <= getX() + getWidth()
+                && y >= getY() - getHeight()
+                && y <= getY());
+    }
+
 }

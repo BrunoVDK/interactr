@@ -32,14 +32,10 @@ public class SequenceView extends DiagramView {
 
     @Override
     public void display(PaintBoard paintBoard, Diagram diagram, SelectionManager selectionManager) {
-        for (Party party : diagram.getParties()) {
-            if (selectionManager.isSelected(party))
-                paintBoard.setColor(Color.BLUE);
-            else
-                paintBoard.setColor(Color.BLACK);
+        super.displayFigures(paintBoard, diagram, selectionManager);
+        paintBoard.setColor(Color.BLACK);
+        for (Party party : figures.keySet()) {
             Figure partyFigure = figures.get(party);
-            partyFigure.draw(paintBoard);
-            paintBoard.setColor(Color.BLACK);
             paintBoard.drawLine(partyFigure.getX() + partyFigure.getWidth() / 2,
                     PARTY_ROW_HEIGHT,
                     partyFigure.getX() + partyFigure.getWidth() / 2,
@@ -51,7 +47,7 @@ public class SequenceView extends DiagramView {
     @Override
     public void addParty(Diagram diagram, Party party, int x, int y) throws InvalidAddPartyException {
         if (y >= PARTY_ROW_HEIGHT)
-            throw new InvalidAddPartyException(null);
+            throw new InvalidAddPartyException();
         super.addParty(diagram, party, x, 5);
     }
 
@@ -63,7 +59,9 @@ public class SequenceView extends DiagramView {
     @Override
     public DiagramComponent selectableComponentAt(Diagram diagram, int x, int y) {
         for (Party party : diagram.getParties()) {
-            if (figures.get(party).isLabelHit(x,y))
+            System.out.println(figureForParty(party).getLabelBounds().getY());
+            System.out.println(figureForParty(party).getLabelBounds().getWidth());
+            if (figureForParty(party).isLabelHit(x,y))
                 return party;
         }
         return null;
