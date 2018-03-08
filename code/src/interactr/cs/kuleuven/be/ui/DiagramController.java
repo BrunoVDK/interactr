@@ -32,9 +32,7 @@ public class DiagramController {
      *  and an empty diagram.
      */
     public DiagramController() {
-
         this(new Diagram(), defaultViews());
-        selectionManager = new SelectionManager();
     }
 
     /**
@@ -46,6 +44,7 @@ public class DiagramController {
     public DiagramController(Diagram diagram, ArrayList<DiagramView> views) {
         this.diagram = diagram;
         this.views = new ArrayList<DiagramView>();
+        this.selectionManager = new SelectionManager();
         if (views != null)
             for (DiagramView view : views)
                 this.views.add(view);
@@ -208,8 +207,11 @@ public class DiagramController {
     /**
      * The selected manager associated with this diagram controller.
      */
-    private SelectionManager selectionManager = null;
+    private SelectionManager selectionManager;
 
+    public SelectionManager getSelectionManager() {
+        return selectionManager;
+    }
 
     /**
      * Returns the diagram associated with this diagram controller.
