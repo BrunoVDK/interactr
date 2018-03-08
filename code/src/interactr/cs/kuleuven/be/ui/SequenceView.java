@@ -52,7 +52,7 @@ public class SequenceView extends DiagramView {
 
     @Override
     public DiagramComponent selectableComponentAt(Diagram diagram, int x, int y) {
-        return null;
+        // todo
     }
 
     @Override
@@ -60,15 +60,13 @@ public class SequenceView extends DiagramView {
         return "Sequence View";
     }
 
-
-
     /**
      * The height of the party row.
      */
     private static int PARTY_ROW_HEIGHT = 75;
 
     /**
-     * The height of the party row.
+     * The height of each message row.
      */
     private static int MESSAGE_ROW_HEIGHT = 30;
 

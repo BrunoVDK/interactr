@@ -97,6 +97,19 @@ public class PaintBoard {
     }
 
     /**
+     * Fill a rectangle of given width and height at the given coordinates on this paint board.
+     *
+     * @param x The start x coordinate for the line.
+     * @param y The start y coordinate for the line.
+     * @param width The end x coordinate for the line.
+     * @param height The end y coordinate for the line.
+     */
+    public void fillRectangle(int x, int y, int width, int height) {
+        if (currentContext != null)
+            currentContext.fillRect(x, y, width, height);
+    }
+
+    /**
      * Sets the color for this paint board.
      *
      * @param color The color to use for this paint board.

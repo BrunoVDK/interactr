@@ -156,6 +156,13 @@ public class DiagramController {
         selectionManager.addToSelection(component);
     }
 
+    /**
+     * Returns the party at the given coordinate, or null if there is none.
+     *
+     * @param x The x coordinate for the party.
+     * @param y The y coordinate for the party.
+     * @return The party at the given coordinate, or null if there is none.
+     */
     public Party getPartyAt(int x,int y ){
         return getActiveView().getPartyAt(x,y);
     }
@@ -170,10 +177,23 @@ public class DiagramController {
         getActiveView().moveParty(party,x,y);
     }
 
+    /**
+     * Adds a message using the given start and end coordinates of a drag session.
+     *
+     * @param xStart The start x coordinate for the session.
+     * @param yStart The start y coordinate for the session.
+     * @param xEnd The end x coordinate for the session.
+     * @param yEnd The end y coordinate for the session.
+     */
     public void addMessageFrom(int xStart, int yStart, int xEnd, int yEnd){
 
     }
 
+    /**
+     * Append the given char to the current edit session.
+     *
+     * @param c The char that is to be appended.
+     */
     public void appendChar(char c){
         selectionManager.setTemporaryLabel(selectionManager.getTemporaryLabel() + c);
     }
