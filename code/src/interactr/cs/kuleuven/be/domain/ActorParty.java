@@ -11,7 +11,7 @@ import interactr.cs.kuleuven.be.ui.geometry.StickFigure;
 public class ActorParty extends Party {
 
     /**
-     * Initialize this new party with a label of ':Class'.
+     * Initialize this new party with a default label.
      */
     public ActorParty() {
         super();
@@ -27,8 +27,7 @@ public class ActorParty extends Party {
     }
 
     /**
-     * The class that represents the model of this class
-     * @return StickFigure.class;
+     * A proposed type of figures for drawing this actor.
      */
     public Class proposedFigure() {
         return StickFigure.class;

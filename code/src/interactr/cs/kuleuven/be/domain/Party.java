@@ -18,15 +18,6 @@ public class Party extends DiagramComponent {
     }
 
     /**
-     * A method that causes the party to delete itself from the diagram
-     * @param diagram The diagram from which this component should be deleted.
-     */
-    @Override
-    public void delete(Diagram diagram) {
-        diagram.deleteParty(this);
-    }
-
-    /**
      * Initialize this new party with the given party.
      *
      * @param party The party to initialize this party with.
@@ -44,11 +35,6 @@ public class Party extends DiagramComponent {
         return Box.class;
     }
 
-    /**
-     * A method tht checks of the given label is a valid label for a Party
-     * @param label The string to check with.
-     * @return (validCharacters && super.canHaveAsLabel(label))
-     */
     @Override
     public boolean canHaveAsLabel(String label) {
         boolean validCharacters = true;
@@ -63,6 +49,11 @@ public class Party extends DiagramComponent {
         else
             validCharacters = false;
         return (validCharacters && super.canHaveAsLabel(label));
+    }
+
+    @Override
+    public void delete(Diagram diagram) {
+        diagram.deleteParty(this);
     }
 
 }

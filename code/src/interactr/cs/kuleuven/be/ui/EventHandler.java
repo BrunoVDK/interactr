@@ -38,8 +38,10 @@ public class EventHandler {
      */
     void handleMouseEvent(int id, int x, int y, int clickCount) {
 
-
+        // Mouse events are ignored when the diagram controller is editing
         if (getDiagramController() != null && ! getDiagramController().isEditing()) {
+
+            // Mouse click
             if (id == MouseEvent.MOUSE_CLICKED) {
                 switch (clickCount) {
                     case 1: // Single click
@@ -56,28 +58,36 @@ public class EventHandler {
                         break;
                 }
             }
+
+            // Mouse press
             if(id == MouseEvent.MOUSE_PRESSED){
                 focusedParty = getDiagramController().getPartyAt(x,y);
-                focusedCoordinate = new Point(x,y);
+                focusCoordinate = new Point(x,y);
 
             }
+
+            // Mouse drag
             if(id == MouseEvent.MOUSE_DRAGGED){
                 if(focusedParty != null){
                     getDiagramController().moveParty(focusedParty, x, y);
                 }
             }
 
+            // Mouse release
             if(id == MouseEvent.MOUSE_RELEASED){
-                if(focusedParty == null && focusedCoordinate != null){
-                    getDiagramController().addMessageFrom(focusedCoordinate.getX()
-                            ,focusedCoordinate.getY(),x,y);
-                }else if(focusedParty != null){
+                if (focusedParty == null && focusCoordinate != null) {
+                    getDiagramController().addMessageFrom(focusCoordinate.getX()
+                            ,focusCoordinate.getY(),x,y);
+                }
+                else if(focusedParty != null) {
                     focusedParty = null;
-                    focusedCoordinate = null;
+                    focusCoordinate = null;
                 }
 
             }
+
         }
+
     }
 
     /**
@@ -88,6 +98,7 @@ public class EventHandler {
      * @param keyChar The key char for the key event.
      */
     void handleKeyEvent(int id, int keyCode, char keyChar) {
+
         if (getDiagramController() != null) {
             switch (id) {
                 case KeyEvent.KEY_TYPED:
@@ -95,21 +106,28 @@ public class EventHandler {
                         getDiagramController().nextView();
                     else if (keyChar == KeyEvent.VK_DELETE && !getDiagramController().isEditing()) {
 
-                    }else if (keyCode == KeyEvent.VK_ENTER){
+                    }
+                    else if (keyCode == KeyEvent.VK_ENTER)
                         getDiagramController().abortEditing();
-
-                    }else if( keyCode == KeyEvent.VK_BACK_SPACE){
+                    else if (keyCode == KeyEvent.VK_BACK_SPACE)
                         getDiagramController().removeLastChar();
-
-                    }
-                    else if(getDiagramController().isEditing()){
+                    else if (getDiagramController().isEditing())
                         getDiagramController().appendChar(keyChar);
-
-                    }
                     break;
             }
         }
+
     }
+
+    /**
+     * Registers the focused party for this event handler.
+     */
+    private Party focusedParty = null;
+
+    /**
+     * Registers the focus coordinate for this event handler.
+     */
+    private Point focusCoordinate = null;
 
     /**
      * Returns the diagram controller associated with this event handler.
@@ -132,15 +150,5 @@ public class EventHandler {
      * Variable registering the diagram controller of this event handler.
      */
     private DiagramController diagramController;
-
-
-    /**
-     * A global variable that holds the focused party, which is a party after a MOUSE.PRESS
-     */
-    private Party focusedParty = null;
-    /**
-     * A global variable that holds a coordinate of the last Mouse.PRESS
-     */
-    private Point focusedCoordinate = null;
 
 }
