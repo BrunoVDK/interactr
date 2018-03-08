@@ -134,6 +134,27 @@ public abstract class DiagramView {
     }
 
     /**
+     * Returns the diagram component at given location, or null
+     *  if no component is present at that coordinate.
+     *  The given excluded component, if not null, is ignored.
+     *
+     * @param diagram The diagram whose components are to be considered.
+     * @param x The x coordinate to look at.
+     * @param y The y coordinate to look at.
+     * @param excludedComponent The component to ignore when look for the component at given coordinate.
+     * @return The diagram component at given location in this view,
+     *  or null if no such component is visible at the given coordinate.
+     * @note This method can be used when looking for a place to move a certain component.
+     */
+    protected DiagramComponent componentAt(Diagram diagram, int x, int y, DiagramComponent excludedComponent) {
+        for (Party party : diagram.getParties()) {
+            if (party != excludedComponent && figureForParty(party).isHit(x,y))
+                return party;
+        }
+        return null;
+    }
+
+    /**
      * Returns the name of this diagram view as a string.
      *
      * @return This diagram view's name as a string.
@@ -216,11 +237,12 @@ public abstract class DiagramView {
      * @param y The new absolut y coordinate of the given Party
      */
     public void moveParty(Diagram diagram, Party party, int x ,int y) {
-        DiagramComponent component = componentAt(diagram, x, y);
+        DiagramComponent component = componentAt(diagram, x, y, party);
         if (component != null && component != party)
             return;
-        figures.get(party).setX(x);
-        figures.get(party).setY(y);
+        Figure figure = figures.get(party);
+        figure.setX(x);
+        figure.setY(y);
     }
 
     /**

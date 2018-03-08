@@ -12,9 +12,14 @@ public class Arrow extends Link {
 
     @Override
     public void draw(PaintBoard paintBoard) {
+
+        // Link
         paintBoard.drawLine(getStartX(), getStartY(), getEndX(), getEndY());
+
+        // Arrow head
         paintBoard.drawLine(getEndX(), getEndY(), getEndX() - 5, getEndY());
         paintBoard.drawLine(getEndX(), getEndY(), getEndX(), getEndY() - 5);
+
     }
 
 }

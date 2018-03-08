@@ -32,7 +32,7 @@ public class SequenceView extends DiagramView {
     @Override
     public void display(PaintBoard paintBoard, Diagram diagram, SelectionManager selectionManager) {
         super.displayFigures(paintBoard, diagram, selectionManager);
-        paintBoard.setColor(Color.GRAY);
+        paintBoard.setColor(Color.LIGHT_GRAY);
         for (Party party : figures.keySet()) {
             Figure partyFigure = figures.get(party);
             paintBoard.drawLine(partyFigure.getX() + partyFigure.getWidth() / 2,
@@ -74,7 +74,7 @@ public class SequenceView extends DiagramView {
 
     @Override
     public void moveParty(Diagram diagram, Party party, int x, int y){
-        super.moveParty(diagram, party, x, figures.get(party).getY());
+        super.moveParty(diagram, party, x, 5);
     }
 
     public boolean canAddMessage(Party sender, Party receiver, int y){
