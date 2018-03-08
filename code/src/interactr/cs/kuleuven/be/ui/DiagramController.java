@@ -198,9 +198,6 @@ public class DiagramController {
         selectionManager.setTemporaryLabel(selectionManager.getTemporaryLabel() + c);
     }
 
-    /**
-     * A method that removes the last char of the temporary label
-     */
     public void removeLastChar(){
         String temp = selectionManager.getTemporaryLabel();
         if(temp != "")

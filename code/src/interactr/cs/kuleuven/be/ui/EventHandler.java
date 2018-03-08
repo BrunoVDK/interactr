@@ -37,7 +37,7 @@ public class EventHandler {
      * @param clickCount The amount of clicks for this mouse events.
      */
     public void handleMouseEvent(int id, int x, int y, int clickCount) throws IllegalArgumentException{
-        if(x < 0 || y < 0 || clickCount < 0) throw  new IllegalArgumentException("Coordinates and clicks can't be negative");
+        if(x < 0 || y < 0 || clickCount < 0) throw  new IllegalArgumentException();
 
         // Mouse events are ignored when the diagram controller is editing
         if (getDiagramController() != null && ! getDiagramController().isEditing()) {

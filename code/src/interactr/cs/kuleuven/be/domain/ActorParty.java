@@ -1,5 +1,6 @@
 package interactr.cs.kuleuven.be.domain;
 
+import interactr.cs.kuleuven.be.ui.exceptions.InvalidLabelException;
 import interactr.cs.kuleuven.be.ui.geometry.StickFigure;
 
 /**
@@ -18,12 +19,21 @@ public class ActorParty extends Party {
     }
 
     /**
+     * Initialize this new actor with the given label.
+     *
+     * @param label The label for this new actor.
+     */
+    public ActorParty(String label) {
+        super(label);
+    }
+
+    /**
      * Initialize this new actor party with the given party.
      *
      * @param party The party to initialize this actor party with.
      */
     public ActorParty(Party party) {
-
+        super(party);
     }
 
     /**

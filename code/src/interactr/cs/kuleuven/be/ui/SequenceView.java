@@ -20,6 +20,16 @@ import java.awt.*;
  */
 public class SequenceView extends DiagramView {
 
+    /**
+     * The height of the party row.
+     */
+    private static int PARTY_ROW_HEIGHT = 75;
+
+    /**
+     * The height of each message row.
+     */
+    private static int MESSAGE_ROW_HEIGHT = 30;
+
     @Override
     public void display(PaintBoard paintBoard, Diagram diagram, SelectionManager selectionManager) {
         for (Party party : diagram.getParties()) {
@@ -63,16 +73,6 @@ public class SequenceView extends DiagramView {
     public String viewName() {
         return "Sequence View";
     }
-
-    /**
-     * The height of the party row.
-     */
-    private static int PARTY_ROW_HEIGHT = 75;
-
-    /**
-     * The height of each message row.
-     */
-    private static int MESSAGE_ROW_HEIGHT = 30;
 
     @Override
     public void moveParty(Party party, int x, int y){

@@ -1,5 +1,7 @@
 package interactr.cs.kuleuven.be.domain;
 
+import interactr.cs.kuleuven.be.ui.exceptions.InvalidLabelException;
+
 /**
  * A class of diagram components.
  *
@@ -19,9 +21,9 @@ public abstract class DiagramComponent {
      * Initialize this new diagram component with given label.
      *
      * @param label The label to initialize this component with.
-     * @throws IllegalArgumentException If the given label is not a valid label for this component.
+     * @throws InvalidLabelException If the new component can not have the given label.
      */
-    public DiagramComponent(String label) throws IllegalArgumentException {
+    public DiagramComponent(String label) throws InvalidLabelException {
         setLabel(label);
     }
 
@@ -46,11 +48,11 @@ public abstract class DiagramComponent {
      * Sets the label of this figure to the given value.
      *
      * @param label The new label value for this figure.
-     * @throws IllegalArgumentException If the given label is not a valid label for this component.
+     * @throws InvalidLabelException If the given label is not a valid label for this component.
      */
-    public void setLabel(String label) throws IllegalArgumentException {
+    public void setLabel(String label) throws InvalidLabelException {
         if (!canHaveAsLabel(label))
-            throw new IllegalArgumentException("Invalid label for this component.");
+            throw new InvalidLabelException();
         this.label = label;
     }
 

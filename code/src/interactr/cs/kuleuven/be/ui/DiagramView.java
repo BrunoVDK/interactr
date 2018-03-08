@@ -87,7 +87,7 @@ public abstract class DiagramView {
             if (Figure.class.isAssignableFrom(figureType))
                 figure = (Figure) figureType.getConstructor().newInstance();
         } catch (Exception e) {
-            System.out.println("Invalid figure type given in custom party class.");
+            System.err.println("Invalid figure type given in custom party class.");
         }
         figure.setX(x);
         figure.setY(y);
@@ -117,9 +117,10 @@ public abstract class DiagramView {
     }
 
     /**
-     * A method that returns a link of a given message
-     * @param message the message of which a link is created
-     * @return link
+     * Creates a link for the given message.
+     *
+     * @param message The message for which a link is created.
+     * @return A link representing the given message in this view.
      */
     protected Link linkForMessage(Message message) {
         Link link = new Arrow();
@@ -128,10 +129,11 @@ public abstract class DiagramView {
             if (Link.class.isAssignableFrom(linkType))
                 link = (Link) linkType.getConstructor().newInstance();
         } catch (Exception e) {
-            System.out.println("Invalid figure type given in custom party class.");
+            System.err.println("Invalid link type given in custom message class.");
         }
         Party sender = message.getSender(), receiver = message.getReceiver();
         Figure senderFigure = figures.get(sender), receiverFigure = figures.get(receiver);
+        /*
         if (senderFigure.getX() < receiverFigure.getX())
             link.setStartX(senderFigure.getX() + senderFigure.getWidth());
         else
@@ -140,6 +142,11 @@ public abstract class DiagramView {
             link.setStartX(senderFigure.getY() + senderFigure.getHeight());
         else
             link.setStartX(receiverFigure.getY() + receiverFigure.getHeight());
+            */
+        link.setStartX(senderFigure.getX() + senderFigure.getHeight());
+        link.setStartY(senderFigure.getY() + senderFigure.getHeight()/2);
+        link.setEndX(receiverFigure.getX());
+        link.setEndY(receiverFigure.getY() + receiverFigure.getHeight()/2);
         link.setLabel(message.getLabel());
         return link;
     }

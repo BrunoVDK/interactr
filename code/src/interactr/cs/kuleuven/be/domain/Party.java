@@ -1,5 +1,6 @@
 package interactr.cs.kuleuven.be.domain;
 
+import interactr.cs.kuleuven.be.ui.exceptions.InvalidLabelException;
 import interactr.cs.kuleuven.be.ui.geometry.Box;
 
 /**
@@ -11,10 +12,19 @@ import interactr.cs.kuleuven.be.ui.geometry.Box;
 public class Party extends DiagramComponent {
 
     /**
-     * Initialize this new party with a label of ':Class'.
+     * Initialize this new party with a ':Class' label.
      */
     public Party() {
         super(":Class");
+    }
+
+    /**
+     * Initialize this new party with the given label.
+     *
+     * @param label The label for this new party.
+     */
+    public Party(String label) {
+        super(label);
     }
 
     /**

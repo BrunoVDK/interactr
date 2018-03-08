@@ -16,6 +16,15 @@ public class ObjectParty extends Party {
     }
 
     /**
+     * Initialize this new object with the given label.
+     *
+     * @param label The label for this new object.
+     */
+    public ObjectParty(String label) {
+        super(label);
+    }
+
+    /**
      * Initialize this new object party with the given party.
      *
      * @param party The party to initialize this object party with.

@@ -32,20 +32,6 @@ public class CommunicationView extends DiagramView {
     }
 
     /**
-     * Adds a party to the diagram at the given location
-     * @param diagram The diagram the party is gonna be addded to.
-     * @param party The party that is to be added.
-     * @param x The x coordinate of the new party.
-     * @param y The y coordinate of the new party.
-     * @throws InvalidAddPartyException
-     */
-    @Override
-    public void addParty(Diagram diagram, Party party, int x, int y) throws InvalidAddPartyException {
-
-        super.addParty(diagram, party, x, y);
-    }
-
-    /**
      * A method that returns  diagram component at the given coordinate
      * @param diagram The diagram whose components are to be considered.
      * @param x The x coordinate to look at.
