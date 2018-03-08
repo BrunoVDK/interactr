@@ -1,5 +1,7 @@
 package interactr.cs.kuleuven.be.ui.geometry;
 
+import interactr.cs.kuleuven.be.ui.PaintBoard;
+
 /**
  * A class of arrow links.
  *
@@ -8,6 +10,11 @@ package interactr.cs.kuleuven.be.ui.geometry;
  */
 public class Arrow extends Link {
 
-
+    @Override
+    public void draw(PaintBoard paintBoard) {
+        paintBoard.drawLine(getStartX(), getStartY(), getEndX(), getEndY());
+        paintBoard.drawLine(getEndX(), getEndY(), getEndX() - 5, getEndY());
+        paintBoard.drawLine(getEndX(), getEndY(), getEndX(), getEndY() - 5);
+    }
 
 }
