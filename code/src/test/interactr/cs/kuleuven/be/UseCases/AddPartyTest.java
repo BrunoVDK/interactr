@@ -40,4 +40,17 @@ public class AddPartyTest {
 
     }
 
+    @Test
+    void addPartyWithLegalLabel(){
+        DiagramWindow.replayRecording("addPartyLegalLabel.txt",diagramWindow);
+        assertEquals(diagramWindow.getEventHandler().getDiagramController().getSelectionManager().getActiveComponent(),null);
+    }
+
+    @Test
+    void addPartyWithIllegalLabel(){
+        DiagramWindow.replayRecording("addPartyIllegalLabel.txt",diagramWindow);
+        if(diagramWindow.getEventHandler().getDiagramController().getSelectionManager().getActiveComponent() != null) assert true;
+        else assert false;
+    }
+
 }
