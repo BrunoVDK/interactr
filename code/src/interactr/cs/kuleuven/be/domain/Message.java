@@ -67,6 +67,10 @@ public class Message extends DiagramComponent {
         return Arrow.class;
     }
 
+    /**
+     * Deletes itself from the given diagram
+     * @param diagram The diagram from which this component should be deleted.
+     */
     @Override
     public void delete(Diagram diagram) {
         diagram.deleteMessage(this);

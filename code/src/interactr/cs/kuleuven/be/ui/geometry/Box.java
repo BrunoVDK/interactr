@@ -10,6 +10,10 @@ import interactr.cs.kuleuven.be.ui.PaintBoard;
  */
 public class Box extends Figure {
 
+    /**
+     * Draws a box
+     * @param paintBoard The paint board on which to draw.
+     */
     @Override
     public void draw(PaintBoard paintBoard) {
         paintBoard.drawRectangle(getX(), getY(), getWidth(), getHeight());

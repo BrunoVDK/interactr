@@ -111,10 +111,16 @@ public abstract class DiagramView {
         return null;
     }
 
+    //TODO
     public void addMessage(int fromX, int fromY, int toX, int toY) {
 
     }
 
+    /**
+     * A method that returns a link of a given message
+     * @param message the message of which a link is created
+     * @return link
+     */
     protected Link linkForMessage(Message message) {
         Link link = new Arrow();
         Class linkType = message.proposedLinkType();
@@ -138,6 +144,13 @@ public abstract class DiagramView {
         return link;
     }
 
+    /**
+     * A mehtod that moves the given party to the given coordinates
+     *
+     * @param party The party that has te be moved
+     * @param x The new absolute x coordinate of the given Party
+     * @param y The new absolut y coordinate of the given Party
+     */
     public void moveParty(Party party, int x ,int y){
         figures.get(party).setX(x);
         figures.get(party).setY(y);
