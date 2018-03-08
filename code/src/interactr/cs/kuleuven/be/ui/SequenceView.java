@@ -52,7 +52,9 @@ public class SequenceView extends DiagramView {
 
     @Override
     public DiagramComponent selectableComponentAt(Diagram diagram, int x, int y) {
-        // todo
+        for (Party party : diagram.getParties()) {
+            if (figures.get(party))
+        }
         return null;
     }
 

@@ -1,5 +1,7 @@
 package interactr.cs.kuleuven.be.ui;
 
+import interactr.cs.kuleuven.be.ui.geometry.Model;
+
 import java.awt.*;
 
 /**
@@ -202,5 +204,13 @@ public class PaintBoard {
      * The default font used by this paint board.
      */
     private static Font defaultFont = new Font("Monospaced", Font.PLAIN, 12);
+
+    /**
+     * Pre-process font metrics.
+     */
+    static {
+        Model.charHeight = defaultFont.getSize();
+        Model.charWidth = java.awt.Toolkit.getDefaultToolkit().getFontMetrics(defaultFont).charWidth('a');
+    }
 
 }
