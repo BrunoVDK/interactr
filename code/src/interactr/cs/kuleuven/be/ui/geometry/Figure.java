@@ -18,7 +18,7 @@ public class Figure extends Model {
     }
 
     /**
-     * Initialize this new figure with given coordinates and size, and en empty label.
+     * Initialize this new figure with given coordinates and size, and an empty label.
      *
      * @param x The x coordinate for this new figure.
      * @param y The y coordinate for this new figure.
@@ -26,11 +26,11 @@ public class Figure extends Model {
      * @param height The height for this new figure.
      */
     public Figure(int x, int y, int width, int height) {
+        super("");
         setX(x);
         setY(y);
         setWidth(width);
         setHeight(height);
-        setLabel("");
     }
 
     /**

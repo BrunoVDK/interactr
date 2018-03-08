@@ -79,7 +79,7 @@ public abstract class Model {
      * @param paintBoard The paint board on which to draw.
      */
     public void draw(PaintBoard paintBoard) {
-
+        // To be overridden
     }
 
 }

@@ -129,36 +129,4 @@ public class Link extends Model {
      */
     private int endY;
 
-    /**
-     * Checks whether the given coordinate 'hits' this figure's label.
-     *
-     * @param x The x coordinate to check with.
-     * @param y The y coordinate to check with.
-     * @return True if and only if the given coordinate is enclosed by this figure's label.
-     */
-    public boolean isLabelHit(int x, int y) {
-        return false;
-    }
-
-    /**
-     * Returns the label of this figure.
-     */
-    public String getLabel() {
-        return label;
-    }
-
-    /**
-     * Sets the label of this figure to the given value.
-     *
-     * @param label The new label value for this figure.
-     */
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    /**
-     * Registers the label for this figure.
-     */
-    private String label;
-
 }

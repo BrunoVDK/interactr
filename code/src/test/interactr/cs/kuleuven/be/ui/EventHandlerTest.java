@@ -1,25 +1,23 @@
-package interactr.cs.kuleuven.be.unitTests;
+package test.interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.ui.DiagramController;
 import interactr.cs.kuleuven.be.ui.EventHandler;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class EventHandlerTest {
+class EventHandlerTest extends TestCase {
 
     private EventHandler eventHandler;
 
-
-    @BeforeEach
-    void setUp() {
+    @Before
+    protected void setUp() {
         eventHandler = new EventHandler(new DiagramController());
     }
 
-    @AfterEach
-    void tearDown() {
+    @After
+    protected void tearDown() {
     }
 
     @Test(expected=IllegalArgumentException.class)
