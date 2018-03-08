@@ -4,16 +4,18 @@ import interactr.cs.kuleuven.be.ui.DiagramController;
 import interactr.cs.kuleuven.be.ui.DiagramWindow;
 import interactr.cs.kuleuven.be.ui.EventHandler;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
-//import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.lang.reflect.Field;
 
+import static org.junit.Assert.assertEquals;
 
-public class SwitchView {
+
+public class SwitchViewTest {
 
     private DiagramWindow diagramWindow = new DiagramWindow();
 
-    //@Test
+    @Test
     public void switchViewTest() throws NoSuchFieldException, IllegalAccessException {
         diagramWindow.setEventHandler(new EventHandler(new DiagramController()));
         diagramWindow.setPaintBoard(new PaintBoard(diagramWindow, diagramWindow.getEventHandler().getDiagramController()));
@@ -22,7 +24,8 @@ public class SwitchView {
         f.setAccessible(true);
         int currentView = (int) f.get(diagramWindow.getEventHandler().getDiagramController());
         System.out.println(currentView);
-        assert(currentView == 1);
+        assertEquals(1,currentView);
     }
+
 
 }
