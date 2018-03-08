@@ -10,6 +10,7 @@ public class ObjectTest {
 
     @Before
     public void setUp() {
+        
     }
 
     @After
