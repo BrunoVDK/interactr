@@ -25,6 +25,9 @@ public abstract class DiagramView {
      */
     public void display(PaintBoard paintBoard, Diagram diagram, SelectionManager selectionManager) {
         displayFigures(paintBoard, diagram, selectionManager);
+        Arrow a = new Arrow();
+        a.setLabel("Test");
+        a.draw(paintBoard);
     }
 
     /**
