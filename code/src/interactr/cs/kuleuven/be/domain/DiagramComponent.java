@@ -68,4 +68,8 @@ public abstract class DiagramComponent {
      */
     public abstract void delete(Diagram diagram);
 
+    @Override
+    public String toString() {
+        return this.getLabel();
+    }
 }

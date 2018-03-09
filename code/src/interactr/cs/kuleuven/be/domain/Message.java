@@ -87,4 +87,8 @@ public class Message extends DiagramComponent {
         diagram.deleteMessage(this);
     }
 
+    @Override
+    public String toString() {
+        return getSender().toString() + " " + getLabel() + " " + getReceiver().toString();
+    }
 }

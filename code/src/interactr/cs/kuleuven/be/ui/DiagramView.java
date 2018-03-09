@@ -317,7 +317,7 @@ public abstract class DiagramView {
     }
 
     /**
-     * Returns the index of the message lying right above a message, if inserted at th the given coordinates.
+     * Returns the index of the message lying right above a message, if inserted at the the given coordinates.
      *
      * @param diagram The diagram in which the message is to be inserted.
      * @param fromX The start x coordinate for the message to insert.

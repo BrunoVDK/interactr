@@ -65,4 +65,8 @@ public class Party extends DiagramComponent {
         diagram.deleteParty(this);
     }
 
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }
