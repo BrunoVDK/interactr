@@ -256,8 +256,12 @@ public class Diagram {
      * @return A prefix for the given message.
      */
     public String getPrefix(Message message) {
-
-
+        int index = getIndexOfMessage(message);
+        if (index == -1 || getIndexOfAssociatedMessage(index) < index)
+            return "";
+        ArrayList<Integer> sequence = new ArrayList<Integer>();
+        Party initiator = getInitiator();
+        
         return "X.X";
     }
 
