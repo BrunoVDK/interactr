@@ -2,12 +2,14 @@ package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
+import interactr.cs.kuleuven.be.purecollections.PMap;
 import interactr.cs.kuleuven.be.ui.geometry.Arrow;
 import interactr.cs.kuleuven.be.ui.geometry.Figure;
 import interactr.cs.kuleuven.be.ui.geometry.Link;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * A class of sequence diagram views. Sequence diagram views display diagrams
@@ -29,7 +31,12 @@ public class SequenceView extends DiagramView {
     /**
      * The height of each message row.
      */
-    private static int MESSAGE_ROW_HEIGHT = 30;
+    private static int MESSAGE_ROW_HEIGHT = 40;
+
+    /**
+     * The width of activation bars.
+     */
+    private static int ACTIVATION_BAR_HEIGHT = 10;
 
     @Override
     public void display(PaintBoard paintBoard, Diagram diagram, SelectionManager selectionManager) {
@@ -49,16 +56,45 @@ public class SequenceView extends DiagramView {
 
     @Override
     protected void displayMessages(PaintBoard paintBoard, Diagram diagram, SelectionManager selectionManager) {
-        for (Message message : links.keySet()) {
-            boolean isSelected = selectionManager.isSelected(message);
-            boolean isActive = selectionManager.getActiveComponent() == message;
-            paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
+
+        // Pre-processing
+        Color activationColor = Color.getHSBColor(216/360, 35/360, 0.66f);
+        Party initiator = diagram.getInitiator();
+        HashMap<Party, Integer> startActivations = new HashMap<Party, Integer>();
+        HashMap<Party, Integer> endActivations = new HashMap<Party, Integer>();
+
+        // Display messages and activation bars
+        for (int i=0 ; i<diagram.getNbMessages() ; i++) {
+
+            Message message = diagram.getMessageAtIndex(i);
+            int associatedIndex = diagram.getIndexOfAssociatedMessage(i);
+            Party sender = message.getSender();
             Link messageLink = linkForMessage(message);
-            if (isActive)
-                messageLink.setLabel(selectionManager.getTemporaryLabel() + "|");
-            messageLink.draw(paintBoard);
-            paintBoard.setColor(Color.BLACK);
+            if (messageLink != null) {
+
+                // Check if we're back at the initiator
+                if (sender == initiator) {
+                    startActivations.clear();
+                    endActivations.clear();
+                }
+
+                // Determine activation bar and draw it
+
+                // Also use its position for repositioning the message link
+
+                // Draw link
+                boolean isSelected = selectionManager.isSelected(message);
+                boolean isActive = selectionManager.getActiveComponent() == message;
+                paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
+                if (isActive)
+                    messageLink.setLabel(selectionManager.getTemporaryLabel() + "|");
+                messageLink.draw(paintBoard);
+                paintBoard.setColor(Color.BLACK);
+
+            }
+
         }
+
     }
 
     @Override
@@ -71,15 +107,6 @@ public class SequenceView extends DiagramView {
     @Override
     public void registerParty(Party party, int x, int y) {
         super.registerParty(party, x, 5);
-    }
-
-    @Override
-    public DiagramComponent selectableComponentAt(Diagram diagram, int x, int y) {
-        for (Party party : diagram.getParties()) {
-            if (figureForParty(party).isLabelHit(x,y))
-                return party;
-        }
-        return null;
     }
 
     @Override
@@ -124,10 +151,11 @@ public class SequenceView extends DiagramView {
     public boolean canInsertMessageAt(Diagram diagram, int fromX, int fromY, int toX, int toY) {
         if (fromY < PARTY_ROW_HEIGHT || toY < PARTY_ROW_HEIGHT)
             return false;
+        int min = Math.min(fromY, toY);
         Link link = new Link(fromX, fromY, toX, toY);
         for (Message message : diagram.getMessages()) {
             Link messageLink = linkForMessage(message);
-            if (messageLink != null && messageLink.crosses(link))
+            if (messageLink != null && (messageLink.crosses(link) || Math.abs(messageLink.getStartY() - min) < 8))
                 return false;
         }
         return true;
@@ -138,19 +166,17 @@ public class SequenceView extends DiagramView {
         int min = Math.min(fromY, toY);
         Link invocationLink = createLinkForMessage(invocation, fromX, min, toX, min);
         int max = Math.max(fromY, toY);
-        Link resultLink = createLinkForMessage(resultMessage, fromX, min + 30, toX, min + 30);
+        Link resultLink = createLinkForMessage(resultMessage, fromX, min + MESSAGE_ROW_HEIGHT, toX, min + MESSAGE_ROW_HEIGHT);
         links = links.plus(invocation, invocationLink);
         links = links.plus(resultMessage, resultLink);
-        int minY = min + 30;
+        int minY = min + MESSAGE_ROW_HEIGHT;
         int resultIndex = diagram.getIndexOfMessage(resultMessage);
-        System.out.println("INDEX = " + resultIndex);
         for (int i=resultIndex+1 ; i<diagram.getNbMessages() ; i++) {
             Link link = links.get(diagram.getMessageAtIndex(i));
-            System.out.println("Y:"+link.getStartY());
-            if (link != null && (link.getStartY() < minY + 30 || link.getEndY() < minY + 30)) {
-                link.setStartY(minY + 30);
-                link.setEndY(minY + 30);
-                minY = minY + 30;
+            if (link != null && (link.getStartY() < minY + MESSAGE_ROW_HEIGHT || link.getEndY() < minY + MESSAGE_ROW_HEIGHT)) {
+                link.setStartY(minY + MESSAGE_ROW_HEIGHT);
+                link.setEndY(minY + MESSAGE_ROW_HEIGHT);
+                minY = minY + MESSAGE_ROW_HEIGHT;
             }
         }
     }

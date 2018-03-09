@@ -14,7 +14,7 @@ public abstract class DiagramComponent {
      * Initialize this new diagram component with an empty label.
      */
     public DiagramComponent() {
-        this(":Class");
+        this("");
     }
 
     /**

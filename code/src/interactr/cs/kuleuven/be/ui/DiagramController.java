@@ -4,7 +4,6 @@ import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddMessageException;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
-//import org.mockito.invocation.Invocation;
 
 import java.util.ArrayList;
 
@@ -111,8 +110,8 @@ public class DiagramController {
             for (DiagramView view : views)
                 if (view != getActiveView())
                     view.registerParty(newParty, x, y);
-            getPaintBoard().refresh();
             selectionManager.setActiveComponent(newParty);
+            getPaintBoard().refresh();
         }
         catch (InvalidAddPartyException addException) {
             throw addException;
@@ -130,15 +129,14 @@ public class DiagramController {
     public void addMessageFrom(int x1, int y1, int x2, int y2) {
         if (getActiveView().canInsertMessageAt(getDiagram(), x1, y1, x2, y2)) {
             int index = getActiveView().getMessageInsertionIndex(getDiagram(), x1, y1, x2, y2);
-            System.out.println("NEW MESSAGE INDEX : " + index);
             InvocationMessage message = getActiveView().getInvocationMessageForCoordinates(x1, y1, x2, y2);
             if (message != null) {
                 try {
                     getDiagram().insertInvocationMessageAtIndex(message, index);
-                    System.out.println("NEW MESSAGE FROM : " + message.getSender() + " --- " + message.getReceiver());
                     ResultMessage result = getDiagram().getResultMessageForInvocationMessage(message);
                     for (DiagramView view : views)
                         view.registerMessages(getDiagram(), message, result, x1, y1, x2, y2);
+                    selectionManager.setActiveComponent(message);
                     getPaintBoard().refresh();
                 }
                 catch (InvalidAddMessageException exception) {}
@@ -218,6 +216,20 @@ public class DiagramController {
     }
 
     /**
+     * Removes all components in the current selection from this controller's diagram.
+     */
+    public void deleteSelection() {
+        if (selectionManager.getActiveComponent() != null)
+            return;
+        for (DiagramComponent component : getSelectionManager().getSelectedComponents())
+            component.delete(getDiagram());
+        selectionManager.unselectAll();
+        for (DiagramView view : views)
+            view.synchronize(getDiagram());
+        getPaintBoard().refresh();
+    }
+
+    /**
      * Append the given char to the current edit session.
      *
      * @param c The char that is to be appended.
@@ -232,7 +244,7 @@ public class DiagramController {
      */
     public void removeLastChar() {
         String temp = selectionManager.getTemporaryLabel();
-        if (temp != "") {
+        if (temp.length() > 0) {
             selectionManager.setTemporaryLabel(temp.substring(0, temp.length()-1));
             getPaintBoard().refresh();
         }

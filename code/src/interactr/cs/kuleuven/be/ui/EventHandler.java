@@ -102,18 +102,21 @@ public class EventHandler {
         if (getDiagramController() != null) {
             switch (id) {
                 case KeyEvent.KEY_PRESSED:
-                    if (keyChar == KeyEvent.VK_DELETE && !getDiagramController().isEditing()) {
-
-                    }
-                    else if (keyCode == KeyEvent.VK_ENTER)
+                    if (keyCode == KeyEvent.VK_ENTER)
                         getDiagramController().abortEditing();
-                    else if (keyCode == KeyEvent.VK_BACK_SPACE)
-                        getDiagramController().removeLastChar();
+                    else if (keyCode == KeyEvent.VK_BACK_SPACE) {
+                        if (getDiagramController().isEditing())
+                            getDiagramController().removeLastChar();
+                        else
+                            getDiagramController().deleteSelection();
+                    }
                     break;
                 case KeyEvent.KEY_TYPED:
                     if (keyChar == KeyEvent.VK_TAB && !getDiagramController().isEditing())
                         getDiagramController().nextView();
-                    else if (Character.isLetter(keyChar) || Character.isDigit(keyChar) || keyChar == ':')
+                    else if (Character.isLetter(keyChar)
+                            || Character.isDigit(keyChar)
+                            || ":();-_<>*&[]".indexOf(Character.toString(keyChar)) != -1)
                         getDiagramController().appendChar(keyChar);
 
             }

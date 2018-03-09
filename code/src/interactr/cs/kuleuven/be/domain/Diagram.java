@@ -63,6 +63,7 @@ public class Diagram {
                 }
             }
         }
+        parties = parties.minus(party);
     }
 
     /**
@@ -107,6 +108,19 @@ public class Diagram {
     }
 
     /**
+     * Returns the index of the message associated with the message at the given index.
+     *
+     * @param index The index of the message whose associated message's index is desired.
+     * @return The index of the message associated with the message at the given index, or
+     *  -1 if there is none.
+     */
+    public int getIndexOfAssociatedMessage(int index) {
+        if (index < associatedMessageIndices.size())
+            return associatedMessageIndices.get(index);
+        return -1;
+    }
+
+    /**
      * Returns the result message for the given invocation message.
      *
      * @param message The invocation message whose result message is desired.
@@ -127,17 +141,32 @@ public class Diagram {
      * @throws InvalidAddMessageException The given message could not be added at the given index in this diagram.
      */
     public void insertInvocationMessageAtIndex(InvocationMessage message, int index) {
+
+        // Only insert if it is a valid message to insert
         if (!canAddMessageAtIndex(message, index))
             throw new InvalidAddMessageException();
+
+        // Always insert a corresponding result message
         ResultMessage resultMessage = new ResultMessage(message);
-        if (messages.size() == 0 || index >= messages.size()) {
+
+        // First shift all the indices
+        for (int i=0 ; i<messages.size() ; i++) {
+            Integer formerIndex = associatedMessageIndices.get(i);
+            if (formerIndex >= index) {
+                associatedMessageIndices.remove(i);
+                associatedMessageIndices.add(i, formerIndex+2); // Shift two downwards because of insert
+            }
+        }
+
+        // Insert the message
+        if (messages.size() == 0 || index >= messages.size()) { // Append to end
             index = messages.size();
             messages = messages.plus(message);
             messages = messages.plus(resultMessage);
             associatedMessageIndices.add(index + 1);
             associatedMessageIndices.add(index);
         }
-        else {
+        else { // Insert
             messages = messages.plus(index, resultMessage);
             messages = messages.plus(index, message);
             associatedMessageIndices.add(index, index);
@@ -159,7 +188,7 @@ public class Diagram {
         if (index >= messages.size())
             return messages.get(messages.size() - 1).getReceiver() == message.getSender();
         if (index == 0)
-            return (message.getSender() == messages.getFirst().getReceiver());
+            return (message.getSender() == messages.getFirst().getSender());
         return (messages.get(index).getSender() == message.getSender());
     }
 
@@ -183,15 +212,28 @@ public class Diagram {
         int associatedMessageIndex = associatedMessageIndices.get(messageIndex);
         int min = Math.min(messageIndex, associatedMessageIndex), max = Math.max(messageIndex, associatedMessageIndex);
         int count = max - min + 1; // Number of messages to remove
-        int i = 0; // Current number of message removed
+        int i = 0; // Current index of message to be removed
         while(i < count) {
             messages = messages.minus(min);
+            associatedMessageIndices.remove(min);
             i++;
         }
         for (i=min ; i<messages.size() ; i++) {
             Integer formerIndex = associatedMessageIndices.remove(i);
             associatedMessageIndices.add(i,  formerIndex - count);
         }
+    }
+
+    /**
+     * Returns the initiator for this diagram.
+     *
+     * @return The first sending party in this diagram's call stack.
+     */
+    public Party getInitiator() {
+        Message first = messages.getFirst();
+        if (first != null)
+            return first.getSender();
+        return null;
     }
 
     /**
