@@ -223,6 +223,7 @@ public class DiagramController {
             return;
         for (DiagramComponent component : getSelectionManager().getSelectedComponents())
             component.delete(getDiagram());
+        selectionManager.unselectAll();
         for (DiagramView view : views)
             view.synchronize(getDiagram());
         getPaintBoard().refresh();

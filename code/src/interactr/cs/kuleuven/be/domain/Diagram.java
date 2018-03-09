@@ -199,7 +199,7 @@ public class Diagram {
         int associatedMessageIndex = associatedMessageIndices.get(messageIndex);
         int min = Math.min(messageIndex, associatedMessageIndex), max = Math.max(messageIndex, associatedMessageIndex);
         int count = max - min + 1; // Number of messages to remove
-        int i = 0; // Current number of message removed
+        int i = 0; // Current index of message to be removed
         while(i < count) {
             messages = messages.minus(min);
             associatedMessageIndices.remove(min);
