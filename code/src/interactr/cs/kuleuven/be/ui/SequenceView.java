@@ -2,6 +2,7 @@ package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
+import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.purecollections.PMap;
 import interactr.cs.kuleuven.be.ui.geometry.Arrow;
 import interactr.cs.kuleuven.be.ui.geometry.Figure;
@@ -59,29 +60,22 @@ public class SequenceView extends DiagramView {
 
         // Pre-processing
         Color activationColor = Color.getHSBColor(216/360, 35/360, 0.66f);
-        Party initiator = diagram.getInitiator();
-        HashMap<Party, Integer> startActivations = new HashMap<Party, Integer>();
-        HashMap<Party, Integer> endActivations = new HashMap<Party, Integer>();
         int barWidth = ACTIVATION_BAR_HEIGHT;
+        PList<Party> parties = diagram.getParties();
+        int[][] activations = new int[parties.size()][2]; // From left, from right
 
         // Display messages and activation bars
         for (int i=0 ; i<diagram.getNbMessages() ; i++) {
 
             Message message = diagram.getMessageAtIndex(i);
             int associatedIndex = diagram.getIndexOfAssociatedMessage(i);
-            System.out.println("Associated = " + associatedIndex);
-            Party sender = message.getSender();
+            Party sender = message.getSender(), receiver = message.getReceiver();
             Link messageLink = linkForMessage(message);
             Link associatedMessageLink = linkForMessage(diagram.getMessageAtIndex(associatedIndex));
             if (messageLink != null && associatedMessageLink != null) {
 
-                // Check if we're back at the initiator
-                if (sender == initiator) {
-                    startActivations.clear();
-                    endActivations.clear();
-                }
-
-                // Determine activation bar and draw it
+                // Determine activation bar at the 'end' side and draw it
+                boolean fromLeft = messageLink.getStartX() < messageLink.getEndX();
                 int min = Math.min(messageLink.getStartY(), associatedMessageLink.getStartY());
                 int max = Math.max(messageLink.getStartY(), associatedMessageLink.getStartY());
                 int barHeight = max - min + 10;

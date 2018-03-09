@@ -401,6 +401,8 @@ public abstract class DiagramView {
 
     /**
      * Make sure no link or figure is held by this view if it doesn't have a corresponding component in the given diagram.
+     *
+     * @param diagram The diagram to synchronize with.
      */
     public void synchronize(Diagram diagram) {
         PList<Message> diagramMessages = diagram.getMessages();
