@@ -127,7 +127,6 @@ public class Link extends Model {
         Rectangle bounds = super.getLabelBounds();
         int startX = getStartX(), endX = getEndX();
         int startY = getStartY(), endY = getEndY();
-        System.out.println(startX + (endX - startX)/2 - bounds.getWidth()/2);
         bounds.setX(startX + (endX - startX)/2 - bounds.getWidth()/2);
         bounds.setY(Math.min(startY, endY) + Math.abs(startY - endY)/2 - 3);
         return bounds;
