@@ -42,12 +42,14 @@ public class AddMessage {
     }
 
     @Test
-    void addIllegaleMessageBetweenTwoParties(){
+    void addIllegaleMessageStack0110(){
         DiagramWindow.replayRecording("addMessage0-100.txt",diagramWindow);
         DiagramWindow.replayRecording("addMessage100-0.txt",diagramWindow);
         assertEquals(2,diagramWindow.getEventHandler().getDiagramController().getDiagram().getMessages().size());
 
     }
+
+    //TODO als het mogelijk is om meerdere messages toe te voegen, alle cases testen -> nog meer
 
 
 }
