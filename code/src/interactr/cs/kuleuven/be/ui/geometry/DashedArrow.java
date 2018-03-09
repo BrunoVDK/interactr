@@ -53,6 +53,8 @@ public class DashedArrow extends Link {
             xOld = xNew + 10;
         }
 
+        super.draw(paintBoard);
+
 
     }
 

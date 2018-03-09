@@ -13,6 +13,7 @@ public class Arrow extends Link {
 
     @Override
     public void draw(PaintBoard paintBoard) {
+        super.draw(paintBoard);
 
         // Link
         paintBoard.drawLine(getStartX(), getStartY(), getEndX(), getEndY());

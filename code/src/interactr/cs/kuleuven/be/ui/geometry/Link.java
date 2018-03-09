@@ -14,7 +14,7 @@ public class Link extends Model {
      * Initialize this new figure with zero coordinates and a width and height of 20.
      */
     public Link() {
-        this(100, 200, 300, 200);
+        this(50, 200, 100, 400);
     }
 
     /**
@@ -125,17 +125,21 @@ public class Link extends Model {
     @Override
     public Rectangle getLabelBounds() {
         Rectangle bounds = super.getLabelBounds();
-        int startX = getStartX(), endY = getEndX();
-        int startY = getStartY(), endX = getEndY();
-        bounds.setY(Math.min(startY, endY) + Math.abs(startY - endY)/2 + 5); // Above link
-        int boundsX = startX + Math.abs(startX - endX)/2 - bounds.getWidth()/2;
+        int startX = getStartX(), endY = getEndY();
+        int startY = getStartY(), endX = getEndX();
+        bounds.setY(Math.min(startY, endY) + Math.abs(startY - endY)/2); // Above link
+        int i;
+        if(startX < endX) i = 1;
+        else i = -1;
+        int boundsX = startX +  (i * (Math.abs(startX - endX)/2 - bounds.getWidth()/2));
         int offset = bounds.getWidth()/2 + charHeight;
+
         if ((startY < endY && getStartX() < getEndX())
                 || (startY > endY && getStartX() > getEndX())) {
             offset = -offset;
         }
-        bounds.setX(boundsX + offset);
-        return super.getLabelBounds();
+        bounds.setX(boundsX);
+        return bounds;
     }
 
 }
