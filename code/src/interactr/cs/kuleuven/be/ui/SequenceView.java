@@ -123,11 +123,12 @@ public class SequenceView extends DiagramView {
 
     @Override
     public void registerMessages(InvocationMessage invocation, ResultMessage resultMessage, int fromX, int fromY, int toX, int toY) {
-        Link invocationLink = createFigureForMessage(invocation, fromX, fromY, toX, toY);
+        int y = Math.min(fromY, toY) + Math.abs(fromY - toY) / 2;
+        Link invocationLink = createFigureForMessage(invocation, fromX, y, toX, y);
         int max = Math.max(fromY, toY);
         Link resultLink = createFigureForMessage(resultMessage, fromX, max + 20, toX, max + 20);
         links = links.plus(invocation, invocationLink);
-        links = links.plus(invocation, resultLink);
+        links = links.plus(resultMessage, resultLink);
     }
 
     @Override

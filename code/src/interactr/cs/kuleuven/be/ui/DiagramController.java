@@ -134,8 +134,8 @@ public class DiagramController {
             InvocationMessage message = getActiveView().getInvocationMessageForCoordinates(x1, y1, x2, y2);
             if (message != null) {
                 try {
-                    System.out.println("NEW MESSAGE FROM : " + message.getSender() + " --- " + message.getReceiver());
                     getDiagram().insertInvocationMessageAtIndex(message, index);
+                    System.out.println("NEW MESSAGE FROM : " + message.getSender() + " --- " + message.getReceiver());
                     ResultMessage result = getDiagram().getResultMessageForInvocationMessage(message);
                     for (DiagramView view : views)
                         view.registerMessages(message, result, x1, y1, x2, y2);
