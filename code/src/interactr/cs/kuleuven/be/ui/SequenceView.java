@@ -143,10 +143,8 @@ public class SequenceView extends DiagramView {
         links = links.plus(resultMessage, resultLink);
         int minY = min + 30;
         int resultIndex = diagram.getIndexOfMessage(resultMessage);
-        System.out.println("INDEX = " + resultIndex);
         for (int i=resultIndex+1 ; i<diagram.getNbMessages() ; i++) {
             Link link = links.get(diagram.getMessageAtIndex(i));
-            System.out.println("Y:"+link.getStartY());
             if (link != null && (link.getStartY() < minY + 30 || link.getEndY() < minY + 30)) {
                 link.setStartY(minY + 30);
                 link.setEndY(minY + 30);

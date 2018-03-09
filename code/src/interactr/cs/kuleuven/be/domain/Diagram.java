@@ -159,7 +159,7 @@ public class Diagram {
         if (index >= messages.size())
             return messages.get(messages.size() - 1).getReceiver() == message.getSender();
         if (index == 0)
-            return (message.getSender() == messages.getFirst().getReceiver());
+            return (message.getSender() == messages.getFirst().getSender());
         return (messages.get(index).getSender() == message.getSender());
     }
 

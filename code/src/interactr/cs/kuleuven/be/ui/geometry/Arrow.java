@@ -10,7 +10,6 @@ import interactr.cs.kuleuven.be.ui.PaintBoard;
  */
 public class Arrow extends Link {
 
-
     @Override
     public void draw(PaintBoard paintBoard) {
         super.draw(paintBoard);
@@ -38,6 +37,5 @@ public class Arrow extends Link {
         paintBoard.drawLine((int) Math.floor(Dx),(int) Math.floor(Dy),getEndX(),getEndY());
 
     }
-
 
 }
