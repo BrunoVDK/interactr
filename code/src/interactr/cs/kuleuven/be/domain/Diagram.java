@@ -180,6 +180,7 @@ public class Diagram {
      * @param message The message that is to be removed.
      */
     public void deleteMessage(Message message) {
+        System.out.println("DELETE : " + message);
         int messageIndex = getIndexOfMessage(message);
         int associatedMessageIndex = associatedMessageIndices.get(messageIndex);
         int min = Math.min(messageIndex, associatedMessageIndex), max = Math.max(messageIndex, associatedMessageIndex);
