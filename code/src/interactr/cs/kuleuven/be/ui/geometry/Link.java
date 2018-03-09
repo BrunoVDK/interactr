@@ -26,7 +26,7 @@ public class Link extends Model {
      * @param endY The end y coordinate for this new linke.
      */
     public Link(int startX, int startY, int endX, int endY) {
-        super("");
+        super("method()");
         setStartX(startX);
         setStartY(startY);
         setEndX(endX);
@@ -125,20 +125,11 @@ public class Link extends Model {
     @Override
     public Rectangle getLabelBounds() {
         Rectangle bounds = super.getLabelBounds();
-        int startX = getStartX(), endY = getEndY();
-        int startY = getStartY(), endX = getEndX();
-        bounds.setY(Math.min(startY, endY) + Math.abs(startY - endY)/2); // Above link
-        int i;
-        if(startX < endX) i = 1;
-        else i = -1;
-        int boundsX = startX +  (i * (Math.abs(startX - endX)/2 - bounds.getWidth()/2));
-        int offset = bounds.getWidth()/2 + charHeight;
-
-        if ((startY < endY && getStartX() < getEndX())
-                || (startY > endY && getStartX() > getEndX())) {
-            offset = -offset;
-        }
-        bounds.setX(boundsX);
+        int startX = getStartX(), endX = getEndX();
+        int startY = getStartY(), endY = getEndY();
+        System.out.println(startX + (endX - startX)/2 - bounds.getWidth()/2);
+        bounds.setX(startX + (endX - startX)/2 - bounds.getWidth()/2);
+        bounds.setY(Math.min(startY, endY) + Math.abs(startY - endY)/2 - 3);
         return bounds;
     }
 

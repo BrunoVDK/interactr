@@ -61,6 +61,8 @@ public abstract class DiagramView {
             Link messageLink = linkForMessage(message);
             if (isActive)
                 messageLink.setLabel(selectionManager.getTemporaryLabel() + "|");
+            else
+                messageLink.setLabel(diagram.getPrefix(message) + messageLink.getLabel());
             messageLink.draw(paintBoard);
             paintBoard.setColor(Color.BLACK);
         }
@@ -276,9 +278,9 @@ public abstract class DiagramView {
         if (link != null) {
             Party sender = message.getSender(), receiver = message.getReceiver();
             Figure senderFigure = figures.get(sender), receiverFigure = figures.get(receiver);
-            link.setStartX(senderFigure.getX() + senderFigure.getHeight());
+            link.setStartX(senderFigure.getX() + (senderFigure.getX() < receiverFigure.getX() ? senderFigure.getWidth() : 0));
             link.setStartY(senderFigure.getY() + senderFigure.getHeight()/2);
-            link.setEndX(receiverFigure.getX());
+            link.setEndX(receiverFigure.getX() + (senderFigure.getX() < receiverFigure.getX() ? 0 : receiverFigure.getWidth()));
             link.setEndY(receiverFigure.getY() + receiverFigure.getHeight()/2);
             link.setLabel(message.getLabel());
         }
@@ -295,7 +297,7 @@ public abstract class DiagramView {
      * @param toY The to y coordinate for the message.
      * @return A link at given coordinates representing the given message.
      */
-    protected Link createFigureForMessage(Message message, int fromX, int fromY, int toX, int toY) {
+    protected Link createLinkForMessage(Message message, int fromX, int fromY, int toX, int toY) {
         Link link = new Arrow();
         Class linkType = message.proposedLinkType();
         try {
@@ -306,9 +308,9 @@ public abstract class DiagramView {
         }
         Party sender = message.getSender(), receiver = message.getReceiver();
         Figure senderFigure = figures.get(sender), receiverFigure = figures.get(receiver);
-        link.setStartX(senderFigure.getX() + senderFigure.getHeight());
+        link.setStartX(senderFigure.getX() + (senderFigure.getX() < receiverFigure.getX() ? senderFigure.getWidth() : 0));
         link.setStartY(senderFigure.getY() + senderFigure.getHeight()/2);
-        link.setEndX(receiverFigure.getX());
+        link.setEndX(receiverFigure.getX() + (receiverFigure.getX() < receiverFigure.getX() ? 0 : receiverFigure.getWidth()));
         link.setEndY(receiverFigure.getY() + receiverFigure.getHeight()/2);
         link.setLabel(message.getLabel());
         return link;
@@ -363,7 +365,11 @@ public abstract class DiagramView {
      * @param toY The end y coordinate for the invocation message's link.
      */
     public void registerMessages(InvocationMessage invocation, ResultMessage resultMessage, int fromX, int fromY, int toX, int toY) {
-        // To be overridden
+        // Result messages are ignored!
+        Link invocationLink = createLinkForMessage(invocation, fromX, fromY, toX, toY);
+        // Link resultLink = createLinkForMessage(resultMessage, fromX, fromY, toX, toY);
+        links = links.plus(invocation, invocationLink);
+        // links = links.plus(resultMessage, resultLink);
     }
 
     /**

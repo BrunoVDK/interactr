@@ -186,6 +186,16 @@ public class Diagram {
     }
 
     /**
+     * Calculates a prefix for the given message in this diagram.
+     *
+     * @param message The message whose prefix should be determined.
+     * @return A prefix for the given message.
+     */
+    public String getPrefix(Message message) {
+        return "X.X";
+    }
+
+    /**
      * The messages held by this diagram.
      */
     private PList<Message> messages = PList.<Message>empty();

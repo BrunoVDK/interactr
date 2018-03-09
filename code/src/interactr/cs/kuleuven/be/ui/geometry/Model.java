@@ -106,7 +106,8 @@ public abstract class Model {
      * @param paintBoard The board in which to draw the label.
      */
     protected void drawLabel(PaintBoard paintBoard) {
-        paintBoard.drawString(getLabel(), getLabelBounds().getX(), getLabelBounds().getY());
+        Rectangle labelBounds = getLabelBounds();
+        paintBoard.drawString(getLabel(), labelBounds.getX(), labelBounds.getY());
     }
 
 }
