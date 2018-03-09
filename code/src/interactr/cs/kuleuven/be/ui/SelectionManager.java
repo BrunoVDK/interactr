@@ -12,6 +12,15 @@ import interactr.cs.kuleuven.be.purecollections.PList;
 public class SelectionManager {
 
     /**
+     * Returns all components selected by this selection manager.
+     *
+     * @return A list of components in the selection held by this manager.
+     */
+    public PList<DiagramComponent> getSelectedComponents() {
+        return selection;
+    }
+
+    /**
      * Returns the active component for this selection manager.
      *
      * @return The active component for this selection manager.

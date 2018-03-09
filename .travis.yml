@@ -3,3 +3,4 @@ notifications:
     email:
         on_success: change
         on_failure: change
+before_install: cd code

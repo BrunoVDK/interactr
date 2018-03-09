@@ -25,13 +25,9 @@ public class SwitchView {
         }
 
         DiagramWindow.replayRecording("tabkey.txt", diagramWindow);
-
-
-
         Field f = diagramWindow.getEventHandler().getDiagramController().getClass().getDeclaredField("activeViewIndex"); //NoSuchFieldException
         f.setAccessible(true);
         int currentView = (int) f.get(diagramWindow.getEventHandler().getDiagramController());
-        System.out.println(currentView);
         assert(currentView == 1);
     }
 

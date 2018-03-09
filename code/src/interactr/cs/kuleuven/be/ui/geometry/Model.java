@@ -66,6 +66,8 @@ public abstract class Model {
         int length = 0;
         if (getLabel() != null)
             length = getLabel().length();
+        if (length == 0)
+            length = 1;
         return new Rectangle(0, 0, length * charWidth, charHeight);
     }
 

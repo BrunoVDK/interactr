@@ -63,6 +63,7 @@ public class Diagram {
                 }
             }
         }
+        parties = parties.minus(party);
     }
 
     /**
@@ -85,6 +86,15 @@ public class Diagram {
      */
     public PList<Message> getMessages() {
         return messages;
+    }
+
+    /**
+     * Returns the number of messages in this diagram.
+     *
+     * @return The number of messages in this diagram.
+     */
+    public int getNbMessages() {
+        return messages.size();
     }
 
     /**
@@ -118,21 +128,36 @@ public class Diagram {
      * @throws InvalidAddMessageException The given message could not be added at the given index in this diagram.
      */
     public void insertInvocationMessageAtIndex(InvocationMessage message, int index) {
+
+        // Only insert if it is a valid message to insert
         if (!canAddMessageAtIndex(message, index))
             throw new InvalidAddMessageException();
+
+        // Always insert a corresponding result message
         ResultMessage resultMessage = new ResultMessage(message);
-        if (messages.size() == 0 || index >= messages.size()) {
+
+        // First shift all the indices
+        for (int i=0 ; i<messages.size() ; i++) {
+            Integer formerIndex = associatedMessageIndices.get(i);
+            if (formerIndex >= index) {
+                associatedMessageIndices.remove(i);
+                associatedMessageIndices.add(i, formerIndex+2); // Shift two downwards because of insert
+            }
+        }
+
+        // Insert the message
+        if (messages.size() == 0 || index >= messages.size()) { // Append to end
             index = messages.size();
             messages = messages.plus(message);
             messages = messages.plus(resultMessage);
             associatedMessageIndices.add(index + 1);
             associatedMessageIndices.add(index);
         }
-        else {
+        else { // Insert
             messages = messages.plus(index, resultMessage);
             messages = messages.plus(index, message);
             associatedMessageIndices.add(index, index);
-            associatedMessageIndices.add(index, index-1);
+            associatedMessageIndices.add(index, index + 1);
         }
     }
 
@@ -150,7 +175,7 @@ public class Diagram {
         if (index >= messages.size())
             return messages.get(messages.size() - 1).getReceiver() == message.getSender();
         if (index == 0)
-            return (message.getSender() == messages.getFirst().getReceiver());
+            return (message.getSender() == messages.getFirst().getSender());
         return (messages.get(index).getSender() == message.getSender());
     }
 
