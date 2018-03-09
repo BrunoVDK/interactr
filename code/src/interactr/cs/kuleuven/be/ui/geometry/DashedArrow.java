@@ -45,7 +45,7 @@ public class DashedArrow extends Link {
             xOld = getStartX();
             xLast = getEndX();
         }
-        while(xOld < xLast){
+        while(xOld + 10 < xLast){
             xNew = xOld + 10;
             paintBoard.drawLine(xOld,y,xNew,y);
             xOld = xNew + 10;
