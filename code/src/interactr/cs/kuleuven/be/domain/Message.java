@@ -18,12 +18,8 @@ public class Message extends DiagramComponent {
      * @throws IllegalArgumentException If any of the given parties is null.
      */
     public Message(Party sender, Party receiver) throws IllegalArgumentException {
-        if (sender == null || receiver == null)
-            throw new IllegalArgumentException("Party can not be null when creating message.");
-        if (sender == receiver)
-            throw new IllegalArgumentException("Message sender can not equal its receiver.");
-        this.sender = sender;
-        this.receiver = receiver;
+        setSender(sender);
+        setReceiver(receiver);
     }
 
     /**
@@ -31,6 +27,17 @@ public class Message extends DiagramComponent {
      */
     public Party getSender() {
         return sender;
+    }
+
+    /**
+     * Set the sender for this message.
+     *
+     * @param sender The new sender for this message.
+     */
+    public void setSender(Party sender) {
+        if (sender == null || sender == getReceiver())
+            throw new IllegalArgumentException("Invalid sender for this message.");
+        this.sender = sender;
     }
 
     /**
@@ -43,6 +50,17 @@ public class Message extends DiagramComponent {
      */
     public Party getReceiver() {
         return receiver;
+    }
+
+    /**
+     * Set the receiver for this message.
+     *
+     * @param receiver The new receiver for this message.
+     */
+    public void setReceiver(Party receiver) {
+        if (receiver == null || receiver == getSender())
+            throw new IllegalArgumentException("Invalid receiver for this message.");
+        this.receiver = receiver;
     }
 
     /**
