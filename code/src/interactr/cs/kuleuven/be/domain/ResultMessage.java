@@ -30,7 +30,7 @@ public class ResultMessage extends Message {
 
     @Override
     public Class proposedLinkType() {
-        return Arrow.class;
+        return DashedArrow.class;
     }
 
 }

@@ -256,6 +256,8 @@ public class Diagram {
      * @return A prefix for the given message.
      */
     public String getPrefix(Message message) {
+
+
         return "X.X";
     }
 

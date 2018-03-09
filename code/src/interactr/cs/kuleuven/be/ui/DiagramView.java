@@ -62,7 +62,7 @@ public abstract class DiagramView {
             if (isActive)
                 messageLink.setLabel(selectionManager.getTemporaryLabel() + "|");
             else
-                messageLink.setLabel(diagram.getPrefix(message) + messageLink.getLabel());
+                messageLink.setLabel(diagram.getPrefix(message) + " " + messageLink.getLabel());
             messageLink.draw(paintBoard);
             paintBoard.setColor(Color.BLACK);
         }
