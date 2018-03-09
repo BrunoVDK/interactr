@@ -8,7 +8,7 @@ import static org.mockito.Mockito.mock;
 
 public class MessageTest {
 
-    private Message message;
+    private InvocationMessage message;
     private Party sender;
     private Party receiver;
 
@@ -17,7 +17,7 @@ public class MessageTest {
     void setUp() {
             sender = mock(Party.class);
             receiver = mock(Party.class);
-            message = new Message(sender,receiver);
+            message = new InvocationMessage(sender,receiver);
     }
 
     @Test
@@ -33,9 +33,17 @@ public class MessageTest {
     }
 
     @Test
+    void getMessageTest() {
+        Diagram diagram = new Diagram();
+        diagram.insertInvocationMessageAtIndex(message, 0);
+        assert(diagram.getMessages().contains(message));
+        assert(diagram.getMessageAtIndex(0) == message);
+    }
+
+    @Test
     void deleteTest() {
         Diagram diagram = new Diagram();
-        // TODO: how tf do I add a message to a diagram? omfg
+        diagram.insertInvocationMessageAtIndex(message,0);
         message.delete(diagram);
         assert(!diagram.getMessages().contains(message));
     }

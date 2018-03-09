@@ -63,6 +63,7 @@ public class Diagram {
                 }
             }
         }
+        parties = parties.minus(party);
     }
 
     /**
