@@ -29,7 +29,7 @@ public class SequenceView extends DiagramView {
     /**
      * The height of each message row.
      */
-    private static int MESSAGE_ROW_HEIGHT = 30;
+    private static int MESSAGE_ROW_HEIGHT = 40;
 
     @Override
     public void display(PaintBoard paintBoard, Diagram diagram, SelectionManager selectionManager) {
@@ -116,10 +116,11 @@ public class SequenceView extends DiagramView {
     public boolean canInsertMessageAt(Diagram diagram, int fromX, int fromY, int toX, int toY) {
         if (fromY < PARTY_ROW_HEIGHT || toY < PARTY_ROW_HEIGHT)
             return false;
+        int min = Math.min(fromY, toY);
         Link link = new Link(fromX, fromY, toX, toY);
         for (Message message : diagram.getMessages()) {
             Link messageLink = linkForMessage(message);
-            if (messageLink != null && messageLink.crosses(link))
+            if (messageLink != null && (messageLink.crosses(link) || Math.abs(messageLink.getStartY() - min) < 8))
                 return false;
         }
         return true;
@@ -130,17 +131,17 @@ public class SequenceView extends DiagramView {
         int min = Math.min(fromY, toY);
         Link invocationLink = createLinkForMessage(invocation, fromX, min, toX, min);
         int max = Math.max(fromY, toY);
-        Link resultLink = createLinkForMessage(resultMessage, fromX, min + 30, toX, min + 30);
+        Link resultLink = createLinkForMessage(resultMessage, fromX, min + MESSAGE_ROW_HEIGHT, toX, min + MESSAGE_ROW_HEIGHT);
         links = links.plus(invocation, invocationLink);
         links = links.plus(resultMessage, resultLink);
-        int minY = min + 30;
+        int minY = min + MESSAGE_ROW_HEIGHT;
         int resultIndex = diagram.getIndexOfMessage(resultMessage);
         for (int i=resultIndex+1 ; i<diagram.getNbMessages() ; i++) {
             Link link = links.get(diagram.getMessageAtIndex(i));
-            if (link != null && (link.getStartY() < minY + 30 || link.getEndY() < minY + 30)) {
-                link.setStartY(minY + 30);
-                link.setEndY(minY + 30);
-                minY = minY + 30;
+            if (link != null && (link.getStartY() < minY + MESSAGE_ROW_HEIGHT || link.getEndY() < minY + MESSAGE_ROW_HEIGHT)) {
+                link.setStartY(minY + MESSAGE_ROW_HEIGHT);
+                link.setEndY(minY + MESSAGE_ROW_HEIGHT);
+                minY = minY + MESSAGE_ROW_HEIGHT;
             }
         }
     }
