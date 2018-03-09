@@ -30,15 +30,23 @@ public class AddMessage {
 
     @Test
     void addMessageBetweenTwoPartiesSequence(){
-        DiagramWindow.replayRecording("addMessage.txt",diagramWindow);
+        DiagramWindow.replayRecording("addMessage0-100.txt",diagramWindow);
         assertEquals(2,diagramWindow.getEventHandler().getDiagramController().getDiagram().getMessages().size());
     }
 
     @Test
     void moveWithMessagesSequence(){
-        DiagramWindow.replayRecording("addMessage.txt",diagramWindow);
+        DiagramWindow.replayRecording("addMessage0-100.txt",diagramWindow);
         DiagramWindow.replayRecording("moveTill200.txt",diagramWindow);
         assertEquals(2,diagramWindow.getEventHandler().getDiagramController().getDiagram().getMessages().size());
+    }
+
+    @Test
+    void addIllegaleMessageBetweenTwoParties(){
+        DiagramWindow.replayRecording("addMessage0-100.txt",diagramWindow);
+        DiagramWindow.replayRecording("addMessage100-0.txt",diagramWindow);
+        assertEquals(2,diagramWindow.getEventHandler().getDiagramController().getDiagram().getMessages().size());
+
     }
 
 
