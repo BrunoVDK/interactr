@@ -216,6 +216,19 @@ public class DiagramController {
     }
 
     /**
+     * Removes all components in the current selection from this controller's diagram.
+     */
+    public void deleteSelection() {
+        if (selectionManager.getActiveComponent() != null)
+            return;
+        for (DiagramComponent component : getSelectionManager().getSelectedComponents())
+            component.delete(getDiagram());
+        for (DiagramView view : views)
+            view.synchronize(getDiagram());
+        getPaintBoard().refresh();
+    }
+
+    /**
      * Append the given char to the current edit session.
      *
      * @param c The char that is to be appended.
@@ -230,7 +243,7 @@ public class DiagramController {
      */
     public void removeLastChar() {
         String temp = selectionManager.getTemporaryLabel();
-        if (temp != "") {
+        if (temp.length() > 0) {
             selectionManager.setTemporaryLabel(temp.substring(0, temp.length()-1));
             getPaintBoard().refresh();
         }

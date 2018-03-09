@@ -74,15 +74,6 @@ public class SequenceView extends DiagramView {
     }
 
     @Override
-    public DiagramComponent selectableComponentAt(Diagram diagram, int x, int y) {
-        for (Party party : diagram.getParties()) {
-            if (figureForParty(party).isLabelHit(x,y))
-                return party;
-        }
-        return null;
-    }
-
-    @Override
     public void moveParty(Diagram diagram, Party party, int x, int y){
         super.moveParty(diagram, party, x, 5);
     }

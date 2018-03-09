@@ -130,6 +130,10 @@ public abstract class DiagramView {
      *  or null if no such component is visible at the given coordinate.
      */
     public DiagramComponent selectableComponentAt(Diagram diagram, int x, int y) {
+        for (Message message : links.keySet()) {
+            if (linkForMessage(message).isLabelHit(x,y))
+                return message;
+        }
         for (Party party : figures.keySet()) {
             if (figureForParty(party).isLabelHit(x,y))
                 return party;
@@ -148,6 +152,10 @@ public abstract class DiagramView {
      *  or null if no such component is visible at the given coordinate.
      */
     public DiagramComponent componentAt(Diagram diagram, int x, int y) {
+        for (Message message : links.keySet()) {
+            if (linkForMessage(message).isLabelHit(x,y))
+                return message;
+        }
         for (Party party : diagram.getParties()) {
             if (figureForParty(party).isHit(x,y))
                 return party;
@@ -387,15 +395,29 @@ public abstract class DiagramView {
     }
 
     /**
+     * A hashmap containing links of all messages in this diagram view.
+     */
+    protected PMap<Message, Link> links = PMap.<Message, Link>empty();
+
+    /**
+     * Make sure no link or figure is held by this view if it doesn't have a corresponding component in the given diagram.
+     */
+    public void synchronize(Diagram diagram) {
+        PList<Message> diagramMessages = diagram.getMessages();
+        for (Message message : links.keySet())
+            if (!diagramMessages.contains(message))
+                links = links.minus(message);
+        PList<Party> diagramParties = diagram.getParties();
+        for (Party party : figures.keySet())
+            if (!diagramParties.contains(party))
+                figures = figures.minus(party);
+    }
+
+    /**
      * Returns the name of this diagram view as a string.
      *
      * @return This diagram view's name as a string.
      */
     public abstract String viewName();
-
-    /**
-     * A hashmap containing links of all messages in this diagram view.
-     */
-    protected PMap<Message, Link> links = PMap.<Message, Link>empty();
 
 }
