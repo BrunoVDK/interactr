@@ -2,12 +2,14 @@ package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
+import interactr.cs.kuleuven.be.purecollections.PMap;
 import interactr.cs.kuleuven.be.ui.geometry.Arrow;
 import interactr.cs.kuleuven.be.ui.geometry.Figure;
 import interactr.cs.kuleuven.be.ui.geometry.Link;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * A class of sequence diagram views. Sequence diagram views display diagrams
@@ -31,6 +33,11 @@ public class SequenceView extends DiagramView {
      */
     private static int MESSAGE_ROW_HEIGHT = 40;
 
+    /**
+     * The width of activation bars.
+     */
+    private static int ACTIVATION_BAR_HEIGHT = 10;
+
     @Override
     public void display(PaintBoard paintBoard, Diagram diagram, SelectionManager selectionManager) {
         displayFigures(paintBoard, diagram, selectionManager);
@@ -44,22 +51,50 @@ public class SequenceView extends DiagramView {
         }
         paintBoard.setColor(Color.BLACK);
         paintBoard.drawLine(0, PARTY_ROW_HEIGHT, paintBoard.getWidth(), PARTY_ROW_HEIGHT);
-        // TODO Draw activation bars
         displayMessages(paintBoard, diagram, selectionManager);
     }
 
     @Override
     protected void displayMessages(PaintBoard paintBoard, Diagram diagram, SelectionManager selectionManager) {
-        for (Message message : links.keySet()) {
-            boolean isSelected = selectionManager.isSelected(message);
-            boolean isActive = selectionManager.getActiveComponent() == message;
-            paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
+
+        // Pre-processing
+        Color activationColor = Color.getHSBColor(216/360, 35/360, 0.66f);
+        Party initiator = diagram.getInitiator();
+        HashMap<Party, Integer> startActivations = new HashMap<Party, Integer>();
+        HashMap<Party, Integer> endActivations = new HashMap<Party, Integer>();
+
+        // Display messages and activation bars
+        for (int i=0 ; i<diagram.getNbMessages() ; i++) {
+
+            Message message = diagram.getMessageAtIndex(i);
+            int associatedIndex = diagram.getIndexOfAssociatedMessage(i);
+            Party sender = message.getSender();
             Link messageLink = linkForMessage(message);
-            if (isActive)
-                messageLink.setLabel(selectionManager.getTemporaryLabel() + "|");
-            messageLink.draw(paintBoard);
-            paintBoard.setColor(Color.BLACK);
+            if (messageLink != null) {
+
+                // Check if we're back at the initiator
+                if (sender == initiator) {
+                    startActivations.clear();
+                    endActivations.clear();
+                }
+
+                // Determine activation bar and draw it
+
+                // Also use its position for repositioning the message link
+
+                // Draw link
+                boolean isSelected = selectionManager.isSelected(message);
+                boolean isActive = selectionManager.getActiveComponent() == message;
+                paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
+                if (isActive)
+                    messageLink.setLabel(selectionManager.getTemporaryLabel() + "|");
+                messageLink.draw(paintBoard);
+                paintBoard.setColor(Color.BLACK);
+
+            }
+
         }
+
     }
 
     @Override

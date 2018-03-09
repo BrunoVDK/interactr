@@ -108,6 +108,19 @@ public class Diagram {
     }
 
     /**
+     * Returns the index of the message associated with the message at the given index.
+     *
+     * @param index The index of the message whose associated message's index is desired.
+     * @return The index of the message associated with the message at the given index, or
+     *  -1 if there is none.
+     */
+    public int getIndexOfAssociatedMessage(int index) {
+        if (index < associatedMessageIndices.size())
+            return associatedMessageIndices.get(index);
+        return -1;
+    }
+
+    /**
      * Returns the result message for the given invocation message.
      *
      * @param message The invocation message whose result message is desired.
@@ -209,6 +222,18 @@ public class Diagram {
             Integer formerIndex = associatedMessageIndices.remove(i);
             associatedMessageIndices.add(i,  formerIndex - count);
         }
+    }
+
+    /**
+     * Returns the initiator for this diagram.
+     *
+     * @return The first sending party in this diagram's call stack.
+     */
+    public Party getInitiator() {
+        Message first = messages.getFirst();
+        if (first != null)
+            return first.getSender();
+        return null;
     }
 
     /**
