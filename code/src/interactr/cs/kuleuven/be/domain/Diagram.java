@@ -202,6 +202,7 @@ public class Diagram {
         int i = 0; // Current number of message removed
         while(i < count) {
             messages = messages.minus(min);
+            associatedMessageIndices.remove(min);
             i++;
         }
         for (i=min ; i<messages.size() ; i++) {
