@@ -44,6 +44,7 @@ public class SequenceView extends DiagramView {
         }
         paintBoard.setColor(Color.BLACK);
         paintBoard.drawLine(0, PARTY_ROW_HEIGHT, paintBoard.getWidth(), PARTY_ROW_HEIGHT);
+        // TODO Draw activation bars
         displayMessages(paintBoard, diagram, selectionManager);
     }
 
