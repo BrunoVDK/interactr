@@ -13,6 +13,8 @@ public class DashedArrow extends Link {
     @Override
     public void draw(PaintBoard paintBoard) {
 
+        System.out.println("> " + getStartX() + " >" + getEndX());
+
         // Arrow head
         int d = 5;
         int xDif = getEndX() -getStartX();

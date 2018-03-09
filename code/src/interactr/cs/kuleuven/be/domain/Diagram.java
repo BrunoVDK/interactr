@@ -132,7 +132,7 @@ public class Diagram {
             messages = messages.plus(index, resultMessage);
             messages = messages.plus(index, message);
             associatedMessageIndices.add(index, index);
-            associatedMessageIndices.add(index, index-1);
+            associatedMessageIndices.add(index, index + 1);
         }
     }
 
