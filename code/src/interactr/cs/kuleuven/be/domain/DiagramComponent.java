@@ -1,6 +1,6 @@
 package interactr.cs.kuleuven.be.domain;
 
-import interactr.cs.kuleuven.be.ui.exceptions.InvalidLabelException;
+import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
 
 /**
  * A class of diagram components.

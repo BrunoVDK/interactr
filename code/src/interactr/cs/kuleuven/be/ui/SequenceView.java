@@ -1,8 +1,10 @@
 package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.domain.*;
-import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddPartyException;
+import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
+import interactr.cs.kuleuven.be.ui.geometry.Arrow;
 import interactr.cs.kuleuven.be.ui.geometry.Figure;
+import interactr.cs.kuleuven.be.ui.geometry.Link;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -42,6 +44,7 @@ public class SequenceView extends DiagramView {
         }
         paintBoard.setColor(Color.BLACK);
         paintBoard.drawLine(0, PARTY_ROW_HEIGHT, paintBoard.getWidth(), PARTY_ROW_HEIGHT);
+        super.displayMessages(paintBoard, diagram, selectionManager);
     }
 
     @Override
@@ -68,57 +71,85 @@ public class SequenceView extends DiagramView {
     }
 
     @Override
-    public String viewName() {
-        return "Sequence View";
-    }
-
-    @Override
     public void moveParty(Diagram diagram, Party party, int x, int y){
         super.moveParty(diagram, party, x, 5);
     }
 
-    public boolean canAddMessage(Party sender, Party receiver, int y){
+    @Override
+    protected Link linkForMessage(Message message) {
+        Link link = links.get(message);
+        if (link != null) {
+            Party sender = message.getSender(), receiver = message.getReceiver();
+            Figure senderFigure = figures.get(sender), receiverFigure = figures.get(receiver);
+            link.setStartX(senderFigure.getX() + senderFigure.getWidth()/2);
+            link.setEndX(receiverFigure.getX() + receiverFigure.getWidth()/2);
+            link.setLabel(message.getLabel());
+        }
+        return link;
+    }
 
+    @Override
+    protected Link createFigureForMessage(Message message, int fromX, int fromY, int toX, int toY) {
+        Link link = new Arrow();
+        Class linkType = message.proposedLinkType();
+        try {
+            if (Link.class.isAssignableFrom(linkType))
+                link = (Link) linkType.getConstructor().newInstance();
+        } catch (Exception e) {
+            System.err.println("Invalid link type given in custom message class.");
+        }
+        Party sender = message.getSender(), receiver = message.getReceiver();
+        Figure senderFigure = figures.get(sender), receiverFigure = figures.get(receiver);
+        link.setStartX(senderFigure.getX() + senderFigure.getWidth()/2);
+        link.setStartY(fromY);
+        link.setEndX(receiverFigure.getX() + receiverFigure.getWidth()/2);
+        link.setEndY(toY);
+        link.setLabel(message.getLabel());
+        return link;
+    }
+
+    @Override
+    public boolean canInsertMessageAt(Diagram diagram, int fromX, int fromY, int toX, int toY) {
+        if (fromY < PARTY_ROW_HEIGHT || toY < PARTY_ROW_HEIGHT)
+            return false;
+        Link link = new Link(fromX, fromY, toX, toY);
+        for (Message message : diagram.getMessages()) {
+            Link messageLink = linkForMessage(message);
+            if (messageLink != null && messageLink.crosses(link))
+                return false;
+        }
         return true;
     }
 
-    public ArrayList<MessageY> getMessagesOnYCo(){
-        return messagesOnYCo;
+    @Override
+    public void registerMessages(InvocationMessage invocation, ResultMessage resultMessage, int fromX, int fromY, int toX, int toY) {
+        int y = Math.min(fromY, toY) + Math.abs(fromY - toY) / 2;
+        Link invocationLink = createFigureForMessage(invocation, fromX, y, toX, y);
+        int max = Math.max(fromY, toY);
+        Link resultLink = createFigureForMessage(resultMessage, fromX, max + 20, toX, max + 20);
+        links = links.plus(invocation, invocationLink);
+        links = links.plus(resultMessage, resultLink);
     }
 
-    private ArrayList<MessageY> messagesOnYCo = new ArrayList<>();
-
-    public void initializeCallStack(Party sender, Party receiver, int y){
-        MessageY invoc = new MessageY(new InvocationMessage(sender, receiver), y);
-        MessageY result = new MessageY(new ResultMessage(sender, receiver), y+20);
-
-        getMessagesOnYCo().add(invoc);
-        getMessagesOnYCo().add(result);
-    }
-
-    public void updateCallStack(Party sender, Party receiver, int y){
-        Message previous = null;
-        for(int i = 0; i < getMessagesOnYCo().size(); i++){
-            if(getMessagesOnYCo().get(i).getY() > y){
-                previous = getMessagesOnYCo().get(i-1).getMessage();
-                break;
-            }
+    @Override
+    public InvocationMessage getInvocationMessageForCoordinates(int fromX, int fromY, int toX, int toY) {
+        Party fromParty = getPartyAt(fromX, 10), toParty = getPartyAt(toX, 10);
+        if (fromParty == null || toParty == null)
+            return null;
+        Figure fromFigure = figureForParty(fromParty), toFigure = figureForParty(toParty);
+        if (fromFigure == null || toFigure == null)
+            return null;
+        try {
+            InvocationMessage message = new InvocationMessage(fromParty, toParty);
+            return message;
         }
-        if(!(previous.equals(null)) && previous.getReceiver() == sender){
-            MessageY invoc = new MessageY(new InvocationMessage(sender, receiver), y);
-            MessageY result = new MessageY(new ResultMessage(sender, receiver), y+20);
-
-            getMessagesOnYCo().add(invoc);
-            getMessagesOnYCo().add(result);
-        }
+        catch (Exception e) {}
+        return null;
     }
 
-    private int height;
+    @Override
+    public String viewName() {
+        return "Sequence View";
+    }
 
-    public void setOffSet(int height, int width){
-        this.height = height;
-    }
-    public int getOffSet(){
-        return 0;
-    }
 }

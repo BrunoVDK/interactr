@@ -1,8 +1,10 @@
 package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.domain.*;
-import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddPartyException;
-import interactr.cs.kuleuven.be.ui.exceptions.InvalidLabelException;
+import interactr.cs.kuleuven.be.exceptions.InvalidAddMessageException;
+import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
+import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
+import org.mockito.invocation.Invocation;
 
 import java.util.ArrayList;
 
@@ -125,17 +127,22 @@ public class DiagramController {
      * @param x2 The end x coordinate for the session.
      * @param y2 The end y coordinate for the session.
      */
-    public void addMessageFrom(int x1, int y1, int x2, int y2){
-        int height = this.getPaintBoard().getHeight();
-
-        this.getActiveView().setOffSet(height);
-
-        Party sender = getPartyAt(x1,10);
-        Party receiver = getPartyAt(x2,10);
-
-        if(this.getActiveView().getMessagesOnYCo().isEmpty()) this.getActiveView().initializeCallStack(sender, receiver, y1);
-        else{
-            this.getActiveView().updateCallStack(sender, receiver, y1);
+    public void addMessageFrom(int x1, int y1, int x2, int y2) {
+        if (getActiveView().canInsertMessageAt(getDiagram(), x1, y1, x2, y2)) {
+            int index = getActiveView().getMessageInsertionIndex(getDiagram(), x1, y1, x2, y2);
+            System.out.println("NEW MESSAGE INDEX : " + index);
+            InvocationMessage message = getActiveView().getInvocationMessageForCoordinates(x1, y1, x2, y2);
+            if (message != null) {
+                try {
+                    getDiagram().insertInvocationMessageAtIndex(message, index);
+                    System.out.println("NEW MESSAGE FROM : " + message.getSender() + " --- " + message.getReceiver());
+                    ResultMessage result = getDiagram().getResultMessageForInvocationMessage(message);
+                    for (DiagramView view : views)
+                        view.registerMessages(message, result, x1, y1, x2, y2);
+                    getPaintBoard().refresh();
+                }
+                catch (InvalidAddMessageException exception) {}
+            }
         }
     }
 
@@ -183,7 +190,6 @@ public class DiagramController {
      */
     public void selectComponentAt(int x, int y) {
         DiagramComponent component = getActiveView().selectableComponentAt(getDiagram(), x, y);
-        //TODO Moet dit wel om toe te voegen want deze kan wel null zijn
         selectionManager.addToSelection(component);
         paintBoard.refresh();
     }
@@ -211,7 +217,6 @@ public class DiagramController {
         getPaintBoard().refresh();
     }
 
-
     /**
      * Append the given char to the current edit session.
      *
@@ -238,6 +243,11 @@ public class DiagramController {
      */
     private SelectionManager selectionManager;
 
+    /**
+     * Returns the selection manager associated with this diagram controller.
+     *
+     * @return The selection manager for this diagram controller.
+     */
     public SelectionManager getSelectionManager() {
         return selectionManager;
     }

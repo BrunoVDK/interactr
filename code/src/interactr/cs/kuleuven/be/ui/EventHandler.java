@@ -1,6 +1,6 @@
 package interactr.cs.kuleuven.be.ui;
 
-import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddPartyException;
+import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 
 
 import java.awt.event.KeyEvent;
@@ -102,7 +102,6 @@ public class EventHandler {
         if (getDiagramController() != null) {
             switch (id) {
                 case KeyEvent.KEY_PRESSED:
-                    System.out.println(keyCode);
                     if (keyChar == KeyEvent.VK_DELETE && !getDiagramController().isEditing()) {
 
                     }

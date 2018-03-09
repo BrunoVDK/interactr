@@ -1,12 +1,12 @@
 package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.domain.*;
+import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.purecollections.PMap;
-import interactr.cs.kuleuven.be.ui.exceptions.InvalidAddPartyException;
+import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.*;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 /**
  * An abstract interface for diagram views. Diagram views can display diagrams in
@@ -25,6 +25,7 @@ public abstract class DiagramView {
      */
     public void display(PaintBoard paintBoard, Diagram diagram, SelectionManager selectionManager) {
         displayFigures(paintBoard, diagram, selectionManager);
+        displayMessages(paintBoard, diagram, selectionManager);
     }
 
     /**
@@ -42,6 +43,25 @@ public abstract class DiagramView {
             if (isActive)
                 partyFigure.setLabel(selectionManager.getTemporaryLabel() + "|");
             partyFigure.draw(paintBoard);
+            paintBoard.setColor(Color.BLACK);
+        }
+    }
+
+    /**
+     * Display the messages of the given diagram diagram in this view using the given paintboard.
+     *
+     * @param paintBoard The paintboard to use when displaying the view.
+     * @param diagram The diagram that is to be displayed in this view.
+     */
+    protected void displayMessages(PaintBoard paintBoard, Diagram diagram, SelectionManager selectionManager) {
+        for (Message message : links.keySet()) {
+            boolean isSelected = selectionManager.isSelected(message);
+            boolean isActive = selectionManager.getActiveComponent() == message;
+            paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
+            Link messageLink = linkForMessage(message);
+            if (isActive)
+                messageLink.setLabel(selectionManager.getTemporaryLabel() + "|");
+            messageLink.draw(paintBoard);
             paintBoard.setColor(Color.BLACK);
         }
     }
@@ -155,19 +175,14 @@ public abstract class DiagramView {
     }
 
     /**
-     * Returns the name of this diagram view as a string.
-     *
-     * @return This diagram view's name as a string.
-     */
-    public abstract String viewName();
-
-    /**
      * Returns the figure for the given party held by this view.
      *
      * @param party The party whose figure is desired.
      * @return The figure associated with the given party, or null if there is none.
      */
     protected Figure figureForParty(Party party) {
+        if (party == null)
+            return null;
         Figure figure = figures.get(party);
         if (figure != null) {
             figure.setLabel(party.getLabel());
@@ -234,7 +249,7 @@ public abstract class DiagramView {
      * @param diagram The diagram in which to draw the label.
      * @param party The party that has te be moved
      * @param x The new absolute x coordinate of the given Party
-     * @param y The new absolut y coordinate of the given Party
+     * @param y The new absolute y coordinate of the given Party
      */
     public void moveParty(Diagram diagram, Party party, int x ,int y) {
         DiagramComponent component = componentAt(diagram, x, y, party);
@@ -257,6 +272,30 @@ public abstract class DiagramView {
      * @return A link representing the given message in this view.
      */
     protected Link linkForMessage(Message message) {
+        Link link = links.get(message);
+        if (link != null) {
+            Party sender = message.getSender(), receiver = message.getReceiver();
+            Figure senderFigure = figures.get(sender), receiverFigure = figures.get(receiver);
+            link.setStartX(senderFigure.getX() + senderFigure.getHeight());
+            link.setStartY(senderFigure.getY() + senderFigure.getHeight()/2);
+            link.setEndX(receiverFigure.getX());
+            link.setEndY(receiverFigure.getY() + receiverFigure.getHeight()/2);
+            link.setLabel(message.getLabel());
+        }
+        return link;
+    }
+
+    /**
+     * Creates a link for the given message at the given coordinates.
+     *
+     * @param message The message to make a link for.
+     * @param fromX The from x coordinate for the message.
+     * @param fromY The from y coordinate for the message.
+     * @param toX The to x coordinate for the message.
+     * @param toY The to y coordinate for the message.
+     * @return A link at given coordinates representing the given message.
+     */
+    protected Link createFigureForMessage(Message message, int fromX, int fromY, int toX, int toY) {
         Link link = new Arrow();
         Class linkType = message.proposedLinkType();
         try {
@@ -267,51 +306,89 @@ public abstract class DiagramView {
         }
         Party sender = message.getSender(), receiver = message.getReceiver();
         Figure senderFigure = figures.get(sender), receiverFigure = figures.get(receiver);
-        /*
-        if (senderFigure.getX() < receiverFigure.getX())
-            link.setStartX(senderFigure.getX() + senderFigure.getWidth());
-        else
-            link.setStartX(receiverFigure.getX() + receiverFigure.getWidth());
-        if (senderFigure.getY() < receiverFigure.getY())
-            link.setStartX(senderFigure.getY() + senderFigure.getHeight());
-        else
-            link.setStartX(receiverFigure.getY() + receiverFigure.getHeight());
-            */
         link.setStartX(senderFigure.getX() + senderFigure.getHeight());
         link.setStartY(senderFigure.getY() + senderFigure.getHeight()/2);
         link.setEndX(receiverFigure.getX());
         link.setEndY(receiverFigure.getY() + receiverFigure.getHeight()/2);
         link.setLabel(message.getLabel());
         return link;
-
     }
 
-    public abstract boolean canAddMessage(Party sender, Party receiver, int y);
+    /**
+     * Returns the index of the message lying right above a message, if inserted at th the given coordinates.
+     *
+     * @param diagram The diagram in which the message is to be inserted.
+     * @param fromX The start x coordinate for the message to insert.
+     * @param fromY The start x coordinate for the message to insert.
+     * @param toX The start x coordinate for the message to insert.
+     * @param toY The start x coordinate for the message to insert.
+     * @return The index at which a message should be inserted if added at the given coordinates.
+     */
+    public int getMessageInsertionIndex(Diagram diagram, int fromX, int fromY, int toX, int toY) {
+        PList<Message> messages = diagram.getMessages();
+        for (int i=0 ; i<messages.size() ; i++) {
+            Link link = linkForMessage(messages.get(i));
+            if (link.getStartY() > fromY || link.getEndY() > toY)
+                return i;
 
-    public void initializeCallStack(Party sender, Party receiver, int y){}
-
-    public ArrayList<MessageY> getMessagesOnYCo(){return null;}
-
-    public void updateCallStack(Party sender, Party receiver, int y){}
-
-    public void setOffSet(int height){};
-
-    public class MessageY{
-        private Message m;
-        private int y;
-
-        public MessageY(Message m , int y){
-            this.m = m;
-            this.y = y;
         }
-
-        public int getY(){
-            return this.y;
-        }
-        public Message getMessage(){
-            return m;
-        }
-
+        return messages.size();
     }
+
+    /**
+     * Checks whether a message can be inserted at the given coordinates.
+     *
+     * @param diagram The diagram in which the message should be inserted.
+     * @param fromX The start x coordinate for the message.
+     * @param fromY The start y coordinate for the message.
+     * @param toX The end x coordinate for the message.
+     * @param toY The end y coordinate for the message.
+     * @return True if and only if a message can be inserted at the given coordinates.
+     * @note This method does not check for validity of the callstack after addition of the message
+     *  to the diagram itself.
+     */
+    public boolean canInsertMessageAt(Diagram diagram, int fromX, int fromY, int toX, int toY) {
+        return false; // Default behaviour is inability to add anything
+    }
+
+    /**
+     * Registers the given invocation message and result message in this diagram view,
+     *  using the given start/end coordinates.
+     *
+     * @param invocation The invocation message that is to be registered.
+     * @param resultMessage The result message that is to be registered.
+     * @param fromX The start x coordinate for the invocation message's link.
+     * @param fromY The start y coordinate for the invocation message's link.
+     * @param toX The end x coordinate for the invocation message's link.
+     * @param toY The end y coordinate for the invocation message's link.
+     */
+    public void registerMessages(InvocationMessage invocation, ResultMessage resultMessage, int fromX, int fromY, int toX, int toY) {
+        // To be overridden
+    }
+
+    /**
+     * Returns the invocation message representing the given coordinates.
+     *
+     * @param fromX The start x coordinate for the message's link.
+     * @param fromY The start y coordinate for the message's link.
+     * @param toX The end x coordinate for the message's link.
+     * @param toY The end y coordinate for the message's link.
+     * @return A message whose link coincides with the given one.
+     */
+    public InvocationMessage getInvocationMessageForCoordinates(int fromX, int fromY, int toX, int toY) {
+        return null;
+    }
+
+    /**
+     * Returns the name of this diagram view as a string.
+     *
+     * @return This diagram view's name as a string.
+     */
+    public abstract String viewName();
+
+    /**
+     * A hashmap containing links of all messages in this diagram view.
+     */
+    protected PMap<Message, Link> links = PMap.<Message, Link>empty();
 
 }

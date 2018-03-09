@@ -19,7 +19,9 @@ public class Message extends DiagramComponent {
      */
     public Message(Party sender, Party receiver) throws IllegalArgumentException {
         if (sender == null || receiver == null)
-            throw new IllegalArgumentException("Null parties.");
+            throw new IllegalArgumentException("Party can not be null when creating message.");
+        if (sender == receiver)
+            throw new IllegalArgumentException("Message sender can not equal its receiver.");
         this.sender = sender;
         this.receiver = receiver;
     }
