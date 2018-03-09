@@ -114,7 +114,9 @@ public class EventHandler {
                 case KeyEvent.KEY_TYPED:
                     if (keyChar == KeyEvent.VK_TAB && !getDiagramController().isEditing())
                         getDiagramController().nextView();
-                    else if (Character.isLetter(keyChar) || Character.isDigit(keyChar) || keyChar == ':')
+                    else if (Character.isLetter(keyChar)
+                            || Character.isDigit(keyChar)
+                            || ":();-_<>*&[]".indexOf(Character.toString(keyChar)) != -1)
                         getDiagramController().appendChar(keyChar);
 
             }
