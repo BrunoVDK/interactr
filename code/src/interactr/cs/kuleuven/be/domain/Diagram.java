@@ -39,7 +39,10 @@ public class Diagram {
         parties = parties.minus(oldParty);
         parties = parties.plus(newParty);
         for (Message message : messages)
-            ; // Replace all
+            if (message.getSender() == oldParty)
+                message.setSender(newParty);
+            else if (message.getReceiver() == oldParty)
+                message.setReceiver(newParty);
     }
 
     /**
