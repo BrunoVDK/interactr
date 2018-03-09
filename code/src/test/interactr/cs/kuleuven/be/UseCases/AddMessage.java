@@ -7,7 +7,10 @@ import interactr.cs.kuleuven.be.ui.PaintBoard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.stream.Collectors;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class AddMessage {
 
@@ -24,7 +27,7 @@ public class AddMessage {
             e.printStackTrace();
         }
         DiagramWindow.replayRecording("addPartyLegalLabel.txt", diagramWindow);
-        DiagramWindow.replayRecording("addPartyLegalLabel100X.txt", diagramWindow);;
+        DiagramWindow.replayRecording("addPartyLegalLabel100X.txt", diagramWindow);
 
     }
 
@@ -48,8 +51,31 @@ public class AddMessage {
         assertEquals(2,diagramWindow.getEventHandler().getDiagramController().getDiagram().getMessages().size());
 
     }
+    @Test
+    void addLegalMessageStack011221(){
+        DiagramWindow.replayRecording("addPartyLegalLabel200X.txt", diagramWindow);
+        DiagramWindow.replayRecording("addMessage0-100.txt",diagramWindow);
+        DiagramWindow.replayRecording("addMessage100-200.txt",diagramWindow);
+        DiagramWindow.replayRecording("addMessage200-100.txt",diagramWindow);
+        assertEquals(6,diagramWindow.getEventHandler().getDiagramController().getDiagram().getMessages().size());
+    }
 
-    //TODO als het mogelijk is om meerdere messages toe te voegen, alle cases testen -> nog meer
+    @Test
+    void editLabelOfMessage(){
+        DiagramWindow.replayRecording("addMessage0-100.txt",diagramWindow);
+        DiagramWindow.replayRecording("editLabelMessage0-100.txt",diagramWindow);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        DiagramWindow.replayRecording("editLabelMessage0-100.txt",diagramWindow);
+        DiagramWindow.replayRecording("writeLabelB.txt",diagramWindow);
+        assertEquals("b:B",diagramWindow.getEventHandler().getDiagramController().getDiagram().getMessages().getFirst().getLabel());
+
+    }
+
+
 
 
 }
