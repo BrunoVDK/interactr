@@ -29,16 +29,14 @@ public class MoveParty {
     @Test
     void movePartyToALegalPositionSequence() {
         DiagramWindow.replayRecording("moveTill100XY.txt", diagramWindow);
-        if(diagramWindow.getEventHandler().getDiagramController().getActiveView().getPartyAt(100,10) == null) assert false;
-        else assert true;
+        assert(diagramWindow.getEventHandler().getDiagramController().getActiveView().getPartyAt(100,10) != null);
     }
 
     @Test
     void movePartyToALegalPostitionCommunication(){
         diagramWindow.getEventHandler().getDiagramController().nextView();
         DiagramWindow.replayRecording("moveTill100XY.txt", diagramWindow);
-        if(diagramWindow.getEventHandler().getDiagramController().getActiveView().getPartyAt(100,100) == null) assert false;
-        else assert true;
+        assert(diagramWindow.getEventHandler().getDiagramController().getActiveView().getPartyAt(100,100) != null);
     }
 
     @Test
