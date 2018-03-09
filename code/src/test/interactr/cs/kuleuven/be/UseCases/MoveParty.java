@@ -43,13 +43,17 @@ public class MoveParty {
     void movePartyToIllegalPositionSequence(){
         DiagramWindow.replayRecording("addPartyLegalLabel100X.txt", diagramWindow);
         DiagramWindow.replayRecording("moveTill100XY.txt", diagramWindow);
-        assertEquals("b:B",diagramWindow.getEventHandler().getDiagramController().getActiveView().getPartyAt(50,10).getLabel());
-
+        assertEquals("b:B", diagramWindow.getEventHandler().getDiagramController().getActiveView().getPartyAt(100,10).getLabel());
+        assertEquals("a:A", diagramWindow.getEventHandler().getDiagramController().getActiveView().getPartyAt(50,10).getLabel());
     }
 
     @Test
     void movePartyToIllegalPositionCommunication(){
         diagramWindow.getEventHandler().getDiagramController().nextView();
+        DiagramWindow.replayRecording("addPartyLegalLabel100X.txt", diagramWindow);
+        DiagramWindow.replayRecording("moveTill100X.txt", diagramWindow);
+        try{Thread.sleep(5000);}catch(Exception e){}
+        assertEquals("b:B",diagramWindow.getEventHandler().getDiagramController().getActiveView().getPartyAt(100,10).getLabel());
     }
 
 }

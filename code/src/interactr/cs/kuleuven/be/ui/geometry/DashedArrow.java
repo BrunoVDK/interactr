@@ -39,11 +39,9 @@ public class DashedArrow extends Link {
         int xOld;
         int xLast;
         if(getStartX() > getEndX()) {
-            xNew = getEndX();
             xOld= getEndX();
             xLast = getStartX();
         }else{
-            xNew = getStartX();
             xOld = getStartX();
             xLast = getEndX();
         }
