@@ -116,10 +116,11 @@ public class SequenceView extends DiagramView {
     public boolean canInsertMessageAt(Diagram diagram, int fromX, int fromY, int toX, int toY) {
         if (fromY < PARTY_ROW_HEIGHT || toY < PARTY_ROW_HEIGHT)
             return false;
+        int min = Math.min(fromY, toY);
         Link link = new Link(fromX, fromY, toX, toY);
         for (Message message : diagram.getMessages()) {
             Link messageLink = linkForMessage(message);
-            if (messageLink != null && messageLink.crosses(link))
+            if (messageLink != null && (messageLink.crosses(link) || Math.abs(messageLink.getStartY() - min) < 8))
                 return false;
         }
         return true;
