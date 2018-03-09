@@ -104,6 +104,8 @@ public class Diagram {
      * @return The message in this diagram at the given row, or null if there is none.
      */
     public Message getMessageAtIndex(int index) {
+        if (index < 0 || index >= getNbMessages())
+            return null;
         return messages.get(index);
     }
 
@@ -154,7 +156,7 @@ public class Diagram {
             Integer formerIndex = associatedMessageIndices.get(i);
             if (formerIndex >= index) {
                 associatedMessageIndices.remove(i);
-                associatedMessageIndices.add(i, formerIndex+2); // Shift two downwards because of insert
+                associatedMessageIndices.add(i, formerIndex + 2); // Shift two downwards because of insert
             }
         }
 
@@ -208,20 +210,32 @@ public class Diagram {
      * @param message The message that is to be removed.
      */
     public void deleteMessage(Message message) {
+
+        // Pre-processing
         int messageIndex = getIndexOfMessage(message);
+        if (messageIndex < 0)
+            return; // Message not in stack
         int associatedMessageIndex = associatedMessageIndices.get(messageIndex);
         int min = Math.min(messageIndex, associatedMessageIndex), max = Math.max(messageIndex, associatedMessageIndex);
         int count = max - min + 1; // Number of messages to remove
         int i = 0; // Current index of message to be removed
+
+        // First update associated message indices
+        for (int j=0 ; j<messages.size() ; j++) {
+            Integer formerIndex = associatedMessageIndices.get(j);
+            if (formerIndex > max) {
+                associatedMessageIndices.remove(j);
+                associatedMessageIndices.add(j, formerIndex - count); // Shift count upwards because of removal
+            }
+        }
+
+        // Now remove the messages
         while(i < count) {
             messages = messages.minus(min);
             associatedMessageIndices.remove(min);
             i++;
         }
-        for (i=min ; i<messages.size() ; i++) {
-            Integer formerIndex = associatedMessageIndices.remove(i);
-            associatedMessageIndices.add(i,  formerIndex - count);
-        }
+
     }
 
     /**
@@ -230,9 +244,8 @@ public class Diagram {
      * @return The first sending party in this diagram's call stack.
      */
     public Party getInitiator() {
-        Message first = messages.getFirst();
-        if (first != null)
-            return first.getSender();
+        if (getNbMessages() > 0)
+            return messages.getFirst().getSender();
         return null;
     }
 

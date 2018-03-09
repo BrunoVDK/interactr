@@ -62,15 +62,18 @@ public class SequenceView extends DiagramView {
         Party initiator = diagram.getInitiator();
         HashMap<Party, Integer> startActivations = new HashMap<Party, Integer>();
         HashMap<Party, Integer> endActivations = new HashMap<Party, Integer>();
+        int barWidth = ACTIVATION_BAR_HEIGHT;
 
         // Display messages and activation bars
         for (int i=0 ; i<diagram.getNbMessages() ; i++) {
 
             Message message = diagram.getMessageAtIndex(i);
             int associatedIndex = diagram.getIndexOfAssociatedMessage(i);
+            System.out.println("Associated = " + associatedIndex);
             Party sender = message.getSender();
             Link messageLink = linkForMessage(message);
-            if (messageLink != null) {
+            Link associatedMessageLink = linkForMessage(diagram.getMessageAtIndex(associatedIndex));
+            if (messageLink != null && associatedMessageLink != null) {
 
                 // Check if we're back at the initiator
                 if (sender == initiator) {
@@ -79,8 +82,15 @@ public class SequenceView extends DiagramView {
                 }
 
                 // Determine activation bar and draw it
-
-                // Also use its position for repositioning the message link
+                int min = Math.min(messageLink.getStartY(), associatedMessageLink.getStartY());
+                int max = Math.max(messageLink.getStartY(), associatedMessageLink.getStartY());
+                int barHeight = max - min + 10;
+                int barX = messageLink.getStartX() - barWidth/2;
+                int barY = min - 5;
+                paintBoard.setColor(activationColor);
+                paintBoard.fillRectangle(barX, barY, barWidth, barHeight);
+                paintBoard.setColor(Color.BLACK);
+                paintBoard.drawRectangle(barX, barY, barWidth, barHeight);
 
                 // Draw link
                 boolean isSelected = selectionManager.isSelected(message);
