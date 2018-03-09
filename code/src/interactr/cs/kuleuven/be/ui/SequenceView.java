@@ -37,7 +37,12 @@ public class SequenceView extends DiagramView {
     /**
      * The width of activation bars.
      */
-    private static int ACTIVATION_BAR_HEIGHT = 10;
+    private static int ACTIVATION_BAR_WIDTH = 10;
+
+    /**
+     * The color used to draw activation bars.
+     */
+    private static Color ACTIVATION_COLOR = Color.getHSBColor(216/360, 35/360, 0.66f);
 
     @Override
     public void display(PaintBoard paintBoard, Diagram diagram, SelectionManager selectionManager) {
@@ -59,46 +64,94 @@ public class SequenceView extends DiagramView {
     protected void displayMessages(PaintBoard paintBoard, Diagram diagram, SelectionManager selectionManager) {
 
         // Pre-processing
-        Color activationColor = Color.getHSBColor(216/360, 35/360, 0.66f);
-        int barWidth = ACTIVATION_BAR_HEIGHT;
+        Party initiator = diagram.getInitiator();
         PList<Party> parties = diagram.getParties();
-        int[][] activations = new int[parties.size()][2]; // From left, from right
+        int[] activations = new int[parties.size()];
 
         // Display messages and activation bars
-        for (int i=0 ; i<diagram.getNbMessages() ; i++) {
+        for (int i=0 ; i<diagram.getNbMessages() ; i++) { // Drawing is done in pairs
 
             Message message = diagram.getMessageAtIndex(i);
-            int associatedIndex = diagram.getIndexOfAssociatedMessage(i);
             Party sender = message.getSender(), receiver = message.getReceiver();
             Link messageLink = linkForMessage(message);
+            int associatedIndex = diagram.getIndexOfAssociatedMessage(i);
+            Message associatedMessage = diagram.getMessageAtIndex(associatedIndex);
             Link associatedMessageLink = linkForMessage(diagram.getMessageAtIndex(associatedIndex));
-            if (messageLink != null && associatedMessageLink != null) {
 
-                // Determine activation bar at the 'end' side and draw it
-                boolean fromLeft = messageLink.getStartX() < messageLink.getEndX();
-                int min = Math.min(messageLink.getStartY(), associatedMessageLink.getStartY());
-                int max = Math.max(messageLink.getStartY(), associatedMessageLink.getStartY());
-                int barHeight = max - min + 10;
-                int barX = messageLink.getStartX() - barWidth/2;
-                int barY = min - 5;
-                paintBoard.setColor(activationColor);
-                paintBoard.fillRectangle(barX, barY, barWidth, barHeight);
-                paintBoard.setColor(Color.BLACK);
-                paintBoard.drawRectangle(barX, barY, barWidth, barHeight);
+            if (messageLink != null && associatedMessageLink != null && associatedIndex > i) {
 
-                // Draw link
-                boolean isSelected = selectionManager.isSelected(message);
-                boolean isActive = selectionManager.getActiveComponent() == message;
-                paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
-                if (isActive)
-                    messageLink.setLabel(selectionManager.getTemporaryLabel() + "|");
-                messageLink.draw(paintBoard);
-                paintBoard.setColor(Color.BLACK);
+                if (associatedIndex > i) {
+
+                    // Determine horizontal offset for the message
+                    boolean fromLeft = messageLink.getStartX() < messageLink.getEndX(); // Link direction
+                    int indexOfReceiver = parties.indexOf(receiver), indexOfSender = parties.indexOf(sender);
+                    int receiverActivations = activations[indexOfReceiver], senderActivations = activations[indexOfSender];
+
+                    // Determine activation bar heights (widths are fixed)
+                    int min = Math.min(messageLink.getStartY(), associatedMessageLink.getStartY());
+                    int max = Math.max(messageLink.getStartY(), associatedMessageLink.getStartY());
+                    int barX = 0, barY = min-5, barHeight = max - min + 10;
+
+                    // If the sender of the invocation message is the diagram's initiator, an initial bar is drawn
+                    if (sender == initiator) {
+                        activations[indexOfSender]++;
+                        drawActivationBar(paintBoard, messageLink.getStartX() - ACTIVATION_BAR_WIDTH / 2, barY, barHeight);
+                    }
+
+                    // Draw bar at the end of the invocation message's receiver
+                    activations[indexOfReceiver]++;
+                    barX = messageLink.getEndX() - ACTIVATION_BAR_WIDTH/2 + ACTIVATION_BAR_WIDTH*receiverActivations;
+                    drawActivationBar(paintBoard, barX, barY, barHeight);
+
+                    // Calculate link offsets
+                    int startOffset = ACTIVATION_BAR_WIDTH/2 + senderActivations*ACTIVATION_BAR_WIDTH;
+                    if (!fromLeft) startOffset = -startOffset;
+                    int endOffset = ACTIVATION_BAR_WIDTH/2 + senderActivations*ACTIVATION_BAR_WIDTH;
+                    if (!fromLeft) endOffset = -endOffset;
+
+                    // Draw invocation link (calculate offset!)
+                    boolean isSelected = selectionManager.isSelected(message);
+                    boolean isActive = selectionManager.getActiveComponent() == message;
+                    paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
+                    if (isActive)
+                        messageLink.setLabel(selectionManager.getTemporaryLabel() + "|");
+                    messageLink.setStartX(messageLink.getStartX() + startOffset);
+                    messageLink.setEndX(messageLink.getEndX() - endOffset);
+                    messageLink.draw(paintBoard);
+                    paintBoard.setColor(Color.BLACK);
+
+                    // Draw receiver link (calculate offset!)
+                    isSelected = selectionManager.isSelected(associatedMessage);
+                    isActive = selectionManager.getActiveComponent() == associatedMessage;
+                    paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
+                    if (isActive)
+                        associatedMessageLink.setLabel(selectionManager.getTemporaryLabel() + "|");
+                    associatedMessageLink.setEndX(associatedMessageLink.getEndX() + startOffset);
+                    associatedMessageLink.setStartX(associatedMessageLink.getStartX() - endOffset);
+                    associatedMessageLink.draw(paintBoard);
+                    paintBoard.setColor(Color.BLACK);
+
+                }
 
             }
 
         }
 
+    }
+
+    /**
+     * Draw an activation bar on the given paint board, with given dimensions and coordinate.
+     *
+     * @param paintBoard The paint board on which to draw.
+     * @param x The x coordinate for the bar.
+     * @param y The y coordiante for the bar.
+     * @param height The height of the bar.
+     */
+    private void drawActivationBar(PaintBoard paintBoard, int x, int y, int height) {
+        paintBoard.setColor(ACTIVATION_COLOR);
+        paintBoard.fillRectangle(x, y, ACTIVATION_BAR_WIDTH, height);
+        paintBoard.setColor(Color.BLACK);
+        paintBoard.drawRectangle(x, y, ACTIVATION_BAR_WIDTH, height);
     }
 
     @Override
