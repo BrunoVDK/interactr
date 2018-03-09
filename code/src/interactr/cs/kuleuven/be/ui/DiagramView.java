@@ -357,6 +357,7 @@ public abstract class DiagramView {
      * Registers the given invocation message and result message in this diagram view,
      *  using the given start/end coordinates.
      *
+     * @param diagram The diagram in which the messages were added.
      * @param invocation The invocation message that is to be registered.
      * @param resultMessage The result message that is to be registered.
      * @param fromX The start x coordinate for the invocation message's link.
@@ -364,7 +365,7 @@ public abstract class DiagramView {
      * @param toX The end x coordinate for the invocation message's link.
      * @param toY The end y coordinate for the invocation message's link.
      */
-    public void registerMessages(InvocationMessage invocation, ResultMessage resultMessage, int fromX, int fromY, int toX, int toY) {
+    public void registerMessages(Diagram diagram, InvocationMessage invocation, ResultMessage resultMessage, int fromX, int fromY, int toX, int toY) {
         // Result messages are ignored!
         Link invocationLink = createLinkForMessage(invocation, fromX, fromY, toX, toY);
         // Link resultLink = createLinkForMessage(resultMessage, fromX, fromY, toX, toY);

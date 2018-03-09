@@ -138,7 +138,7 @@ public class DiagramController {
                     System.out.println("NEW MESSAGE FROM : " + message.getSender() + " --- " + message.getReceiver());
                     ResultMessage result = getDiagram().getResultMessageForInvocationMessage(message);
                     for (DiagramView view : views)
-                        view.registerMessages(message, result, x1, y1, x2, y2);
+                        view.registerMessages(getDiagram(), message, result, x1, y1, x2, y2);
                     getPaintBoard().refresh();
                 }
                 catch (InvalidAddMessageException exception) {}
