@@ -88,6 +88,15 @@ public class Diagram {
     }
 
     /**
+     * Returns the number of messages in this diagram.
+     *
+     * @return The number of messages in this diagram.
+     */
+    public int getNbMessages() {
+        return messages.size();
+    }
+
+    /**
      * Returns the message at the given row in this diagram.
      *
      * @param index The row where the message is located.

@@ -134,13 +134,25 @@ public class SequenceView extends DiagramView {
     }
 
     @Override
-    public void registerMessages(InvocationMessage invocation, ResultMessage resultMessage, int fromX, int fromY, int toX, int toY) {
-        int y = Math.min(fromY, toY) + Math.abs(fromY - toY) / 2;
-        Link invocationLink = createLinkForMessage(invocation, fromX, y, toX, y);
+    public void registerMessages(Diagram diagram, InvocationMessage invocation, ResultMessage resultMessage, int fromX, int fromY, int toX, int toY) {
+        int min = Math.min(fromY, toY);
+        Link invocationLink = createLinkForMessage(invocation, fromX, min, toX, min);
         int max = Math.max(fromY, toY);
-        Link resultLink = createLinkForMessage(resultMessage, fromX, max + 20, toX, max + 20);
+        Link resultLink = createLinkForMessage(resultMessage, fromX, min + 30, toX, min + 30);
         links = links.plus(invocation, invocationLink);
         links = links.plus(resultMessage, resultLink);
+        int minY = min + 30;
+        int resultIndex = diagram.getIndexOfMessage(resultMessage);
+        System.out.println("INDEX = " + resultIndex);
+        for (int i=resultIndex+1 ; i<diagram.getNbMessages() ; i++) {
+            Link link = links.get(diagram.getMessageAtIndex(i));
+            System.out.println("Y:"+link.getStartY());
+            if (link != null && (link.getStartY() < minY + 30 || link.getEndY() < minY + 30)) {
+                link.setStartY(minY + 30);
+                link.setEndY(minY + 30);
+                minY = minY + 30;
+            }
+        }
     }
 
     @Override
