@@ -78,36 +78,37 @@ public class SequenceView extends DiagramView {
             Message associatedMessage = diagram.getMessageAtIndex(associatedIndex);
             Link associatedMessageLink = linkForMessage(diagram.getMessageAtIndex(associatedIndex));
 
-            if (messageLink != null && associatedMessageLink != null && associatedIndex > i) {
+            if (messageLink != null && associatedMessageLink != null) {
+
+                // Determine horizontal offset for the message
+                boolean fromLeft = messageLink.getStartX() < messageLink.getEndX(); // Link direction
+                int indexOfReceiver = parties.indexOf(receiver), indexOfSender = parties.indexOf(sender);
+                int receiverActivations = activations[indexOfReceiver], senderActivations = activations[indexOfSender];
 
                 if (associatedIndex > i) {
-
-                    // Determine horizontal offset for the message
-                    boolean fromLeft = messageLink.getStartX() < messageLink.getEndX(); // Link direction
-                    int indexOfReceiver = parties.indexOf(receiver), indexOfSender = parties.indexOf(sender);
-                    int receiverActivations = activations[indexOfReceiver], senderActivations = activations[indexOfSender];
 
                     // Determine activation bar heights (widths are fixed)
                     int min = Math.min(messageLink.getStartY(), associatedMessageLink.getStartY());
                     int max = Math.max(messageLink.getStartY(), associatedMessageLink.getStartY());
-                    int barX = 0, barY = min-5, barHeight = max - min + 10;
+                    int messageX = 0, barX = 0, barY = min - 5, barHeight = max - min + 10;
 
                     // If the sender of the invocation message is the diagram's initiator, an initial bar is drawn
-                    if (sender == initiator) {
-                        activations[indexOfSender]++;
-                        drawActivationBar(paintBoard, messageLink.getStartX() - ACTIVATION_BAR_WIDTH / 2, barY, barHeight);
+                    if (sender == initiator && senderActivations == 0) {
+                        activations[indexOfSender] = 1;
+                        senderActivations++;
+                        drawActivationBar(paintBoard,
+                                messageLink.getStartX() - ACTIVATION_BAR_WIDTH/2,
+                                barY,
+                                barHeight);
                     }
 
                     // Draw bar at the end of the invocation message's receiver
                     activations[indexOfReceiver]++;
-                    barX = messageLink.getEndX() - ACTIVATION_BAR_WIDTH/2 + ACTIVATION_BAR_WIDTH*receiverActivations;
+                    barX = messageLink.getEndX() - ACTIVATION_BAR_WIDTH/2
+                            + (ACTIVATION_BAR_WIDTH/2)*receiverActivations;
+                    messageX = messageLink.getStartX()
+                            + (ACTIVATION_BAR_WIDTH/2)*senderActivations;
                     drawActivationBar(paintBoard, barX, barY, barHeight);
-
-                    // Calculate link offsets
-                    int startOffset = ACTIVATION_BAR_WIDTH/2 + senderActivations*ACTIVATION_BAR_WIDTH;
-                    if (!fromLeft) startOffset = -startOffset;
-                    int endOffset = ACTIVATION_BAR_WIDTH/2 + senderActivations*ACTIVATION_BAR_WIDTH;
-                    if (!fromLeft) endOffset = -endOffset;
 
                     // Draw invocation link (calculate offset!)
                     boolean isSelected = selectionManager.isSelected(message);
@@ -115,8 +116,8 @@ public class SequenceView extends DiagramView {
                     paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
                     if (isActive)
                         messageLink.setLabel(selectionManager.getTemporaryLabel() + "|");
-                    messageLink.setStartX(messageLink.getStartX() + startOffset);
-                    messageLink.setEndX(messageLink.getEndX() - endOffset);
+                    messageLink.setStartX(messageX - (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
+                    messageLink.setEndX(barX + (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
                     messageLink.draw(paintBoard);
                     paintBoard.setColor(Color.BLACK);
 
@@ -126,11 +127,16 @@ public class SequenceView extends DiagramView {
                     paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
                     if (isActive)
                         associatedMessageLink.setLabel(selectionManager.getTemporaryLabel() + "|");
-                    associatedMessageLink.setEndX(associatedMessageLink.getEndX() + startOffset);
-                    associatedMessageLink.setStartX(associatedMessageLink.getStartX() - endOffset);
+                    associatedMessageLink.setEndX(messageX - (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
+                    associatedMessageLink.setStartX(barX + (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
                     associatedMessageLink.draw(paintBoard);
                     paintBoard.setColor(Color.BLACK);
 
+                }
+                else {
+                    if (receiver == initiator && receiverActivations == 1)
+                        activations[indexOfReceiver] = 0;
+                    activations[indexOfSender]--;
                 }
 
             }
