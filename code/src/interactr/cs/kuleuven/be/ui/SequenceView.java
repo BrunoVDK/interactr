@@ -33,7 +33,7 @@ public class SequenceView extends DiagramView {
 
     @Override
     public void display(PaintBoard paintBoard, Diagram diagram, SelectionManager selectionManager) {
-        super.displayFigures(paintBoard, diagram, selectionManager);
+        displayFigures(paintBoard, diagram, selectionManager);
         paintBoard.setColor(Color.LIGHT_GRAY);
         for (Party party : figures.keySet()) {
             Figure partyFigure = figures.get(party);
@@ -44,7 +44,21 @@ public class SequenceView extends DiagramView {
         }
         paintBoard.setColor(Color.BLACK);
         paintBoard.drawLine(0, PARTY_ROW_HEIGHT, paintBoard.getWidth(), PARTY_ROW_HEIGHT);
-        super.displayMessages(paintBoard, diagram, selectionManager);
+        displayMessages(paintBoard, diagram, selectionManager);
+    }
+
+    @Override
+    protected void displayMessages(PaintBoard paintBoard, Diagram diagram, SelectionManager selectionManager) {
+        for (Message message : links.keySet()) {
+            boolean isSelected = selectionManager.isSelected(message);
+            boolean isActive = selectionManager.getActiveComponent() == message;
+            paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
+            Link messageLink = linkForMessage(message);
+            if (isActive)
+                messageLink.setLabel(selectionManager.getTemporaryLabel() + "|");
+            messageLink.draw(paintBoard);
+            paintBoard.setColor(Color.BLACK);
+        }
     }
 
     @Override
@@ -89,7 +103,7 @@ public class SequenceView extends DiagramView {
     }
 
     @Override
-    protected Link createFigureForMessage(Message message, int fromX, int fromY, int toX, int toY) {
+    protected Link createLinkForMessage(Message message, int fromX, int fromY, int toX, int toY) {
         Link link = new Arrow();
         Class linkType = message.proposedLinkType();
         try {
@@ -124,9 +138,9 @@ public class SequenceView extends DiagramView {
     @Override
     public void registerMessages(InvocationMessage invocation, ResultMessage resultMessage, int fromX, int fromY, int toX, int toY) {
         int y = Math.min(fromY, toY) + Math.abs(fromY - toY) / 2;
-        Link invocationLink = createFigureForMessage(invocation, fromX, y, toX, y);
+        Link invocationLink = createLinkForMessage(invocation, fromX, y, toX, y);
         int max = Math.max(fromY, toY);
-        Link resultLink = createFigureForMessage(resultMessage, fromX, max + 20, toX, max + 20);
+        Link resultLink = createLinkForMessage(resultMessage, fromX, max + 20, toX, max + 20);
         links = links.plus(invocation, invocationLink);
         links = links.plus(resultMessage, resultLink);
     }
