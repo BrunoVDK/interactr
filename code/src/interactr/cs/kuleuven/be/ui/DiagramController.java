@@ -46,7 +46,6 @@ public class DiagramController {
     public DiagramController(Diagram diagram, ArrayList<DiagramView> views) {
         this.diagram = diagram;
         this.views = new ArrayList<DiagramView>();
-        this.selectionManager = new SelectionManager();
         if (views != null)
             for (DiagramView view : views)
                 this.views.add(view);
@@ -73,7 +72,7 @@ public class DiagramController {
      * Display the currently active diagram view by making use of the given paintboard.
      */
     public void displayView() {
-        getActiveView().display(getPaintBoard(), getDiagram(),selectionManager);
+        getActiveView().display(getPaintBoard(), getDiagram());
     }
 
     /**
@@ -110,7 +109,7 @@ public class DiagramController {
             for (DiagramView view : views)
                 if (view != getActiveView())
                     view.registerParty(newParty, x, y);
-            selectionManager.setActiveComponent(newParty);
+            getDiagram().setActiveComponent(newParty);
             getPaintBoard().refresh();
         }
         catch (InvalidAddPartyException addException) {
@@ -136,7 +135,7 @@ public class DiagramController {
                     ResultMessage result = getDiagram().getResultMessageForInvocationMessage(message);
                     for (DiagramView view : views)
                         view.registerMessages(getDiagram(), message, result, x1, y1, x2, y2);
-                    selectionManager.setActiveComponent(message);
+                    getDiagram().setActiveComponent(message);
                     getPaintBoard().refresh();
                 }
                 catch (InvalidAddMessageException exception) {}
@@ -147,16 +146,16 @@ public class DiagramController {
     /**
      * A method that returns the editing mode of the selectionManager
      */
-    public boolean isEditing() { return selectionManager.getActiveComponent() != null;};
+    public boolean isEditing() { return getDiagram().getActiveComponent() != null;};
 
     /**
      * A method that terminates the editing
      */
     public void abortEditing(){
-        if (selectionManager.getActiveComponent() != null){
+        if (getDiagram().getActiveComponent() != null){
             try {
-                selectionManager.getActiveComponent().setLabel(selectionManager.getTemporaryLabel());
-                selectionManager.setActiveComponent(null);
+                getDiagram().getActiveComponent().setLabel(getDiagram().getTemporaryLabel());
+                getDiagram().setActiveComponent(null);
                 getPaintBoard().refresh();
             }
             catch (InvalidLabelException e) {}
@@ -188,7 +187,7 @@ public class DiagramController {
      */
     public void selectComponentAt(int x, int y) {
         DiagramComponent component = getActiveView().selectableComponentAt(getDiagram(), x, y);
-        selectionManager.addToSelection(component);
+        getDiagram().addToSelection(component);
         paintBoard.refresh();
     }
 
@@ -219,11 +218,11 @@ public class DiagramController {
      * Removes all components in the current selection from this controller's diagram.
      */
     public void deleteSelection() {
-        if (selectionManager.getActiveComponent() != null)
+        if (this.getDiagram().getActiveComponent() != null)
             return;
-        for (DiagramComponent component : getSelectionManager().getSelectedComponents())
+        for (DiagramComponent component : getDiagram().getSelectedComponents())
             component.delete(getDiagram());
-        selectionManager.unselectAll();
+        this.getDiagram().unselectAll();
         for (DiagramView view : views)
             view.synchronize(getDiagram());
         getPaintBoard().refresh();
@@ -235,7 +234,7 @@ public class DiagramController {
      * @param c The char that is to be appended.
      */
     public void appendChar(char c){
-        selectionManager.setTemporaryLabel(selectionManager.getTemporaryLabel() + c);
+        this.getDiagram().setTemporaryLabel(this.getDiagram().getTemporaryLabel() + c);
         getPaintBoard().refresh();
     }
 
@@ -243,25 +242,11 @@ public class DiagramController {
      * Removes the last char from the label of the active component.
      */
     public void removeLastChar() {
-        String temp = selectionManager.getTemporaryLabel();
+        String temp = this.getDiagram().getTemporaryLabel();
         if (temp.length() > 0) {
-            selectionManager.setTemporaryLabel(temp.substring(0, temp.length()-1));
+            this.getDiagram().setTemporaryLabel(temp.substring(0, temp.length()-1));
             getPaintBoard().refresh();
         }
-    }
-
-    /**
-     * The selected manager associated with this diagram controller.
-     */
-    private SelectionManager selectionManager;
-
-    /**
-     * Returns the selection manager associated with this diagram controller.
-     *
-     * @return The selection manager for this diagram controller.
-     */
-    public SelectionManager getSelectionManager() {
-        return selectionManager;
     }
 
     /**

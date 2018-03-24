@@ -23,9 +23,9 @@ public abstract class DiagramView {
      * @param paintBoard The paintboard to use when displaying the view.
      * @param diagram The diagram that is to be displayed in this view.
      */
-    public void display(PaintBoard paintBoard, Diagram diagram, SelectionManager selectionManager) {
-        displayFigures(paintBoard, diagram, selectionManager);
-        displayMessages(paintBoard, diagram, selectionManager);
+    public void display(PaintBoard paintBoard, Diagram diagram) {
+        displayFigures(paintBoard, diagram);
+        displayMessages(paintBoard, diagram);
     }
 
     /**
@@ -34,14 +34,14 @@ public abstract class DiagramView {
      * @param paintBoard The paintboard to use when displaying the view.
      * @param diagram The diagram that is to be displayed in this view.
      */
-    protected void displayFigures(PaintBoard paintBoard, Diagram diagram, SelectionManager selectionManager) {
+    protected void displayFigures(PaintBoard paintBoard, Diagram diagram) {
         for (Party party : figures.keySet()) {
-            boolean isSelected = selectionManager.isSelected(party);
-            boolean isActive = selectionManager.getActiveComponent() == party;
+            boolean isSelected = diagram.isSelected(party);
+            boolean isActive = diagram.getActiveComponent() == party;
             paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
             Figure partyFigure = figureForParty(party);
             if (isActive)
-                partyFigure.setLabel(selectionManager.getTemporaryLabel() + "|");
+                partyFigure.setLabel(diagram.getTemporaryLabel() + "|");
             partyFigure.draw(paintBoard);
             paintBoard.setColor(Color.BLACK);
         }
@@ -53,14 +53,14 @@ public abstract class DiagramView {
      * @param paintBoard The paintboard to use when displaying the view.
      * @param diagram The diagram that is to be displayed in this view.
      */
-    protected void displayMessages(PaintBoard paintBoard, Diagram diagram, SelectionManager selectionManager) {
+    protected void displayMessages(PaintBoard paintBoard, Diagram diagram) {
         for (Message message : links.keySet()) {
-            boolean isSelected = selectionManager.isSelected(message);
-            boolean isActive = selectionManager.getActiveComponent() == message;
+            boolean isSelected = diagram.isSelected(message);
+            boolean isActive = diagram.getActiveComponent() == message;
             paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
             Link messageLink = linkForMessage(message);
             if (isActive)
-                messageLink.setLabel(selectionManager.getTemporaryLabel() + "|");
+                messageLink.setLabel(diagram.getTemporaryLabel() + "|");
             else
                 messageLink.setLabel(diagram.getPrefix(message) + " " + messageLink.getLabel());
             messageLink.draw(paintBoard);

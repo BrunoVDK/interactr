@@ -19,7 +19,7 @@ public class Diagram {
      * Initialize this new diagram without any messages or parties.
      */
     public Diagram() {
-
+        this.activeComponent = null;
     }
 
     /**
@@ -278,4 +278,94 @@ public class Diagram {
      */
     private ArrayList<Integer> associatedMessageIndices = new ArrayList<Integer>();
 
+    /**
+     * List registering selected diagramcomponents.
+     */
+    private PList<DiagramComponent> selection = PList.<DiagramComponent>empty();
+
+    /**
+     * Returns the list of selected components.
+     */
+    public PList<DiagramComponent> getSelectedComponents(){
+        return this.selection;
+    }
+
+    /**
+     * Adds the given component to the selected components in this diagram.
+     *  If the given component is already selected, it is activated.
+     *
+     * @param component The component that is to be selected.
+     */
+    public void addToSelection(DiagramComponent component) {
+        if (isSelected(component)) {
+            setActiveComponent(component);
+            setTemporaryLabel("");
+        }
+        else if (component != null)
+            selection = selection.plus(component);
+    }
+
+    /**
+     * Returns whether or not the given diagram component is currently selected.
+     *
+     * @param component The component to check for.
+     * @return True if and only if the given diagram component is currently selected.
+     */
+    public boolean isSelected(DiagramComponent component) {
+        return selection.contains(component);
+    }
+
+    /**
+     * Registers the active component in this diagram.
+     */
+    private DiagramComponent activeComponent;
+
+    /**
+     * Returns the diagramcomponent that is currently active in this diagram.
+     */
+    public DiagramComponent getActiveComponent() {
+        return activeComponent;
+    }
+
+    /**
+     * Sets a diagramcomponent in this diagram as active component.
+     * @param component the diagramcomponent that needs to be set as active component.
+     */
+    public void setActiveComponent(DiagramComponent component) {
+        unselectAll();
+        setTemporaryLabel("");
+        this.activeComponent = component;
+    }
+
+    /**
+     * Unselects the currently active component(s).
+     */
+    public void unselectAll(){
+        this.activeComponent = null;
+    }
+
+    /**
+     * Sets the temporary label for the active component to the given one.
+     *
+     * @param label The new temporary label for the active component.
+     * @throws IllegalArgumentException If the given label is null.
+     */
+    public void setTemporaryLabel(String label){
+        if(label == null){
+            throw new IllegalArgumentException("Invalid temporary label (null).");
+        }
+        this.temporaryLabel = label;
+    }
+
+    /**
+     * Returns the temporary label of the currently active component in this diagram.
+     */
+    public String getTemporaryLabel(){
+        return temporaryLabel;
+    }
+
+    /**
+     * The temporary label for the active component of this diagram.
+     */
+    private String temporaryLabel = "";
 }

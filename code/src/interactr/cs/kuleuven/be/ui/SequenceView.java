@@ -45,8 +45,8 @@ public class SequenceView extends DiagramView {
     private static Color ACTIVATION_COLOR = Color.getHSBColor(216/360, 35/360, 0.66f);
 
     @Override
-    public void display(PaintBoard paintBoard, Diagram diagram, SelectionManager selectionManager) {
-        displayFigures(paintBoard, diagram, selectionManager);
+    public void display(PaintBoard paintBoard, Diagram diagram) {
+        displayFigures(paintBoard, diagram);
         paintBoard.setColor(Color.LIGHT_GRAY);
         for (Party party : figures.keySet()) {
             Figure partyFigure = figures.get(party);
@@ -57,11 +57,11 @@ public class SequenceView extends DiagramView {
         }
         paintBoard.setColor(Color.BLACK);
         paintBoard.drawLine(0, PARTY_ROW_HEIGHT, paintBoard.getWidth(), PARTY_ROW_HEIGHT);
-        displayMessages(paintBoard, diagram, selectionManager);
+        displayMessages(paintBoard, diagram);
     }
 
     @Override
-    protected void displayMessages(PaintBoard paintBoard, Diagram diagram, SelectionManager selectionManager) {
+    protected void displayMessages(PaintBoard paintBoard, Diagram diagram) {
 
         // Pre-processing
         Party initiator = diagram.getInitiator();
@@ -111,22 +111,22 @@ public class SequenceView extends DiagramView {
                     drawActivationBar(paintBoard, barX, barY, barHeight);
 
                     // Draw invocation link (calculate offset!)
-                    boolean isSelected = selectionManager.isSelected(message);
-                    boolean isActive = selectionManager.getActiveComponent() == message;
+                    boolean isSelected = diagram.isSelected(message);
+                    boolean isActive = diagram.getActiveComponent() == message;
                     paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
                     if (isActive)
-                        messageLink.setLabel(selectionManager.getTemporaryLabel() + "|");
+                        messageLink.setLabel(diagram.getTemporaryLabel() + "|");
                     messageLink.setStartX(messageX - (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
                     messageLink.setEndX(barX + (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
                     messageLink.draw(paintBoard);
                     paintBoard.setColor(Color.BLACK);
 
                     // Draw receiver link (calculate offset!)
-                    isSelected = selectionManager.isSelected(associatedMessage);
-                    isActive = selectionManager.getActiveComponent() == associatedMessage;
+                    isSelected = diagram.isSelected(associatedMessage);
+                    isActive = diagram.getActiveComponent() == associatedMessage;
                     paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
                     if (isActive)
-                        associatedMessageLink.setLabel(selectionManager.getTemporaryLabel() + "|");
+                        associatedMessageLink.setLabel(diagram.getTemporaryLabel() + "|");
                     associatedMessageLink.setEndX(messageX - (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
                     associatedMessageLink.setStartX(barX + (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
                     associatedMessageLink.draw(paintBoard);
