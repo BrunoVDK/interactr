@@ -1,7 +1,9 @@
 package interactr.cs.kuleuven.be.domain;
 
 import interactr.cs.kuleuven.be.exceptions.InvalidAddMessageException;
+import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.purecollections.PList;
+import interactr.cs.kuleuven.be.ui.DiagramView;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -25,8 +27,19 @@ public class Diagram {
     /**
      * Add the given party to this diagram.
      */
-    public void addParty(Party party) {
-        parties = parties.plus(party);
+    public void addParty(int x, int y, DiagramView activeView, ArrayList<DiagramView> views) {
+        Party party = new ObjectParty();
+        try{
+            activeView.addParty(this, party, x, y);
+            parties = parties.plus(party);
+            for(DiagramView view : views)
+                if(view != activeView)
+                    view.registerParty(party, x, y);
+            this.setActiveComponent(party);
+        }
+        catch (InvalidAddPartyException addException){
+            throw addException;
+        }
     }
 
     /**
@@ -202,6 +215,25 @@ public class Diagram {
      */
     public int getIndexOfMessage(Message message) {
         return messages.indexOf(message);
+    }
+
+    public void addMessageFrom(int x1, int y1, int x2, int y2, DiagramView activeView, ArrayList<DiagramView> views){
+        if(activeView.canInsertMessageAt(this, x1, y1, x2, y2)) {
+            int index = activeView.getMessageInsertionIndex(this, x1, y1, x2, y2);
+            InvocationMessage message = activeView.getInvocationMessageForCoordinates(x1, y1, x2, y2);
+            if(message != null){
+                try {
+                    this.insertInvocationMessageAtIndex(message, index);
+                    ResultMessage result = this.getResultMessageForInvocationMessage(message);
+                    for(DiagramView view : views)
+                        view.registerMessages(this, message, result, x1, y1, x2, y2);
+                    this.setActiveComponent(message);
+                }
+                catch(InvalidAddMessageException addException){
+                    throw addException;
+                }
+            }
+        }
     }
 
     /**

@@ -102,17 +102,11 @@ public class DiagramController {
      * @throws InvalidAddPartyException The given coordinates point to a component already.
      */
     public void addPartyAt(int x, int y) throws InvalidAddPartyException {
-        Party newParty = new ObjectParty();
         try {
-            getActiveView().addParty(getDiagram(), newParty, x, y);
-            getDiagram().addParty(newParty);
-            for (DiagramView view : views)
-                if (view != getActiveView())
-                    view.registerParty(newParty, x, y);
-            getDiagram().setActiveComponent(newParty);
+            getDiagram().addParty(x, y, this.getActiveView(), views);
             getPaintBoard().refresh();
         }
-        catch (InvalidAddPartyException addException) {
+        catch (InvalidAddPartyException addException){
             throw addException;
         }
     }
@@ -126,26 +120,17 @@ public class DiagramController {
      * @param y2 The end y coordinate for the session.
      */
     public void addMessageFrom(int x1, int y1, int x2, int y2) {
-        if (getActiveView().canInsertMessageAt(getDiagram(), x1, y1, x2, y2)) {
-            int index = getActiveView().getMessageInsertionIndex(getDiagram(), x1, y1, x2, y2);
-            InvocationMessage message = getActiveView().getInvocationMessageForCoordinates(x1, y1, x2, y2);
-            if (message != null) {
-                try {
-                    getDiagram().insertInvocationMessageAtIndex(message, index);
-                    ResultMessage result = getDiagram().getResultMessageForInvocationMessage(message);
-                    for (DiagramView view : views)
-                        view.registerMessages(getDiagram(), message, result, x1, y1, x2, y2);
-                    getDiagram().setActiveComponent(message);
-                    getPaintBoard().refresh();
-                }
-                catch (InvalidAddMessageException exception) {}
-            }
+        try {
+            getDiagram().addMessageFrom(x1, y1, x2, y2, this.getActiveView(), views);
+            getPaintBoard().refresh();
+        }
+        catch(InvalidAddMessageException addException){
+            throw addException;
         }
     }
-
-    /**
-     * A method that returns the editing mode of the selectionManager
-     */
+        /**
+         * A method that returns the editing mode of the selectionManager
+         */
     public boolean isEditing() { return getDiagram().getActiveComponent() != null;};
 
     /**
@@ -287,5 +272,4 @@ public class DiagramController {
     public static void main(String[] args) { // No documentation
         new DiagramController();
     }
-
 }
