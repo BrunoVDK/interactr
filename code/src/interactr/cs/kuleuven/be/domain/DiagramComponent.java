@@ -66,7 +66,7 @@ public abstract class DiagramComponent {
      *
      * @param diagram The diagram from which this component should be deleted.
      */
-    public abstract void delete(Diagram diagram);
+    public abstract void deleteFrom(Diagram diagram);
 
     @Override
     public String toString() {

@@ -61,7 +61,7 @@ public class Party extends DiagramComponent {
     }
 
     @Override
-    public void delete(Diagram diagram) {
+    public void deleteFrom(Diagram diagram) {
         diagram.deleteParty(this);
     }
 

@@ -83,7 +83,7 @@ public class Message extends DiagramComponent {
     }
 
     @Override
-    public void delete(Diagram diagram) {
+    public void deleteFrom(Diagram diagram) {
         diagram.deleteMessage(this);
     }
 

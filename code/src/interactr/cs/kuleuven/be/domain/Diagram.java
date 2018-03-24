@@ -46,16 +46,25 @@ public class Diagram {
      * Replace a party with the given party.
      *
      * @param oldParty The party that is to be replaced.
-     * @param newParty The party to replace it with.
+     * @param views List of views
      */
-    public void replaceParty(Party oldParty, Party newParty) {
+    public void replaceParty(Party oldParty, ArrayList<DiagramView> views){
+        Party newParty;
+        if (oldParty instanceof ActorParty)
+            newParty = new ObjectParty(oldParty);
+        else
+            newParty = new ActorParty(oldParty);
+
         parties = parties.minus(oldParty);
         parties = parties.plus(newParty);
-        for (Message message : messages)
+        for (Message message : messages){
             if (message.getSender() == oldParty)
                 message.setSender(newParty);
             else if (message.getReceiver() == oldParty)
                 message.setReceiver(newParty);
+        }
+        for (DiagramView view : views)
+            view.registerPartyReplace(oldParty, newParty);
     }
 
     /**
@@ -400,4 +409,17 @@ public class Diagram {
      * The temporary label for the active component of this diagram.
      */
     private String temporaryLabel = "";
+
+    /**
+     * Delete the selected component and all depending components from the diagram.
+     * @param views List of all possible views of the diagram.
+     */
+    public void deleteSelection(ArrayList<DiagramView> views){
+        if(this.getActiveComponent() != null) return;
+        for(DiagramComponent component : this.getSelectedComponents())
+            component.deleteFrom(this);
+        this.unselectAll();
+        for(DiagramView view : views)
+            view.synchronize(this);
+    }
 }

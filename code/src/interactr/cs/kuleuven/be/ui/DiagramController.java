@@ -152,15 +152,8 @@ public class DiagramController {
      *
      * @param party The party whose type is to be switched.
      */
-    public void switchPartyType(Party party) {
-        Party newParty;
-        if (party instanceof ActorParty)
-            newParty = new ObjectParty(party);
-        else
-            newParty = new ActorParty(party);
-        diagram.replaceParty(party, newParty);
-        for (DiagramView view : views)
-            view.registerPartyReplace(party, newParty);
+    public void switchPartyType(Party party){
+        getDiagram().replaceParty(party, views);
         getPaintBoard().refresh();
     }
 
@@ -173,7 +166,7 @@ public class DiagramController {
     public void selectComponentAt(int x, int y) {
         DiagramComponent component = getActiveView().selectableComponentAt(getDiagram(), x, y);
         getDiagram().addToSelection(component);
-        paintBoard.refresh();
+        this.getPaintBoard().refresh();
     }
 
     /**
@@ -202,15 +195,9 @@ public class DiagramController {
     /**
      * Removes all components in the current selection from this controller's diagram.
      */
-    public void deleteSelection() {
-        if (this.getDiagram().getActiveComponent() != null)
-            return;
-        for (DiagramComponent component : getDiagram().getSelectedComponents())
-            component.delete(getDiagram());
-        this.getDiagram().unselectAll();
-        for (DiagramView view : views)
-            view.synchronize(getDiagram());
-        getPaintBoard().refresh();
+    public void deleteSelection(){
+        this.getDiagram().deleteSelection(this.views);
+        this.getPaintBoard().refresh();
     }
 
     /**
