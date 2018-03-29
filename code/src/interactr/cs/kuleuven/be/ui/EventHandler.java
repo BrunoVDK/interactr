@@ -52,36 +52,34 @@ public class EventHandler {
                             getDiagramController().addPartyAt(x,y);
                         }
                         catch (InvalidAddPartyException exception) {
-                            Party party = getDiagramController().getPartyAt(x, y);
-                            if (party != null)
-                                getDiagramController().switchPartyType(party);
+                           getDiagramController().switchPartyTypeAt(x, y);
                         }
                         break;
                 }
             }
 
-            // Mouse press
+            //If there is no party to move save the exception to get the coordenate out of
             if(id == MouseEvent.MOUSE_PRESSED){
-                focusedParty = getDiagramController().getPartyAt(x,y);
-                focusCoordinate = new Point(x,y);
+                try{
+                    getDiagramController().movePartyAt(x,y);
+                }catch(Exception e) {
+                    this.e = e;
+                }
             }
 
             // Mouse drag
             if(id == MouseEvent.MOUSE_DRAGGED){
-                if(focusedParty != null){
-                    getDiagramController().moveParty(focusedParty, x, y);
-                }
+                if(e == null)
+                    getDiagramController().movePartyTo(x, y);
+
             }
 
             // Mouse release
             if(id == MouseEvent.MOUSE_RELEASED){
-                if (focusedParty == null && focusCoordinate != null) {
-                    getDiagramController().addMessageFrom(focusCoordinate.getX()
-                            ,focusCoordinate.getY(),x,y);
-                }
-                else if(focusedParty != null) {
-                    focusedParty = null;
-                    focusCoordinate = null;
+                if (e != null) {
+                    getDiagramController().addMessageFrom(e.getX()
+                            ,e.getY(),x,y);
+                    e = null;
                 }
 
             }
@@ -154,5 +152,10 @@ public class EventHandler {
      * Variable registering the diagram controller of this event handler.
      */
     private DiagramController diagramController;
+
+    /**
+     * The exception when a press happens but there is no party availabe
+     */
+    private Exception e;
 
 }

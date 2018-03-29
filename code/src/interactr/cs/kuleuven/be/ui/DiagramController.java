@@ -72,7 +72,7 @@ public class DiagramController {
      * Display the currently active diagram view by making use of the given paintboard.
      */
     public void displayView() {
-        getActiveView().display(getPaintBoard(), getDiagram());
+        getActiveSubwindow().displayView(getPaintBoard());
     }
 
     /**
@@ -99,7 +99,7 @@ public class DiagramController {
      */
     public void addPartyAt(int x, int y) throws InvalidAddPartyException {
         try {
-            getDiagram().addParty(x, y, this.getActiveView(), views);
+            getActiveSubwindow().addParty(x, y);
             getPaintBoard().refresh();
         }
         catch (InvalidAddPartyException addException){
@@ -172,20 +172,23 @@ public class DiagramController {
      * @param y The y coordinate for the party.
      * @return The party at the given coordinate, or null if there is none.
      */
-    public Party getPartyAt(int x,int y ){
-        return getActiveView().getPartyAt(x,y);
+    public Party switchPartyTypeAt(int x,int y ){
+        return getActiveSubwindow().switchPartyTypeAt(x,y);
     }
 
     /**
      * Moves the given party to the given x and y coordinates.
-     *
-     * @param party The party that is to be moved.
      * @param x The new x coordinate for the party.
      * @param y The new y coordinate for the party.
      */
-    public void moveParty(Party party ,int x, int y){
-        getActiveView().moveParty(getDiagram(), party,x,y);
+    public void movePartyTo(int x, int y){
+        getActiveSubwindow().movePartyTo(x,y);
         getPaintBoard().refresh();
+    }
+
+    public void movePartyAt(int x, int y){
+        getActiveSubwindow().movePartyAt(x,y);
+
     }
 
     /**
@@ -255,9 +258,17 @@ public class DiagramController {
     /**
      * A method that creates a new Subwindow and adds it to top of the list, so that
      */
-    private void addNewSubwindow(){
+    private void addNewSubWindow(){
+        subWindows.add(0, new SubWindow());
+    }
 
-
+    /**
+     * A method that creates a dublpicate subWindow
+     */
+    private void addDuplicateSubWindow(){
+        SubWindow temp = subWindows.remove(0);
+        subWindows.add(0,new SubWindow(temp));
+        subWindows.add(temp);
     }
 
     public static void main(String[] args) { // No documentation
