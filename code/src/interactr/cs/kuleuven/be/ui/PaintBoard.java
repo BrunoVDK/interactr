@@ -23,7 +23,7 @@ public class PaintBoard {
      */
     public PaintBoard(DiagramWindow diagramWindow, DiagramController diagramController) throws IllegalArgumentException {
         if (diagramWindow == null)
-            throw new IllegalArgumentException("Window cannot be null.");
+            throw new IllegalArgumentException("Null window.");
         this.diagramWindow = diagramWindow;
         setDiagramController(diagramController);
     }
@@ -117,7 +117,7 @@ public class PaintBoard {
      *
      * @param colour The colour to use for this paint board.
      */
-    public void setColour(Colour colour) {
+    public void setColor(Colour colour) {
         if (currentContext != null)
             currentContext.setColor(Color.getHSBColor(colour.getHue(), colour.getSaturation(), colour.getBrightness()));
     }
@@ -153,25 +153,13 @@ public class PaintBoard {
     }
 
     /**
-     * Returns the current clip rect of this paint board.
-     */
-    public Rectangle getClipRect() {
-        return this.clipRect;
-    }
-
-    /**
      * The new clipping rectangle for this paintboard.
      *
      * @param clipRect The new clipping rectangle for this paintboard.
      */
     public void setClipRect(Rectangle clipRect) {
-        this.clipRect = clipRect;
+        this.currentContext.setClip(new java.awt.Rectangle(clipRect.getX(), clipRect.getY(), clipRect.getWidth(), clipRect.getHeight()));
     }
-
-    /**
-     * The current clipping rectangle for this paint board.
-     */
-    private Rectangle clipRect;
 
     /**
      * Variable registering the current graphics context of this paint board.
