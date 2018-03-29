@@ -14,7 +14,7 @@ public class EditLabel {
     private DiagramWindow diagramWindow = new DiagramWindow();
 
     @BeforeEach
-    void setUp() throws Exception{
+    void setUp(){
         diagramWindow.setEventHandler(new EventHandler(new DiagramController()));
         diagramWindow.setPaintBoard(new PaintBoard(diagramWindow, diagramWindow.getEventHandler().getDiagramController()));
         try {

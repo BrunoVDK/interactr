@@ -6,8 +6,6 @@ import interactr.cs.kuleuven.be.purecollections.PMap;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.*;
 
-import java.awt.*;
-
 /**
  * An abstract interface for diagram views. Diagram views can display diagrams in
  *  a coordinate system.
@@ -15,15 +13,49 @@ import java.awt.*;
  * @author Team 25
  * @version 1.0
  */
-public abstract class DiagramView {
+public class DiagramView {
+
+    /**
+     * Initialize this new diagram view with the given diagram.
+     *
+     * @param diagram The diagram to associate this diagram view with.
+     * @throws IllegalArgumentException If the given diagram is null.
+     */
+    public DiagramView(Diagram diagram) {
+        setDiagram(diagram);
+    }
+
+    /**
+     * Returns the diagram associated with this diagram view.
+     */
+    public Diagram getDiagram() {
+        return this.diagram;
+    }
+
+    /**
+     * Sets the diagram of this diagram view to the given one.
+     *
+     * @param diagram The new diagram associated with this diagram view.
+     * @throws IllegalArgumentException If the given diagram is null.
+     */
+    public void setDiagram(Diagram diagram) {
+        if (diagram == null)
+            throw new IllegalArgumentException("Diagram cannot be null.");
+        this.diagram = diagram;
+        // TODO : add listeners
+    }
+
+    /**
+     * The diagram associated with this diagram view.
+     */
+    private Diagram diagram;
 
     /**
      * Display the given diagram in this view using the given paintboard.
      *
      * @param paintBoard The paintboard to use when displaying the view.
-     * @param diagram The diagram that is to be displayed in this view.
      */
-    public void display(PaintBoard paintBoard, Diagram diagram) {
+    public void display(PaintBoard paintBoard) {
         displayFigures(paintBoard, diagram);
         displayMessages(paintBoard, diagram);
     }
@@ -38,12 +70,12 @@ public abstract class DiagramView {
         for (Party party : figures.keySet()) {
             boolean isSelected = diagram.isSelected(party);
             boolean isActive = diagram.getActiveComponent() == party;
-            paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
+            paintBoard.setColour((isSelected || isActive ? Colour.BLUE : Colour.BLACK));
             Figure partyFigure = figureForParty(party);
             if (isActive)
                 partyFigure.setLabel(diagram.getTemporaryLabel() + "|");
             partyFigure.draw(paintBoard);
-            paintBoard.setColor(Color.BLACK);
+            paintBoard.setColour(Colour.BLACK);
         }
     }
 
@@ -57,14 +89,14 @@ public abstract class DiagramView {
         for (Message message : links.keySet()) {
             boolean isSelected = diagram.isSelected(message);
             boolean isActive = diagram.getActiveComponent() == message;
-            paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
+            paintBoard.setColour((isSelected || isActive ? Colour.BLUE : Colour.BLACK));
             Link messageLink = linkForMessage(message);
             if (isActive)
                 messageLink.setLabel(diagram.getTemporaryLabel() + "|");
             else
                 messageLink.setLabel(diagram.getPrefix(message) + " " + messageLink.getLabel());
             messageLink.draw(paintBoard);
-            paintBoard.setColor(Color.BLACK);
+            paintBoard.setColour(Colour.BLACK);
         }
     }
 
@@ -216,16 +248,8 @@ public abstract class DiagramView {
             figure.setLabel(party.getLabel());
             figure.setX(x);
             figure.setY(y);
-        }
-        else { // No figure has been made for the given party
-            figure = new Box();
-            Class figureType = party.proposedFigure();
-            try {
-                if (Figure.class.isAssignableFrom(figureType))
-                    figure = (Figure) figureType.getConstructor().newInstance();
-            } catch (Exception e) {
-                System.out.println("Invalid figure type given in custom party class.");
-            }
+        } else { // No figure has been made for the given party
+            figure = party.proposedFigure();
             figure.setX(x);
             figure.setY(y);
             figure.setWidth(50);
@@ -306,14 +330,7 @@ public abstract class DiagramView {
      * @return A link at given coordinates representing the given message.
      */
     protected Link createLinkForMessage(Message message, int fromX, int fromY, int toX, int toY) {
-        Link link = new Arrow();
-        Class linkType = message.proposedLinkType();
-        try {
-            if (Link.class.isAssignableFrom(linkType))
-                link = (Link) linkType.getConstructor().newInstance();
-        } catch (Exception e) {
-            System.err.println("Invalid link type given in custom message class.");
-        }
+        Link link = message.proposedLink();
         Party sender = message.getSender(), receiver = message.getReceiver();
         Figure senderFigure = figures.get(sender), receiverFigure = figures.get(receiver);
         link.setStartX(senderFigure.getX() + (senderFigure.getX() < receiverFigure.getX() ? senderFigure.getWidth() : 0));
@@ -420,6 +437,8 @@ public abstract class DiagramView {
      *
      * @return This diagram view's name as a string.
      */
-    public abstract String viewName();
+    public String viewName() {
+        return "Default";
+    }
 
 }

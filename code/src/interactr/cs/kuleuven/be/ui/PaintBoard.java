@@ -1,6 +1,7 @@
 package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.ui.geometry.Model;
+import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 import java.awt.*;
 
@@ -112,13 +113,13 @@ public class PaintBoard {
     }
 
     /**
-     * Sets the color for this paint board.
+     * Sets the colour for this paint board.
      *
-     * @param color The color to use for this paint board.
+     * @param colour The colour to use for this paint board.
      */
-    public void setColor(Color color) {
+    public void setColour(Colour colour) {
         if (currentContext != null)
-            currentContext.setColor(color);
+            currentContext.setColor(Color.getHSBColor(colour.getHue(), colour.getSaturation(), colour.getBrightness()));
     }
 
     /**
@@ -149,6 +150,15 @@ public class PaintBoard {
      */
     public int getHeight() {
         return getDiagramWindow().getHeight();
+    }
+
+    /**
+     * The new clipping rectangle for this paintboard.
+     *
+     * @param clipRect The new clipping rectangle for this paintboard.
+     */
+    public void setClipRect(Rectangle clipRect) {
+        this.currentContext.setClip(new java.awt.Rectangle(clipRect.getX(), clipRect.getY(), clipRect.getWidth(), clipRect.getHeight()));
     }
 
     /**

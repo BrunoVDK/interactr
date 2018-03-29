@@ -52,8 +52,8 @@ public class MoveParty {
         diagramWindow.getEventHandler().getDiagramController().nextView();
         DiagramWindow.replayRecording("addPartyLegalLabel100X.txt", diagramWindow);
         DiagramWindow.replayRecording("moveTill100X.txt", diagramWindow);
-        try{Thread.sleep(5000);}catch(Exception e){}
         assertEquals("b:B",diagramWindow.getEventHandler().getDiagramController().getActiveView().getPartyAt(100,10).getLabel());
     }
+
 
 }

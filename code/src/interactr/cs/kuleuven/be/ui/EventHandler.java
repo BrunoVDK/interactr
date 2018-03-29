@@ -5,8 +5,12 @@ import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.security.Key;
+
 import interactr.cs.kuleuven.be.domain.*;
+import interactr.cs.kuleuven.be.exceptions.NoSuchPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.Point;
+import javafx.scene.input.KeyCode;
 
 
 /**
@@ -52,36 +56,35 @@ public class EventHandler {
                             getDiagramController().addPartyAt(x,y);
                         }
                         catch (InvalidAddPartyException exception) {
-                            Party party = getDiagramController().getPartyAt(x, y);
-                            if (party != null)
-                                getDiagramController().switchPartyType(party);
+                           getDiagramController().switchPartyTypeAt(x, y);
                         }
                         break;
                 }
             }
 
-            // Mouse press
+            //If there is no party to move save the exception to get the coordenate out of
             if(id == MouseEvent.MOUSE_PRESSED){
-                focusedParty = getDiagramController().getPartyAt(x,y);
-                focusCoordinate = new Point(x,y);
+                getDiagramController().switchSubWindow(x,y);
+                try {
+                    getDiagramController().movePartyAt(x,y);
+                }
+                catch (NoSuchPartyException e) {
+                    this.exception = e;
+                }
             }
 
             // Mouse drag
             if(id == MouseEvent.MOUSE_DRAGGED){
-                if(focusedParty != null){
-                    getDiagramController().moveParty(focusedParty, x, y);
-                }
+                if (exception == null)
+                    getDiagramController().movePartyTo(x, y);
+
             }
 
             // Mouse release
             if(id == MouseEvent.MOUSE_RELEASED){
-                if (focusedParty == null && focusCoordinate != null) {
-                    getDiagramController().addMessageFrom(focusCoordinate.getX()
-                            ,focusCoordinate.getY(),x,y);
-                }
-                else if(focusedParty != null) {
-                    focusedParty = null;
-                    focusCoordinate = null;
+                if (exception != null) {
+                    getDiagramController().addMessageFrom(exception.getX(), exception.getY(),x,y);
+                    exception = null;
                 }
 
             }
@@ -110,10 +113,23 @@ public class EventHandler {
                         else
                             getDiagramController().deleteSelection();
                     }
+                    else if (keyCode == KeyEvent.VK_CONTROL)
+                        controlIsPressed = true;
+
+                    else if(keyCode == KeyEvent.VK_N && controlIsPressed)
+                        getDiagramController().addNewSubWindow();
+
+                    else if(keyCode == KeyEvent.VK_D && controlIsPressed)
+                        getDiagramController().addDuplicateSubWindow();
+
                     break;
                 case KeyEvent.KEY_TYPED:
                     if (keyChar == KeyEvent.VK_TAB && !getDiagramController().isEditing())
                         getDiagramController().nextView();
+
+                    else if(keyChar == KeyEvent.VK_CONTROL)
+                        controlIsPressed = false;
+
                     else if (Character.isLetter(keyChar)
                             || Character.isDigit(keyChar)
                             || ":();-_<>*&[]".indexOf(Character.toString(keyChar)) != -1)
@@ -154,5 +170,15 @@ public class EventHandler {
      * Variable registering the diagram controller of this event handler.
      */
     private DiagramController diagramController;
+
+    /**
+     * The exception when a press happens but there is no party availabe
+     */
+    private NoSuchPartyException exception;
+
+    /**
+     * A boolean that returns if the control key is pressed on the moment
+     */
+    private boolean controlIsPressed = false;
 
 }

@@ -3,14 +3,9 @@ package interactr.cs.kuleuven.be.ui;
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.purecollections.PList;
-import interactr.cs.kuleuven.be.purecollections.PMap;
 import interactr.cs.kuleuven.be.ui.geometry.Arrow;
 import interactr.cs.kuleuven.be.ui.geometry.Figure;
 import interactr.cs.kuleuven.be.ui.geometry.Link;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * A class of sequence diagram views. Sequence diagram views display diagrams
@@ -42,12 +37,21 @@ public class SequenceView extends DiagramView {
     /**
      * The color used to draw activation bars.
      */
-    private static Color ACTIVATION_COLOR = Color.getHSBColor(216/360, 35/360, 0.66f);
+    private static Colour ACTIVATION_COLOR = new Colour(216/360f, 35/360f, 0.66f);
 
-    @Override
+    /**
+     * Initialize this new diagram view with the given diagram.
+     *
+     * @param diagram The diagram to associate this diagram view with.
+     * @throws IllegalArgumentException If the given diagram is null.
+     */
+    public SequenceView(Diagram diagram) {
+        super(diagram);
+    }
+
     public void display(PaintBoard paintBoard, Diagram diagram) {
         displayFigures(paintBoard, diagram);
-        paintBoard.setColor(Color.LIGHT_GRAY);
+        paintBoard.setColour(Colour.GRAY);
         for (Party party : figures.keySet()) {
             Figure partyFigure = figures.get(party);
             paintBoard.drawLine(partyFigure.getX() + partyFigure.getWidth() / 2,
@@ -55,7 +59,7 @@ public class SequenceView extends DiagramView {
                     partyFigure.getX() + partyFigure.getWidth() / 2,
                     paintBoard.getHeight());
         }
-        paintBoard.setColor(Color.BLACK);
+        paintBoard.setColour(Colour.BLACK);
         paintBoard.drawLine(0, PARTY_ROW_HEIGHT, paintBoard.getWidth(), PARTY_ROW_HEIGHT);
         displayMessages(paintBoard, diagram);
     }
@@ -113,24 +117,24 @@ public class SequenceView extends DiagramView {
                     // Draw invocation link (calculate offset!)
                     boolean isSelected = diagram.isSelected(message);
                     boolean isActive = diagram.getActiveComponent() == message;
-                    paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
+                    paintBoard.setColour((isSelected || isActive ? Colour.BLUE : Colour.BLACK));
                     if (isActive)
                         messageLink.setLabel(diagram.getTemporaryLabel() + "|");
                     messageLink.setStartX(messageX - (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
                     messageLink.setEndX(barX + (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
                     messageLink.draw(paintBoard);
-                    paintBoard.setColor(Color.BLACK);
+                    paintBoard.setColour(Colour.BLACK);
 
                     // Draw receiver link (calculate offset!)
                     isSelected = diagram.isSelected(associatedMessage);
                     isActive = diagram.getActiveComponent() == associatedMessage;
-                    paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
+                    paintBoard.setColour((isSelected || isActive ? Colour.BLUE : Colour.BLACK));
                     if (isActive)
                         associatedMessageLink.setLabel(diagram.getTemporaryLabel() + "|");
                     associatedMessageLink.setEndX(messageX - (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
                     associatedMessageLink.setStartX(barX + (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
                     associatedMessageLink.draw(paintBoard);
-                    paintBoard.setColor(Color.BLACK);
+                    paintBoard.setColour(Colour.BLACK);
 
                 }
                 else {
@@ -154,9 +158,9 @@ public class SequenceView extends DiagramView {
      * @param height The height of the bar.
      */
     private void drawActivationBar(PaintBoard paintBoard, int x, int y, int height) {
-        paintBoard.setColor(ACTIVATION_COLOR);
+        paintBoard.setColour(ACTIVATION_COLOR);
         paintBoard.fillRectangle(x, y, ACTIVATION_BAR_WIDTH, height);
-        paintBoard.setColor(Color.BLACK);
+        paintBoard.setColour(Colour.BLACK);
         paintBoard.drawRectangle(x, y, ACTIVATION_BAR_WIDTH, height);
     }
 
@@ -192,14 +196,7 @@ public class SequenceView extends DiagramView {
 
     @Override
     protected Link createLinkForMessage(Message message, int fromX, int fromY, int toX, int toY) {
-        Link link = new Arrow();
-        Class linkType = message.proposedLinkType();
-        try {
-            if (Link.class.isAssignableFrom(linkType))
-                link = (Link) linkType.getConstructor().newInstance();
-        } catch (Exception e) {
-            System.err.println("Invalid link type given in custom message class.");
-        }
+        Link link = message.proposedLink();
         Party sender = message.getSender(), receiver = message.getReceiver();
         Figure senderFigure = figures.get(sender), receiverFigure = figures.get(receiver);
         link.setStartX(senderFigure.getX() + senderFigure.getWidth()/2);
