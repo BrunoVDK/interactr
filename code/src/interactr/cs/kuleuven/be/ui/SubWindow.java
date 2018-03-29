@@ -18,24 +18,21 @@ import java.util.ArrayList;
 public class SubWindow {
 
     /**
-     * Create a new subwindow with given frame. The new subwindow has a sequence view and a diagram view.
-     *
-     * @param frame The frame for the new subwindow.
+     * Create a new subwindow without duplicating an other one.
      */
-    public SubWindow(Rectangle frame) {
-        this(frame, null);
+    public SubWindow() {
+        this(null);
     }
 
     /**
-     * Create a new subwindow with given frame as a duplicate of the given subwindow.
+     * Create a new subwindow with a default frame of size 400x400 as a duplicate of the given subwindow.
      *  If the given subwindow is null, a subwindow with a new (empty) diagram is created.
      *  Otherwise the diagram of the given subwindow is adopted by this new subwindow.
      *
-     * @param frame The frame for the new subwindow.
      * @param subWindow The subwindow that is to be duplicated by this subwindow.
      */
-    public SubWindow(Rectangle frame, SubWindow subWindow) {
-        setFrame(frame);
+    public SubWindow(SubWindow subWindow) {
+        setFrame(new Rectangle(0, 0, 400, 400));
         Diagram adoptedDiagram = null;
         if (subWindow == null)
             adoptedDiagram = new Diagram();

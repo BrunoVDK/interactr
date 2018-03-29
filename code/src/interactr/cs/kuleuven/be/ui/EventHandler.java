@@ -6,6 +6,7 @@ import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import interactr.cs.kuleuven.be.domain.*;
+import interactr.cs.kuleuven.be.exceptions.NoSuchPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.Point;
 
 
@@ -60,26 +61,26 @@ public class EventHandler {
 
             //If there is no party to move save the exception to get the coordenate out of
             if(id == MouseEvent.MOUSE_PRESSED){
-                try{
+                try {
                     getDiagramController().movePartyAt(x,y);
-                }catch(Exception e) {
-                    this.e = e;
+                }
+                catch (NoSuchPartyException e) {
+                    this.exception = e;
                 }
             }
 
             // Mouse drag
             if(id == MouseEvent.MOUSE_DRAGGED){
-                if(e == null)
+                if (exception == null)
                     getDiagramController().movePartyTo(x, y);
 
             }
 
             // Mouse release
             if(id == MouseEvent.MOUSE_RELEASED){
-                if (e != null) {
-                    getDiagramController().addMessageFrom(e.getX()
-                            ,e.getY(),x,y);
-                    e = null;
+                if (exception != null) {
+                    getDiagramController().addMessageFrom(exception.getX(), exception.getY(),x,y);
+                    exception = null;
                 }
 
             }
@@ -156,6 +157,6 @@ public class EventHandler {
     /**
      * The exception when a press happens but there is no party availabe
      */
-    private Exception e;
+    private NoSuchPartyException exception;
 
 }

@@ -1,6 +1,8 @@
 package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.ui.geometry.Model;
+import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
+import org.w3c.dom.css.Rect;
 
 import java.awt.*;
 
@@ -150,6 +152,27 @@ public class PaintBoard {
     public int getHeight() {
         return getDiagramWindow().getHeight();
     }
+
+    /**
+     * Returns the current clip rect of this paint board.
+     */
+    public Rectangle getClipRect() {
+        return this.clipRect;
+    }
+
+    /**
+     * The new clipping rectangle for this paintboard.
+     *
+     * @param clipRect The new clipping rectangle for this paintboard.
+     */
+    public void setClipRect(Rectangle clipRect) {
+        this.clipRect = clipRect;
+    }
+
+    /**
+     * The current clipping rectangle for this paint board.
+     */
+    private Rectangle clipRect;
 
     /**
      * Variable registering the current graphics context of this paint board.
