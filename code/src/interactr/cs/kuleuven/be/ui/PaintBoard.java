@@ -2,7 +2,6 @@ package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.ui.geometry.Model;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
-import org.w3c.dom.css.Rect;
 
 import java.awt.*;
 
@@ -114,13 +113,13 @@ public class PaintBoard {
     }
 
     /**
-     * Sets the color for this paint board.
+     * Sets the colour for this paint board.
      *
-     * @param color The color to use for this paint board.
+     * @param colour The colour to use for this paint board.
      */
-    public void setColor(Color color) {
+    public void setColour(Colour colour) {
         if (currentContext != null)
-            currentContext.setColor(color);
+            currentContext.setColor(Color.getHSBColor(colour.getHue(), colour.getSaturation(), colour.getBrightness()));
     }
 
     /**

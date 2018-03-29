@@ -6,8 +6,6 @@ import interactr.cs.kuleuven.be.purecollections.PMap;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.*;
 
-import java.awt.*;
-
 /**
  * An abstract interface for diagram views. Diagram views can display diagrams in
  *  a coordinate system.
@@ -72,12 +70,12 @@ public class DiagramView {
         for (Party party : figures.keySet()) {
             boolean isSelected = diagram.isSelected(party);
             boolean isActive = diagram.getActiveComponent() == party;
-            paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
+            paintBoard.setColor((isSelected || isActive ? Colour.BLUE : Colour.BLACK));
             Figure partyFigure = figureForParty(party);
             if (isActive)
                 partyFigure.setLabel(diagram.getTemporaryLabel() + "|");
             partyFigure.draw(paintBoard);
-            paintBoard.setColor(Color.BLACK);
+            paintBoard.setColor(Colour.BLACK);
         }
     }
 
@@ -91,14 +89,15 @@ public class DiagramView {
         for (Message message : links.keySet()) {
             boolean isSelected = diagram.isSelected(message);
             boolean isActive = diagram.getActiveComponent() == message;
-            paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
+            java.awt.Color.
+            paintBoard.setColor((isSelected || isActive ? Colour.BLUE : Colour.BLACK));
             Link messageLink = linkForMessage(message);
             if (isActive)
                 messageLink.setLabel(diagram.getTemporaryLabel() + "|");
             else
                 messageLink.setLabel(diagram.getPrefix(message) + " " + messageLink.getLabel());
             messageLink.draw(paintBoard);
-            paintBoard.setColor(Color.BLACK);
+            paintBoard.setColor(Colour.BLACK);
         }
     }
 
