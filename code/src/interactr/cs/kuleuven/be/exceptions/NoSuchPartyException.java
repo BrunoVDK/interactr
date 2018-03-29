@@ -20,9 +20,23 @@ public class NoSuchPartyException extends RuntimeException {
     }
 
     /**
+     * Returns the x coordinate associated with this exception.
+     */
+    public int getX() {
+        return this.x;
+    }
+
+    /**
      * The x coordinate associated with this exception.
      */
     private int x;
+
+    /**
+     * Returns the y coordinate associated with this exception.
+     */
+    public int getY() {
+        return this.y;
+    }
 
     /**
      * The y coordinate associated with this exception.

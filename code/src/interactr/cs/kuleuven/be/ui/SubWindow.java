@@ -1,6 +1,7 @@
 package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
+import interactr.cs.kuleuven.be.domain.Party;
 import interactr.cs.kuleuven.be.exceptions.NoSuchPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
@@ -114,7 +115,9 @@ public class SubWindow {
      * @throws NoSuchPartyException If there is no party at the given coordinates.
      */
     public void movePartyAt(int x, int y) throws NoSuchPartyException {
-        // Throw exception if there is no party here
+        movedParty = getActiveview().getPartyAt(x, y);
+        if (movedParty == null)
+            throw new NoSuchPartyException(x, y);
     }
 
     /**
@@ -126,6 +129,11 @@ public class SubWindow {
     public void movePartyTo(int x, int y) {
 
     }
+
+    /**
+     * The party for the currently active moving session.
+     */
+    private Party movedParty = null;
 
     /**
      * Switch to the next view.
