@@ -5,3 +5,4 @@ Vragen
 - DIAGRAMCONTROLLER : zou het beter zijn om event handler en diagram controller in één klasse te voegen
 - ACTOR <-> OBJECT switch : is een instanceof hier problematisch?
 - RESIZEN : als men vanuit de linkerbovenhoek van een subwindow resized, mogen de parties en messages dan meebewegen? of moeten die visueel op hun plaats blijven staan
+- ABSTRACT FACTORY : gebruiken bij het maken van figures voor actors/messages?
