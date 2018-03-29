@@ -64,6 +64,7 @@ public class EventHandler {
 
             //If there is no party to move save the exception to get the coordenate out of
             if(id == MouseEvent.MOUSE_PRESSED){
+                getDiagramController().switchSubWindow(x,y);
                 try {
                     getDiagramController().movePartyAt(x,y);
                 }

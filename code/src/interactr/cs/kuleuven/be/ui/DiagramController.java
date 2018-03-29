@@ -5,7 +5,8 @@ import interactr.cs.kuleuven.be.exceptions.InvalidAddMessageException;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
 
-import java.util.ArrayList;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A class of diagram controllers for managing a diagram and associated diagram views.
@@ -234,10 +235,19 @@ public class DiagramController {
         subWindows.add(temp);
     }
 
-
-
+    /**
+     * Switch from subwindow at the given x and y, if there is no subwindow nothing happens
+     * @param x
+     * @param y
+     */
+    public void switchSubWindow(int x, int y){
+        SubWindow sub = subWindows.stream().filter( s -> s.getFrame().encloses(x,y)).findFirst().get();
+        if(sub != null)
+            subWindows.add(0, subWindows.remove(subWindows.indexOf(sub)));
+    }
 
     public static void main(String[] args) { // No documentation
         new DiagramController();
     }
+
 }
