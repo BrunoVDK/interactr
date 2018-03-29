@@ -92,4 +92,19 @@ public class SubWindow {
      */
     private ArrayList<DiagramView> views;
 
+    /**
+     *
+     */
+    public void nextView(){
+        //TODO
+    }
+
+    /**
+     * Returns the active view of this current subwindow
+     */
+    public DiagramView getActiveView(){
+        //TODO
+        return null;
+    }
+
 }

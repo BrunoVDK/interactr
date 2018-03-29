@@ -32,19 +32,36 @@ public class DeleteElement {
     }
 
     @Test
-    void deleteMessageAvalanche(){
+    void deleteMessageCascadeSequence(){
         DiagramWindow.replayRecording("editLabelMessage0-100.txt",diagramWindow);
         DiagramWindow.replayRecording("pressBackspace.txt",diagramWindow);
         assertEquals(0,diagramWindow.getEventHandler().getDiagramController().getDiagram().getMessages().size());
     }
 
     @Test
-    void deletePartyAvalanche(){
+    void deletePartyCascadeSequence(){
         DiagramWindow.replayRecording("selectParty100X.txt",diagramWindow);
         DiagramWindow.replayRecording("pressBackspace.txt",diagramWindow);
         assertEquals(0,diagramWindow.getEventHandler().getDiagramController().getDiagram().getMessages().size());
         assertEquals(2,diagramWindow.getEventHandler().getDiagramController().getDiagram().getParties().size());
+    }
 
+    @Test
+    void deleteMessageCascadeCommunication(){
+        DiagramWindow.replayRecording("tabkey.txt",diagramWindow);
+        DiagramWindow.replayRecording("mousePressLabelCom.txt",diagramWindow);
+        DiagramWindow.replayRecording("pressBackspace.txt",diagramWindow);
+        assertEquals(0,diagramWindow.getEventHandler().getDiagramController().getDiagram().getMessages().size());
+    }
+
+    @Test
+    void deletePartyCascadeCommunication(){
+        DiagramWindow.replayRecording("tabkey.txt",diagramWindow);
+        DiagramWindow.replayRecording("selectParty100XCom.txt",diagramWindow);
+        DiagramWindow.replayRecording("pressBackspace.txt",diagramWindow);
+        assertEquals(0,diagramWindow.getEventHandler().getDiagramController().getDiagram().getMessages().size());
+        assertEquals(2,diagramWindow.getEventHandler().getDiagramController().getDiagram().getParties().size());
 
     }
+
 }

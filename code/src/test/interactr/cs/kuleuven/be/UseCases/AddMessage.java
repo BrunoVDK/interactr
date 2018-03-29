@@ -75,6 +75,23 @@ public class AddMessage {
 
     }
 
+    @Test
+    void moveWithMessagesCommunication(){
+        DiagramWindow.replayRecording("addMessage0-100.txt",diagramWindow);
+        DiagramWindow.replayRecording("tabkey.txt", diagramWindow);
+        DiagramWindow.replayRecording("moveTill200.txt",diagramWindow);
+        assertEquals(2,diagramWindow.getEventHandler().getDiagramController().getDiagram().getMessages().size());
+    }
+
+    @Test
+    void addMessageInCommunication(){
+        DiagramWindow.replayRecording("tabkey.txt", diagramWindow);
+        DiagramWindow.replayRecording("addMessage0-100.txt",diagramWindow);
+        assertEquals(0,diagramWindow.getEventHandler().getDiagramController().getDiagram().getMessages().size());
+
+    }
+
+
 
 
 

@@ -45,7 +45,7 @@ public class DiagramController {
      */
     public DiagramController(Diagram diagram, ArrayList<DiagramView> views) {
         this.diagram = diagram;
-        this.views = new ArrayList<DiagramView>();
+        this.subWindows = new ArrayList<SubWindow>();
         if (views != null)
             for (DiagramView view : views)
                 this.views.add(view);
@@ -64,7 +64,7 @@ public class DiagramController {
      *  in this controller's diagram window.
      */
     public void nextView() {
-        activeViewIndex = (activeViewIndex + 1) % views.size();
+        getActiveSubwindow().nextView();
         getPaintBoard().refresh();
     }
 
@@ -80,19 +80,15 @@ public class DiagramController {
      *
      * @return The diagram view of this controller that's currently active.
      */
-    public DiagramView getActiveView() {
-        return views.get(activeViewIndex);
+    public SubWindow getActiveSubwindow(){
+        return subWindows.get(0);
     }
 
-    /**
-     * Registers the index of the currently active view.
-     */
-    private int activeViewIndex = 0;
 
     /**
      * The list of all diagram views kept by this diagram handler.
      */
-    private ArrayList<DiagramView> views = new ArrayList<DiagramView>();
+    private ArrayList<SubWindow> subWindows = new ArrayList<SubWindow>();
 
     /**
      * Add a new party at the given x and y coordinate.
@@ -255,6 +251,14 @@ public class DiagramController {
      * Registers the paint board associated with this controller.
      */
     private PaintBoard paintBoard;
+
+    /**
+     * A method that creates a new Subwindow and adds it to top of the list, so that
+     */
+    private void addNewSubwindow(){
+
+
+    }
 
     public static void main(String[] args) { // No documentation
         new DiagramController();

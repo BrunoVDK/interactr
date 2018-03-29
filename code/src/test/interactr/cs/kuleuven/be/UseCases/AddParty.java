@@ -5,9 +5,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 
-public class AddPartyTest {
+public class AddParty {
 
     private DiagramWindow diagramWindow = new DiagramWindow();
 
@@ -50,6 +51,21 @@ public class AddPartyTest {
         DiagramWindow.replayRecording("addPartyIllegalLabel.txt",diagramWindow);
         if(diagramWindow.getEventHandler().getDiagramController().getSelectionManager().getActiveComponent() != null) assert true;
         else assert false;
+    }
+
+    @Test
+    void addPartySwitch(){
+        DiagramWindow.replayRecording("addPartyLegalLabel.txt",diagramWindow);
+        DiagramWindow.replayRecording("tabkey.txt",diagramWindow);
+        assertFalse(diagramWindow.getEventHandler().getDiagramController().getActiveView().getPartyAt(0,0) == null);
+    }
+
+    @Test
+    void switchAddPartySwitch() {
+        DiagramWindow.replayRecording("tabkey.txt", diagramWindow);
+        DiagramWindow.replayRecording("addPartyLegalLabel.txt", diagramWindow);
+        DiagramWindow.replayRecording("tabkey.txt", diagramWindow);
+        assertFalse(diagramWindow.getEventHandler().getDiagramController().getActiveView().getPartyAt(0, 10) == null);
     }
 
 }
