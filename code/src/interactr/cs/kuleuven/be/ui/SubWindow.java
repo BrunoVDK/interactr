@@ -2,6 +2,7 @@ package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.Party;
+import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.exceptions.NoSuchPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
@@ -91,6 +92,29 @@ public class SubWindow {
      * The frame of this subwindow.
      */
     private Rectangle frame;
+
+    /**
+     * Add a party at the given coordinates in the currently active diagram view.
+     *
+     * @param x The x coordinate to add the party at.
+     * @param y The y coordinate to add the party at.
+     * @throws InvalidAddPartyException If a party cannot be added at the given coordinates.
+     */
+    public void addPartyAt(int x, int y) throws InvalidAddPartyException {
+        // TODO
+    }
+
+    /**
+     * Add a message from the given coordinates to the given ones.
+     *
+     * @param fromX The starting x coordinate for the message.
+     * @param fromY The starting y coordinate for the message.
+     * @param toX The ending x coordinate for the message.
+     * @param toY The ending y coordinate for the message.
+     */
+    public void addMessage(int fromX, int fromY, int toX, int toY) {
+        // TODO
+    }
 
     /**
      * Switch the type of the party at given coordinates.
