@@ -117,7 +117,7 @@ public class PaintBoard {
      *
      * @param colour The colour to use for this paint board.
      */
-    public void setColor(Colour colour) {
+    public void setColour(Colour colour) {
         if (currentContext != null)
             currentContext.setColor(Color.getHSBColor(colour.getHue(), colour.getSaturation(), colour.getBrightness()));
     }
