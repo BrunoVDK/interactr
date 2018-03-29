@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
  */
 public class DiagramController {
 
-
     /**
      * Initialize this new diagram controller with given diagram and diagram views.
      */

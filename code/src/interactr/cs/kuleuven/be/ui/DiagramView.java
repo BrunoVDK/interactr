@@ -70,12 +70,12 @@ public class DiagramView {
         for (Party party : figures.keySet()) {
             boolean isSelected = diagram.isSelected(party);
             boolean isActive = diagram.getActiveComponent() == party;
-            paintBoard.setColor((isSelected || isActive ? Colour.BLUE : Colour.BLACK));
+            paintBoard.setColour((isSelected || isActive ? Colour.BLUE : Colour.BLACK));
             Figure partyFigure = figureForParty(party);
             if (isActive)
                 partyFigure.setLabel(diagram.getTemporaryLabel() + "|");
             partyFigure.draw(paintBoard);
-            paintBoard.setColor(Colour.BLACK);
+            paintBoard.setColour(Colour.BLACK);
         }
     }
 
@@ -89,15 +89,14 @@ public class DiagramView {
         for (Message message : links.keySet()) {
             boolean isSelected = diagram.isSelected(message);
             boolean isActive = diagram.getActiveComponent() == message;
-            java.awt.Color.
-            paintBoard.setColor((isSelected || isActive ? Colour.BLUE : Colour.BLACK));
+            paintBoard.setColour((isSelected || isActive ? Colour.BLUE : Colour.BLACK));
             Link messageLink = linkForMessage(message);
             if (isActive)
                 messageLink.setLabel(diagram.getTemporaryLabel() + "|");
             else
                 messageLink.setLabel(diagram.getPrefix(message) + " " + messageLink.getLabel());
             messageLink.draw(paintBoard);
-            paintBoard.setColor(Colour.BLACK);
+            paintBoard.setColour(Colour.BLACK);
         }
     }
 
