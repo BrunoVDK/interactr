@@ -5,9 +5,12 @@ import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.security.Key;
+
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.NoSuchPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.Point;
+import javafx.scene.input.KeyCode;
 
 
 /**
@@ -109,10 +112,23 @@ public class EventHandler {
                         else
                             getDiagramController().deleteSelection();
                     }
+                    else if (keyCode == KeyEvent.VK_CONTROL)
+                        controlIsPressed = true;
+
+                    else if(keyCode == KeyEvent.VK_N && controlIsPressed)
+                        getDiagramController().addNewSubWindow();
+
+                    else if(keyCode == KeyEvent.VK_D && controlIsPressed)
+                        getDiagramController().addDuplicateSubWindow();
+
                     break;
                 case KeyEvent.KEY_TYPED:
                     if (keyChar == KeyEvent.VK_TAB && !getDiagramController().isEditing())
                         getDiagramController().nextView();
+
+                    else if(KeyCode == KeyEvent.VK_CONTROL)
+                        controlIsPressed = false;
+
                     else if (Character.isLetter(keyChar)
                             || Character.isDigit(keyChar)
                             || ":();-_<>*&[]".indexOf(Character.toString(keyChar)) != -1)
@@ -158,5 +174,10 @@ public class EventHandler {
      * The exception when a press happens but there is no party availabe
      */
     private NoSuchPartyException exception;
+
+    /**
+     * A boolean that returns if the control key is pressed on the moment
+     */
+    private boolean controlIsPressed = false;
 
 }

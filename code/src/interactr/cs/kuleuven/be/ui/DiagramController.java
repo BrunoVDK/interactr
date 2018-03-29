@@ -17,38 +17,12 @@ import java.util.ArrayList;
  */
 public class DiagramController {
 
-    /**
-     * Returns a default list of views for diagram controllers.
-     *
-     * @return An arraylist with a sequence - and a communication view.
-     */
-    public static ArrayList<DiagramView> defaultViews() {
-        ArrayList<DiagramView> views = new ArrayList<DiagramView>();
-        views.add(new SequenceView());
-        views.add(new CommunicationView());
-        return views;
-    }
-
-    /**
-     * Initialize this new diagram controller with a communication & sequence view,
-     *  and an empty diagram.
-     */
-    public DiagramController() {
-        this(new Diagram(), defaultViews());
-    }
 
     /**
      * Initialize this new diagram controller with given diagram and diagram views.
-     *
-     * @param diagram The diagram to initialize this controller with.
-     * @param views The views for this new diagram.
      */
-    public DiagramController(Diagram diagram, ArrayList<DiagramView> views) {
-        this.diagram = diagram;
+    public DiagramController() {
         this.subWindows = new ArrayList<SubWindow>();
-        if (views != null)
-            for (DiagramView view : views)
-                this.views.add(view);
         java.awt.EventQueue.invokeLater(() -> {
             DiagramWindow window = new DiagramWindow("New document - Interactr");
             PaintBoard paintBoard = new PaintBoard(window, this);
@@ -99,7 +73,7 @@ public class DiagramController {
      */
     public void addPartyAt(int x, int y) throws InvalidAddPartyException {
         try {
-            getActiveSubwindow().addParty(x, y);
+            getActiveSubwindow().addPartyAt(x, y);
             getPaintBoard().refresh();
         }
         catch (InvalidAddPartyException addException){
@@ -151,9 +125,9 @@ public class DiagramController {
      * @param y The y coordinate of the commponent that is to be selected.
      */
     public void selectComponentAt(int x, int y) {
-        DiagramComponent component = getActiveView().selectableComponentAt(getDiagram(), x, y);
-        getDiagram().addToSelection(component);
-        this.getPaintBoard().refresh();
+        getActiveSubwindow().selectableComponentAt(x, y);
+
+        getPaintBoard().refresh();
     }
 
     /**
@@ -186,7 +160,7 @@ public class DiagramController {
      * Removes all components in the current selection from this controller's diagram.
      */
     public void deleteSelection(){
-        this.getDiagram().deleteSelection(this.views);
+        getActiveSubwindow().deleteSelection();
         this.getPaintBoard().refresh();
     }
 
@@ -249,14 +223,14 @@ public class DiagramController {
     /**
      * A method that creates a new Subwindow and adds it to top of the list, so that
      */
-    private void addNewSubWindow(){
+    public void addNewSubWindow(){
         subWindows.add(0, new SubWindow());
     }
 
     /**
      * A method that creates a dublpicate subWindow
      */
-    private void addDuplicateSubWindow(){
+    public void addDuplicateSubWindow(){
         SubWindow temp = subWindows.remove(0);
         subWindows.add(0,new SubWindow(temp));
         subWindows.add(temp);
