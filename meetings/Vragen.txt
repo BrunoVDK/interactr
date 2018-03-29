@@ -1,0 +1,7 @@
+Vragen
+------
+
+- TESTEN : wat is de bedoeling? Wat werd er juist fout gedaan in de eerste iteratie? Niet alle flows getest?
+- DIAGRAMCONTROLLER : zou het beter zijn om event handler en diagram controller in één klasse te voegen
+- ACTOR <-> OBJECT switch : is een instanceof hier problematisch?
+- RESIZEN : als men vanuit de linkerbovenhoek van een subwindow resized, mogen de parties en messages dan meebewegen? of moeten die visueel op hun plaats blijven staan
