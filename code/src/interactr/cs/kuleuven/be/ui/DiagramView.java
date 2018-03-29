@@ -249,16 +249,8 @@ public class DiagramView {
             figure.setLabel(party.getLabel());
             figure.setX(x);
             figure.setY(y);
-        }
-        else { // No figure has been made for the given party
-            figure = new Box();
-            Class figureType = party.proposedFigure();
-            try {
-                if (Figure.class.isAssignableFrom(figureType))
-                    figure = (Figure) figureType.getConstructor().newInstance();
-            } catch (Exception e) {
-                System.out.println("Invalid figure type given in custom party class.");
-            }
+        } else { // No figure has been made for the given party
+            figure = party.proposedFigure();
             figure.setX(x);
             figure.setY(y);
             figure.setWidth(50);
@@ -339,14 +331,7 @@ public class DiagramView {
      * @return A link at given coordinates representing the given message.
      */
     protected Link createLinkForMessage(Message message, int fromX, int fromY, int toX, int toY) {
-        Link link = new Arrow();
-        Class linkType = message.proposedLinkType();
-        try {
-            if (Link.class.isAssignableFrom(linkType))
-                link = (Link) linkType.getConstructor().newInstance();
-        } catch (Exception e) {
-            System.err.println("Invalid link type given in custom message class.");
-        }
+        Link link = message.proposedLink();
         Party sender = message.getSender(), receiver = message.getReceiver();
         Figure senderFigure = figures.get(sender), receiverFigure = figures.get(receiver);
         link.setStartX(senderFigure.getX() + (senderFigure.getX() < receiverFigure.getX() ? senderFigure.getWidth() : 0));

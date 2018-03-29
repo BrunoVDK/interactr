@@ -49,7 +49,6 @@ public class SequenceView extends DiagramView {
         super(diagram);
     }
 
-    @Override
     public void display(PaintBoard paintBoard, Diagram diagram) {
         displayFigures(paintBoard, diagram);
         paintBoard.setColor(Colour.LIGHT_GRAY);
@@ -197,14 +196,7 @@ public class SequenceView extends DiagramView {
 
     @Override
     protected Link createLinkForMessage(Message message, int fromX, int fromY, int toX, int toY) {
-        Link link = new Arrow();
-        Class linkType = message.proposedLinkType();
-        try {
-            if (Link.class.isAssignableFrom(linkType))
-                link = (Link) linkType.getConstructor().newInstance();
-        } catch (Exception e) {
-            System.err.println("Invalid link type given in custom message class.");
-        }
+        Link link = message.proposedLink();
         Party sender = message.getSender(), receiver = message.getReceiver();
         Figure senderFigure = figures.get(sender), receiverFigure = figures.get(receiver);
         link.setStartX(senderFigure.getX() + senderFigure.getWidth()/2);
