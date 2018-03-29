@@ -15,15 +15,49 @@ import java.awt.*;
  * @author Team 25
  * @version 1.0
  */
-public abstract class DiagramView {
+public class DiagramView {
+
+    /**
+     * Initialize this new diagram view with the given diagram.
+     *
+     * @param diagram The diagram to associate this diagram view with.
+     * @throws IllegalArgumentException If the given diagram is null.
+     */
+    public DiagramView(Diagram diagram) {
+        setDiagram(diagram);
+    }
+
+    /**
+     * Returns the diagram associated with this diagram view.
+     */
+    public Diagram getDiagram() {
+        return this.diagram;
+    }
+
+    /**
+     * Sets the diagram of this diagram view to the given one.
+     *
+     * @param diagram The new diagram associated with this diagram view.
+     * @throws IllegalArgumentException If the given diagram is null.
+     */
+    public void setDiagram(Diagram diagram) {
+        if (diagram == null)
+            throw new IllegalArgumentException("Diagram cannot be null.");
+        this.diagram = diagram;
+        // TODO : add listeners
+    }
+
+    /**
+     * The diagram associated with this diagram view.
+     */
+    private Diagram diagram;
 
     /**
      * Display the given diagram in this view using the given paintboard.
      *
      * @param paintBoard The paintboard to use when displaying the view.
-     * @param diagram The diagram that is to be displayed in this view.
      */
-    public void display(PaintBoard paintBoard, Diagram diagram) {
+    public void display(PaintBoard paintBoard) {
         displayFigures(paintBoard, diagram);
         displayMessages(paintBoard, diagram);
     }
@@ -420,6 +454,8 @@ public abstract class DiagramView {
      *
      * @return This diagram view's name as a string.
      */
-    public abstract String viewName();
+    public String viewName() {
+        return "Default";
+    }
 
 }

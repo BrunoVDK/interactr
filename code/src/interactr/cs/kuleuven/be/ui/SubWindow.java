@@ -1,8 +1,11 @@
 package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
+import interactr.cs.kuleuven.be.domain.Party;
+import interactr.cs.kuleuven.be.exceptions.NoSuchPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -34,9 +37,19 @@ public class SubWindow {
     public SubWindow(Rectangle frame, SubWindow subWindow) {
         setFrame(frame);
         Diagram adoptedDiagram = null;
-        if (subWindow == null) {
-            adoptedDiagram = 
-        }
+        if (subWindow == null)
+            adoptedDiagram = new Diagram();
+        else
+            adoptedDiagram = subWindow.getDiagram();
+        views.add(new SequenceView(adoptedDiagram));
+        views.add(new CommunicationView(adoptedDiagram));
+    }
+
+    /**
+     * Returns the diagram associated with this subwindow.
+     */
+    public Diagram getDiagram() {
+        return null;
     }
 
     /**
@@ -83,6 +96,71 @@ public class SubWindow {
     private Rectangle frame;
 
     /**
+     * Switch the type of the party at given coordinates.
+     *
+     * @param x The x coordinate of the party.
+     * @param y The y coordinate of the party.
+     */
+    public void switchTypeofPartyAt(int x, int y) {
+        // Get the party
+    }
+
+    /**
+     * Start moving the party at the given coordinates.
+     *  This simply starts a move session for the party at the given coordinates.
+     *  If there is no party at those coordinates, an exception is thrown.
+     *
+     * @param x The x coordinate of the party that is to be moved.
+     * @param y The y coordinate of the party that is to be moved.
+     * @throws NoSuchPartyException If there is no party at the given coordinates.
+     */
+    public void movePartyAt(int x, int y) throws NoSuchPartyException {
+        movedParty = getActiveview().getPartyAt(x, y);
+        if (movedParty == null)
+            throw new NoSuchPartyException(x, y);
+    }
+
+    /**
+     * Move the party that is currently being moved to the given of coordinates.
+     *
+     * @param x The new x coordinate for the party.
+     * @param y The new y coordinate for the party.
+     */
+    public void movePartyTo(int x, int y) {
+
+    }
+
+    /**
+     * The party for the currently active moving session.
+     */
+    private Party movedParty = null;
+
+    /**
+     * Switch to the next view.
+     */
+    public void nextView() {
+        activeViewIndex = (activeViewIndex + 1) % views.size();
+    }
+
+    /**
+     * Display the currently active view in the given paintboard.
+     *
+     * @param paintBoard The paintboard on which should be drawn.
+     */
+    public void displayView(PaintBoard paintBoard) {
+        getActiveview().display(paintBoard);
+    }
+
+    /**
+     * Returns the currently active view in this subwindow.
+     *
+     * @return The active view for this subwindow.
+     */
+    public DiagramView getActiveview() {
+        return views.get(activeViewIndex);
+    }
+
+    /**
      * The index of the currently active view in this subwindow.
      */
     private int activeViewIndex = 0;
@@ -90,21 +168,6 @@ public class SubWindow {
     /**
      * A list of diagram views held by this subwindow.
      */
-    private ArrayList<DiagramView> views;
-
-    /**
-     *
-     */
-    public void nextView(){
-        //TODO
-    }
-
-    /**
-     * Returns the active view of this current subwindow
-     */
-    public DiagramView getActiveView(){
-        //TODO
-        return null;
-    }
+    private ArrayList<DiagramView> views = new ArrayList<DiagramView>();
 
 }

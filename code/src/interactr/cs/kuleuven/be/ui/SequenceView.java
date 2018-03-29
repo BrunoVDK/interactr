@@ -44,6 +44,16 @@ public class SequenceView extends DiagramView {
      */
     private static Color ACTIVATION_COLOR = Color.getHSBColor(216/360, 35/360, 0.66f);
 
+    /**
+     * Initialize this new diagram view with the given diagram.
+     *
+     * @param diagram The diagram to associate this diagram view with.
+     * @throws IllegalArgumentException If the given diagram is null.
+     */
+    public SequenceView(Diagram diagram) {
+        super(diagram);
+    }
+
     @Override
     public void display(PaintBoard paintBoard, Diagram diagram) {
         displayFigures(paintBoard, diagram);
