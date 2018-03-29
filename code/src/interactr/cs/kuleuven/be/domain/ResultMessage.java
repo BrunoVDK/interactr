@@ -1,7 +1,7 @@
 package interactr.cs.kuleuven.be.domain;
 
-import interactr.cs.kuleuven.be.ui.geometry.Arrow;
 import interactr.cs.kuleuven.be.ui.geometry.DashedArrow;
+import interactr.cs.kuleuven.be.ui.geometry.Link;
 
 /**
  * A class of result messages.
@@ -29,8 +29,8 @@ public class ResultMessage extends Message {
     public ResultMessage(Party sender, Party receiver) {super(sender,receiver);}
 
     @Override
-    public Class proposedLinkType() {
-        return DashedArrow.class;
+    public Link proposedLink() {
+        return new DashedArrow();
     }
 
 }
