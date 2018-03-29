@@ -117,7 +117,7 @@ public class DiagramController {
      */
     public void addMessageFrom(int x1, int y1, int x2, int y2) {
         try {
-            getDiagram().addMessageFrom(x1, y1, x2, y2, this.getActiveView(), views);
+            getActiveSubwindow().addMessage(x1, y1, x2, y2);
             getPaintBoard().refresh();
         }
         catch(InvalidAddMessageException addException){
@@ -143,15 +143,6 @@ public class DiagramController {
         }
     }
 
-    /**
-     * Switch the type of the given party.
-     *
-     * @param party The party whose type is to be switched.
-     */
-    public void switchPartyType(Party party){
-        getDiagram().replaceParty(party, views);
-        getPaintBoard().refresh();
-    }
 
     /**
      * The x & y coordinates of the component.
@@ -172,8 +163,8 @@ public class DiagramController {
      * @param y The y coordinate for the party.
      * @return The party at the given coordinate, or null if there is none.
      */
-    public Party switchPartyTypeAt(int x,int y ){
-        return getActiveSubwindow().switchPartyTypeAt(x,y);
+    public void switchPartyTypeAt(int x,int y ){
+        getActiveSubwindow().switchTypeofPartyAt(x,y);
     }
 
     /**
