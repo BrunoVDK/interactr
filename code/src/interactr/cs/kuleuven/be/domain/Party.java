@@ -36,38 +36,12 @@ public class Party extends DiagramComponent {
     }
 
     /**
-<<<<<<< HEAD
-     * Flag denoting whether or not this party is an actor.
-     */
-    private boolean isActor;
-
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    private String label = "|";
-
-    /**
-     *
-     * @return
-     */
-
-    //TODO
-    public boolean checkCorrectnessLabel() {
-        return this.label.length() <= 30 && true && label != " ";
-=======
      * Returns a proposal for how this component should be drawn, by returning a mock-up figure.
      *
      * @return A mock-up for how this component should be drawn.
      */
     public Class proposedFigure() {
         return Box.class;
->>>>>>> brunoBranch
     }
 
     @Override

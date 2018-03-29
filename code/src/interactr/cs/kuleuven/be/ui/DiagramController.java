@@ -5,14 +5,7 @@ import interactr.cs.kuleuven.be.exceptions.InvalidAddMessageException;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
 
-<<<<<<< HEAD
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-
-=======
 import java.util.ArrayList;
->>>>>>> brunoBranch
 
 /**
  * A class of diagram controllers for managing a diagram and associated diagram views.
@@ -91,26 +84,6 @@ public class DiagramController {
         return views.get(activeViewIndex);
     }
 
-<<<<<<< HEAD
-    //TODO de logica doorverwijzen naar een andere klassen want deze moet hier niet staan
-    void handleMouseEvent(int id, int x, int y, int clickCount) {
-        switch(id){
-            case MouseEvent.MOUSE_CLICKED:
-                handleMouseClicked(x,y,clickCount);
-                break;
-
-            case MouseEvent.MOUSE_PRESSED:
-                handleMousePressed(x,y,clickCount);
-                break;
-
-            case MouseEvent.MOUSE_DRAGGED:
-                handleMouseDragged(x,y,clickCount);
-                break;
-
-            case MouseEvent.MOUSE_RELEASED:
-                handleMouseReleased();
-                break;
-=======
     /**
      * Registers the index of the currently active view.
      */
@@ -135,7 +108,6 @@ public class DiagramController {
         }
         catch (InvalidAddPartyException addException){
             throw addException;
->>>>>>> brunoBranch
         }
     }
 
@@ -161,51 +133,6 @@ public class DiagramController {
          */
     public boolean isEditing() { return getDiagram().getActiveComponent() != null;};
 
-<<<<<<< HEAD
-    private boolean notYetReleased;
-
-    void handleMouseClicked(int x, int y, int clickCount){
-        if(clickCount == 2
-                && !paintController.getPartyAt(x,y).isPresent() && paintController.canAddParty(x,y)
-                && ! paintController.isEditMode()){
-            getDiagram().addParty(x,y);
-            getWindow().repaint();
-        }
-        if (clickCount == 2 && paintController.getPartyAt(x,y).isPresent() && ! paintController.isEditMode()){
-            getDiagram().changePartyType(paintController.getPartyAt(x,y).get());
-            getWindow().repaint();
-        }
-    }
-
-    void handleMousePressed(int x, int y, int clickcount){
-        if(clickcount == 1
-                && paintController.getSelectedParty() == null
-                && paintController.getPartyAt(x,y).isPresent()
-                && ! paintController.isEditMode()) {
-
-            paintController.setSelectedParty(paintController.getPartyAt(x,y).get());
-        }
-
-    }
-    void handleMouseDragged(int x, int y, int clickcount){
-        if (! paintController.isEditMode()) {
-            paintController.moveSelectedParty(x, y);
-            getWindow().repaint();
-        }
-    }
-
-    void handleMouseReleased(){
-        if(! paintController.isEditMode()) {
-            paintController.setSelectedParty(null);
-            this.notYetReleased = false;
-        }
-    }
-
-    void handleKeyEvent(int id, int keyCode, char keyChar) {
-        if (keyChar == KeyEvent.VK_TAB && id == KeyEvent.KEY_TYPED && ! paintController.isEditMode()) {
-            this.paintController.switchView();
-            this.getWindow().repaint();
-=======
     /**
      * A method that terminates the editing
      */
@@ -217,7 +144,6 @@ public class DiagramController {
                 getPaintBoard().refresh();
             }
             catch (InvalidLabelException e) {}
->>>>>>> brunoBranch
         }
     }
 
@@ -231,33 +157,6 @@ public class DiagramController {
         getPaintBoard().refresh();
     }
 
-<<<<<<< HEAD
-        }
-
-        else if(paintController.isEditMode() && keyChar == KeyEvent.VK_ENTER && id == KeyEvent.KEY_TYPED){
-            if(paintController.getSelectedParty().checkCorrectnessLabel()){
-                getDiagram().deleteCursor(paintController.getSelectedParty());
-                paintController.setEditMode(false);
-                paintController.setSelectedParty(null);
-                getWindow().repaint();
-            }
-        }
-
-        else if(paintController.isEditMode() && keyChar == KeyEvent.VK_BACK_SPACE && id == KeyEvent.KEY_TYPED){
-            getDiagram().deleteCharOfLabel(paintController.getSelectedParty());
-            getWindow().repaint();
-        }
-
-        else if(paintController.isEditMode() && keyChar != KeyEvent.VK_ENTER && id == KeyEvent.KEY_TYPED){
-            getDiagram().addCharToLabel(paintController.getSelectedParty(),keyChar);
-            getWindow().repaint();
-        }
-    }
-
-
-    public void paint(Graphics context) {
-        this.paintController.paint(context);
-=======
     /**
      * The x & y coordinates of the component.
      *
@@ -291,7 +190,6 @@ public class DiagramController {
     public void moveParty(Party party ,int x, int y){
         getActiveView().moveParty(getDiagram(), party,x,y);
         getPaintBoard().refresh();
->>>>>>> brunoBranch
     }
 
     /**
@@ -349,15 +247,8 @@ public class DiagramController {
      *
      * @param paintBoard The new paint board for this controller.
      */
-<<<<<<< HEAD
-    public void addPartyToView(Party p,int x, int y){
-        paintController.setEditMode(true);
-        paintController.setSelectedParty(p);
-        paintController.addNewPartyToViews(p,x,y);
-=======
     public void setPaintBoard(PaintBoard paintBoard) {
         this.paintBoard = paintBoard;
->>>>>>> brunoBranch
     }
 
     /**

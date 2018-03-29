@@ -85,10 +85,6 @@ public class SequenceView extends DiagramView {
                 int indexOfReceiver = parties.indexOf(receiver), indexOfSender = parties.indexOf(sender);
                 int receiverActivations = activations[indexOfReceiver], senderActivations = activations[indexOfSender];
 
-<<<<<<< HEAD
-            if(entry.getKey().isActor()) ActorModel.draw(g,entry.getValue());
-            else if(!entry.getKey().isActor()) ObjectModel.draw(g,entry.getValue(),entry.getKey());
-=======
                 if (associatedIndex > i) {
 
                     // Determine activation bar heights (widths are fixed)
@@ -144,7 +140,6 @@ public class SequenceView extends DiagramView {
                 }
 
             }
->>>>>>> brunoBranch
 
         }
 
@@ -183,11 +178,6 @@ public class SequenceView extends DiagramView {
     }
 
     @Override
-<<<<<<< HEAD
-    public void moveSelectedParty(Party party, int differenceX, int differenceY) {
-        int newX = parties.get(party).getxMin() + differenceX;
-        parties.replace(party, new HitBox(differenceX,activationBarHeight/4 ));
-=======
     protected Link linkForMessage(Message message) {
         Link link = links.get(message);
         if (link != null) {
@@ -198,7 +188,6 @@ public class SequenceView extends DiagramView {
             link.setLabel(message.getLabel());
         }
         return link;
->>>>>>> brunoBranch
     }
 
     @Override
