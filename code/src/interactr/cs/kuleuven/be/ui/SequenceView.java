@@ -3,14 +3,9 @@ package interactr.cs.kuleuven.be.ui;
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.purecollections.PList;
-import interactr.cs.kuleuven.be.purecollections.PMap;
 import interactr.cs.kuleuven.be.ui.geometry.Arrow;
 import interactr.cs.kuleuven.be.ui.geometry.Figure;
 import interactr.cs.kuleuven.be.ui.geometry.Link;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * A class of sequence diagram views. Sequence diagram views display diagrams
@@ -42,7 +37,7 @@ public class SequenceView extends DiagramView {
     /**
      * The color used to draw activation bars.
      */
-    private static Color ACTIVATION_COLOR = Color.getHSBColor(216/360, 35/360, 0.66f);
+    private static Colour ACTIVATION_COLOR = Colour.getHSBColor(216/360, 35/360, 0.66f);
 
     /**
      * Initialize this new diagram view with the given diagram.
@@ -57,7 +52,7 @@ public class SequenceView extends DiagramView {
     @Override
     public void display(PaintBoard paintBoard, Diagram diagram) {
         displayFigures(paintBoard, diagram);
-        paintBoard.setColor(Color.LIGHT_GRAY);
+        paintBoard.setColor(Colour.LIGHT_GRAY);
         for (Party party : figures.keySet()) {
             Figure partyFigure = figures.get(party);
             paintBoard.drawLine(partyFigure.getX() + partyFigure.getWidth() / 2,
@@ -65,7 +60,7 @@ public class SequenceView extends DiagramView {
                     partyFigure.getX() + partyFigure.getWidth() / 2,
                     paintBoard.getHeight());
         }
-        paintBoard.setColor(Color.BLACK);
+        paintBoard.setColor(Colour.BLACK);
         paintBoard.drawLine(0, PARTY_ROW_HEIGHT, paintBoard.getWidth(), PARTY_ROW_HEIGHT);
         displayMessages(paintBoard, diagram);
     }
@@ -123,24 +118,24 @@ public class SequenceView extends DiagramView {
                     // Draw invocation link (calculate offset!)
                     boolean isSelected = diagram.isSelected(message);
                     boolean isActive = diagram.getActiveComponent() == message;
-                    paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
+                    paintBoard.setColor((isSelected || isActive ? Colour.BLUE : Colour.BLACK));
                     if (isActive)
                         messageLink.setLabel(diagram.getTemporaryLabel() + "|");
                     messageLink.setStartX(messageX - (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
                     messageLink.setEndX(barX + (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
                     messageLink.draw(paintBoard);
-                    paintBoard.setColor(Color.BLACK);
+                    paintBoard.setColor(Colour.BLACK);
 
                     // Draw receiver link (calculate offset!)
                     isSelected = diagram.isSelected(associatedMessage);
                     isActive = diagram.getActiveComponent() == associatedMessage;
-                    paintBoard.setColor((isSelected || isActive ? Color.BLUE : Color.BLACK));
+                    paintBoard.setColor((isSelected || isActive ? Colour.BLUE : Colour.BLACK));
                     if (isActive)
                         associatedMessageLink.setLabel(diagram.getTemporaryLabel() + "|");
                     associatedMessageLink.setEndX(messageX - (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
                     associatedMessageLink.setStartX(barX + (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
                     associatedMessageLink.draw(paintBoard);
-                    paintBoard.setColor(Color.BLACK);
+                    paintBoard.setColor(Colour.BLACK);
 
                 }
                 else {
@@ -166,7 +161,7 @@ public class SequenceView extends DiagramView {
     private void drawActivationBar(PaintBoard paintBoard, int x, int y, int height) {
         paintBoard.setColor(ACTIVATION_COLOR);
         paintBoard.fillRectangle(x, y, ACTIVATION_BAR_WIDTH, height);
-        paintBoard.setColor(Color.BLACK);
+        paintBoard.setColor(Colour.BLACK);
         paintBoard.drawRectangle(x, y, ACTIVATION_BAR_WIDTH, height);
     }
 

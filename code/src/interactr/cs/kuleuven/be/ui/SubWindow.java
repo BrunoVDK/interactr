@@ -6,7 +6,6 @@ import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.exceptions.NoSuchPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -136,7 +135,7 @@ public class SubWindow {
      * @throws NoSuchPartyException If there is no party at the given coordinates.
      */
     public void movePartyAt(int x, int y) throws NoSuchPartyException {
-        movedParty = getActiveview().getPartyAt(x, y);
+        movedParty = getActiveView().getPartyAt(x, y);
         if (movedParty == null)
             throw new NoSuchPartyException(x, y);
     }
@@ -169,7 +168,17 @@ public class SubWindow {
      * @param paintBoard The paintboard on which should be drawn.
      */
     public void displayView(PaintBoard paintBoard) {
-        getActiveview().display(paintBoard);
+
+        Rectangle frame = getFrame();
+        paintBoard.setClipRect(frame); // Make sure no drawing is done outside the frame
+        getActiveView().display(paintBoard); // Draw view contents
+
+        // Draw the sub window's frame
+        paintBoard.setColour(Colour.GRAY);
+        paintBoard.fillRectangle(frame.getX(), frame.getY(), frame.getWidth(), frame.getHeight());
+        paintBoard.setColour(Colour.BLACK);
+        paintBoard.drawRectangle(frame.getX(), frame.getY(), frame.getWidth(), frame.getHeight());
+
     }
 
     /**
@@ -177,7 +186,7 @@ public class SubWindow {
      *
      * @return The active view for this subwindow.
      */
-    public DiagramView getActiveview() {
+    public DiagramView getActiveView() {
         return views.get(activeViewIndex);
     }
 
