@@ -126,6 +126,23 @@ public class SubWindow {
     }
 
     /**
+     * Select the component at the given coordinates in this subwindow.
+     *
+     * @param x The x coordinate of the component that is to be selected.
+     * @param y The y coordinate of the component that is to be selected.
+     */
+    public void selectComponentAt(int x, int y) {
+        // TODO
+    }
+
+    /**
+     * Removes the currently selected component from this subwindow's diagram.
+     */
+    public void deleteSelection(){
+        // TODO
+    }
+
+    /**
      * Start moving the party at the given coordinates.
      *  This simply starts a move session for the party at the given coordinates.
      *  If there is no party at those coordinates, an exception is thrown.

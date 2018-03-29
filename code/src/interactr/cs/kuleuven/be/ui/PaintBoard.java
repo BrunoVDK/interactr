@@ -23,7 +23,7 @@ public class PaintBoard {
      */
     public PaintBoard(DiagramWindow diagramWindow, DiagramController diagramController) throws IllegalArgumentException {
         if (diagramWindow == null)
-            throw new IllegalArgumentException("Null window.");
+            throw new IllegalArgumentException("Window cannot be null.");
         this.diagramWindow = diagramWindow;
         setDiagramController(diagramController);
     }
