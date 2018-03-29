@@ -69,4 +69,11 @@ public class Party extends DiagramComponent {
     public String toString() {
         return super.toString();
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if(other == null) return false;
+        if(other == this) return true;
+        else return false;
+    }
 }

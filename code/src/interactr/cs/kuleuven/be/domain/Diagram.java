@@ -6,8 +6,7 @@ import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.ui.DiagramView;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * A class of diagrams having parties and messages sent between these parties.
@@ -301,9 +300,37 @@ public class Diagram {
         if (index == -1 || getIndexOfAssociatedMessage(index) < index)
             return "";
         ArrayList<Integer> sequence = new ArrayList<Integer>();
-        Party initiator = getInitiator();
+        Party nextInitiator = getInitiator();
+
+        //go through list and set up the sequence of the messages up till the index of the added invocationmessage.
+        int initiatorCounter = 1;
+        for(int i = 0; i <= index; i++){
+            if(messages.get(i).getSender().equals(nextInitiator)){
+                sequence.add(initiatorCounter);
+                initiatorCounter++;
+            }
+            else{
+                nextInitiator = messages.get(i).getReceiver();
+            }
+        }
+
+        //method is only used in displaymessages in DiagramView!!
+        //go through list , every time initiator is in there as invocation, the first number has to be augmented
+        // set the receiver as active every time loop ends so that we know where we are
+
+        //get the list that shows the current callstack
+
         
-        return "X.X";
+        return "";
+    }
+
+    public void makePrefixMapping(){
+        Map<String, Message> prefixMap = new HashMap<>();
+        Party initiator = this.getInitiator();
+
+        for(int i = 0; i < this.getMessages().size(); i++){
+            if(this.getMessages().get(i).equals(initiator));
+        }
     }
 
     /**
