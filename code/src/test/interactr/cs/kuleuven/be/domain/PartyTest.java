@@ -1,22 +1,29 @@
 package interactr.cs.kuleuven.be.domain;
 
-import junit.framework.TestCase;
-//import org.junit.jupiter.api.AfterEach;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+public class PartyTest {
 
-class PartyTest extends TestCase {
+    private Party party;
 
-    //@BeforeEach
-    protected void setUp() {
+    @BeforeEach
+    void setUp() {
+        party = new Party("valid:Party");
     }
 
-    //@AfterEach
-    protected void tearDown() {
+    @Test
+    void canHaveAsLabelTest() {
+        assert(party.canHaveAsLabel("valid:Label"));
+        assert(!party.canHaveAsLabel("Invalid:Label"));
     }
 
-    //@Test
-    void canHaveAsLabel() {
+    @Test
+    void deleteTest() {
+        Diagram diagram = new Diagram();
+        diagram.addParty(party);
+        party.delete(diagram);
+        assert(!diagram.getParties().contains(party));
     }
+
 }

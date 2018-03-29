@@ -1,39 +1,42 @@
 package interactr.cs.kuleuven.be.domain;
 
+import interactr.cs.kuleuven.be.ui.geometry.Box;
+
 /**
- * A class of parties, having an x/y coordinate and a flag denoting whether
- *  or not the party is an actor.
+ * A class of parties.
+ *
+ * @author Team 25
+ * @version 1.0
  */
-public class Party {
+public class Party extends DiagramComponent {
 
     /**
-     * Initialize this new party with given x coordinate, y coordinate,
-     *  and a flag denoting whether or not the new party is an actor.
+     * Initialize this new party with a ':Class' label.
+     */
+    public Party() {
+        super(":Class");
+    }
+
+    /**
+     * Initialize this new party with the given label.
      *
-     * @param isActor Flag denoting whether or not the new party is an actor.
+     * @param label The label for this new party.
      */
-    public Party(boolean isActor) {
-        setIsActor(isActor);
-
+    public Party(String label) {
+        super(label);
     }
 
     /**
-     * Returns whether or not this party is an actor.
-     */
-    public boolean isActor() {
-        return this.isActor;
-    }
-
-    /**
-     * Set whether or not this party is an actor.
+     * Initialize this new party with the given party.
      *
-     * @param isActor True if this party should become an actor.
+     * @param party The party to initialize this party with.
      */
-    public void setIsActor(boolean isActor) {
-        this.isActor = isActor;
+    public Party(Party party) {
+        super(party.getLabel());
     }
 
     /**
+<<<<<<< HEAD
      * Flag denoting whether or not this party is an actor.
      */
     private boolean isActor;
@@ -57,8 +60,46 @@ public class Party {
     //TODO
     public boolean checkCorrectnessLabel() {
         return this.label.length() <= 30 && true && label != " ";
+=======
+     * Returns a proposal for how this component should be drawn, by returning a mock-up figure.
+     *
+     * @return A mock-up for how this component should be drawn.
+     */
+    public Class proposedFigure() {
+        return Box.class;
+>>>>>>> brunoBranch
     }
 
+    @Override
+    public boolean canHaveAsLabel(String label) {
+        boolean validCharacters = true;
+        String[] parts = label.split(":");
+        if (parts.length == 2) {
+            // Instance doesn't start with lowercase letter
+            if (parts[0].length() != 0 && (!Character.isLowerCase(parts[0].charAt(0)) || !Character.isLetter(parts[0].charAt(0))))
+                validCharacters = false;
+            if (parts[1].length() == 0 || (!Character.isUpperCase(parts[1].charAt(0)) || !Character.isLetter(parts[1].charAt(0))))
+                validCharacters = false;
+        }
+        else
+            validCharacters = false;
+        return (validCharacters && super.canHaveAsLabel(label));
+    }
 
+    @Override
+    public void deleteFrom(Diagram diagram) {
+        diagram.deleteParty(this);
+    }
 
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if(other == null) return false;
+        if(other == this) return true;
+        else return false;
+    }
 }

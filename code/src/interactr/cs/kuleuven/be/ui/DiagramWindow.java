@@ -1,7 +1,6 @@
 package interactr.cs.kuleuven.be.ui;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 
 /**
  * A class of windows for displaying and interacting with interaction diagrams.
@@ -12,25 +11,22 @@ import java.awt.event.KeyEvent;
 public class DiagramWindow extends CanvasWindow {
 
     /**
-     * Initializes this new window with given title and diagram handler.
+     * Initializes this new window with an empty title.
      *
-     * @post The title of this window equals the given one.
+     * @post The title of this window equals an empty string.
      */
     public DiagramWindow() {
-        this("",null);
+        this("");
     }
 
     /**
      * Initializes this new window with given title and diagram handler.
      *
      * @param title The title for the new window.
-     * @param diagramController The diagram handler associated with this window.
      * @post The title of this window equals the given one.
-     * @post The diagram handler associated with this window equals the given one.
      */
-    public DiagramWindow(String title, DiagramController diagramController) {
+    public DiagramWindow(String title) {
         super(title);
-        setDiagramController(diagramController);
     }
 
     /**
@@ -40,8 +36,8 @@ public class DiagramWindow extends CanvasWindow {
      */
     @Override
     protected void paint(Graphics context) {
-        if (getDiagramController() != null)
-            getDiagramController().paint(context);
+        if (getPaintBoard() != null)
+            getPaintBoard().paint(context);
     }
 
     /**
@@ -56,8 +52,8 @@ public class DiagramWindow extends CanvasWindow {
      */
     @Override
     protected void handleMouseEvent(int id, int x, int y, int clickCount) {
-        if (getDiagramController() != null)
-            getDiagramController().handleMouseEvent(id, x, y, clickCount);
+        if (getEventHandler() != null)
+            getEventHandler().handleMouseEvent(id, x, y, clickCount);
     }
 
     /**
@@ -70,29 +66,68 @@ public class DiagramWindow extends CanvasWindow {
      */
     @Override
     protected void handleKeyEvent(int id, int keyCode, char keyChar) {
-        if (getDiagramController() != null)
-            getDiagramController().handleKeyEvent(id, keyCode, keyChar);
+        if (getEventHandler() != null)
+            getEventHandler().handleKeyEvent(id, keyCode, keyChar);
     }
 
     /**
-     * Returns the diagram handler of this diagram window.
+     * Returns the paint board associated with this diagram window.
      */
-    public DiagramController getDiagramController() {
-        return this.diagramController;
+    public PaintBoard getPaintBoard() {
+        return paintBoard;
     }
 
     /**
-     * Associate this diagram window with the given diagram handler.
+     * Set the paint board of this diagram window to match the given one.
      *
-     * @param diagramController The diagram handler that is to be associated with this window.
+     * @param paintBoard The new paint board for this window.
+     * @throws IllegalArgumentException The given paint board's associated window does not
+     *  equal this diagram window.
      */
-    public void setDiagramController(DiagramController diagramController) {
-        this.diagramController = diagramController;
+    public void setPaintBoard(PaintBoard paintBoard) throws IllegalArgumentException {
+        if (paintBoard.getDiagramWindow() != this)
+            throw new IllegalArgumentException("Paintboard's window invalid.");
+        this.paintBoard = paintBoard;
     }
 
     /**
-     * Variable registering this diagram window's diagram handler.
+     * Registers the paint board associated with this window.
      */
-    private DiagramController diagramController;
+    private PaintBoard paintBoard;
+
+    /**
+     * Returns the event handler associated with this diagram window.
+     */
+    public EventHandler getEventHandler() {
+        return eventHandler;
+    }
+
+    /**
+     * Set the event handler of this diagram window to match the given one.
+     *
+     * @param eventHandler The new event handler for this window.
+     */
+    public void setEventHandler(EventHandler eventHandler) {
+        this.eventHandler = eventHandler;
+    }
+
+    /**
+     * Registers the event handler associated with this window.
+     */
+    private EventHandler eventHandler;
+
+    /**
+     * Returns the width of this window.
+     */
+    public int getWidth() {
+        return this.panel.getWidth();
+    }
+
+    /**
+     * Returns the height of this window.
+     */
+    public int getHeight() {
+        return this.panel.getHeight();
+    }
 
 }

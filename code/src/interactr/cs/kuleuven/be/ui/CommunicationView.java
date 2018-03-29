@@ -1,6 +1,7 @@
 package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.domain.Party;
+<<<<<<< HEAD
 import interactr.cs.kuleuven.be.ui.shapes.ActorModel;
 import interactr.cs.kuleuven.be.ui.shapes.ObjectModel;
 
@@ -30,17 +31,25 @@ public class CommunicationView implements DiagramView {
 
     @Override
     public boolean canAddPartyAt(int x, int y) {return true;}
+=======
+>>>>>>> brunoBranch
 
+/**
+ * A class of communication views. Communication views display diagrams
+ *  as a composite of parties with messages sent between them. Parties
+ *  can be located at any coordinate.
+ *
+ * @author Team 25
+ * @version 1.0
+ */
+public class CommunicationView extends DiagramView {
+    
     @Override
-    public void addNewParty(Party party, int x, int y) {
-        parties.put(party, new HitBox(x,y));
+    public String viewName() {
+        return "Communication View";
     }
 
-    @Override
-    public void moveSelectedParty(Party party, int x, int y) {
-        parties.replace(party,new HitBox(x,y));
-    }
+    public boolean canAddMessage(Party sender, Party receiver, int y){return false;}
 
-    private HashMap<Party,HitBox> parties = new HashMap<>();
 
 }
