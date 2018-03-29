@@ -105,6 +105,18 @@ public class SubWindow {
     }
 
     /**
+     * Add a message from the given coordinates to the given ones.
+     *
+     * @param fromX The starting x coordinate for the message.
+     * @param fromY The starting y coordinate for the message.
+     * @param toX The ending x coordinate for the message.
+     * @param toY The ending y coordinate for the message.
+     */
+    public void addMessage(int fromX, int fromY, int toX, int toY) {
+        // TODO
+    }
+
+    /**
      * Switch the type of the party at given coordinates.
      *
      * @param x The x coordinate of the party.
