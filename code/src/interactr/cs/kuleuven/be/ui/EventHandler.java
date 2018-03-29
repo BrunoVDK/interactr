@@ -126,7 +126,7 @@ public class EventHandler {
                     if (keyChar == KeyEvent.VK_TAB && !getDiagramController().isEditing())
                         getDiagramController().nextView();
 
-                    else if(KeyCode == KeyEvent.VK_CONTROL)
+                    else if(keyChar == KeyEvent.VK_CONTROL)
                         controlIsPressed = false;
 
                     else if (Character.isLetter(keyChar)

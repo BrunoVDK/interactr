@@ -125,8 +125,7 @@ public class DiagramController {
      * @param y The y coordinate of the commponent that is to be selected.
      */
     public void selectComponentAt(int x, int y) {
-        getActiveSubwindow().selectableComponentAt(x, y);
-
+        getActiveSubwindow().selectComponentAt(x, y);
         getPaintBoard().refresh();
     }
 
@@ -235,6 +234,9 @@ public class DiagramController {
         subWindows.add(0,new SubWindow(temp));
         subWindows.add(temp);
     }
+
+
+
 
     public static void main(String[] args) { // No documentation
         new DiagramController();
