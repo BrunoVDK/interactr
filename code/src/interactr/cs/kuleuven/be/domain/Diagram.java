@@ -188,12 +188,16 @@ public class Diagram {
             messages = messages.plus(resultMessage);
             associatedMessageIndices.add(index + 1);
             associatedMessageIndices.add(index);
+            this.addPrefix(message, index);
+            this.addPrefix(resultMessage);
         }
         else { // Insert
             messages = messages.plus(index, resultMessage);
             messages = messages.plus(index, message);
             associatedMessageIndices.add(index, index);
             associatedMessageIndices.add(index, index + 1);
+            this.addPrefix(message, index);
+            this.addPrefix(resultMessage);
         }
     }
 
@@ -289,48 +293,50 @@ public class Diagram {
         return null;
     }
 
+
+    public String getPrefix(Message m){
+        int index = getIndexOfMessage(m);
+        return associatedPrefix.get(index);
+    }
+
+    public  void addPrefix(ResultMessage message){
+        int index = this.getIndexOfAssociatedMessage(this.getIndexOfMessage(message));
+        this.associatedPrefix.add(index+1, null);
+    }
+
     /**
      * Calculates a prefix for the given message in this diagram.
      *
      * @param message The message whose prefix should be determined.
      * @return A prefix for the given message.
      */
-    public String getPrefix(Message message) {
-        int index = getIndexOfMessage(message);
-        if (index == -1 || getIndexOfAssociatedMessage(index) < index)
-            return "";
-        ArrayList<Integer> sequence = new ArrayList<Integer>();
-        Party nextInitiator = getInitiator();
+    public void addPrefix(InvocationMessage message, int index) {
+        Message prev = this.getPreviousInvocationMessage(message, index);
 
-        //go through list and set up the sequence of the messages up till the index of the added invocationmessage.
-        int initiatorCounter = 1;
-        for(int i = 0; i <= index; i++){
-            if(messages.get(i).getSender().equals(nextInitiator)){
-                sequence.add(initiatorCounter);
-                initiatorCounter++;
-            }
-            else{
-                nextInitiator = messages.get(i).getReceiver();
-            }
+        if(prev == null){
+            this.associatedPrefix.add(index, "1.");
         }
-
-        //method is only used in displaymessages in DiagramView!!
-        //go through list , every time initiator is in there as invocation, the first number has to be augmented
-        // set the receiver as active every time loop ends so that we know where we are
-
-        //get the list that shows the current callstack
-
-        
-        return "";
+        else if(message.getSender().equals(prev.getSender())){
+            String previousPrefix = this.associatedPrefix.get(this.getIndexOfMessage(prev));
+            int prefixLast = Integer.parseInt(previousPrefix.substring(previousPrefix.length()-2, previousPrefix.length()-1));
+            int prefixNew = prefixLast + 1;
+            String prefix = previousPrefix.substring(0 , previousPrefix.length()-2) + prefixNew + ".";
+            this.associatedPrefix.add(index, prefix);
+        }
+        else if( message.getSender().equals(prev.getReceiver())){
+            String prefix = this.associatedPrefix.get((this.getIndexOfMessage(prev))) + "1.";
+            this.associatedPrefix.add(index, prefix);
+        }
     }
 
-    public void makePrefixMapping(){
-        Map<String, Message> prefixMap = new HashMap<>();
-        Party initiator = this.getInitiator();
-
-        for(int i = 0; i < this.getMessages().size(); i++){
-            if(this.getMessages().get(i).equals(initiator));
+    public Message getPreviousInvocationMessage(Message m, int index){
+        Message prev = null;
+        for(int i = 0; i < index; i++){
+            if (i < this.getIndexOfAssociatedMessage(i) && (m.getSender().equals(this.getMessageAtIndex(i).getReceiver()) || m.getSender().equals(this.getMessageAtIndex(i).getSender()))){
+                prev = this.getMessageAtIndex(i);
+            }
         }
+        return prev;
     }
 
     /**
@@ -345,6 +351,11 @@ public class Diagram {
      *  in the messages list.
      */
     private ArrayList<Integer> associatedMessageIndices = new ArrayList<Integer>();
+
+    /**
+     * The prefixes associated with the messages.
+     */
+    private ArrayList<String> associatedPrefix = new ArrayList<String>();
 
     /**
      * List registering selected diagramcomponents.
