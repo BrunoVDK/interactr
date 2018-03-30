@@ -189,13 +189,15 @@ public class Diagram {
             associatedMessageIndices.add(index + 1);
             associatedMessageIndices.add(index);
             this.addPrefix(message, index);
-            this.addPrefix(resultMessage, index);
+            this.addPrefix(resultMessage);
         }
         else { // Insert
             messages = messages.plus(index, resultMessage);
             messages = messages.plus(index, message);
             associatedMessageIndices.add(index, index);
             associatedMessageIndices.add(index, index + 1);
+            this.addPrefix(message, index);
+            this.addPrefix(resultMessage);
         }
     }
 
@@ -297,54 +299,44 @@ public class Diagram {
         return associatedPrefix.get(index);
     }
 
+    public  void addPrefix(ResultMessage message){
+        int index = this.getIndexOfAssociatedMessage(this.getIndexOfMessage(message));
+        this.associatedPrefix.add(index+1, null);
+    }
+
     /**
      * Calculates a prefix for the given message in this diagram.
      *
      * @param message The message whose prefix should be determined.
      * @return A prefix for the given message.
      */
-    public void addPrefix(Message message, int index) {
+    public void addPrefix(InvocationMessage message, int index) {
         Message prev = this.getPreviousInvocationMessage(message, index);
 
         if(prev == null){
             this.associatedPrefix.add(index, "1.");
         }
-        else if(this.getIndexOfAssociatedMessage(this.getIndexOfMessage(message)) > this.getIndexOfMessage(message)){
-            this.associatedPrefix.add(index, null);
-        }
         else if(message.getSender().equals(prev.getSender())){
             String previousPrefix = this.associatedPrefix.get(this.getIndexOfMessage(prev));
             int prefixLast = Integer.parseInt(previousPrefix.substring(previousPrefix.length()-2, previousPrefix.length()-1));
-            String prefix = previousPrefix.substring(0 , previousPrefix.length()-2) + prefixLast + " ";
+            int prefixNew = prefixLast + 1;
+            String prefix = previousPrefix.substring(0 , previousPrefix.length()-2) + prefixNew + ".";
             this.associatedPrefix.add(index, prefix);
         }
         else if( message.getSender().equals(prev.getReceiver())){
-            String prefix = this.associatedPrefix.get((this.getIndexOfMessage(prev))) + ".1 ";
+            String prefix = this.associatedPrefix.get((this.getIndexOfMessage(prev))) + "1.";
             this.associatedPrefix.add(index, prefix);
         }
     }
 
     public Message getPreviousInvocationMessage(Message m, int index){
         Message prev = null;
-
-        //TODO: geval dat er tussen previous result en overeenkomstige invocation nog messages staan
-        //probeer while loop???
-        for(int i = 0; i < index - 1; i++){
-            if(i < this.getIndexOfAssociatedMessage(i)) break;
-            else if (m.getSender().equals(this.getMessageAtIndex(i).getReceiver()) || m.getSender().equals(this.getMessageAtIndex(i).getSender())){
+        for(int i = 0; i < index; i++){
+            if (i < this.getIndexOfAssociatedMessage(i) && (m.getSender().equals(this.getMessageAtIndex(i).getReceiver()) || m.getSender().equals(this.getMessageAtIndex(i).getSender()))){
                 prev = this.getMessageAtIndex(i);
             }
         }
         return prev;
-    }
-
-    public void makePrefixMapping(){
-        Map<String, Message> prefixMap = new HashMap<>();
-        Party initiator = this.getInitiator();
-
-        for(int i = 0; i < this.getMessages().size(); i++){
-            if(this.getMessages().get(i).equals(initiator));
-        }
     }
 
     /**
