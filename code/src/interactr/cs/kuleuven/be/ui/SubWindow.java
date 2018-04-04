@@ -222,4 +222,23 @@ public class SubWindow {
      */
     private final static int TITLE_BAR_HEIGHT = 23;
 
+    /**
+     * A method that returns true if the given x and y coordinate encloses the title bar of the subwindow
+     * @param x
+     * @param y
+     * @return
+     */
+    public boolean enclosesTitleBar(int x, int y){
+        if( this.getFrame().encloses(x,y) && y < getFrame().getY() + TITLE_BAR_HEIGHT)
+            return true;
+        else
+            return false;
+    }
+
+    public boolean enclosesBorderOrCorner(int x, int y){
+        if( Math.abs(getFrame().getX() - x) <= 10 )
+            return false;
+        return true;
+    }
+
 }

@@ -4,6 +4,7 @@ import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddMessageException;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
+import interactr.cs.kuleuven.be.exceptions.InvalidMoveWindowException;
 
 import java.util.*;
 
@@ -253,13 +254,27 @@ public class DiagramController {
 
     }
 
+    /**
+     * A window that selects the subwindow for moving if one exists, else throw a new exception that the eventhandle can catch
+     * @param x
+     * @param y
+     */
     public void moveSubWindowAt(int x,int y){
-
+        SubWindow sub = subWindows.stream().filter( s -> s.enclosesTitleBar(x,y)).findFirst().get();
+        if(sub != null)
+            selectedSubWindow = sub;
+        else
+            throw new InvalidMoveWindowException();
     }
 
     public void moveSubWindowTo(int x, int y){
 
     }
+
+    /**
+     * A subwindow that is currently selected for moving or resizing
+     */
+    private SubWindow selectedSubWindow;
 
     public static void main(String[] args) { // No documentation
         new DiagramController();
