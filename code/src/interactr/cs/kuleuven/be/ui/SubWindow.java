@@ -4,6 +4,7 @@ import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.Party;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.exceptions.NoSuchPartyException;
+import interactr.cs.kuleuven.be.ui.geometry.Colour;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 import java.util.ArrayList;

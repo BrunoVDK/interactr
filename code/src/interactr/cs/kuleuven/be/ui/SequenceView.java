@@ -3,7 +3,7 @@ package interactr.cs.kuleuven.be.ui;
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.purecollections.PList;
-import interactr.cs.kuleuven.be.ui.geometry.Arrow;
+import interactr.cs.kuleuven.be.ui.geometry.Colour;
 import interactr.cs.kuleuven.be.ui.geometry.Figure;
 import interactr.cs.kuleuven.be.ui.geometry.Link;
 
