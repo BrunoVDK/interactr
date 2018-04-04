@@ -110,7 +110,7 @@ public class EventHandler {
             // Mouse release
             if(id == MouseEvent.MOUSE_RELEASED){
                 if (mousepressOperationType == 0)
-                    getDiagramController().addMessageFrom(exception.getX(), exception.getY(),x,y);
+                    getDiagramController().addMessageFrom(lastPressedX, lastPressedY,x,y);
 
                 mousepressOperationType = 0;
 
@@ -197,11 +197,6 @@ public class EventHandler {
      * Variable registering the diagram controller of this event handler.
      */
     private DiagramController diagramController;
-
-    /**
-     * The exception when a press happens but there is no party availabe
-     */
-    private NoSuchPartyException exception;
 
     /**
      * A boolean that returns if the control key is pressed on the moment
