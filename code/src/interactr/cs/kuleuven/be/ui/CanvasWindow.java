@@ -223,8 +223,8 @@ class CanvasWindowRecording {
 
 public class CanvasWindow {
 	
-	int width = 600;
-	int height = 600;
+	int width = 1024;
+	int height = 768;
 	String title;
 	Panel panel;
 	private Frame frame;
@@ -317,7 +317,7 @@ public class CanvasWindow {
 		
 		{
 			setPreferredSize(new Dimension(width, height));
-			setBackground(Color.WHITE);
+			setBackground(Color.GRAY);
 			setFocusable(true);
 			setFocusTraversalKeysEnabled(false);
 			addMouseListener(new MouseAdapter() {
