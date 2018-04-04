@@ -5,12 +5,11 @@ import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.security.Key;
 
 import interactr.cs.kuleuven.be.domain.*;
+import interactr.cs.kuleuven.be.exceptions.*;
 import interactr.cs.kuleuven.be.exceptions.NoSuchPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.Point;
-import javafx.scene.input.KeyCode;
 
 
 /**
@@ -72,11 +71,13 @@ public class EventHandler {
                 try{
                     getDiagramController().resizeSubWindowAt(x,y);
                     mousepressOperationType = 1;
-                }catch(InvalidResizeWindowException e){
+                }
+                catch(InvalidResizeWindowException e) {
+
                     try{
                         getDiagramController().moveSubWindowAt(x,y);
                         mousepressOperationType = 2;
-                    }catch (InvalidMoveWindowException e2){
+                    } catch (InvalidMoveWindowException e2){
                         try {
                             getDiagramController().movePartyAt(x,y);
                             mousepressOperationType = 3;

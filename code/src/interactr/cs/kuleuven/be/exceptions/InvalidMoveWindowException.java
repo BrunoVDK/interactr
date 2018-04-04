@@ -6,7 +6,7 @@ package interactr.cs.kuleuven.be.exceptions;
  * @author Team 25
  * @version 1.0
  */
-public class InvalidResizeWindowException extends RuntimeException {
+public class InvalidMoveWindowException extends RuntimeException {
 
 
 
