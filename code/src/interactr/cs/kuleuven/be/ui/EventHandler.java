@@ -64,28 +64,54 @@ public class EventHandler {
 
             //If there is no party to move save the exception to get the coordenate out of
             if(id == MouseEvent.MOUSE_PRESSED){
+                this.lastPressedX = x;
+                this.lastPressedY = y;
+
                 getDiagramController().switchSubWindow(x,y);
-                try {
-                    getDiagramController().movePartyAt(x,y);
-                }
-                catch (NoSuchPartyException e) {
-                    this.exception = e;
+
+                try{
+                    getDiagramController().resizeSubWindowAt(x,y);
+                    mousepressOperationType = 1;
+                }catch(InvalidResizeWindowException e){
+                    try{
+                        getDiagramController().moveSubWindowAt(x,y);
+                        mousepressOperationType = 2;
+                    }catch (InvalidMoveWindowException e2){
+                        try {
+                            getDiagramController().movePartyAt(x,y);
+                            mousepressOperationType = 3;
+                        }
+                        catch (NoSuchPartyException e3) {
+                            mousepressOperationType = 0;
+                        }
+                    }
+
+
                 }
             }
 
             // Mouse drag
             if(id == MouseEvent.MOUSE_DRAGGED){
-                if (exception == null)
-                    getDiagramController().movePartyTo(x, y);
+                switch(mousepressOperationType){
+                    case 1:
+                        getDiagramController().resizeSubWindowTo(x,y);
+                        break;
+                    case 2:
+                        getDiagramController().moveSubWindowTo(x,y);
+                        break;
 
+                    case 3:
+                        getDiagramController().movePartyTo(x, y);
+                        break;
+                }
             }
 
             // Mouse release
             if(id == MouseEvent.MOUSE_RELEASED){
-                if (exception != null) {
+                if (mousepressOperationType == 0)
                     getDiagramController().addMessageFrom(exception.getX(), exception.getY(),x,y);
-                    exception = null;
-                }
+
+                mousepressOperationType = 0;
 
             }
 
@@ -180,5 +206,26 @@ public class EventHandler {
      * A boolean that returns if the control key is pressed on the moment
      */
     private boolean controlIsPressed = false;
+
+    /**
+     * An Int that is used as a flag to indicate the drag operation what to do
+     *
+     * 0 for nothing
+     * 1 for resize a subwindow
+     * 2 for moving a subwindow
+     * 3 for moving a party
+     */
+    private int mousepressOperationType = 0;
+
+    /**
+     * The x coordinate of the last mouse press
+     */
+    private int lastPressedX;
+
+    /**
+     * The y coordinate of the last mouse press
+     */
+    private int lastPressedY;
+
 
 }

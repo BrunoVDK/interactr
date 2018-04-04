@@ -6,7 +6,6 @@ import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * A class of diagram controllers for managing a diagram and associated diagram views.
@@ -244,6 +243,22 @@ public class DiagramController {
         SubWindow sub = subWindows.stream().filter( s -> s.getFrame().encloses(x,y)).findFirst().get();
         if(sub != null)
             subWindows.add(0, subWindows.remove(subWindows.indexOf(sub)));
+    }
+
+    public void resizeSubWindowAt(int x, int y){
+
+    }
+
+    public void resizeSubWindowTo(int x, int y){
+
+    }
+
+    public void moveSubWindowAt(int x,int y){
+
+    }
+
+    public void moveSubWindowTo(int x, int y){
+
     }
 
     public static void main(String[] args) { // No documentation
