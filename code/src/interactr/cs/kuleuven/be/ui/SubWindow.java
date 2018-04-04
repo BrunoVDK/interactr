@@ -217,4 +217,9 @@ public class SubWindow {
      */
     private ArrayList<DiagramView> views = new ArrayList<DiagramView>();
 
+    /**
+     * The height of a subwindow's title bar.
+     */
+    private final static int TITLE_BAR_HEIGHT = 23;
+
 }
