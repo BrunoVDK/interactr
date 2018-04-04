@@ -1,10 +1,9 @@
 package interactr.cs.kuleuven.be.ui;
 
+import com.sun.tools.javac.code.Attribute;
 import interactr.cs.kuleuven.be.domain.*;
-import interactr.cs.kuleuven.be.exceptions.InvalidAddMessageException;
-import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
-import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
-import interactr.cs.kuleuven.be.exceptions.InvalidMoveWindowException;
+import interactr.cs.kuleuven.be.exceptions.*;
+import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 import java.util.*;
 
@@ -246,12 +245,27 @@ public class DiagramController {
             subWindows.add(0, subWindows.remove(subWindows.indexOf(sub)));
     }
 
+    /**
+     * A method
+     * @param x
+     * @param y
+     */
     public void resizeSubWindowAt(int x, int y){
+        SubWindow sub = subWindows.stream().filter( s -> s.enclosesBorders(x,y)).findFirst().get();
+        if(sub != null)
+            selectedSubWindow = sub;
+        else
+            throw new InvalidResizeWindowException();
 
     }
 
-    public void resizeSubWindowTo(int x, int y){
-
+    /**
+     * A method that resizethe subwindow accordingly
+     * @param x
+     * @param y
+     */
+    public void resizeSubWindowTo(int x, int y) {
+        selectedSubWindow.resizeSubWindowFrame(x,y);
     }
 
     /**
@@ -267,9 +281,22 @@ public class DiagramController {
             throw new InvalidMoveWindowException();
     }
 
+    /**
+     * A method that moves the selected SubWindow
+     * @param x
+     * @param y
+     */
     public void moveSubWindowTo(int x, int y){
-
+        selectedSubWindow.moveSubWindowFrame(x,y);
     }
+
+    /**
+     * A method that calls the reset operation of the just moved party
+     */
+    public void resetResizeRhumb(){
+        selectedSubWindow.resetResizeRhumb();
+    }
+
 
     /**
      * A subwindow that is currently selected for moving or resizing
@@ -279,5 +306,9 @@ public class DiagramController {
     public static void main(String[] args) { // No documentation
         new DiagramController();
     }
+
+    public static final int EAST = 2;
+    public static final int SOUTH = 3;
+    public static final int WEST = 5;
 
 }

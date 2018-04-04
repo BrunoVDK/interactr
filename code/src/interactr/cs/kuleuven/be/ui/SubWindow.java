@@ -9,6 +9,9 @@ import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 import java.util.ArrayList;
 
+import static interactr.cs.kuleuven.be.ui.DiagramController.EAST;
+import static interactr.cs.kuleuven.be.ui.DiagramController.SOUTH;
+import static interactr.cs.kuleuven.be.ui.DiagramController.WEST;
 /**
  * A class of subwindows for displaying diagrams.
  *  The subwindows can be closed, resized and moved.
@@ -236,10 +239,69 @@ public class SubWindow {
             return false;
     }
 
-    public boolean enclosesBorderOrCorner(int x, int y){
-        if( Math.abs(getFrame().getX() - x) <= 10 )
+    /**
+     * A method that checks if there are borders where the click happens if so, set the moveRhumb correctly
+     * EAST *= 2
+     * SOUTH *= 3
+     * WEST *= 5
+     *
+     * @param x
+     * @param y
+     * @return
+     */
+    public boolean enclosesBorders(int x, int y){
+        if(Math.abs(getFrame().getX() - x) <= 10)
+            resizeRhumb *= WEST;
+        if(Math.abs( ( getFrame().getY() + getFrame().getHeight() ) - y ) <= 10)
+            resizeRhumb *= SOUTH;
+        if(Math.abs( ( getFrame().getX() + getFrame().getWidth() ) - x ) <= 10)
+            resizeRhumb *= EAST;
+        if(resizeRhumb == 1)
             return false;
-        return true;
+        else
+            return true;
     }
+
+    /**
+     * Actually resizes the frame correctly with teh given x and y
+     * @param x
+     * @param y
+     */
+    public void resizeSubWindowFrame(int x, int y){
+        if(resizeRhumb % EAST == 0)
+            getFrame().setWidth(x);
+
+        if(resizeRhumb% SOUTH == 0)
+            getFrame().setHeight(y);
+
+        if(resizeRhumb % WEST == 0) {
+            getFrame().setX(x);
+            getFrame().setWidth((getFrame().getWidth() + (Math.abs(getFrame().getX() - x))));
+        }
+    }
+
+    /**
+     * A method that acutally moves this subwindow
+     * @param x
+     * @param y
+     */
+    public void moveSubWindowFrame(int x, int y){
+        //TODO niet absoluut maar relatief veranderen
+        getFrame().setX(x);
+        getFrame().setY(y);
+
+    }
+
+    /**
+     * A method that resets the moveRhumb to the original value 1
+     */
+    public void resetResizeRhumb() {
+        resizeRhumb = 1;
+    }
+
+    /**
+     * An int that defines which ways to resize the borders
+     */
+    private int resizeRhumb = 1;
 
 }

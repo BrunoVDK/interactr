@@ -112,6 +112,11 @@ public class EventHandler {
                 if (mousepressOperationType == 0)
                     getDiagramController().addMessageFrom(lastPressedX, lastPressedY,x,y);
 
+                if(mousepressOperationType == 1)
+                    getDiagramController().resetResizeRhumb();
+
+
+
                 mousepressOperationType = 0;
 
             }
