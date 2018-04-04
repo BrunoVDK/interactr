@@ -1,9 +1,7 @@
 package interactr.cs.kuleuven.be.ui;
 
-import com.sun.tools.javac.code.Attribute;
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.*;
-import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 import java.util.*;
 
