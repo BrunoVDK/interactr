@@ -18,7 +18,7 @@ public class DiagramNotificationCenter {
      * Register the given observer with the given diagram.
      */
     public void registerObserver(Diagram diagram, Object observer) {
-        observers.plus(diagram, observer);
+        observers = observers.plus(diagram, observer);
     }
 
     /**
@@ -30,7 +30,7 @@ public class DiagramNotificationCenter {
     /**
      * @note https://www.javaworld.com/article/2073352/core-java/simply-singleton.html
      */
-    protected DiagramNotificationCenter() {
+    private DiagramNotificationCenter() {
         // Exists only to defeat instantiation.
     }
 
@@ -40,14 +40,12 @@ public class DiagramNotificationCenter {
      * @note This is a singleton
      */
     public static DiagramNotificationCenter defaultCenter() {
-        if(defaultCenter == null)
-            defaultCenter = new DiagramNotificationCenter();
         return defaultCenter;
     }
 
     /**
      * The singleton instance.
      */
-    private static DiagramNotificationCenter defaultCenter = null;
+    private final static DiagramNotificationCenter defaultCenter = new DiagramNotificationCenter();
 
 }
