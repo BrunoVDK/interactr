@@ -41,12 +41,15 @@ public class DiagramController {
      * Display all subwindows in this diagram controller.
      */
     public void displayAllSubWindows() {
-        for (SubWindow window : subWindows)
-            window.displayView(getPaintBoard());
+        for (int i=subWindows.size()-1 ; i>=0 ; i--) // Last window first
+            subWindows.get(i).displayView(getPaintBoard());
     }
 
     /**
      * Display the currently active subwindow of this diagram controller.
+     *
+     * @note This method can be used to improve performance if nothing but the contents of the active subwindow
+     *  was changed.
      */
     public void displaySubWindow() {
         if (getActiveSubwindow() != null)
@@ -58,7 +61,7 @@ public class DiagramController {
      *
      * @return The diagram view of this controller that's currently active.
      */
-    private SubWindow getActiveSubwindow(){
+    private SubWindow getActiveSubwindow() {
         return (subWindows.isEmpty() ? null : subWindows.get(0));
     }
 
@@ -67,18 +70,17 @@ public class DiagramController {
      */
     public void createSubWindow(){
         subWindows.add(0, new SubWindow());
+        getPaintBoard().refresh();
     }
 
     /**
      * Duplicate the currently active subwindow.
-     *
-     * @throws NoSuchWindowException If no window is currently active.
      */
     public void duplicateSubWindow() {
-        if (getActiveSubwindow() != null)
+        if (getActiveSubwindow() != null) {
             subWindows.add(0, new SubWindow(getActiveSubwindow()));
-        else
-            throw new NoSuchWindowException();
+            getPaintBoard().refresh();
+        }
     }
 
     /**

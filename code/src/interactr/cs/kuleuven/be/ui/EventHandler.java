@@ -25,7 +25,7 @@ public class EventHandler {
      *
      * @param diagramController The diagram controller to associate this event handler with.
      */
-    public EventHandler(DiagramController diagramController) {
+    EventHandler(DiagramController diagramController) {
         setDiagramController(diagramController);
     }
 
@@ -95,7 +95,7 @@ public class EventHandler {
             getDiagramController().activateSubWindow(x,y);
             dragOperationType = DragOperationType.DRAG_VALID;
         }
-        catch (NoSuchWindowException e) {}
+        catch (NoSuchWindowException ignored) {}
     }
 
     /**
@@ -151,7 +151,7 @@ public class EventHandler {
             lastDragCoordinate = new Point(x,y);
 
         }
-        catch (NoSuchPartyException e) {}
+        catch (NoSuchPartyException ignored) {}
     }
 
     /**
@@ -197,7 +197,6 @@ public class EventHandler {
      * @param keyChar The key char for the key event.
      */
     void handleKeyEvent(int id, int keyCode, char keyChar) {
-
         if (getDiagramController() != null) {
             switch (id) {
                 case KeyEvent.KEY_PRESSED:
@@ -211,44 +210,29 @@ public class EventHandler {
                     }
                     else if (keyCode == KeyEvent.VK_CONTROL)
                         controlIsPressed = true;
-
-                    else if(keyCode == KeyEvent.VK_N && controlIsPressed)
+                    else if (keyCode == KeyEvent.VK_N && controlIsPressed)
                         getDiagramController().createSubWindow();
-
-                    else if(keyCode == KeyEvent.VK_D && controlIsPressed)
+                    else if (keyCode == KeyEvent.VK_D && controlIsPressed)
                         getDiagramController().duplicateSubWindow();
-
                     break;
                 case KeyEvent.KEY_TYPED:
                     if (keyChar == KeyEvent.VK_TAB && !getDiagramController().isEditing())
                         getDiagramController().toggleActiveSubWindowView();
-
                     else if(keyChar == KeyEvent.VK_CONTROL)
                         controlIsPressed = false;
-
                     else if (Character.isLetter(keyChar)
                             || Character.isDigit(keyChar)
                             || ":();-_<>*&[]".indexOf(Character.toString(keyChar)) != -1)
                         getDiagramController().appendChar(keyChar);
-
+                    break;
             }
         }
     }
 
     /**
-     * Registers the focused party for this event handler.
-     */
-    private Party focusedParty = null;
-
-    /**
-     * Registers the focus coordinate for this event handler.
-     */
-    private Point focusCoordinate = null;
-
-    /**
      * Returns the diagram controller associated with this event handler.
      */
-    public DiagramController getDiagramController() {
+    private DiagramController getDiagramController() {
         return diagramController;
     }
 
@@ -256,9 +240,8 @@ public class EventHandler {
      * Set the diagram controller for this event handler to the given one.
      *
      * @param diagramController The new diagram controller for this event handler.
-     * @post The diagram controller associated with this event handler matches the given one.
      */
-    public void setDiagramController(DiagramController diagramController) {
+    private void setDiagramController(DiagramController diagramController) {
         this.diagramController = diagramController;
     }
 
