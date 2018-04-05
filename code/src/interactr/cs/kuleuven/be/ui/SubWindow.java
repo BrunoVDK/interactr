@@ -2,10 +2,7 @@ package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.Party;
-import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
-import interactr.cs.kuleuven.be.exceptions.InvalidMoveWindowException;
-import interactr.cs.kuleuven.be.exceptions.InvalidResizeWindowException;
-import interactr.cs.kuleuven.be.exceptions.NoSuchPartyException;
+import interactr.cs.kuleuven.be.exceptions.*;
 import interactr.cs.kuleuven.be.ui.geometry.Colour;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
@@ -62,13 +59,26 @@ public class SubWindow implements DiagramObserver {
     }
 
     /**
-     * Set the frame of this subwindow to the given one.
+     * Returns the frame of this subwindow, including its resize borders.
      *
-     * @param   frame
-     *          The new frame for this subwindow.
+     * @return The frame of this subwindow with a margin of 5 for each resize border.
      */
-    public void setFrame(Rectangle frame) {
-        this.frame = frame;
+    public Rectangle getBorderedFrame() {
+        return new Rectangle(
+                frame.getX() - 5,
+                frame.getY() - 5,
+                frame.getWidth() + 10,
+                frame.getHeight() + 10);
+    }
+
+    /**
+     * Returns whether or not this subwindow can have the given frame as its frame.
+     *
+     * @param frame The frame to check with.
+     * @return True if and only if the given frame's width and height are large enough.
+     */
+    public boolean canHaveAsFrame(Rectangle frame) {
+        return (frame.getWidth() > CLOSE_BUTTON_SIZE + 10 && frame.getHeight() > TITLE_BAR_HEIGHT + 10);
     }
 
     /**
@@ -78,18 +88,21 @@ public class SubWindow implements DiagramObserver {
      *          The new width for this subwindow's frame.
      * @param   height
      *          The new height for this subwindow's frame.
-     * @throws  IllegalArgumentException
-     *          The given width is smaller than one.
-     * @throws  IllegalArgumentException
-     *          The given height is smaller than one.
      */
     public void setSize(int width, int height) {
-        if (width < 1)
-            throw new IllegalArgumentException("The width cannot be smaller than 1.");
-        if (height < 1)
-            throw new IllegalArgumentException("The height cannot be smaller than 1.");
-        this.frame.setWidth(width);
-        this.frame.setHeight(height);
+        setFrame(new Rectangle(frame.getX(), frame.getY(), width, height));
+    }
+
+    /**
+     * Set the frame of this subwindow to the given one.
+     *
+     * @param frame The new frame for this subwindow.
+     * @throws IllegalWindowFrameException This subwindow cannot have the given frame as its own frame.
+     */
+    public void setFrame(Rectangle frame) throws IllegalWindowFrameException {
+        if (!canHaveAsFrame(frame))
+            throw new IllegalWindowFrameException();
+        this.frame = frame;
     }
 
     /**
@@ -99,6 +112,7 @@ public class SubWindow implements DiagramObserver {
      * @param fromY The start y coordinate for the resize.
      * @param toX The end x coordinate for the resize.
      * @param toY The end y coordinate for the resize.
+     * @throws InvalidResizeWindowException The resize was not successful.
      */
     public void resize(int fromX, int fromY, int toX, int toY) throws InvalidResizeWindowException {
 
@@ -107,26 +121,28 @@ public class SubWindow implements DiagramObserver {
         if (border == 0) // No resize can be done from the given start coordinates (no border)
             throw new InvalidResizeWindowException();
 
-        // Resize the frame based on the end coordinates
-        Rectangle frame = this.getFrame();
+        // Calculate the new frame based on the end coordinates
+        Rectangle newFrame = new Rectangle(this.getFrame());
         if ((border & SubWindowBorder.NORTH.code) != 0) {
-            frame.setY(frame.getY() + (toY - fromY));
-            frame.setHeight(frame.getHeight() - (toY - fromY));
+            newFrame.setY(newFrame.getY() + (toY - fromY));
+            newFrame.setHeight(newFrame.getHeight() - (toY - fromY));
         }
         if ((border & SubWindowBorder.EAST.code) != 0)
-            frame.setWidth(frame.getWidth() + (toX - fromX));
+            newFrame.setWidth(newFrame.getWidth() + (toX - fromX));
         if ((border & SubWindowBorder.SOUTH.code) != 0)
-            frame.setHeight(frame.getHeight() + (toY - fromY));
+            newFrame.setHeight(newFrame.getHeight() + (toY - fromY));
         if ((border & SubWindowBorder.WEST.code) != 0) {
-            frame.setX(frame.getX() + (toX - fromX));
-            frame.setWidth(frame.getWidth() - (toX - fromX));
+            newFrame.setX(newFrame.getX() + (toX - fromX));
+            newFrame.setWidth(newFrame.getWidth() - (toX - fromX));
         }
 
-        // Make sure the window doesn't hide the title bar or the close button
-        if (frame.getHeight() < TITLE_BAR_HEIGHT + 10)
-            frame.setHeight(TITLE_BAR_HEIGHT + 10);
-        if (frame.getHeight() < CLOSE_BUTTON_SIZE + 10)
-            frame.setHeight(CLOSE_BUTTON_SIZE + 10); // 10 for extra margin
+        // Try to set the frame or throw an exception if the new frame is invalid
+        try {
+            setFrame(newFrame);
+        }
+        catch (IllegalWindowFrameException e) {
+            throw new InvalidResizeWindowException();
+        }
 
     }
 
@@ -242,7 +258,7 @@ public class SubWindow implements DiagramObserver {
         paintBoard.drawRectangle(frame.getX(), frame.getY(), frame.getWidth()-1, frame.getHeight()-1);
 
         // Draw the close button
-        int closeX = frame.getX() + frame.getWidth() - 3 - CLOSE_BUTTON_SIZE, closeY = frame.getY() + 3;
+        int closeX = frame.getX() + frame.getWidth() - 4 - CLOSE_BUTTON_SIZE, closeY = frame.getY() + 3;
         paintBoard.drawRectangle(closeX, closeY, CLOSE_BUTTON_SIZE, CLOSE_BUTTON_SIZE);
         paintBoard.drawLine(closeX, closeY, closeX + CLOSE_BUTTON_SIZE, closeY + CLOSE_BUTTON_SIZE);
         paintBoard.drawLine(closeX, closeY + CLOSE_BUTTON_SIZE, closeX + CLOSE_BUTTON_SIZE, closeY);
@@ -286,6 +302,17 @@ public class SubWindow implements DiagramObserver {
      * @return True if and only if the given coordinates lie within this subwindow's title bar.
      */
     public boolean titleBarEncloses(int x, int y) {
+        return (this.getFrame().encloses(x,y) && y < getFrame().getY() + TITLE_BAR_HEIGHT);
+    }
+
+    /**
+     * Returns whether or not the given coordinates lie within this subwindow's title bar.
+     *
+     * @param x The x coordinate to check with.
+     * @param y The y coordinate to check with.
+     * @return True if and only if the given coordinates lie within this subwindow's title bar.
+     */
+    public boolean closeButtonEncloses(int x, int y) {
         return (this.getFrame().encloses(x,y) && y < getFrame().getY() + TITLE_BAR_HEIGHT);
     }
 

@@ -136,7 +136,7 @@ public class DiagramController {
      * @return The subwindow at the given coordinates or null if there is none.
      */
     private SubWindow getSubWindowAt(int x, int y) {
-        return subWindows.stream().filter( s -> s.getFrame().encloses(x,y)).findFirst().orElse(null);
+        return subWindows.stream().filter( s -> s.getBorderedFrame().encloses(x,y)).findFirst().orElse(null);
     }
 
     /**
