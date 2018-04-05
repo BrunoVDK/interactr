@@ -14,7 +14,7 @@ public class DiagramNotificationCenter {
     /**
      * Register the given observer with the given diagram.
      */
-    public void registerObserver(Diagram diagram, Object observer) {
+    public void registerObserver(Diagram diagram, DiagramObserver observer) {
         observers = observers.plus(diagram, observer);
     }
 
@@ -22,7 +22,7 @@ public class DiagramNotificationCenter {
      * The list of registered observers kept track of by this center.
      *  This is on a per-diagram basis.
      */
-    protected PMap<Diagram, Object> observers = PMap.<Diagram, Object>empty();
+    protected PMap<Diagram, DiagramObserver> observers = PMap.empty();
 
     private DiagramNotificationCenter() {
         // Exists only to defeat instantiation.
