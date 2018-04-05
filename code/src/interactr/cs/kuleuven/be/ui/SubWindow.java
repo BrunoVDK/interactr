@@ -109,17 +109,17 @@ public class SubWindow implements DiagramObserver {
         // Resize the frame based on the end coordinates
         Rectangle frame = this.getFrame();
         if ((border & SubWindowBorder.NORTH.code) != 0) {
-            frame.setY(frame.getY() + (fromY - frame.getY()));
-            frame.setWidth(fromX - getFrame().getX());
+            frame.setY(frame.getY() + (toY - fromY));
+            frame.setHeight(frame.getHeight() - (toY - fromY));
         }
         if ((border & SubWindowBorder.EAST.code) != 0) {
-            frame.setX(frame.getX() + (fromX - frame.getX()));
-            frame.setWidth((getFrame().getWidth() + (Math.abs(getFrame().getX() - fromX))));
+            frame.setX(frame.getX() + (toX - fromX));
+            frame.setWidth(frame.getWidth() - (toX - fromX));
         }
         if ((border & SubWindowBorder.SOUTH.code) != 0)
-            frame.setHeight(fromY - getFrame().getY());
+            frame.setHeight(frame.getHeight() + (toY - fromY));
         if ((border & SubWindowBorder.WEST.code) != 0)
-            frame.setWidth(fromX - getFrame().getX());
+            frame.setWidth(frame.getWidth() + (toX - fromX));
 
     }
 
