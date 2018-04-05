@@ -149,34 +149,19 @@ public class SubWindow implements DiagramObserver {
     }
 
     /**
-     * Start moving the party at the given coordinates.
-     *  This simply starts a move session for the party at the given coordinates.
-     *  If there is no party at those coordinates, an exception is thrown.
+     * Move the party at the given start coordinates to the given end coordinates.
      *
-     * @param x The x coordinate of the party that is to be moved.
-     * @param y The y coordinate of the party that is to be moved.
+     * @param fromX The start x coordinate for the add.
+     * @param fromY The start y coordinate for the add.
+     * @param toX The end x coordinate for the add.
+     * @param toY The end y coordinate for the add.
      * @throws NoSuchPartyException If there is no party at the given coordinates.
      */
-    public void movePartyAt(int x, int y) throws NoSuchPartyException {
-        movedParty = getActiveView().getPartyAt(x, y);
+    public void moveParty(int fromX, int fromY, int toX, int toY) throws NoSuchPartyException {
+        Party movedParty = getActiveView().getPartyAt(fromX, fromY);
         if (movedParty == null)
-            throw new NoSuchPartyException(x, y);
+            throw new NoSuchPartyException(fromX, fromY);
     }
-
-    /**
-     * Move the party that is currently being moved to the given of coordinates.
-     *
-     * @param x The new x coordinate for the party.
-     * @param y The new y coordinate for the party.
-     */
-    public void movePartyTo(int x, int y) {
-
-    }
-
-    /**
-     * The party for the currently active moving session.
-     */
-    private Party movedParty = null;
 
     /**
      * Switch to the next view.

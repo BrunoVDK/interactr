@@ -93,20 +93,24 @@ public class DiagramController {
     }
 
     /**
-     * TODO relative resizing better? there is no blocking here, like there is with party moving
+     * Resize the active subwindow from the given coordinates to the given coordinates.
      *
-     * @param x
-     * @param y
+     * @param fromX The start x coordinate for the resize.
+     * @param fromY The start y coordinate for the resize.
+     * @param toX The end x coordinate for the resize.
+     * @param toY The end y coordinate for the resize.
      */
     public void resizeSubWindow(int fromX, int fromY, int toX, int toY) {
         getActiveSubwindow().resizeSubWindowFrame(toX, toY);
     }
 
     /**
-     * TODO relative moving better? there is no blocking here, like there is with party moving
+     * Move the active subwindow from the given coordinates to the given coordinates.
      *
-     * @param x The x coordinate to move the subwindow to.
-     * @param y The y coordinate to move the subwindow to.
+     * @param fromX The start x coordinate for the move.
+     * @param fromY The start y coordinate for the move.
+     * @param toX The end x coordinate for the move.
+     * @param toY The end y coordinate for the move.
      */
     public void moveSubWindow(int fromX, int fromY, int toX, int toY){
         getActiveSubwindow().moveSubWindowFrame(toX, toY);
@@ -153,16 +157,16 @@ public class DiagramController {
     }
 
     /**
-     * Adds a message using the given start and end coordinates of a drag session.
+     * Adds a message from the given start coordinate to the given end coordinate.
      *
-     * @param x1 The start x coordinate for the session.
-     * @param y1 The start y coordinate for the session.
-     * @param x2 The end x coordinate for the session.
-     * @param y2 The end y coordinate for the session.
+     * @param fromX The start x coordinate for the add.
+     * @param fromY The start y coordinate for the add.
+     * @param toX The end x coordinate for the add.
+     * @param toY The end y coordinate for the add.
      */
-    public void addMessageFrom(int x1, int y1, int x2, int y2) {
+    public void addMessageFrom(int fromX, int fromY, int toX, int toY) {
         try {
-            getActiveSubwindow().addMessage(x1, y1, x2, y2);
+            getActiveSubwindow().addMessage(fromX, fromY, toX, toY);
             getPaintBoard().refresh();
         }
         catch(InvalidAddMessageException addException){
@@ -216,23 +220,15 @@ public class DiagramController {
     }
 
     /**
-     * Move the party at the given coordinates. This starts a move session for the given party.
-     *  If no party is located at the given coordinates, an exception is thrown.
+     * Moves the party at the given start coordinates to the given end coordinates.
      *
-     * @param x The x coordinate at which a party is looked for.
-     * @param y The y coordinate at which a party is looked for.
+     * @param fromX The start x coordinate for the add.
+     * @param fromY The start y coordinate for the add.
+     * @param toX The end x coordinate for the add.
+     * @param toY The end y coordinate for the add.
      */
-    public void movePartyAt(int x, int y){
-        getActiveSubwindow().movePartyAt(x,y);
-    }
-
-    /**
-     * Moves the given party to the given x and y coordinates.
-     * @param x The new x coordinate for the party.
-     * @param y The new y coordinate for the party.
-     */
-    public void movePartyTo(int x, int y){
-        getActiveSubwindow().movePartyTo(x,y);
+    public void moveParty(int fromX, int fromY, int toX, int toY){
+        getActiveSubwindow().moveParty(fromX, fromY, toX, toY);
         getPaintBoard().refresh();
     }
 
