@@ -3,9 +3,6 @@ package interactr.cs.kuleuven.be.ui;
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.purecollections.PMap;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * A class of notification centers for notifying registered observers of changes to a diagram.
  *
@@ -27,9 +24,6 @@ public class DiagramNotificationCenter {
      */
     protected PMap<Diagram, Object> observers = PMap.<Diagram, Object>empty();
 
-    /**
-     * @note https://www.javaworld.com/article/2073352/core-java/simply-singleton.html
-     */
     private DiagramNotificationCenter() {
         // Exists only to defeat instantiation.
     }
@@ -37,7 +31,7 @@ public class DiagramNotificationCenter {
     /**
      * Get the default notification center for diagrams.
      *
-     * @note This is a singleton
+     * @note This is a singleton.
      */
     public static DiagramNotificationCenter defaultCenter() {
         return defaultCenter;

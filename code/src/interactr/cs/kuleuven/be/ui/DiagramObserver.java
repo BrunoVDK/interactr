@@ -8,6 +8,8 @@ package interactr.cs.kuleuven.be.ui;
  */
 public interface DiagramObserver {
 
-
+    // Either a full interface (for every update a method), or only a -diagramDidUpdate: method
+    //  with maybe a type parameter (type of the update), diagram parameter (what diagram updated),
+    //  and additional parameters in a dictionary for example for more information about the update
 
 }
