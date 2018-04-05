@@ -43,87 +43,152 @@ public class EventHandler {
 
         // Mouse events are ignored when the diagram controller is editing
         if (getDiagramController() != null && ! getDiagramController().isEditing()) {
-
-            // Mouse click
-            if (id == MouseEvent.MOUSE_CLICKED) {
-                switch (clickCount) {
-                    case 1: // Single click
-                        getDiagramController().selectComponentAt(x,y);
-                        break;
-                    case 2: // Double click
-                        try {
-                            getDiagramController().addPartyAt(x,y);
-                        }
-                        catch (InvalidAddPartyException exception) {
-                           getDiagramController().switchPartyTypeAt(x, y);
-                        }
-                        break;
-                }
+            switch (id) {
+                case MouseEvent.MOUSE_CLICKED:
+                    handleMouseClick(x,y,clickCount);
+                    break;
+                case MouseEvent.MOUSE_PRESSED:
+                    handleMousePress(x,y);
+                    break;
+                case MouseEvent.MOUSE_DRAGGED:
+                    handleMouseDrag(x,y);
+                    break;
+                case MouseEvent.MOUSE_RELEASED:
+                    handleMouseReleased(x,y);
+                    break;
             }
-
-            //If there is no party to move save the exception to get the coordenate out of
-            if (id == MouseEvent.MOUSE_PRESSED){
-                this.lastPressedX = x;
-                this.lastPressedY = y;
-
-                getDiagramController().activateSubWindow(x,y);
-
-                try {
-                    getDiagramController().resizeSubWindowAt(x,y);
-                    mousepressOperationType = 1;
-                }
-                catch(InvalidResizeWindowException e) {
-
-                    try{
-                        getDiagramController().moveSubWindowAt(x,y);
-                        mousepressOperationType = 2;
-                    } catch (InvalidMoveWindowException e2){
-                        try {
-                            getDiagramController().movePartyAt(x,y);
-                            mousepressOperationType = 3;
-                        }
-                        catch (NoSuchPartyException e3) {
-                            mousepressOperationType = 0;
-                        }
-                    }
-
-
-                }
-            }
-
-            // Mouse drag
-            if(id == MouseEvent.MOUSE_DRAGGED){
-                switch(mousepressOperationType){
-                    case 1:
-                        getDiagramController().resizeSubWindowTo(x,y);
-                        break;
-                    case 2:
-                        getDiagramController().moveSubWindowTo(x,y);
-                        break;
-
-                    case 3:
-                        getDiagramController().movePartyTo(x, y);
-                        break;
-                }
-            }
-
-            // Mouse release
-            if(id == MouseEvent.MOUSE_RELEASED){
-                if (mousepressOperationType == 0)
-                    getDiagramController().addMessageFrom(lastPressedX, lastPressedY,x,y);
-
-                if(mousepressOperationType == 1)
-                    getDiagramController().resetResizeRhumb();
-
-
-
-                mousepressOperationType = 0;
-
-            }
-
         }
 
     }
+
+    /**
+     * Handle a mouse click at the given coordinates and with given click count.
+     *
+     * @param x The x coordinate of the mouse click.
+     * @param y The y coordinate of the mouse click.
+     * @param clickCount The click count.
+     */
+    private void handleMouseClick(int x, int y, int clickCount) {
+        switch (clickCount) {
+            case 1: // Single click
+                getDiagramController().selectComponentAt(x,y);
+                break;
+            case 2: // Double click
+                try {
+                    getDiagramController().addPartyAt(x,y);
+                }
+                catch (InvalidAddPartyException exception) {
+                    getDiagramController().switchPartyTypeAt(x, y);
+                }
+                break;
+        }
+    }
+
+    /**
+     * Handle a mouse press at the given coordinates.
+     *
+     * @param x The x coordinate of the mouse press.
+     * @param y The y coordinate of the mouse press.
+     */
+    private void handleMousePress(int x, int y) {
+        lastDragCoordinate = new Point(x,y); // Keep track of drag coordinates
+        try {
+            getDiagramController().activateSubWindow(x,y);
+            dragOperationType = DragOperationType.DRAG_VALID;
+        }
+        catch (NoSuchWindowException e) {}
+    }
+
+    /**
+     * Handle a mouse drag at the given coordinates.
+     *
+     * @param x The x coordinate of the mouse drag.
+     * @param y The y coordinate of the mouse drag.
+     */
+    private void handleMouseDrag(int x, int y) {
+
+        // Nothing to drag
+        if (dragOperationType == DragOperationType.DRAG_NONE)
+            return;
+
+        // Prioritise dragging in a diagram if it was previously successful
+        //  This prevents the alteration of subwindow frames when dragging something in a diagram
+        //  close to the subwindow's borders / title bar
+        if (dragOperationType == DragOperationType.DRAG_DIAGRAM) {
+            moveParty(x,y);
+        }
+        else {
+            try {
+                getDiagramController().moveSubWindow(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
+            }
+            catch (InvalidMoveWindowException e1) {
+                try {
+                    getDiagramController().resizeSubWindow(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
+                }
+                catch (InvalidResizeWindowException e2) {
+                    moveParty(x,y);
+                    return;
+                }
+            }
+            lastDragCoordinate = new Point(x,y);
+        }
+
+    }
+
+    /**
+     * Move a party at the given coordinates.
+     *
+     * @param x The x coordinate to move the party to.
+     * @param y The y coordinate to move the party to.
+     */
+    private void moveParty(int x, int y) {
+        try {
+
+            // Move party
+            getDiagramController().movePartyTo(x,y);
+
+            // Move party was successful, keep track of the changes
+            dragOperationType = DragOperationType.DRAG_DIAGRAM;
+            lastDragCoordinate = new Point(x,y);
+
+        }
+        catch (NoSuchPartyException e) {}
+    }
+
+    /**
+     * Handle a mouse release at the given coordinates.
+     *
+     * @param x The x coordinate of the mouse release.
+     * @param y The y coordinate of the mouse release.
+     */
+    private void handleMouseReleased(int x, int y) {
+        if (dragOperationType == DragOperationType.DRAG_NONE)
+            getDiagramController().addMessageFrom(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
+        dragOperationType = DragOperationType.DRAG_NONE;
+    }
+
+    /**
+     * An enumeration of drag operation types.
+     *  This is used to override the priority of a particular type of operation.
+     *  Default priority :
+     *   MOVE > RESIZE > DRAG IN DIAGRAM
+     *  If something is dragged within a diagram, this operation type is prioritised.
+     */
+    private enum DragOperationType {
+        DRAG_NONE, // When nothing at all is dragged
+        DRAG_VALID, // When anything is dragged
+        DRAG_DIAGRAM; // When something is dragged within a diagram
+    }
+
+    /**
+     * Registers the current type of dragging operation.
+     */
+    private DragOperationType dragOperationType = DragOperationType.DRAG_NONE;
+
+    /**
+     * The coordinates for the last successful drag operation.
+     */
+    private Point lastDragCoordinate;
 
     /**
      * Handle the key event of given type, having the given key code and key char.
@@ -207,26 +272,5 @@ public class EventHandler {
      * A boolean that returns if the control key is pressed on the moment
      */
     private boolean controlIsPressed = false;
-
-    /**
-     * An Int that is used as a flag to indicate the drag operation what to do
-     *
-     * 0 for nothing
-     * 1 for resize a subwindow
-     * 2 for moving a subwindow
-     * 3 for moving a party
-     */
-    private int mousepressOperationType = 0;
-
-    /**
-     * The x coordinate of the last mouse press
-     */
-    private int lastPressedX;
-
-    /**
-     * The y coordinate of the last mouse press
-     */
-    private int lastPressedY;
-
 
 }
