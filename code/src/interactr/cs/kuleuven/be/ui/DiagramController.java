@@ -13,7 +13,7 @@ import java.util.*;
 public class DiagramController {
 
     /**
-     * Initialize this new diagram controller with given diagram and diagram views.
+     * Initialize this new diagram controller without any subwindows.
      */
     public DiagramController() {
         this.subWindows = new ArrayList<SubWindow>();
@@ -55,7 +55,7 @@ public class DiagramController {
      *
      * @return The diagram view of this controller that's currently active.
      */
-    public SubWindow getActiveSubwindow(){
+    private SubWindow getActiveSubwindow(){
         return (subWindows.isEmpty() ? null : subWindows.get(0));
     }
 
