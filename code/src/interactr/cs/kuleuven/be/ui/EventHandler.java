@@ -118,13 +118,13 @@ public class EventHandler {
         }
         else {
             try {
-                getDiagramController().moveSubWindow(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
+                getDiagramController().resizeSubWindow(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
             }
-            catch (InvalidMoveWindowException e1) {
+            catch (InvalidResizeWindowException e1) {
                 try {
-                    getDiagramController().resizeSubWindow(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
+                    getDiagramController().moveSubWindow(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
                 }
-                catch (InvalidResizeWindowException e2) {
+                catch (InvalidMoveWindowException e2) {
                     moveParty(x,y);
                     return;
                 }
@@ -170,7 +170,7 @@ public class EventHandler {
      * An enumeration of drag operation types.
      *  This is used to override the priority of a particular type of operation.
      *  Default priority :
-     *   MOVE > RESIZE > DRAG IN DIAGRAM
+     *   RESIZE > MOVE > DRAG IN DIAGRAM
      *  If something is dragged within a diagram, this operation type is prioritised.
      */
     private enum DragOperationType {

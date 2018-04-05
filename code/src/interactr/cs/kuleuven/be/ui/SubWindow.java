@@ -113,18 +113,18 @@ public class SubWindow implements DiagramObserver {
             frame.setY(frame.getY() + (toY - fromY));
             frame.setHeight(frame.getHeight() - (toY - fromY));
         }
-        if ((border & SubWindowBorder.EAST.code) != 0) {
+        if ((border & SubWindowBorder.EAST.code) != 0)
+            frame.setWidth(frame.getWidth() + (toX - fromX));
+        if ((border & SubWindowBorder.SOUTH.code) != 0)
+            frame.setHeight(frame.getHeight() + (toY - fromY));
+        if ((border & SubWindowBorder.WEST.code) != 0) {
             frame.setX(frame.getX() + (toX - fromX));
             frame.setWidth(frame.getWidth() - (toX - fromX));
         }
-        if ((border & SubWindowBorder.SOUTH.code) != 0)
-            frame.setHeight(frame.getHeight() + (toY - fromY));
-        if ((border & SubWindowBorder.WEST.code) != 0)
-            frame.setWidth(frame.getWidth() + (toX - fromX));
 
         // Make sure the window doesn't hide the title bar or the close button
-        if (frame.getHeight() < TITLE_BAR_HEIGHT)
-            frame.setHeight(TITLE_BAR_HEIGHT);
+        if (frame.getHeight() < TITLE_BAR_HEIGHT + 10)
+            frame.setHeight(TITLE_BAR_HEIGHT + 10);
         if (frame.getHeight() < CLOSE_BUTTON_SIZE + 10)
             frame.setHeight(CLOSE_BUTTON_SIZE + 10); // 10 for extra margin
 
