@@ -122,6 +122,12 @@ public class SubWindow implements DiagramObserver {
         if ((border & SubWindowBorder.WEST.code) != 0)
             frame.setWidth(frame.getWidth() + (toX - fromX));
 
+        // Make sure the window doesn't hide the title bar or the close button
+        if (frame.getHeight() < TITLE_BAR_HEIGHT)
+            frame.setHeight(TITLE_BAR_HEIGHT);
+        if (frame.getHeight() < CLOSE_BUTTON_SIZE + 10)
+            frame.setHeight(CLOSE_BUTTON_SIZE + 10); // 10 for extra margin
+
     }
 
     /**
@@ -227,13 +233,19 @@ public class SubWindow implements DiagramObserver {
         paintBoard.setClipRect(frame); // Make sure no drawing is done outside the frame
         getActiveView().display(paintBoard); // Draw view contents
 
-        // Draw the title bar
-
-        // Draw the frame
-        paintBoard.setColour(Colour.GRAY);
+        // Draw the frame (including title bar)
+        paintBoard.setColour(Colour.WHITE);
         paintBoard.fillRectangle(frame.getX(), frame.getY(), frame.getWidth(), frame.getHeight());
-        paintBoard.setColour(Colour.BLACK);
-        paintBoard.drawRectangle(frame.getX(), frame.getY(), frame.getWidth(), frame.getHeight());
+        paintBoard.setColour(Colour.LIGHT_GRAY);
+        paintBoard.fillRectangle(frame.getX(), frame.getY(), frame.getWidth()-1, TITLE_BAR_HEIGHT);
+        paintBoard.setColour(Colour.GRAY);
+        paintBoard.drawRectangle(frame.getX(), frame.getY(), frame.getWidth()-1, frame.getHeight()-1);
+
+        // Draw the close button
+        int closeX = frame.getX() + frame.getWidth() - 3 - CLOSE_BUTTON_SIZE, closeY = frame.getY() + 3;
+        paintBoard.drawRectangle(closeX, closeY, CLOSE_BUTTON_SIZE, CLOSE_BUTTON_SIZE);
+        paintBoard.drawLine(closeX, closeY, closeX + CLOSE_BUTTON_SIZE, closeY + CLOSE_BUTTON_SIZE);
+        paintBoard.drawLine(closeX, closeY + CLOSE_BUTTON_SIZE, closeX + CLOSE_BUTTON_SIZE, closeY);
 
     }
 
@@ -260,6 +272,11 @@ public class SubWindow implements DiagramObserver {
      * The height of a subwindow's title bar.
      */
     private final static int TITLE_BAR_HEIGHT = 23;
+
+    /**
+     * The size of a subwindow's close button. Should be smaller than the title bar height.
+     */
+    private final static int CLOSE_BUTTON_SIZE = 17;
 
     /**
      * Returns whether or not the given coordinates lie within this subwindow's title bar.

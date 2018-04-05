@@ -47,8 +47,7 @@ public class DiagramController {
 
     /**
      * Display the currently active subwindow of this diagram controller.
-     *
-     * @note This method can be used to improve performance if nothing but the contents of the active subwindow
+     *  This method can be used to improve performance if nothing but the contents of the active subwindow
      *  was changed.
      */
     public void displaySubWindow() {
@@ -107,7 +106,10 @@ public class DiagramController {
      * @throws InvalidMoveWindowException The resize operation was not successful.
      */
     public void moveSubWindow(int fromX, int fromY, int toX, int toY) {
-        getActiveSubwindow().move(fromX, fromY, toX, toY);
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().move(fromX, fromY, toX, toY);
+            getPaintBoard().refresh();
+        }
     }
 
     /**
@@ -120,7 +122,10 @@ public class DiagramController {
      * @throws InvalidResizeWindowException The resize operation was not successful.
      */
     public void resizeSubWindow(int fromX, int fromY, int toX, int toY) {
-        getActiveSubwindow().resize(fromX, fromY, toX, toY);
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().resize(fromX, fromY, toX, toY);
+            getPaintBoard().refresh();
+        }
     }
 
     /**
