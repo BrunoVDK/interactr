@@ -93,19 +93,6 @@ public class DiagramController {
     }
 
     /**
-     * Resize the active subwindow from the given coordinates to the given coordinates.
-     *
-     * @param fromX The start x coordinate for the resize.
-     * @param fromY The start y coordinate for the resize.
-     * @param toX The end x coordinate for the resize.
-     * @param toY The end y coordinate for the resize.
-     */
-    public void resizeSubWindow(int fromX, int fromY, int toX, int toY) {
-        // TODO
-        getActiveSubwindow().resizeSubWindowFrame(toX, toY);
-    }
-
-    /**
      * Move the active subwindow from the given coordinates to the given coordinates.
      *
      * @param fromX The start x coordinate for the move.
@@ -114,8 +101,21 @@ public class DiagramController {
      * @param toY The end y coordinate for the move.
      */
     public void moveSubWindow(int fromX, int fromY, int toX, int toY) {
-        // TODO
+        // TODO Check if the fromX fromY corresponds to a title bar of a subwindow
         getActiveSubwindow().moveSubWindowFrame(toX, toY);
+    }
+
+    /**
+     * Resize the active subwindow from the given coordinates to the given coordinates.
+     *
+     * @param fromX The start x coordinate for the resize.
+     * @param fromY The start y coordinate for the resize.
+     * @param toX The end x coordinate for the resize.
+     * @param toY The end y coordinate for the resize.
+     */
+    public void resizeSubWindow(int fromX, int fromY, int toX, int toY) {
+        // TODO Check if the fromX fromY corresponds to a border of a subwindow
+        getActiveSubwindow().resizeSubWindowFrame(toX, toY);
     }
 
     /**
