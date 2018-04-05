@@ -6,13 +6,12 @@ import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.exceptions.NoSuchPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.Colour;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
+import static interactr.cs.kuleuven.be.ui.DiagramController.Border.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static interactr.cs.kuleuven.be.ui.DiagramController.EAST;
-import static interactr.cs.kuleuven.be.ui.DiagramController.SOUTH;
-import static interactr.cs.kuleuven.be.ui.DiagramController.WEST;
+
 /**
  * A class of subwindows for displaying diagram views.
  *  The subwindows can be closed, resized and moved. Cycling between available diagram views
@@ -253,11 +252,11 @@ public class SubWindow implements DiagramObserver {
      */
     public boolean enclosesBorders(int x, int y){
         if(Math.abs(getFrame().getX() - x) <= 10)
-            resizeRhumb *= WEST;
+            resizeRhumb = WEST.or(resizeRhumb);
         if(Math.abs( ( getFrame().getY() + getFrame().getHeight() ) - y ) <= 10)
-            resizeRhumb *= SOUTH;
+            resizeRhumb = SOUTH.or(resizeRhumb);
         if(Math.abs( ( getFrame().getX() + getFrame().getWidth() ) - x ) <= 10)
-            resizeRhumb *= EAST;
+            resizeRhumb = EAST.or(resizeRhumb);
         if(resizeRhumb == 1)
             return false;
         else
@@ -270,13 +269,13 @@ public class SubWindow implements DiagramObserver {
      * @param y
      */
     public void resizeSubWindowFrame(int x, int y){
-        if(resizeRhumb % EAST == 0)
+        if(EAST.and(resizeRhumb) != 0)
             getFrame().setWidth(x - getFrame().getX());
 
-        if(resizeRhumb% SOUTH == 0)
+        if(SOUTH.and(resizeRhumb) != 0)
             getFrame().setHeight(y - getFrame().getY());
 
-        if(resizeRhumb % WEST == 0) {
+        if(WEST.and(resizeRhumb) != 0) {
             getFrame().setX(x);
             getFrame().setWidth((getFrame().getWidth() + (Math.abs(getFrame().getX() - x))));
         }

@@ -126,9 +126,26 @@ public class DiagramController {
      *
      * A subwindow that is currently selected for moving or resizing
      */
-    public static final int EAST = 2;
-    public static final int SOUTH = 3;
-    public static final int WEST = 5;
+    public enum Border {
+        NORTH( 0b0001),
+        EAST(  0b0010),
+        SOUTH( 0b0100),
+        WEST(  0b1000);
+
+        public final int code;
+
+        public int and(int x) {
+            return code & x;
+        }
+
+        public int or(int x) {
+            return code | x;
+        }
+
+        Border(int code) {
+            this.code = code;
+        }
+    }
 
     /**
      * The list of all diagram views kept by this diagram handler.
