@@ -6,9 +6,7 @@ import interactr.cs.kuleuven.be.exceptions.*;
 import java.util.*;
 
 /**
- * A class of diagram controllers for managing a diagram and associated diagram views.
- *  Diagram controllers allow for manipulation and selection of diagram components such as parties and messages,
- *  as well as cycling between available diagram views.
+ * A class of diagram controllers for managing subwindows within a diagram window.
  *
  * @author Team 25
  * @version 1.0
@@ -31,18 +29,25 @@ public class DiagramController {
     }
 
     /**
-     * Select the next diagram view associated with this controller and display it
-     *  in this controller's diagram window.
+     * Toggle the diagram view in this controller's active subwindow
      */
-    public void nextView() {
+    public void toggleActiveSubWindowView() {
         getActiveSubwindow().nextView();
         getPaintBoard().refresh();
     }
 
     /**
-     * Display the currently active diagram view by making use of the given paintboard.
+     * Display all subwindows in this diagram controller.
      */
-    public void displayView() {
+    public void displayAllSubWindows() {
+        for (SubWindow window : subWindows)
+            window.displayView(getPaintBoard());
+    }
+
+    /**
+     * Display the currently active subwindow of this diagram controller.
+     */
+    public void displaySubWindow() {
         getActiveSubwindow().displayView(getPaintBoard());
     }
 
@@ -55,6 +60,106 @@ public class DiagramController {
         return subWindows.get(0);
     }
 
+    /**
+     * Creates a new subwindow with default parameters.
+     */
+    public void createSubWindow(){
+        subWindows.add(0, new SubWindow());
+    }
+
+    /**
+     * Duplicate the currently active subwindow.
+     *
+     * @throws NoSuchWindowException If no window is currently active.
+     */
+    public void duplicateSubWindow() {
+        if (getActiveSubwindow() != null)
+            subWindows.add(0, new SubWindow(getActiveSubwindow()));
+        else
+            throw new NoSuchWindowException();
+    }
+
+    /**
+     * Activate the subwindow at the given x and y.
+     *
+     * @param x The x coordinate at which the subwindow lies.
+     * @param y The y coordinate at which the subwindow lies.
+     * @throws NoSuchWindowException If no subwindow lies at the given coordinates.
+     */
+    public void activateSubWindow(int x, int y) throws NoSuchWindowException {
+        SubWindow sub = subWindows.stream().filter( s -> s.getFrame().encloses(x,y)).findFirst().get();
+        if (sub == null)
+            throw new NoSuchWindowException();
+        subWindows.add(0, subWindows.remove(subWindows.indexOf(sub)));
+    }
+
+    /**
+     * TODO probably not necessary? Just keep track of the currently active subwindow and only do resize *to*
+     *
+     * @param x
+     * @param y
+     */
+    public void resizeSubWindowAt(int x, int y){
+        SubWindow sub = subWindows.stream().filter( s -> s.enclosesBorders(x,y)).findFirst().get();
+        if(sub != null)
+            selectedSubWindow = sub;
+        else
+            throw new InvalidResizeWindowException();
+
+    }
+
+    /**
+     * TODO relative resizing better? there is no blocking here, like there is with party moving
+     *
+     * @param x
+     * @param y
+     */
+    public void resizeSubWindowTo(int x, int y) {
+        selectedSubWindow.resizeSubWindowFrame(x,y);
+    }
+
+    /**
+     * TODO probably not necessary? Just keep track of the currently active subwindow and only do move *to*
+     *
+     * @param x
+     * @param y
+     */
+    public void moveSubWindowAt(int x,int y){
+        SubWindow sub = subWindows.stream().filter( s -> s.enclosesTitleBar(x,y)).findFirst().get();
+        if(sub != null)
+            selectedSubWindow = sub;
+        else
+            throw new InvalidMoveWindowException();
+    }
+
+    /**
+     * TODO relative moving better? there is no blocking here, like there is with party moving
+     *
+     * @param x The x coordinate to move the subwindow to.
+     * @param y The y coordinate to move the subwindow to.
+     */
+    public void moveSubWindowTo(int x, int y){
+        selectedSubWindow.moveSubWindowFrame(x,y);
+    }
+
+    /**
+     * TODO semantics probably unnecessary ; only subwindow needs to know of this stuff
+     *
+     * A method that calls the reset operation of the just moved party
+     */
+    public void resetResizeRhumb(){
+        selectedSubWindow.resetResizeRhumb();
+    }
+
+    /**
+     * TODO active subwindow is the selected one? EAST etc. should maybe put in subwindow itself
+     *
+     * A subwindow that is currently selected for moving or resizing
+     */
+    private SubWindow selectedSubWindow;
+    public static final int EAST = 2;
+    public static final int SOUTH = 3;
+    public static final int WEST = 5;
 
     /**
      * The list of all diagram views kept by this diagram handler.
@@ -114,7 +219,6 @@ public class DiagramController {
         }
     }
 
-
     /**
      * The x & y coordinates of the component.
      *
@@ -134,7 +238,18 @@ public class DiagramController {
      * @return The party at the given coordinate, or null if there is none.
      */
     public void switchPartyTypeAt(int x,int y ){
-        getActiveSubwindow().switchTypeofPartyAt(x,y);
+        getActiveSubwindow().switchTypeOfPartyAt(x,y);
+    }
+
+    /**
+     * Move the party at the given coordinates. This starts a move session for the given party.
+     *  If no party is located at the given coordinates, an exception is thrown.
+     *
+     * @param x The x coordinate at which a party is looked for.
+     * @param y The y coordinate at which a party is looked for.
+     */
+    public void movePartyAt(int x, int y){
+        getActiveSubwindow().movePartyAt(x,y);
     }
 
     /**
@@ -145,11 +260,6 @@ public class DiagramController {
     public void movePartyTo(int x, int y){
         getActiveSubwindow().movePartyTo(x,y);
         getPaintBoard().refresh();
-    }
-
-    public void movePartyAt(int x, int y){
-        getActiveSubwindow().movePartyAt(x,y);
-
     }
 
     /**
@@ -215,98 +325,5 @@ public class DiagramController {
      * Registers the paint board associated with this controller.
      */
     private PaintBoard paintBoard;
-
-    /**
-     * A method that creates a new Subwindow and adds it to top of the list, so that
-     */
-    public void addNewSubWindow(){
-        subWindows.add(0, new SubWindow());
-    }
-
-    /**
-     * A method that creates a dublpicate subWindow
-     */
-    public void addDuplicateSubWindow(){
-        SubWindow temp = subWindows.remove(0);
-        subWindows.add(0,new SubWindow(temp));
-        subWindows.add(temp);
-    }
-
-    /**
-     * Switch from subwindow at the given x and y, if there is no subwindow nothing happens
-     * @param x
-     * @param y
-     */
-    public void switchSubWindow(int x, int y){
-        SubWindow sub = subWindows.stream().filter( s -> s.getFrame().encloses(x,y)).findFirst().get();
-        if(sub != null)
-            subWindows.add(0, subWindows.remove(subWindows.indexOf(sub)));
-    }
-
-    /**
-     * A method
-     * @param x
-     * @param y
-     */
-    public void resizeSubWindowAt(int x, int y){
-        SubWindow sub = subWindows.stream().filter( s -> s.enclosesBorders(x,y)).findFirst().get();
-        if(sub != null)
-            selectedSubWindow = sub;
-        else
-            throw new InvalidResizeWindowException();
-
-    }
-
-    /**
-     * A method that resizethe subwindow accordingly
-     * @param x
-     * @param y
-     */
-    public void resizeSubWindowTo(int x, int y) {
-        selectedSubWindow.resizeSubWindowFrame(x,y);
-    }
-
-    /**
-     * A window that selects the subwindow for moving if one exists, else throw a new exception that the eventhandle can catch
-     * @param x
-     * @param y
-     */
-    public void moveSubWindowAt(int x,int y){
-        SubWindow sub = subWindows.stream().filter( s -> s.enclosesTitleBar(x,y)).findFirst().get();
-        if(sub != null)
-            selectedSubWindow = sub;
-        else
-            throw new InvalidMoveWindowException();
-    }
-
-    /**
-     * A method that moves the selected SubWindow
-     * @param x
-     * @param y
-     */
-    public void moveSubWindowTo(int x, int y){
-        selectedSubWindow.moveSubWindowFrame(x,y);
-    }
-
-    /**
-     * A method that calls the reset operation of the just moved party
-     */
-    public void resetResizeRhumb(){
-        selectedSubWindow.resetResizeRhumb();
-    }
-
-
-    /**
-     * A subwindow that is currently selected for moving or resizing
-     */
-    private SubWindow selectedSubWindow;
-
-    public static void main(String[] args) { // No documentation
-        new DiagramController();
-    }
-
-    public static final int EAST = 2;
-    public static final int SOUTH = 3;
-    public static final int WEST = 5;
 
 }

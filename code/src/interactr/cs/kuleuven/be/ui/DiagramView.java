@@ -8,7 +8,7 @@ import interactr.cs.kuleuven.be.ui.geometry.*;
 
 /**
  * An abstract interface for diagram views. Diagram views can display diagrams in
- *  a coordinate system.
+ *  a coordinate system. They allow for manipulation and selection of diagram components.
  *
  * @author Team 25
  * @version 1.0

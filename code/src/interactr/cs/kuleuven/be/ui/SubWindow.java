@@ -13,8 +13,9 @@ import static interactr.cs.kuleuven.be.ui.DiagramController.EAST;
 import static interactr.cs.kuleuven.be.ui.DiagramController.SOUTH;
 import static interactr.cs.kuleuven.be.ui.DiagramController.WEST;
 /**
- * A class of subwindows for displaying diagrams.
- *  The subwindows can be closed, resized and moved.
+ * A class of subwindows for displaying diagram views.
+ *  The subwindows can be closed, resized and moved. Cycling between available diagram views
+ *  is possible too.
  *
  * @author Team 25
  * @version 1.0
@@ -125,7 +126,7 @@ public class SubWindow {
      * @param x The x coordinate of the party.
      * @param y The y coordinate of the party.
      */
-    public void switchTypeofPartyAt(int x, int y) {
+    public void switchTypeOfPartyAt(int x, int y) {
         // Get the party
     }
 

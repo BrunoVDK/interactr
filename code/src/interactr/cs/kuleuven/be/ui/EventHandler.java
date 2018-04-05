@@ -66,9 +66,9 @@ public class EventHandler {
                 this.lastPressedX = x;
                 this.lastPressedY = y;
 
-                getDiagramController().switchSubWindow(x,y);
+                getDiagramController().activateSubWindow(x,y);
 
-                try{
+                try {
                     getDiagramController().resizeSubWindowAt(x,y);
                     mousepressOperationType = 1;
                 }
@@ -149,15 +149,15 @@ public class EventHandler {
                         controlIsPressed = true;
 
                     else if(keyCode == KeyEvent.VK_N && controlIsPressed)
-                        getDiagramController().addNewSubWindow();
+                        getDiagramController().createSubWindow();
 
                     else if(keyCode == KeyEvent.VK_D && controlIsPressed)
-                        getDiagramController().addDuplicateSubWindow();
+                        getDiagramController().duplicateSubWindow();
 
                     break;
                 case KeyEvent.KEY_TYPED:
                     if (keyChar == KeyEvent.VK_TAB && !getDiagramController().isEditing())
-                        getDiagramController().nextView();
+                        getDiagramController().toggleActiveSubWindowView();
 
                     else if(keyChar == KeyEvent.VK_CONTROL)
                         controlIsPressed = false;
