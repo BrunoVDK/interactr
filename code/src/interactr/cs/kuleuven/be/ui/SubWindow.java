@@ -270,10 +270,10 @@ public class SubWindow {
      */
     public void resizeSubWindowFrame(int x, int y){
         if(resizeRhumb % EAST == 0)
-            getFrame().setWidth(x);
+            getFrame().setWidth(x - getFrame().getX());
 
         if(resizeRhumb% SOUTH == 0)
-            getFrame().setHeight(y);
+            getFrame().setHeight(y - getFrame().getY());
 
         if(resizeRhumb % WEST == 0) {
             getFrame().setX(x);
