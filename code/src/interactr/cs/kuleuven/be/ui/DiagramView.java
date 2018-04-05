@@ -6,6 +6,8 @@ import interactr.cs.kuleuven.be.purecollections.PMap;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.*;
 
+import java.util.HashMap;
+
 /**
  * An abstract interface for diagram views. Diagram views can display diagrams in
  *  a coordinate system. They allow for manipulation and selection of diagram components.
@@ -13,7 +15,7 @@ import interactr.cs.kuleuven.be.ui.geometry.*;
  * @author Team 25
  * @version 1.0
  */
-public class DiagramView {
+public class DiagramView implements DiagramObserver {
 
     /**
      * Initialize this new diagram view with the given diagram.
@@ -439,6 +441,11 @@ public class DiagramView {
      */
     public String viewName() {
         return "Default";
+    }
+
+    @Override
+    public void diagramDidUpdate(Diagram diagram, String updateType, HashMap<String, Object> parameters) {
+        // TODO
     }
 
 }

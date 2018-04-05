@@ -8,6 +8,7 @@ import interactr.cs.kuleuven.be.ui.geometry.Colour;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static interactr.cs.kuleuven.be.ui.DiagramController.EAST;
 import static interactr.cs.kuleuven.be.ui.DiagramController.SOUTH;
@@ -20,7 +21,7 @@ import static interactr.cs.kuleuven.be.ui.DiagramController.WEST;
  * @author Team 25
  * @version 1.0
  */
-public class SubWindow {
+public class SubWindow implements DiagramObserver {
 
     /**
      * Create a new subwindow without duplicating an other one.
@@ -305,4 +306,8 @@ public class SubWindow {
      */
     private int resizeRhumb = 1;
 
+    @Override
+    public void diagramDidUpdate(Diagram diagram, String updateType, HashMap<String, Object> parameters) {
+        // TODO
+    }
 }

@@ -11,7 +11,6 @@ import interactr.cs.kuleuven.be.exceptions.*;
 import interactr.cs.kuleuven.be.exceptions.NoSuchPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.Point;
 
-
 /**
  * A class of event handlers for interpreting incoming mouse/key events
  *  and forwarding them to the associated diagram controller.
