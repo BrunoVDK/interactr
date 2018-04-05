@@ -68,7 +68,17 @@ public class EventHandler {
     private void handleMouseClick(int x, int y, int clickCount) {
         switch (clickCount) {
             case 1: // Single click
-                getDiagramController().selectComponentAt(x,y);
+                try {
+                    getDiagramController().activateSubWindow(x,y);
+                    try {
+                        getDiagramController().closeSubWindow(x,y);
+                    }
+                    catch (InvalidCloseWindowException e) {
+                        getDiagramController().selectComponentAt(x,y);
+                    }
+                }
+                catch (NoSuchWindowException ignored) {}
+
                 break;
             case 2: // Double click
                 try {

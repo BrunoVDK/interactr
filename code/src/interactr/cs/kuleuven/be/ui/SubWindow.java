@@ -258,10 +258,10 @@ public class SubWindow implements DiagramObserver {
         paintBoard.drawRectangle(frame.getX(), frame.getY(), frame.getWidth()-1, frame.getHeight()-1);
 
         // Draw the close button
-        int closeX = frame.getX() + frame.getWidth() - 4 - CLOSE_BUTTON_SIZE, closeY = frame.getY() + 3;
-        paintBoard.drawRectangle(closeX, closeY, CLOSE_BUTTON_SIZE, CLOSE_BUTTON_SIZE);
-        paintBoard.drawLine(closeX, closeY, closeX + CLOSE_BUTTON_SIZE, closeY + CLOSE_BUTTON_SIZE);
-        paintBoard.drawLine(closeX, closeY + CLOSE_BUTTON_SIZE, closeX + CLOSE_BUTTON_SIZE, closeY);
+        Rectangle closeButtonFrame = getCloseButtonFrame();
+        paintBoard.drawRectangle(closeButtonFrame.getX(), closeButtonFrame.getY(), closeButtonFrame.getWidth(), closeButtonFrame.getHeight());
+        paintBoard.drawLine(closeButtonFrame.getX(), closeButtonFrame.getY(), closeButtonFrame.getX() + CLOSE_BUTTON_SIZE, closeButtonFrame.getY() + CLOSE_BUTTON_SIZE);
+        paintBoard.drawLine(closeButtonFrame.getX(), closeButtonFrame.getY() + CLOSE_BUTTON_SIZE, closeButtonFrame.getX() + CLOSE_BUTTON_SIZE, closeButtonFrame.getY());
 
     }
 
@@ -285,16 +285,6 @@ public class SubWindow implements DiagramObserver {
     private ArrayList<DiagramView> views = new ArrayList<DiagramView>();
 
     /**
-     * The height of a subwindow's title bar.
-     */
-    private final static int TITLE_BAR_HEIGHT = 23;
-
-    /**
-     * The size of a subwindow's close button. Should be smaller than the title bar height.
-     */
-    private final static int CLOSE_BUTTON_SIZE = 17;
-
-    /**
      * Returns whether or not the given coordinates lie within this subwindow's title bar.
      *
      * @param x The x coordinate to check with.
@@ -306,15 +296,35 @@ public class SubWindow implements DiagramObserver {
     }
 
     /**
-     * Returns whether or not the given coordinates lie within this subwindow's title bar.
+     * Returns whether or not the given coordinates lie within this subwindow's close button.
      *
      * @param x The x coordinate to check with.
      * @param y The y coordinate to check with.
-     * @return True if and only if the given coordinates lie within this subwindow's title bar.
+     * @return True if and only if the given coordinates lie within this subwindow's close button.
      */
     public boolean closeButtonEncloses(int x, int y) {
-        return (this.getFrame().encloses(x,y) && y < getFrame().getY() + TITLE_BAR_HEIGHT);
+        return getCloseButtonFrame().encloses(x,y);
     }
+
+    /**
+     * Returns the frame of the close button of this subwindow.
+     *
+     * @return A rectangle - the frame of the close button of this subwindow.
+     */
+    private Rectangle getCloseButtonFrame() {
+        int closeX = frame.getX() + frame.getWidth() - 4 - CLOSE_BUTTON_SIZE, closeY = frame.getY() + 3;
+        return new Rectangle(closeX, closeY, CLOSE_BUTTON_SIZE, CLOSE_BUTTON_SIZE);
+    }
+
+    /**
+     * The height of a subwindow's title bar.
+     */
+    private final static int TITLE_BAR_HEIGHT = 23;
+
+    /**
+     * The size of a subwindow's close button. Should be smaller than the title bar height.
+     */
+    private final static int CLOSE_BUTTON_SIZE = 17;
 
     /**
      * Returns a code for the borders that lies at the given coordinate.

@@ -97,6 +97,24 @@ public class DiagramController {
     }
 
     /**
+     * Close the subwindow at the given coordinates.
+     *  The given coordinates should lie within the subwindow's close button.
+     *
+     * @param x The x coordinate for the subwindow.
+     * @param y The y coordinate for the subwindow.
+     * @throws InvalidCloseWindowException When the given coordinates don't lie in any subwindow's close button.
+     */
+    public void closeSubWindow(int x, int y) throws InvalidCloseWindowException {
+        SubWindow subWindow = subWindows.stream().filter( s -> s.closeButtonEncloses(x,y)).findFirst().orElse(null);
+        if (subWindow != null) {
+            subWindows.remove(subWindow);
+            getPaintBoard().refresh();
+        }
+        else
+            throw new InvalidCloseWindowException();
+    }
+
+    /**
      * Move the active subwindow from the given coordinates to the given coordinates.
      *
      * @param fromX The start x coordinate for the move.
