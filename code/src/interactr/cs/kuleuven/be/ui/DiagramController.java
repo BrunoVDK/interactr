@@ -101,6 +101,7 @@ public class DiagramController {
      * @param toY The end y coordinate for the resize.
      */
     public void resizeSubWindow(int fromX, int fromY, int toX, int toY) {
+        // TODO
         getActiveSubwindow().resizeSubWindowFrame(toX, toY);
     }
 
@@ -112,43 +113,9 @@ public class DiagramController {
      * @param toX The end x coordinate for the move.
      * @param toY The end y coordinate for the move.
      */
-    public void moveSubWindow(int fromX, int fromY, int toX, int toY){
+    public void moveSubWindow(int fromX, int fromY, int toX, int toY) {
+        // TODO
         getActiveSubwindow().moveSubWindowFrame(toX, toY);
-    }
-
-    /**
-     * TODO semantics probably unnecessary ; only subwindow needs to know of this stuff
-     *
-     * A method that calls the reset operation of the just moved party
-     */
-    public void resetResizeRhumb(){
-        getActiveSubwindow().resetResizeRhumb();
-    }
-
-    /**
-     * TODO active subwindow is the selected one? EAST etc. should maybe put in subwindow itself
-     *
-     * A subwindow that is currently selected for moving or resizing
-     */
-    public enum Border {
-        NORTH( 0b0001),
-        EAST(  0b0010),
-        SOUTH( 0b0100),
-        WEST(  0b1000);
-
-        public final int code;
-
-        public int and(int x) {
-            return code & x;
-        }
-
-        public int or(int x) {
-            return code | x;
-        }
-
-        Border(int code) {
-            this.code = code;
-        }
     }
 
     /**
@@ -189,29 +156,6 @@ public class DiagramController {
         catch(InvalidAddMessageException addException){
             throw addException;
         }
-    }
-        /**
-         * A method that returns the editing mode of the selectionManager
-         */
-    public boolean isEditing() {
-        return false;
-        // return getDiagram().getActiveComponent() != null;
-    };
-
-    /**
-     * A method that terminates the editing
-     */
-    public void abortEditing(){
-        /*
-        if (getDiagram().getActiveComponent() != null){
-            try {
-                getDiagram().getActiveComponent().setLabel(getDiagram().getTemporaryLabel());
-                getDiagram().setActiveComponent(null);
-                getPaintBoard().refresh();
-            }
-            catch (InvalidLabelException e) {}
-        }
-        */
     }
 
     /**
@@ -255,6 +199,30 @@ public class DiagramController {
     public void deleteSelection(){
         getActiveSubwindow().deleteSelection();
         this.getPaintBoard().refresh();
+    }
+
+    /**
+     * A method that returns the editing mode of the selectionManager
+     */
+    public boolean isEditing() {
+        return false;
+        // return getDiagram().getActiveComponent() != null;
+    };
+
+    /**
+     * A method that terminates the editing
+     */
+    public void abortEditing(){
+        /*
+        if (getDiagram().getActiveComponent() != null){
+            try {
+                getDiagram().getActiveComponent().setLabel(getDiagram().getTemporaryLabel());
+                getDiagram().setActiveComponent(null);
+                getPaintBoard().refresh();
+            }
+            catch (InvalidLabelException e) {}
+        }
+        */
     }
 
     /**

@@ -144,7 +144,7 @@ public class EventHandler {
         try {
 
             // Move party
-            getDiagramController().movePartyTo(x,y);
+            getDiagramController().moveParty(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
 
             // Move party was successful, keep track of the changes
             dragOperationType = DragOperationType.DRAG_DIAGRAM;

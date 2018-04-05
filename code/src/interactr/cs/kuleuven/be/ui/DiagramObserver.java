@@ -18,7 +18,7 @@ public interface DiagramObserver {
      *
      * @param diagram The diagram that was updated.
      * @param updateType The type of update.
-     * @param parameters The parameters for the update type.
+     * @param parameters The parameters for the update.
      */
     public void diagramDidUpdate(Diagram diagram, DiagramUpdateType updateType, HashMap<String, Object> parameters);
 
