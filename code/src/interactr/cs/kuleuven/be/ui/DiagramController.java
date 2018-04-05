@@ -86,10 +86,10 @@ public class DiagramController {
      * @throws NoSuchWindowException If no subwindow lies at the given coordinates.
      */
     public void activateSubWindow(int x, int y) throws NoSuchWindowException {
-        SubWindow sub = subWindows.stream().filter( s -> s.getFrame().encloses(x,y)).findFirst().orElse(null);
-        if (sub == null)
+        SubWindow subWindow = getSubWindowAt(x, y);
+        if (subWindow == null)
             throw new NoSuchWindowException();
-        subWindows.add(0, subWindows.remove(subWindows.indexOf(sub)));
+        subWindows.add(0, subWindows.remove(subWindows.indexOf(subWindow)));
     }
 
     /**
@@ -99,10 +99,10 @@ public class DiagramController {
      * @param fromY The start y coordinate for the move.
      * @param toX The end x coordinate for the move.
      * @param toY The end y coordinate for the move.
+     * @throws InvalidMoveWindowException The resize operation was not successful.
      */
     public void moveSubWindow(int fromX, int fromY, int toX, int toY) {
-        // TODO Check if the fromX fromY corresponds to a title bar of a subwindow
-        getActiveSubwindow().moveSubWindowFrame(toX, toY);
+        getActiveSubwindow().move(fromX, fromY, toX, toY);
     }
 
     /**
@@ -112,10 +112,21 @@ public class DiagramController {
      * @param fromY The start y coordinate for the resize.
      * @param toX The end x coordinate for the resize.
      * @param toY The end y coordinate for the resize.
+     * @throws InvalidResizeWindowException The resize operation was not successful.
      */
     public void resizeSubWindow(int fromX, int fromY, int toX, int toY) {
-        // TODO Check if the fromX fromY corresponds to a border of a subwindow
-        getActiveSubwindow().resizeSubWindowFrame(toX, toY);
+        getActiveSubwindow().resize(fromX, fromY, toX, toY);
+    }
+
+    /**
+     * Get the subwindow at the given coordinates.
+     *
+     * @param x The x coordinate to look at.
+     * @param y The y coordinate to look at.
+     * @return The subwindow at the given coordinates or null if there is none.
+     */
+    private SubWindow getSubWindowAt(int x, int y) {
+        return subWindows.stream().filter( s -> s.getFrame().encloses(x,y)).findFirst().orElse(null);
     }
 
     /**

@@ -3,6 +3,7 @@ package interactr.cs.kuleuven.be.ui;
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.Party;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
+import interactr.cs.kuleuven.be.exceptions.InvalidMoveWindowException;
 import interactr.cs.kuleuven.be.exceptions.InvalidResizeWindowException;
 import interactr.cs.kuleuven.be.exceptions.NoSuchPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.Colour;
@@ -124,14 +125,18 @@ public class SubWindow implements DiagramObserver {
     }
 
     /**
-     * Moves the frame of this subwindow horizontally and/or vertically.
+     * Moves the this subwindow horizontally and/or vertically.
      *
-     * @param dx Quantifies the horizontal translation.
-     * @param dy Quantifies the vertical translation.
+     * @param fromX The start x coordinate for the move.
+     * @param fromY The start y coordinate for the move.
+     * @param toX The end x coordinate for the move.
+     * @param toY The end y coordinate for the move.
      */
-    public void moveFrame(int dx, int dy){
-        getFrame().setX(getFrame().getX() + dx);
-        getFrame().setY(getFrame().getY() + dy);
+    public void move(int fromX, int fromY, int toX, int toY) throws InvalidMoveWindowException {
+        if (!titleBarEncloses(fromX, fromY))
+            throw new InvalidMoveWindowException();
+        getFrame().setX(getFrame().getX() + (toX - fromX));
+        getFrame().setY(getFrame().getY() + (toY - fromY));
     }
 
     /**
