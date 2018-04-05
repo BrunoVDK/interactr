@@ -31,8 +31,10 @@ public class DiagramController {
      * Toggle the diagram view in this controller's active subwindow
      */
     public void toggleActiveSubWindowView() {
-        getActiveSubwindow().nextView();
-        getPaintBoard().refresh();
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().nextView();
+            getPaintBoard().refresh();
+        }
     }
 
     /**
@@ -47,7 +49,8 @@ public class DiagramController {
      * Display the currently active subwindow of this diagram controller.
      */
     public void displaySubWindow() {
-        getActiveSubwindow().displayView(getPaintBoard());
+        if (getActiveSubwindow() != null)
+            getActiveSubwindow().displayView(getPaintBoard());
     }
 
     /**
@@ -143,8 +146,10 @@ public class DiagramController {
      */
     public void addPartyAt(int x, int y) throws InvalidAddPartyException {
         try {
-            getActiveSubwindow().addPartyAt(x, y);
-            getPaintBoard().refresh();
+            if (getActiveSubwindow() != null) {
+                getActiveSubwindow().addPartyAt(x, y);
+                getPaintBoard().refresh();
+            }
         }
         catch (InvalidAddPartyException addException){
             throw addException;
@@ -176,8 +181,10 @@ public class DiagramController {
      * @param y The y coordinate of the component that is to be selected.
      */
     public void selectComponentAt(int x, int y) {
-        getActiveSubwindow().selectComponentAt(x, y);
-        getPaintBoard().refresh();
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().selectComponentAt(x, y);
+            getPaintBoard().refresh();
+        }
     }
 
     /**
@@ -187,8 +194,9 @@ public class DiagramController {
      * @param y The y coordinate for the party.
      * @return The party at the given coordinate, or null if there is none.
      */
-    public void switchPartyTypeAt(int x,int y ) {
-        getActiveSubwindow().switchTypeOfPartyAt(x,y);
+    public void switchPartyTypeAt(int x, int y) {
+        if (getActiveSubwindow() != null)
+            getActiveSubwindow().switchTypeOfPartyAt(x,y);
     }
 
     /**
@@ -199,17 +207,21 @@ public class DiagramController {
      * @param toX The end x coordinate for the add.
      * @param toY The end y coordinate for the add.
      */
-    public void moveParty(int fromX, int fromY, int toX, int toY){
-        getActiveSubwindow().moveParty(fromX, fromY, toX, toY);
-        getPaintBoard().refresh();
+    public void moveParty(int fromX, int fromY, int toX, int toY) {
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().moveParty(fromX, fromY, toX, toY);
+            getPaintBoard().refresh();
+        }
     }
 
     /**
      * Removes all components in the current selection from this controller's diagram.
      */
-    public void deleteSelection(){
-        getActiveSubwindow().deleteSelection();
-        this.getPaintBoard().refresh();
+    public void deleteSelection() {
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().deleteSelection();
+            getPaintBoard().refresh();
+        }
     }
 
     /**

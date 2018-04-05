@@ -161,7 +161,7 @@ public class EventHandler {
      * @param y The y coordinate of the mouse release.
      */
     private void handleMouseReleased(int x, int y) {
-        if (dragOperationType == DragOperationType.DRAG_NONE)
+        if (dragOperationType == DragOperationType.DRAG_VALID)
             getDiagramController().addMessageFrom(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
         dragOperationType = DragOperationType.DRAG_NONE;
     }
