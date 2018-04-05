@@ -56,7 +56,7 @@ public class DiagramController {
      * @return The diagram view of this controller that's currently active.
      */
     public SubWindow getActiveSubwindow(){
-        return subWindows.get(0);
+        return (subWindows.isEmpty() ? null : subWindows.get(0));
     }
 
     /**
@@ -98,8 +98,8 @@ public class DiagramController {
      * @param x
      * @param y
      */
-    public void resizeSubWindowTo(int x, int y) {
-        getActiveSubwindow().resizeSubWindowFrame(x,y);
+    public void resizeSubWindow(int fromX, int fromY, int toX, int toY) {
+        getActiveSubwindow().resizeSubWindowFrame(toX, toY);
     }
 
     /**
@@ -108,8 +108,8 @@ public class DiagramController {
      * @param x The x coordinate to move the subwindow to.
      * @param y The y coordinate to move the subwindow to.
      */
-    public void moveSubWindowTo(int x, int y){
-        getActiveSubwindow().moveSubWindowFrame(x,y);
+    public void moveSubWindow(int fromX, int fromY, int toX, int toY){
+        getActiveSubwindow().moveSubWindowFrame(toX, toY);
     }
 
     /**
