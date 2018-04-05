@@ -162,7 +162,7 @@ public class DiagramController {
      * The x & y coordinates of the component.
      *
      * @param x The x coordinate of the component that is to be selected.
-     * @param y The y coordinate of the commponent that is to be selected.
+     * @param y The y coordinate of the component that is to be selected.
      */
     public void selectComponentAt(int x, int y) {
         getActiveSubwindow().selectComponentAt(x, y);
@@ -176,7 +176,7 @@ public class DiagramController {
      * @param y The y coordinate for the party.
      * @return The party at the given coordinate, or null if there is none.
      */
-    public void switchPartyTypeAt(int x,int y ){
+    public void switchPartyTypeAt(int x,int y ) {
         getActiveSubwindow().switchTypeOfPartyAt(x,y);
     }
 

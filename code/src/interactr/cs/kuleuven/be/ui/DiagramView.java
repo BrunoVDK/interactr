@@ -444,7 +444,7 @@ public class DiagramView implements DiagramObserver {
     }
 
     @Override
-    public void diagramDidUpdate(Diagram diagram, String updateType, HashMap<String, Object> parameters) {
+    public void diagramDidUpdate(Diagram diagram, DiagramUpdateType updateType, HashMap<String, Object> parameters) {
         // TODO
     }
 

@@ -3,14 +3,13 @@ package interactr.cs.kuleuven.be.ui;
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.Party;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
+import interactr.cs.kuleuven.be.exceptions.InvalidResizeWindowException;
 import interactr.cs.kuleuven.be.exceptions.NoSuchPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.Colour;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
-import static interactr.cs.kuleuven.be.ui.DiagramController.Border.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
 
 /**
  * A class of subwindows for displaying diagram views.
@@ -90,6 +89,49 @@ public class SubWindow implements DiagramObserver {
             throw new IllegalArgumentException("The height cannot be smaller than 1.");
         this.frame.setWidth(width);
         this.frame.setHeight(height);
+    }
+
+    /**
+     * Resize this subwindow from the given start coordinate to the given end coordinate.
+     *
+     * @param fromX The start x coordinate for the resize.
+     * @param fromY The start y coordinate for the resize.
+     * @param toX The end x coordinate for the resize.
+     * @param toY The end y coordinate for the resize.
+     */
+    public void resize(int fromX, int fromY, int toX, int toY) throws InvalidResizeWindowException {
+
+        // Get the borders at the start coordinates
+        int border = getBordersAt(fromX, fromY);
+        if (border == 0) // No resize can be done from the given start coordinates (no border)
+            throw new InvalidResizeWindowException();
+
+        // Resize the frame based on the end coordinates
+        Rectangle frame = this.getFrame();
+        if ((border & SubWindowBorder.NORTH.code) != 0) {
+            frame.setY(frame.getY() + (fromY - frame.getY()));
+            frame.setWidth(fromX - getFrame().getX());
+        }
+        if ((border & SubWindowBorder.EAST.code) != 0) {
+            frame.setX(frame.getX() + (fromX - frame.getX()));
+            frame.setWidth((getFrame().getWidth() + (Math.abs(getFrame().getX() - fromX))));
+        }
+        if ((border & SubWindowBorder.SOUTH.code) != 0)
+            frame.setHeight(fromY - getFrame().getY());
+        if ((border & SubWindowBorder.WEST.code) != 0)
+            frame.setWidth(fromX - getFrame().getX());
+
+    }
+
+    /**
+     * Moves the frame of this subwindow horizontally and/or vertically.
+     *
+     * @param dx Quantifies the horizontal translation.
+     * @param dy Quantifies the vertical translation.
+     */
+    public void moveFrame(int dx, int dy){
+        getFrame().setX(getFrame().getX() + dx);
+        getFrame().setY(getFrame().getY() + dy);
     }
 
     /**
@@ -180,7 +222,9 @@ public class SubWindow implements DiagramObserver {
         paintBoard.setClipRect(frame); // Make sure no drawing is done outside the frame
         getActiveView().display(paintBoard); // Draw view contents
 
-        // Draw the sub window's frame
+        // Draw the title bar
+
+        // Draw the frame
         paintBoard.setColour(Colour.GRAY);
         paintBoard.fillRectangle(frame.getX(), frame.getY(), frame.getWidth(), frame.getHeight());
         paintBoard.setColour(Colour.BLACK);
@@ -213,85 +257,39 @@ public class SubWindow implements DiagramObserver {
     private final static int TITLE_BAR_HEIGHT = 23;
 
     /**
-     * A method that returns true if the given x and y coordinate encloses the title bar of the subwindow
-     * @param x
-     * @param y
-     * @return
-     */
-    public boolean enclosesTitleBar(int x, int y){
-        if( this.getFrame().encloses(x,y) && y < getFrame().getY() + TITLE_BAR_HEIGHT)
-            return true;
-        else
-            return false;
-    }
-
-    /**
-     * A method that checks if there are borders where the click happens if so, set the moveRhumb correctly
-     * EAST *= 2
-     * SOUTH *= 3
-     * WEST *= 5
+     * Returns whether or not the given coordinates lie within this subwindow's title bar.
      *
-     * @param x
-     * @param y
-     * @return
+     * @param x The x coordinate to check with.
+     * @param y The y coordinate to check with.
+     * @return True if and only if the given coordinates lie within this subwindow's title bar.
      */
-    public boolean enclosesBorders(int x, int y){
-        if(Math.abs(getFrame().getX() - x) <= 10)
-            resizeRhumb = WEST.or(resizeRhumb);
-        if(Math.abs( ( getFrame().getY() + getFrame().getHeight() ) - y ) <= 10)
-            resizeRhumb = SOUTH.or(resizeRhumb);
-        if(Math.abs( ( getFrame().getX() + getFrame().getWidth() ) - x ) <= 10)
-            resizeRhumb = EAST.or(resizeRhumb);
-        if(resizeRhumb == 1)
-            return false;
-        else
-            return true;
+    public boolean titleBarEncloses(int x, int y) {
+        return (this.getFrame().encloses(x,y) && y < getFrame().getY() + TITLE_BAR_HEIGHT);
     }
 
     /**
-     * Actually resizes the frame correctly with teh given x and y
-     * @param x
-     * @param y
+     * Returns a code for the borders that lies at the given coordinate.
+     *
+     * @param x The x coordinate to check with.
+     * @param y The y coordinate to check with.
+     * @return An integer representing the borders lying at the given coordinates.
      */
-    public void resizeSubWindowFrame(int x, int y){
-        if(EAST.and(resizeRhumb) != 0)
-            getFrame().setWidth(x - getFrame().getX());
-
-        if(SOUTH.and(resizeRhumb) != 0)
-            getFrame().setHeight(y - getFrame().getY());
-
-        if(WEST.and(resizeRhumb) != 0) {
-            getFrame().setX(x);
-            getFrame().setWidth((getFrame().getWidth() + (Math.abs(getFrame().getX() - x))));
-        }
+    public int getBordersAt(int x, int y) {
+        int borderCode = 0;
+        if (Math.abs(getFrame().getX() - x) <= 10)
+            borderCode |= SubWindowBorder.WEST.code;
+        if (Math.abs(getFrame().getY() - y) <= 10)
+            borderCode |= SubWindowBorder.NORTH.code;
+        if (Math.abs( ( getFrame().getY() + getFrame().getHeight() ) - y ) <= 10)
+            borderCode |= SubWindowBorder.SOUTH.code;
+        if (Math.abs( ( getFrame().getX() + getFrame().getWidth() ) - x ) <= 10)
+            borderCode |= SubWindowBorder.EAST.code;
+        return borderCode;
     }
-
-    /**
-     * A method that acutally moves this subwindow
-     * @param x
-     * @param y
-     */
-    public void moveSubWindowFrame(int x, int y){
-        //TODO niet absoluut maar relatief veranderen
-        getFrame().setX(x);
-        getFrame().setY(y);
-
-    }
-
-    /**
-     * A method that resets the moveRhumb to the original value 1
-     */
-    public void resetResizeRhumb() {
-        resizeRhumb = 1;
-    }
-
-    /**
-     * An int that defines which ways to resize the borders
-     */
-    private int resizeRhumb = 1;
 
     @Override
-    public void diagramDidUpdate(Diagram diagram, String updateType, HashMap<String, Object> parameters) {
+    public void diagramDidUpdate(Diagram diagram, DiagramUpdateType updateType, HashMap<String, Object> parameters) {
         // TODO
     }
+
 }

@@ -18,19 +18,6 @@ public enum SubWindowBorder {
      */
     public final int code;
 
-    public int and(int x) {
-        return code & x;
-    }
-
-    public int or(int x) {
-        return code | x;
-    }
-
-    /**
-     * Initialize a new subwindow border with given code.
-     *
-     * @param code The code for the new border.
-     */
     SubWindowBorder(int code) {
         this.code = code;
     }
