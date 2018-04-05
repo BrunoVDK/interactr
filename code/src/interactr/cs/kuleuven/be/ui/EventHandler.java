@@ -39,7 +39,7 @@ public class EventHandler {
      * @param y The y coordinate for the mouse event.
      * @param clickCount The amount of clicks for this mouse events.
      */
-    public void handleMouseEvent(int id, int x, int y, int clickCount) throws IllegalArgumentException{
+    public void handleMouseEvent(int id, int x, int y, int clickCount) throws IllegalArgumentException {
 
         // Mouse events are ignored when the diagram controller is editing
         if (getDiagramController() != null && ! getDiagramController().isEditing()) {
@@ -62,7 +62,7 @@ public class EventHandler {
             }
 
             //If there is no party to move save the exception to get the coordenate out of
-            if(id == MouseEvent.MOUSE_PRESSED){
+            if (id == MouseEvent.MOUSE_PRESSED){
                 this.lastPressedX = x;
                 this.lastPressedY = y;
 

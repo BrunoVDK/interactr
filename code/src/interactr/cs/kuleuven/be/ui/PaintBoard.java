@@ -46,7 +46,7 @@ public class PaintBoard {
         context.setFont(defaultFont);
         // Alternatively, ask for figures (basic geometric shapes) to draw and
         //  draw them with private methods
-        getDiagramController().displayView();
+        getDiagramController().displayAllSubWindows();
     }
 
     /**

@@ -87,25 +87,10 @@ public class DiagramController {
      * @throws NoSuchWindowException If no subwindow lies at the given coordinates.
      */
     public void activateSubWindow(int x, int y) throws NoSuchWindowException {
-        SubWindow sub = subWindows.stream().filter( s -> s.getFrame().encloses(x,y)).findFirst().get();
+        SubWindow sub = subWindows.stream().filter( s -> s.getFrame().encloses(x,y)).findFirst().orElse(null);
         if (sub == null)
             throw new NoSuchWindowException();
         subWindows.add(0, subWindows.remove(subWindows.indexOf(sub)));
-    }
-
-    /**
-     * TODO probably not necessary? Just keep track of the currently active subwindow and only do resize *to*
-     *
-     * @param x
-     * @param y
-     */
-    public void resizeSubWindowAt(int x, int y){
-        SubWindow sub = subWindows.stream().filter( s -> s.enclosesBorders(x,y)).findFirst().get();
-        if(sub != null)
-            selectedSubWindow = sub;
-        else
-            throw new InvalidResizeWindowException();
-
     }
 
     /**
@@ -115,21 +100,7 @@ public class DiagramController {
      * @param y
      */
     public void resizeSubWindowTo(int x, int y) {
-        selectedSubWindow.resizeSubWindowFrame(x,y);
-    }
-
-    /**
-     * TODO probably not necessary? Just keep track of the currently active subwindow and only do move *to*
-     *
-     * @param x
-     * @param y
-     */
-    public void moveSubWindowAt(int x,int y){
-        SubWindow sub = subWindows.stream().filter( s -> s.enclosesTitleBar(x,y)).findFirst().get();
-        if(sub != null)
-            selectedSubWindow = sub;
-        else
-            throw new InvalidMoveWindowException();
+        getActiveSubwindow().resizeSubWindowFrame(x,y);
     }
 
     /**
@@ -139,7 +110,7 @@ public class DiagramController {
      * @param y The y coordinate to move the subwindow to.
      */
     public void moveSubWindowTo(int x, int y){
-        selectedSubWindow.moveSubWindowFrame(x,y);
+        getActiveSubwindow().moveSubWindowFrame(x,y);
     }
 
     /**
@@ -148,7 +119,7 @@ public class DiagramController {
      * A method that calls the reset operation of the just moved party
      */
     public void resetResizeRhumb(){
-        selectedSubWindow.resetResizeRhumb();
+        getActiveSubwindow().resetResizeRhumb();
     }
 
     /**
@@ -156,7 +127,6 @@ public class DiagramController {
      *
      * A subwindow that is currently selected for moving or resizing
      */
-    private SubWindow selectedSubWindow;
     public static final int EAST = 2;
     public static final int SOUTH = 3;
     public static final int WEST = 5;
@@ -203,12 +173,16 @@ public class DiagramController {
         /**
          * A method that returns the editing mode of the selectionManager
          */
-    public boolean isEditing() { return getDiagram().getActiveComponent() != null;};
+    public boolean isEditing() {
+        return false;
+        // return getDiagram().getActiveComponent() != null;
+    };
 
     /**
      * A method that terminates the editing
      */
     public void abortEditing(){
+        /*
         if (getDiagram().getActiveComponent() != null){
             try {
                 getDiagram().getActiveComponent().setLabel(getDiagram().getTemporaryLabel());
@@ -217,6 +191,7 @@ public class DiagramController {
             }
             catch (InvalidLabelException e) {}
         }
+        */
     }
 
     /**
@@ -276,7 +251,7 @@ public class DiagramController {
      * @param c The char that is to be appended.
      */
     public void appendChar(char c){
-        this.getDiagram().setTemporaryLabel(this.getDiagram().getTemporaryLabel() + c);
+        // this.getDiagram().setTemporaryLabel(this.getDiagram().getTemporaryLabel() + c);
         getPaintBoard().refresh();
     }
 
@@ -284,26 +259,14 @@ public class DiagramController {
      * Removes the last char from the label of the active component.
      */
     public void removeLastChar() {
+        /*
         String temp = this.getDiagram().getTemporaryLabel();
         if (temp.length() > 0) {
             this.getDiagram().setTemporaryLabel(temp.substring(0, temp.length()-1));
             getPaintBoard().refresh();
         }
+        */
     }
-
-    /**
-     * Returns the diagram associated with this diagram controller.
-     *
-     * @return The diagram associated with this diagram controller.
-     */
-    public Diagram getDiagram() {
-        return this.diagram;
-    }
-
-    /**
-     * The diagram associated with this diagram handler.
-     */
-    private Diagram diagram;
 
     /**
      * Returns the paint board associated with this diagram controller.
@@ -325,5 +288,10 @@ public class DiagramController {
      * Registers the paint board associated with this controller.
      */
     private PaintBoard paintBoard;
+
+    // Entry point
+    public static void main(String[] args) { // No documentation
+        new DiagramController();
+    }
 
 }
