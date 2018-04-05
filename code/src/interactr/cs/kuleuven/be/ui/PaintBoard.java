@@ -114,6 +114,18 @@ public class PaintBoard {
     }
 
     /**
+     * Translate the origin of this paintboard to the given coordinate.
+     *  All drawing in subsequent calls will be relative to this new origin.
+     *
+     * @param x The new x coordinate for the origin.
+     * @param y The new y coordinate for the origin.
+     */
+    public void translateOrigin(int x, int y) {
+        if (currentContext != null)
+            currentContext.translate(x, y);
+    }
+
+    /**
      * Sets the colour for this paint board.
      *
      * @param colour The colour to use for this paint board.
