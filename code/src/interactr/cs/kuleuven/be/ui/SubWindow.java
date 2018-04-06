@@ -5,11 +5,7 @@ import interactr.cs.kuleuven.be.exceptions.*;
 import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.purecollections.PMap;
 import interactr.cs.kuleuven.be.ui.geometry.Colour;
-import interactr.cs.kuleuven.be.ui.geometry.Point;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * A class of subwindows for displaying diagram views.
@@ -36,21 +32,24 @@ public class SubWindow implements DiagramObserver {
      * @param subWindow The subwindow that is to be duplicated by this subwindow.
      */
     SubWindow(SubWindow subWindow) {
-        setFrame(new Rectangle(0, 0, 400, 400));
-        Diagram adoptedDiagram = null;
-        if (subWindow == null || subWindow.getDiagram() == null)
-            adoptedDiagram = new Diagram();
-        else
-            adoptedDiagram = subWindow.getDiagram();
-        views.add(new SequenceView(adoptedDiagram));
-        views.add(new CommunicationView(adoptedDiagram));
+        if (subWindow == null || subWindow.getDiagram() == null) {
+            setFrame(new Rectangle(0, 0, 400, 400));
+            Diagram adoptedDiagram = new Diagram();
+            views = views.plus(new SequenceView(adoptedDiagram));
+            views = views.plus(new CommunicationView(adoptedDiagram));
+        }
+        else {
+            setFrame(new Rectangle(subWindow.getFrame()));
+            for (DiagramView view : subWindow.getViews())
+                views = views.plus(view.clone());
+        }
     }
 
     /**
      * Returns the diagram associated with this subwindow.
      */
     public Diagram getDiagram() {
-        return null;
+        return (views.size() == 0 ? null : views.get(0).getDiagram());
     }
 
     /**
@@ -367,9 +366,18 @@ public class SubWindow implements DiagramObserver {
     private int activeViewIndex = 0;
 
     /**
+     * Returns the views in this subwindow.
+     *
+     * @return The diagram views held by this subwindow.
+     */
+    public PList<DiagramView> getViews() {
+        return views;
+    }
+
+    /**
      * A list of diagram views held by this subwindow.
      */
-    private ArrayList<DiagramView> views = new ArrayList<DiagramView>();
+    private PList<DiagramView> views = PList.<DiagramView>empty();
 
     /**
      * Returns whether or not the given coordinates lie within this subwindow's title bar.

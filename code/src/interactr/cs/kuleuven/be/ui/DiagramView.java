@@ -18,7 +18,7 @@ import java.util.HashMap;
  * @author Team 25
  * @version 1.0
  */
-public class DiagramView implements DiagramObserver {
+public class DiagramView implements DiagramObserver, Cloneable {
 
     /**
      * Initialize this new diagram view with the given diagram.
@@ -535,6 +535,42 @@ public class DiagramView implements DiagramObserver {
         // Link resultLink = createLinkForMessage(resultMessage, fromX, fromY, toX, toY);
         links = links.plus(invocation, invocationLink);
         // links = links.plus(resultMessage, resultLink);
+    }
+
+    @Override
+    public DiagramView clone() {
+        final DiagramView clone;
+        try {
+
+            clone = (DiagramView)super.clone();
+            clone.setDiagram(getDiagram());
+
+            // TODO MAKE DEEP COPY OF FIGURES THEMSELVES
+
+            // Register parties
+            for (Party party : figures.keySet()) {
+                Figure partyFigure = figures.get(party);
+                clone.registerParty(party, new Point(partyFigure.getX(), partyFigure.getY()));
+            }
+
+            // Register messages
+            /*
+            for (int i=0 ; i<diagram.getNbMessages() ; i++) { // Drawing is done in pairs
+
+                Message message = diagram.getMessageAtIndex(i);
+                Link messageLink = linkForMessage(message);
+                int associatedIndex = diagram.getIndexOfAssociatedMessage(i);
+                Message associatedMessage = diagram.getMessageAtIndex(associatedIndex);
+                Link associatedMessageLink = linkForMessage(diagram.getMessageAtIndex(associatedIndex));
+
+                clone.registerMessages(message, associatedMessage, );
+
+            }
+            */
+
+        }
+        catch (CloneNotSupportedException ignored) {throw new RuntimeException("Failed to clone diagram view.");}
+        return clone;
     }
 
     /**
