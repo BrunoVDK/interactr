@@ -2,6 +2,7 @@ package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
+import interactr.cs.kuleuven.be.exceptions.InvalidMovePartyException;
 import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.ui.geometry.*;
 
@@ -152,7 +153,10 @@ public class SequenceView extends DiagramView {
 
     @Override
     public void moveParty(int fromX, int fromY, int toX, int toY) {
-        super.moveParty(fromX, 5, toX, 5);
+        if (fromY >= PARTY_ROW_HEIGHT)
+            throw new InvalidMovePartyException();
+        else
+            super.moveParty(fromX, 5, toX, 5);
     }
 
     @Override
