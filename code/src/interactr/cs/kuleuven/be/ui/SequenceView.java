@@ -3,10 +3,7 @@ package interactr.cs.kuleuven.be.ui;
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.purecollections.PList;
-import interactr.cs.kuleuven.be.ui.geometry.Colour;
-import interactr.cs.kuleuven.be.ui.geometry.Figure;
-import interactr.cs.kuleuven.be.ui.geometry.Link;
-import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
+import interactr.cs.kuleuven.be.ui.geometry.*;
 
 /**
  * A class of sequence diagram views. Sequence diagram views display diagrams
@@ -155,11 +152,6 @@ public class SequenceView extends DiagramView {
     }
 
     @Override
-    public void registerParty(Party party, int x, int y) {
-        super.registerParty(party, x, 5);
-    }
-
-    @Override
     public void moveParty(Party party, int x, int y){
         super.moveParty(party, x, 5);
     }
@@ -205,11 +197,32 @@ public class SequenceView extends DiagramView {
     }
 
     @Override
-    public void registerMessages(InvocationMessage invocation, ResultMessage resultMessage, int fromX, int fromY, int toX, int toY) {
-        int min = Math.min(fromY, toY);
-        Link invocationLink = createLinkForMessage(invocation, fromX, min, toX, min);
-        int max = Math.max(fromY, toY);
-        Link resultLink = createLinkForMessage(resultMessage, fromX, min + MESSAGE_ROW_HEIGHT, toX, min + MESSAGE_ROW_HEIGHT);
+    public InvocationMessage getInvocationMessageForCoordinates(int fromX, int fromY, int toX, int toY) {
+        Party fromParty = getParty(fromX, 10), toParty = getParty(toX, 10);
+        if (fromParty == null || toParty == null)
+            return null;
+        Figure fromFigure = figureForParty(fromParty), toFigure = figureForParty(toParty);
+        if (fromFigure == null || toFigure == null)
+            return null;
+        try {
+            return new InvocationMessage(fromParty, toParty);
+        }
+        catch (Exception ignored) {}
+        return null;
+    }
+
+    @Override
+    public void registerParty(Party party, Point coordinates) {
+        coordinates.setY(5);
+        super.registerParty(party, coordinates);
+    }
+
+    @Override
+    public void registerMessages(InvocationMessage invocation, ResultMessage resultMessage, Point startCoordinates, Point endCoordinates) {
+        int min = Math.min(startCoordinates.getY(), endCoordinates.getY());
+        Link invocationLink = createLinkForMessage(invocation, startCoordinates.getX(), min, endCoordinates.getX(), min);
+        int max = Math.max(startCoordinates.getY(), endCoordinates.getY());
+        Link resultLink = createLinkForMessage(resultMessage, startCoordinates.getX(), min + MESSAGE_ROW_HEIGHT, endCoordinates.getX(), min + MESSAGE_ROW_HEIGHT);
         links = links.plus(invocation, invocationLink);
         links = links.plus(resultMessage, resultLink);
         int minY = min + MESSAGE_ROW_HEIGHT;
@@ -222,22 +235,6 @@ public class SequenceView extends DiagramView {
                 minY = minY + MESSAGE_ROW_HEIGHT;
             }
         }
-    }
-
-    @Override
-    public InvocationMessage getInvocationMessageForCoordinates(int fromX, int fromY, int toX, int toY) {
-        Party fromParty = getParty(fromX, 10), toParty = getParty(toX, 10);
-        if (fromParty == null || toParty == null)
-            return null;
-        Figure fromFigure = figureForParty(fromParty), toFigure = figureForParty(toParty);
-        if (fromFigure == null || toFigure == null)
-            return null;
-        try {
-            InvocationMessage message = new InvocationMessage(fromParty, toParty);
-            return message;
-        }
-        catch (Exception e) {}
-        return null;
     }
 
     /**

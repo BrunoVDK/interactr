@@ -127,21 +127,23 @@ public class DiagramView implements DiagramObserver {
      * @param y The y coordinate of the party.
      */
     public void switchTypeOfParty(int x, int y) {
-        Party party = getParty(x,y);
-        Party newParty = party.proposedReplacement();
-        // TODO
-    }
+        Party oldParty = getParty(x,y);
+        if (oldParty != null) {
 
-    /**
-     * Registers the given party at the given coordinate.
-     *
-     * @param party The party to register.
-     * @param x The x coordinate of the party that is to be registered.
-     * @param y The y coordinate of the party that is to be registered.
-     */
-    public void registerParty(Party party, int x, int y) {
-        if (!figures.containsKey(party))
-            figures = figures.plus(party, createFigureForParty(party, x, y));
+            // Replace the party in the diagram
+            Party newParty = oldParty.proposedReplacement();
+            diagram.replaceParty(oldParty, newParty);
+            PMap<String , Object> notificationParameters = PMap.<String, Object>empty();
+
+            // Post a notification of the update
+            notificationParameters = notificationParameters.plus("oldParty", oldParty);
+            notificationParameters = notificationParameters.plus("newParty", newParty);
+            DiagramNotificationCenter.defaultCenter().postNotification(
+                    diagram,
+                    DiagramUpdateType.REPLACE_PARTY,
+                    notificationParameters);
+
+        }
     }
 
     /**
@@ -388,25 +390,6 @@ public class DiagramView implements DiagramObserver {
     }
 
     /**
-     * Registers the given invocation message and result message in this diagram view,
-     *  using the given start/end coordinates.
-     *
-     * @param invocation The invocation message that is to be registered.
-     * @param resultMessage The result message that is to be registered.
-     * @param fromX The start x coordinate for the invocation message's link.
-     * @param fromY The start y coordinate for the invocation message's link.
-     * @param toX The end x coordinate for the invocation message's link.
-     * @param toY The end y coordinate for the invocation message's link.
-     */
-    public void registerMessages(InvocationMessage invocation, ResultMessage resultMessage, int fromX, int fromY, int toX, int toY) {
-        // Result messages are ignored!
-        Link invocationLink = createLinkForMessage(invocation, fromX, fromY, toX, toY);
-        // Link resultLink = createLinkForMessage(resultMessage, fromX, fromY, toX, toY);
-        links = links.plus(invocation, invocationLink);
-        // links = links.plus(resultMessage, resultLink);
-    }
-
-    /**
      * Returns the invocation message representing the given coordinates.
      *
      * @param fromX The start x coordinate for the message's link.
@@ -434,8 +417,87 @@ public class DiagramView implements DiagramObserver {
     }
 
     @Override
-    public void diagramDidUpdate(Diagram diagram, DiagramUpdateType updateType, HashMap<String, Object> parameters) {
-        // TODO
+    public void diagramDidUpdate(Diagram diagram, DiagramUpdateType updateType, PMap<String, Object> parameters) {
+        switch (updateType) {
+            case ADD_PARTY:
+                Object party = parameters.get("party"), coordinates = parameters.get("coordinates");
+                if (party instanceof Party && coordinates instanceof Point)
+                    registerParty((Party)party, (Point)coordinates);
+                break;
+            case ADD_MESSAGE:
+                Object invocationMessage = parameters.get("invocation"), resultMessage = parameters.get("result");
+                Object startCoordinates = parameters.get("startCoordinates"), endCoordinates = parameters.get("endCoordinates");
+                if (invocationMessage instanceof InvocationMessage
+                        && resultMessage instanceof ResultMessage
+                        && startCoordinates instanceof Point
+                        && endCoordinates instanceof Point)
+                    registerMessages((InvocationMessage)invocationMessage,
+                            (ResultMessage)resultMessage,
+                            (Point)startCoordinates,
+                            (Point)endCoordinates);
+                break;
+            case REPLACE_PARTY:
+                Object oldParty = parameters.get("oldParty"), newParty = parameters.get("newParty");
+                if (oldParty instanceof Party && newParty instanceof Party)
+                    registerPartyReplace((Party)oldParty, (Party)newParty);
+                break;
+            case DELETE_PARTY:
+                // Synchronize parties
+            case DELETE_MESSAGE:
+                // Synchronize messages
+                break;
+        }
+    }
+
+    /**
+     * Registers the given party at the given coordinate.
+     *
+     * @param party The party to register.
+     * @param coordinates The coordinates of the newly created party.
+     */
+    protected void registerParty(Party party, Point coordinates) {
+        if (!figures.containsKey(party))
+            figures = figures.plus(party, createFigureForParty(party, coordinates.getX(), coordinates.getY()));
+    }
+
+    /**
+     * Registers a replacement of the given old party by the given new party.
+     *
+     * @param oldParty The old party to be replaced.
+     * @param newParty The party to replace the old party with.
+     */
+    protected void registerPartyReplace(Party oldParty, Party newParty) {
+        Figure oldFigure = figureForParty(oldParty);
+        if (oldFigure == null)
+            return;
+        Figure newFigure = createFigureForParty(newParty, 0, 0);
+        newFigure.setX(oldFigure.getX());
+        newFigure.setY(oldFigure.getY());
+        newFigure.setWidth(oldFigure.getWidth());
+        newFigure.setHeight(oldFigure.getHeight());
+        figures = figures.minus(oldParty);
+        figures = figures.plus(newParty, newFigure);
+    }
+
+    /**
+     * Registers the given invocation message and result message in this diagram view,
+     *  using the given start/end coordinates.
+     *
+     * @param invocation The invocation message that is to be registered.
+     * @param resultMessage The result message that is to be registered.
+     * @param startCoordinates The start coordinates for the invocation message's link.
+     * @param endCoordinates The end coordinates for the invocation message's link.
+     */
+    protected void registerMessages(InvocationMessage invocation, ResultMessage resultMessage, Point startCoordinates, Point endCoordinates) {
+        // Result messages are ignored!
+        Link invocationLink = createLinkForMessage(invocation,
+                startCoordinates.getX(),
+                startCoordinates.getY(),
+                endCoordinates.getX(),
+                endCoordinates.getY());
+        // Link resultLink = createLinkForMessage(resultMessage, fromX, fromY, toX, toY);
+        links = links.plus(invocation, invocationLink);
+        // links = links.plus(resultMessage, resultLink);
     }
 
 }

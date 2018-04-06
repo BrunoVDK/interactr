@@ -1,6 +1,8 @@
 package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
+import interactr.cs.kuleuven.be.purecollections.PMap;
+
 import java.util.HashMap;
 
 /**
@@ -20,6 +22,6 @@ public interface DiagramObserver {
      * @param updateType The type of update.
      * @param parameters The parameters for the update.
      */
-    public void diagramDidUpdate(Diagram diagram, DiagramUpdateType updateType, HashMap<String, Object> parameters);
+    public void diagramDidUpdate(Diagram diagram, DiagramUpdateType updateType, PMap<String, Object> parameters);
 
 }

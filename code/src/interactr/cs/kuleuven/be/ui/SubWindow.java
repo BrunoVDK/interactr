@@ -3,6 +3,7 @@ package interactr.cs.kuleuven.be.ui;
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.*;
 import interactr.cs.kuleuven.be.purecollections.PList;
+import interactr.cs.kuleuven.be.purecollections.PMap;
 import interactr.cs.kuleuven.be.ui.geometry.Colour;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
@@ -426,7 +427,7 @@ public class SubWindow implements DiagramObserver {
     }
 
     @Override
-    public void diagramDidUpdate(Diagram diagram, DiagramUpdateType updateType, HashMap<String, Object> parameters) {
+    public void diagramDidUpdate(Diagram diagram, DiagramUpdateType updateType, PMap<String, Object> parameters) {
         // TODO
     }
 

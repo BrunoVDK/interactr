@@ -45,7 +45,7 @@ public class DiagramNotificationCenter {
      * @param type The type of the update.
      * @param parameters The parameters for the update.
      */
-    public void postNotification(Diagram diagram, DiagramUpdateType type, HashMap<String, Object> parameters) {
+    public void postNotification(Diagram diagram, DiagramUpdateType type, PMap<String, Object> parameters) {
         ArrayList<DiagramObserver> observers = this.observers.get(diagram);
         if (observers != null)
             for (DiagramObserver observer : observers)
