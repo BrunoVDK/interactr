@@ -203,22 +203,7 @@ public class SubWindow implements DiagramObserver {
      * @throws InvalidAddMessageException The operation was not successful.
      */
     public void addMessage(int fromX, int fromY, int toX, int toY) throws InvalidAddMessageException {
-        if (getActiveView().canInsertMessageAt(fromX, fromY, toX, toY)) {
-            int index = getActiveView().getMessageInsertionIndex(fromX, fromY, toX, toY);
-            InvocationMessage message = getActiveView().getInvocationMessageForCoordinates(fromX, fromY, toX, toY);
-            if (message != null){
-                /*
-                try {
-                    this.insertInvocationMessageAtIndex(message, index);
-                    ResultMessage result = this.getResultMessageForInvocationMessage(message);
-                    for(DiagramView view : views)
-                        view.registerMessages(message, result, fromX, fromY, toX, toY);
-                    this.setActiveComponent(message);
-                }
-                catch(InvalidAddMessageException e) {throw e;}
-                */
-            }
-        }
+        getActiveView().createMessage(fromX,fromY,toX,toY);
     }
 
     /**
@@ -229,18 +214,6 @@ public class SubWindow implements DiagramObserver {
      */
     public void selectComponent(int x, int y) {
         setActiveComponent(getActiveView().getSelectableComponent(x, y-TITLE_BAR_HEIGHT));
-    }
-
-    /**
-     * List registering selected diagramcomponents.
-     */
-    private PList<DiagramComponent> selection = PList.<DiagramComponent>empty();
-
-    /**
-     * Returns the list of selected components.
-     */
-    public PList<DiagramComponent> getSelectedComponents(){
-        return this.selection;
     }
 
     /**
@@ -348,14 +321,14 @@ public class SubWindow implements DiagramObserver {
     public void displayView(PaintBoard paintBoard) {
 
         Rectangle frame = getFrame();
-        paintBoard.setClipRect(frame); // Make sure no drawing is done outside the frame
-        paintBoard.translateOrigin(getFrame().getX(), getFrame().getY());
-        getActiveView().display(paintBoard); // Draw view contents
-        paintBoard.translateOrigin(-getFrame().getX(), -getFrame().getY());
-
-        // Draw the frame (including title bar)
         paintBoard.setColour(Colour.WHITE);
         paintBoard.fillRectangle(frame.getX(), frame.getY(), frame.getWidth(), frame.getHeight());
+        paintBoard.setClipRect(frame); // Make sure no drawing is done outside the frame
+        paintBoard.translateOrigin(getFrame().getX(), getFrame().getY() + TITLE_BAR_HEIGHT);
+        getActiveView().display(paintBoard); // Draw view contents
+        paintBoard.translateOrigin(-getFrame().getX(), -getFrame().getY() - TITLE_BAR_HEIGHT);
+
+        // Draw the frame (including title bar)
         paintBoard.setColour(Colour.LIGHT_GRAY);
         paintBoard.fillRectangle(frame.getX(), frame.getY(), frame.getWidth()-1, TITLE_BAR_HEIGHT);
         paintBoard.setColour(Colour.GRAY);

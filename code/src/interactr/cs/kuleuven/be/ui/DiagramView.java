@@ -1,6 +1,7 @@
 package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.domain.*;
+import interactr.cs.kuleuven.be.exceptions.InvalidAddMessageException;
 import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.purecollections.PMap;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
@@ -186,16 +187,14 @@ public class DiagramView implements DiagramObserver {
     }
 
     /**
-     * Returns the diagram component at given location, or null
-     *  if no component is present at that coordinate.
+     * Returns the diagram component at given location, or null if no component is present at that coordinate.
      *  The given excluded component, if not null, is ignored.
      *
      * @param x The x coordinate to look at.
      * @param y The y coordinate to look at.
-     * @param excludedComponent The component to ignore when look for the component at given coordinate.
+     * @param excludedComponent The component to ignore when looking for the component at given coordinate.
      * @return The diagram component at given location in this view,
      *  or null if no such component is visible at the given coordinate.
-     * @note This method can be used when looking for a place to move a certain component.
      */
     protected DiagramComponent getComponent(int x, int y, DiagramComponent excludedComponent) {
         for (Party party : diagram.getParties()) {
@@ -363,6 +362,29 @@ public class DiagramView implements DiagramObserver {
      */
     public boolean canInsertMessageAt(int fromX, int fromY, int toX, int toY) {
         return false; // Default behaviour is inability to add anything
+    }
+
+    /**
+     * Create a new message for the given start and end coordinates.
+     *
+     * @param fromX The start x coordinate for the message.
+     * @param fromY The start y coordinate for the message.
+     * @param toX The end x coordinate for the message.
+     * @param toY The end y coordinate for the message.
+     * @throws InvalidAddMessageException If a message could not be added.
+     */
+    public void createMessage(int fromX, int fromY, int toX, int toY) {
+        if (canInsertMessageAt(fromX, fromY, toX, toY)) {
+            int index = getMessageInsertionIndex(fromX, fromY, toX, toY);
+            InvocationMessage message = getInvocationMessageForCoordinates(fromX, fromY, toX, toY);
+            if (message != null) {
+                try {
+                    diagram.insertInvocationMessageAtIndex(message, index);
+                    ResultMessage result = diagram.getResultMessageForInvocationMessage(message);
+                }
+                catch(InvalidAddMessageException e) {throw e;}
+            }
+        }
     }
 
     /**

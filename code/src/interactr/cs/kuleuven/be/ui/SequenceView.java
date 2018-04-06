@@ -6,6 +6,7 @@ import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.ui.geometry.Colour;
 import interactr.cs.kuleuven.be.ui.geometry.Figure;
 import interactr.cs.kuleuven.be.ui.geometry.Link;
+import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
  * A class of sequence diagram views. Sequence diagram views display diagrams
@@ -42,6 +43,7 @@ public class SequenceView extends DiagramView {
         }
         paintBoard.setColour(Colour.BLACK);
         paintBoard.drawLine(0, PARTY_ROW_HEIGHT, paintBoard.getWidth(), PARTY_ROW_HEIGHT);
+        System.out.println(new Rectangle(0, PARTY_ROW_HEIGHT, paintBoard.getWidth(), PARTY_ROW_HEIGHT));
         displayMessages(paintBoard);
     }
 
