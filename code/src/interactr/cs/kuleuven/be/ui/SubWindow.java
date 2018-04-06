@@ -203,7 +203,7 @@ public class SubWindow implements DiagramObserver {
      * @throws InvalidAddMessageException The operation was not successful.
      */
     public void addMessage(int fromX, int fromY, int toX, int toY) throws InvalidAddMessageException {
-        getActiveView().createMessage(fromX, fromY - TITLE_BAR_HEIGHT, toX, toY - TITLE_BAR_HEIGHT);
+        getActiveView().addMessage(fromX, fromY - TITLE_BAR_HEIGHT, toX, toY - TITLE_BAR_HEIGHT);
     }
 
     /**
@@ -414,7 +414,7 @@ public class SubWindow implements DiagramObserver {
         int borderCode = 0;
         if (Math.abs(getFrame().getX() - x) <= 10)
             borderCode |= SubWindowBorder.WEST.code;
-        if (Math.abs(getFrame().getY() - y) <= 4)
+        if (Math.abs(getFrame().getY() - y) <= 4) // Less margin for northern direction
             borderCode |= SubWindowBorder.NORTH.code;
         if (Math.abs( ( getFrame().getY() + getFrame().getHeight() ) - y ) <= 10)
             borderCode |= SubWindowBorder.SOUTH.code;
@@ -425,7 +425,11 @@ public class SubWindow implements DiagramObserver {
 
     @Override
     public void diagramDidUpdate(Diagram diagram, DiagramUpdateType updateType, PMap<String, Object> parameters) {
-        // TODO
+        switch (updateType) {
+            case EDIT_LABEL:
+                // TODO
+                break;
+        }
     }
 
     /**

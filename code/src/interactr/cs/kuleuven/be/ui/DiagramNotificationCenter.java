@@ -77,6 +77,8 @@ public class DiagramNotificationCenter {
      * @param observer The observer that is to be registered.
      */
     public void unregisterObserver(Diagram diagram, DiagramObserver observer) {
+        if (diagram == null)
+            return;
         ArrayList<DiagramObserver> observers = this.observers.get(diagram);
         if (observers != null)
             observers.remove(observer);

@@ -386,7 +386,7 @@ public class DiagramView implements DiagramObserver {
     }
 
     /**
-     * Create a new message for the given start and end coordinates.
+     * Add a new message from the given start to the given end coordinates.
      *
      * @param fromX The start x coordinate for the message.
      * @param fromY The start y coordinate for the message.
@@ -394,14 +394,27 @@ public class DiagramView implements DiagramObserver {
      * @param toY The end y coordinate for the message.
      * @throws InvalidAddMessageException If a message could not be added.
      */
-    public void createMessage(int fromX, int fromY, int toX, int toY) {
+    public void addMessage(int fromX, int fromY, int toX, int toY) {
         if (canInsertMessageAt(fromX, fromY, toX, toY)) {
             int index = getMessageInsertionIndex(fromX, fromY, toX, toY);
             InvocationMessage message = getInvocationMessageForCoordinates(fromX, fromY, toX, toY);
             if (message != null) {
                 try {
+
                     diagram.insertInvocationMessageAtIndex(message, index);
                     ResultMessage result = diagram.getResultMessageForInvocationMessage(message);
+
+                    // Post a notification of the update
+                    PMap<String , Object> notificationParameters = PMap.<String, Object>empty();
+                    notificationParameters = notificationParameters.plus("invocation", message);
+                    notificationParameters = notificationParameters.plus("result", result);
+                    notificationParameters = notificationParameters.plus("startCoordinates", new Point(fromX,fromY));
+                    notificationParameters = notificationParameters.plus("endCoordinates", new Point(toX,toY));
+                    DiagramNotificationCenter.defaultCenter().postNotification(
+                            diagram,
+                            DiagramUpdateType.ADD_MESSAGE,
+                            notificationParameters);
+
                 }
                 catch(InvalidAddMessageException e) {throw e;}
             }

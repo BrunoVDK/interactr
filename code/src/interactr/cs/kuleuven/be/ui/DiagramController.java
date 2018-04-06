@@ -124,7 +124,7 @@ public class DiagramController {
      * @param toY The end y coordinate for the move.
      * @throws InvalidMoveWindowException The resize operation was not successful.
      */
-    public void moveSubWindow(int fromX, int fromY, int toX, int toY) {
+    public void moveSubWindow(int fromX, int fromY, int toX, int toY) throws InvalidMoveWindowException {
         if (getActiveSubwindow() != null) {
             getActiveSubwindow().move(fromX, fromY, toX, toY);
             getPaintBoard().refresh();
