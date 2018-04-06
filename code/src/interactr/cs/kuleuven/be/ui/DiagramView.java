@@ -2,6 +2,8 @@ package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddMessageException;
+import interactr.cs.kuleuven.be.exceptions.InvalidMovePartyException;
+import interactr.cs.kuleuven.be.exceptions.NoSuchPartyException;
 import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.purecollections.PMap;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
@@ -282,17 +284,22 @@ public class DiagramView implements DiagramObserver {
     /**
      * A method that moves the given party to the given coordinates
      *
-     * @param party The party that has te be moved
-     * @param x The new absolute x coordinate of the given Party
-     * @param y The new absolute y coordinate of the given Party
+     * @param fromX The start x coordinate for the add.
+     * @param fromY The start y coordinate for the add.
+     * @param toX The end x coordinate for the add.
+     * @param toY The end y coordinate for the add.
+     * @throws NoSuchPartyException If there is no party at the given start coordinates.
+     * @throws InvalidMovePartyException If the party could not be moved to the given end coordinates.
      */
-    public void moveParty(Party party, int x ,int y) {
-        DiagramComponent component = getComponent(x, y, party);
-        if (component != null && component != party)
-            return;
-        Figure figure = figures.get(party);
-        figure.setX(x);
-        figure.setY(y);
+    public void moveParty(int fromX, int fromY, int toX, int toY) throws  NoSuchPartyException, InvalidMovePartyException {
+        Party movedParty = getParty(fromX, fromY);
+        if (movedParty == null)
+            throw new NoSuchPartyException(fromX, fromY);
+        if (getComponent(toX, toY, movedParty) != null)
+            throw new InvalidMovePartyException();
+        Figure figure = figures.get(movedParty);
+        figure.setX(figure.getX() + (toX - fromX));
+        figure.setY(figure.getY() + (toY - fromY));
     }
 
     /**

@@ -175,9 +175,8 @@ public class SubWindow implements DiagramObserver {
      * @throws InvalidAddPartyException If a party cannot be added at the given coordinates.
      */
     public void addParty(int x, int y) throws InvalidAddPartyException {
-        if (y < TITLE_BAR_HEIGHT)
-            throw new InvalidAddPartyException();
-        y -= TITLE_BAR_HEIGHT;
+        if (y < TITLE_BAR_HEIGHT) throw new InvalidAddPartyException();
+        else y -= TITLE_BAR_HEIGHT;
         try {
             getActiveView().addParty(x,y);
         }
@@ -204,7 +203,7 @@ public class SubWindow implements DiagramObserver {
      * @throws InvalidAddMessageException The operation was not successful.
      */
     public void addMessage(int fromX, int fromY, int toX, int toY) throws InvalidAddMessageException {
-        getActiveView().createMessage(fromX,fromY,toX,toY);
+        getActiveView().createMessage(fromX, fromY - TITLE_BAR_HEIGHT, toX, toY - TITLE_BAR_HEIGHT);
     }
 
     /**
@@ -298,13 +297,11 @@ public class SubWindow implements DiagramObserver {
      * @param fromY The start y coordinate for the add.
      * @param toX The end x coordinate for the add.
      * @param toY The end y coordinate for the add.
-     * @throws NoSuchPartyException If there is no party at the given coordinates.
+     * @throws NoSuchPartyException If there is no party at the given start coordinates.
+     * @throws InvalidMovePartyException If the party could not be moved to the given end coordinates.
      */
-    public void moveParty(int fromX, int fromY, int toX, int toY) throws NoSuchPartyException {
-        Party movedParty = getActiveView().getParty(fromX, fromY);
-        if (movedParty == null)
-            throw new NoSuchPartyException(fromX, fromY);
-        // TODO Move party
+    public void moveParty(int fromX, int fromY, int toX, int toY) throws NoSuchPartyException, InvalidMovePartyException {
+        getActiveView().moveParty(fromX, fromY - TITLE_BAR_HEIGHT, toX, toY - TITLE_BAR_HEIGHT);
     }
 
     /**

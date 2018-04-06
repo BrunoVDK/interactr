@@ -159,6 +159,7 @@ public class EventHandler {
 
         }
         catch (NoSuchPartyException ignored) {}
+        catch (InvalidMovePartyException ignored) {}
     }
 
     /**

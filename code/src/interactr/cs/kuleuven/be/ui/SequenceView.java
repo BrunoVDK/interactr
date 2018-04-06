@@ -151,8 +151,8 @@ public class SequenceView extends DiagramView {
     }
 
     @Override
-    public void moveParty(Party party, int x, int y){
-        super.moveParty(party, x, 5);
+    public void moveParty(int fromX, int fromY, int toX, int toY) {
+        super.moveParty(fromX, 5, toX, 5);
     }
 
     @Override

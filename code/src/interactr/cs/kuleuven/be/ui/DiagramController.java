@@ -242,8 +242,10 @@ public class DiagramController {
      * @param fromY The start y coordinate for the add.
      * @param toX The end x coordinate for the add.
      * @param toY The end y coordinate for the add.
+     * @throws NoSuchPartyException If there is no party at the given start coordinates.
+     * @throws InvalidMovePartyException If the party could not be moved to the given end coordinates.
      */
-    public void moveParty(int fromX, int fromY, int toX, int toY) {
+    public void moveParty(int fromX, int fromY, int toX, int toY) throws NoSuchPartyException, InvalidMovePartyException {
         if (getActiveSubwindow() != null) {
             getActiveSubwindow().moveParty(
                     fromX - getActiveSubwindow().getFrame().getX(),
