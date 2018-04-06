@@ -170,7 +170,10 @@ public class EventHandler {
      */
     private void handleMouseReleased(int x, int y) {
         if (dragOperationType == DragOperationType.DRAG_VALID)
-            getDiagramController().addMessage(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
+            try {
+                getDiagramController().addMessage(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
+            }
+            catch (InvalidAddMessageException ignored) {}
         dragOperationType = DragOperationType.DRAG_NONE;
     }
 
