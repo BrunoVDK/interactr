@@ -78,7 +78,6 @@ public class EventHandler {
                     }
                 }
                 catch (NoSuchWindowException ignored) {}
-
                 break;
             case 2: // Double click
                 try {

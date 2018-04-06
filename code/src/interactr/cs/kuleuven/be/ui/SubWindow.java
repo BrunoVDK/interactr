@@ -337,7 +337,7 @@ public class SubWindow implements DiagramObserver {
         int borderCode = 0;
         if (Math.abs(getFrame().getX() - x) <= 10)
             borderCode |= SubWindowBorder.WEST.code;
-        if (Math.abs(getFrame().getY() - y) <= 10)
+        if (Math.abs(getFrame().getY() - y) <= 4)
             borderCode |= SubWindowBorder.NORTH.code;
         if (Math.abs( ( getFrame().getY() + getFrame().getHeight() ) - y ) <= 10)
             borderCode |= SubWindowBorder.SOUTH.code;
