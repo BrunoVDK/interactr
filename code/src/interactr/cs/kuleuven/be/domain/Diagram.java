@@ -20,50 +20,30 @@ public class Diagram {
      * Initialize this new diagram without any messages or parties.
      */
     public Diagram() {
-        this.activeComponent = null;
+
     }
 
     /**
      * Add the given party to this diagram.
      */
-    public void addParty(int x, int y, DiagramView activeView, ArrayList<DiagramView> views) {
-        Party party = new ObjectParty();
-        try{
-            activeView.addParty(this, party, x, y);
-            parties = parties.plus(party);
-            for(DiagramView view : views)
-                if(view != activeView)
-                    view.registerParty(party, x, y);
-            this.setActiveComponent(party);
-        }
-        catch (InvalidAddPartyException addException){
-            throw addException;
-        }
+    public void addParty(Party party) {
+        parties = parties.plus(party);
     }
 
     /**
      * Replace a party with the given party.
      *
      * @param oldParty The party that is to be replaced.
-     * @param views List of views
+     * @param newParty The party to replace it with.
      */
-    public void replaceParty(Party oldParty, ArrayList<DiagramView> views){
-        Party newParty;
-        if (oldParty instanceof ActorParty)
-            newParty = new ObjectParty(oldParty);
-        else
-            newParty = new ActorParty(oldParty);
-
+    public void replaceParty(Party oldParty, Party newParty) {
         parties = parties.minus(oldParty);
         parties = parties.plus(newParty);
-        for (Message message : messages){
+        for (Message message : messages)
             if (message.getSender() == oldParty)
                 message.setSender(newParty);
             else if (message.getReceiver() == oldParty)
                 message.setReceiver(newParty);
-        }
-        for (DiagramView view : views)
-            view.registerPartyReplace(oldParty, newParty);
     }
 
     /**
@@ -229,25 +209,6 @@ public class Diagram {
         return messages.indexOf(message);
     }
 
-    public void addMessageFrom(int x1, int y1, int x2, int y2, DiagramView activeView, ArrayList<DiagramView> views){
-        if(activeView.canInsertMessageAt(this, x1, y1, x2, y2)) {
-            int index = activeView.getMessageInsertionIndex(this, x1, y1, x2, y2);
-            InvocationMessage message = activeView.getInvocationMessageForCoordinates(x1, y1, x2, y2);
-            if(message != null){
-                try {
-                    this.insertInvocationMessageAtIndex(message, index);
-                    ResultMessage result = this.getResultMessageForInvocationMessage(message);
-                    for(DiagramView view : views)
-                        view.registerMessages(this, message, result, x1, y1, x2, y2);
-                    this.setActiveComponent(message);
-                }
-                catch(InvalidAddMessageException addException){
-                    throw addException;
-                }
-            }
-        }
-    }
-
     /**
      * Removes the given message from this diagram, as well as its dependencies.
      *
@@ -293,13 +254,23 @@ public class Diagram {
         return null;
     }
 
-
-    public String getPrefix(Message m){
-        int index = getIndexOfMessage(m);
+    /**
+     * Returns the prefix for the given message.
+     *
+     * @param message The message to get the prefix for.
+     * @return The prefix for the given message.
+     */
+    public String getPrefix(Message message) {
+        int index = getIndexOfMessage(message);
         return associatedPrefix.get(index);
     }
 
-    public  void addPrefix(ResultMessage message){
+    /**
+     * Add a prefix to the given result message.
+     *
+     * @param message The message to add a prefix to.
+     */
+    private void addPrefix(ResultMessage message){
         int index = this.getIndexOfAssociatedMessage(this.getIndexOfMessage(message));
         this.associatedPrefix.add(index+1, null);
     }
@@ -308,34 +279,40 @@ public class Diagram {
      * Calculates a prefix for the given message in this diagram.
      *
      * @param message The message whose prefix should be determined.
-     * @return A prefix for the given message.
      */
-    public void addPrefix(InvocationMessage message, int index) {
+    private void addPrefix(InvocationMessage message, int index) {
         Message prev = this.getPreviousInvocationMessage(message, index);
 
-        if(prev == null){
+        if (prev == null){
             this.associatedPrefix.add(index, "1.");
         }
-        else if(message.getSender().equals(prev.getSender())){
+        else if (message.getSender() == prev.getSender()) {
             String previousPrefix = this.associatedPrefix.get(this.getIndexOfMessage(prev));
             int prefixLast = Integer.parseInt(previousPrefix.substring(previousPrefix.length()-2, previousPrefix.length()-1));
             int prefixNew = prefixLast + 1;
             String prefix = previousPrefix.substring(0 , previousPrefix.length()-2) + prefixNew + ".";
             this.associatedPrefix.add(index, prefix);
         }
-        else if( message.getSender().equals(prev.getReceiver())){
+        else if (message.getSender() == prev.getReceiver()){
             String prefix = this.associatedPrefix.get((this.getIndexOfMessage(prev))) + "1.";
             this.associatedPrefix.add(index, prefix);
         }
     }
 
-    public Message getPreviousInvocationMessage(Message m, int index){
+    /**
+     * Returns the previous invocation message for the given message.
+     *
+     * @param m The message to get the previous invocation for.
+     * @param index The index of the message.
+     * @return The previous invocation message for the given message.
+     */
+    private Message getPreviousInvocationMessage(Message m, int index){
         Message prev = null;
-        for(int i = 0; i < index; i++){
-            if (i < this.getIndexOfAssociatedMessage(i) && (m.getSender().equals(this.getMessageAtIndex(i).getReceiver()) || m.getSender().equals(this.getMessageAtIndex(i).getSender()))){
+        for (int i=0 ; i<index ; i++)
+            if (i < this.getIndexOfAssociatedMessage(i)
+                    && (m.getSender() == this.getMessageAtIndex(i).getReceiver()
+                        || m.getSender() == this.getMessageAtIndex(i).getSender()))
                 prev = this.getMessageAtIndex(i);
-            }
-        }
         return prev;
     }
 
@@ -346,8 +323,7 @@ public class Diagram {
 
     /**
      * The indices of associated messages for the messages held by this diagram.
-     *
-     * @note Each entry in this array gives the associated message of the message at the same index
+     *  Each entry in this array gives the associated message of the message at the same index
      *  in the messages list.
      */
     private ArrayList<Integer> associatedMessageIndices = new ArrayList<Integer>();
@@ -357,107 +333,4 @@ public class Diagram {
      */
     private ArrayList<String> associatedPrefix = new ArrayList<String>();
 
-    /**
-     * List registering selected diagramcomponents.
-     */
-    private PList<DiagramComponent> selection = PList.<DiagramComponent>empty();
-
-    /**
-     * Returns the list of selected components.
-     */
-    public PList<DiagramComponent> getSelectedComponents(){
-        return this.selection;
-    }
-
-    /**
-     * Adds the given component to the selected components in this diagram.
-     *  If the given component is already selected, it is activated.
-     *
-     * @param component The component that is to be selected.
-     */
-    public void addToSelection(DiagramComponent component) {
-        if (isSelected(component)) {
-            setActiveComponent(component);
-            setTemporaryLabel("");
-        }
-        else if (component != null)
-            selection = selection.plus(component);
-    }
-
-    /**
-     * Returns whether or not the given diagram component is currently selected.
-     *
-     * @param component The component to check for.
-     * @return True if and only if the given diagram component is currently selected.
-     */
-    public boolean isSelected(DiagramComponent component) {
-        return selection.contains(component);
-    }
-
-    /**
-     * Registers the active component in this diagram.
-     */
-    private DiagramComponent activeComponent;
-
-    /**
-     * Returns the diagramcomponent that is currently active in this diagram.
-     */
-    public DiagramComponent getActiveComponent() {
-        return activeComponent;
-    }
-
-    /**
-     * Sets a diagramcomponent in this diagram as active component.
-     * @param component the diagramcomponent that needs to be set as active component.
-     */
-    public void setActiveComponent(DiagramComponent component) {
-        unselectAll();
-        setTemporaryLabel("");
-        this.activeComponent = component;
-    }
-
-    /**
-     * Unselects the currently active component(s).
-     */
-    public void unselectAll(){
-        this.activeComponent = null;
-    }
-
-    /**
-     * Sets the temporary label for the active component to the given one.
-     *
-     * @param label The new temporary label for the active component.
-     * @throws IllegalArgumentException If the given label is null.
-     */
-    public void setTemporaryLabel(String label){
-        if(label == null){
-            throw new IllegalArgumentException("Invalid temporary label (null).");
-        }
-        this.temporaryLabel = label;
-    }
-
-    /**
-     * Returns the temporary label of the currently active component in this diagram.
-     */
-    public String getTemporaryLabel(){
-        return temporaryLabel;
-    }
-
-    /**
-     * The temporary label for the active component of this diagram.
-     */
-    private String temporaryLabel = "";
-
-    /**
-     * Delete the selected component and all depending components from the diagram.
-     * @param views List of all possible views of the diagram.
-     */
-    public void deleteSelection(ArrayList<DiagramView> views){
-        if(this.getActiveComponent() != null) return;
-        for(DiagramComponent component : this.getSelectedComponents())
-            component.deleteFrom(this);
-        this.unselectAll();
-        for(DiagramView view : views)
-            view.synchronize(this);
-    }
 }

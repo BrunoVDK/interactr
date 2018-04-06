@@ -1,8 +1,8 @@
 package interactr.cs.kuleuven.be.ui;
 
-import interactr.cs.kuleuven.be.domain.Diagram;
-import interactr.cs.kuleuven.be.domain.Party;
+import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.*;
+import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.ui.geometry.Colour;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
@@ -22,7 +22,7 @@ public class SubWindow implements DiagramObserver {
     /**
      * Create a new subwindow without duplicating an other one.
      */
-    public SubWindow() {
+    SubWindow() {
         this(null);
     }
 
@@ -33,10 +33,10 @@ public class SubWindow implements DiagramObserver {
      *
      * @param subWindow The subwindow that is to be duplicated by this subwindow.
      */
-    public SubWindow(SubWindow subWindow) {
+    SubWindow(SubWindow subWindow) {
         setFrame(new Rectangle(0, 0, 400, 400));
         Diagram adoptedDiagram = null;
-        if (subWindow == null)
+        if (subWindow == null || subWindow.getDiagram() == null)
             adoptedDiagram = new Diagram();
         else
             adoptedDiagram = subWindow.getDiagram();
@@ -77,7 +77,7 @@ public class SubWindow implements DiagramObserver {
      * @param frame The frame to check with.
      * @return True if and only if the given frame's width and height are large enough.
      */
-    public boolean canHaveAsFrame(Rectangle frame) {
+    private boolean canHaveAsFrame(Rectangle frame) {
         return (frame.getWidth() > CLOSE_BUTTON_SIZE + 10 && frame.getHeight() > TITLE_BAR_HEIGHT + 10);
     }
 
@@ -99,7 +99,7 @@ public class SubWindow implements DiagramObserver {
      * @param frame The new frame for this subwindow.
      * @throws IllegalWindowFrameException This subwindow cannot have the given frame as its own frame.
      */
-    public void setFrame(Rectangle frame) throws IllegalWindowFrameException {
+    private void setFrame(Rectangle frame) throws IllegalWindowFrameException {
         if (!canHaveAsFrame(frame))
             throw new IllegalWindowFrameException();
         this.frame = frame;
@@ -173,8 +173,24 @@ public class SubWindow implements DiagramObserver {
      * @param y The y coordinate to add the party at.
      * @throws InvalidAddPartyException If a party cannot be added at the given coordinates.
      */
-    public void addPartyAt(int x, int y) throws InvalidAddPartyException {
-        // TODO
+    public void addParty(int x, int y) throws InvalidAddPartyException {
+        if (y < TITLE_BAR_HEIGHT)
+            throw new InvalidAddPartyException();
+        y -= TITLE_BAR_HEIGHT;
+        try {
+            getActiveView().createParty(x,y);
+        }
+        catch (InvalidAddPartyException e) {throw e;}
+    }
+
+    /**
+     * Switch the type of the party at given coordinates.
+     *
+     * @param x The x coordinate of the party.
+     * @param y The y coordinate of the party.
+     */
+    public void switchTypeOfParty(int x, int y) {
+        getActiveView().switchTypeOfParty(x,y-TITLE_BAR_HEIGHT);
     }
 
     /**
@@ -184,19 +200,25 @@ public class SubWindow implements DiagramObserver {
      * @param fromY The starting y coordinate for the message.
      * @param toX The ending x coordinate for the message.
      * @param toY The ending y coordinate for the message.
+     * @throws InvalidAddMessageException The operation was not successful.
      */
-    public void addMessage(int fromX, int fromY, int toX, int toY) {
-        // TODO
-    }
-
-    /**
-     * Switch the type of the party at given coordinates.
-     *
-     * @param x The x coordinate of the party.
-     * @param y The y coordinate of the party.
-     */
-    public void switchTypeOfPartyAt(int x, int y) {
-        // Get the party
+    public void addMessage(int fromX, int fromY, int toX, int toY) throws InvalidAddMessageException {
+        if (getActiveView().canInsertMessageAt(fromX, fromY, toX, toY)) {
+            int index = getActiveView().getMessageInsertionIndex(fromX, fromY, toX, toY);
+            InvocationMessage message = getActiveView().getInvocationMessageForCoordinates(fromX, fromY, toX, toY);
+            if (message != null){
+                /*
+                try {
+                    this.insertInvocationMessageAtIndex(message, index);
+                    ResultMessage result = this.getResultMessageForInvocationMessage(message);
+                    for(DiagramView view : views)
+                        view.registerMessages(message, result, fromX, fromY, toX, toY);
+                    this.setActiveComponent(message);
+                }
+                catch(InvalidAddMessageException e) {throw e;}
+                */
+            }
+        }
     }
 
     /**
@@ -205,15 +227,94 @@ public class SubWindow implements DiagramObserver {
      * @param x The x coordinate of the component that is to be selected.
      * @param y The y coordinate of the component that is to be selected.
      */
-    public void selectComponentAt(int x, int y) {
-        // TODO
+    public void selectComponent(int x, int y) {
+        setActiveComponent(getActiveView().getSelectableComponent(x, y-TITLE_BAR_HEIGHT));
     }
+
+    /**
+     * List registering selected diagramcomponents.
+     */
+    private PList<DiagramComponent> selection = PList.<DiagramComponent>empty();
+
+    /**
+     * Returns the list of selected components.
+     */
+    public PList<DiagramComponent> getSelectedComponents(){
+        return this.selection;
+    }
+
+    /**
+     * Returns whether or not the given diagram component is currently selected.
+     *
+     * @param component The component to check for.
+     * @return True if and only if the given diagram component is currently selected.
+     */
+    private boolean isSelected(DiagramComponent component) {
+        return getActiveComponent() == component;
+    }
+
+    /**
+     * Returns the diagram component that is currently active in this diagram.
+     */
+    private DiagramComponent getActiveComponent() {
+        return activeComponent;
+    }
+
+    /**
+     * Sets a diagramcomponent in this diagram as active component.
+     *
+     * @param component the diagram component that needs to be set as active component.
+     */
+    private void setActiveComponent(DiagramComponent component) {
+        deselectAll();
+        setActiveLabel("");
+        this.activeComponent = component;
+    }
+
+    /**
+     * Deselects the currently active component(s).
+     */
+    private void deselectAll(){
+        if (activeLabel == null)
+            setActiveComponent(null);
+    }
+
+    /**
+     * Registers the active component in this diagram.
+     */
+    private DiagramComponent activeComponent;
+
+    /**
+     * Sets the temporary label for the active component to the given one.
+     *
+     * @param label The new temporary label for the active component.
+     */
+    private void setActiveLabel(String label){
+        this.activeLabel = label;
+    }
+
+    /**
+     * Returns the temporary label of the currently active component in this diagram.
+     */
+    public String getActiveLabel(){
+        return activeLabel;
+    }
+
+    /**
+     * The temporary label for the active component of this diagram.
+     */
+    private String activeLabel = "";
 
     /**
      * Removes the currently selected component from this subwindow's diagram.
      */
     public void deleteSelection(){
-        // TODO
+        if (activeLabel != null)
+            return;
+        else if (getActiveComponent() != null) {
+            getActiveComponent().deleteFrom(getDiagram());
+            deselectAll();
+        }
     }
 
     /**
@@ -226,9 +327,10 @@ public class SubWindow implements DiagramObserver {
      * @throws NoSuchPartyException If there is no party at the given coordinates.
      */
     public void moveParty(int fromX, int fromY, int toX, int toY) throws NoSuchPartyException {
-        Party movedParty = getActiveView().getPartyAt(fromX, fromY);
+        Party movedParty = getActiveView().getParty(fromX, fromY);
         if (movedParty == null)
             throw new NoSuchPartyException(fromX, fromY);
+        // TODO Move party
     }
 
     /**
@@ -247,7 +349,9 @@ public class SubWindow implements DiagramObserver {
 
         Rectangle frame = getFrame();
         paintBoard.setClipRect(frame); // Make sure no drawing is done outside the frame
+        paintBoard.translateOrigin(getFrame().getX(), getFrame().getY());
         getActiveView().display(paintBoard); // Draw view contents
+        paintBoard.translateOrigin(-getFrame().getX(), -getFrame().getY());
 
         // Draw the frame (including title bar)
         paintBoard.setColour(Colour.WHITE);
@@ -270,7 +374,7 @@ public class SubWindow implements DiagramObserver {
      *
      * @return The active view for this subwindow.
      */
-    public DiagramView getActiveView() {
+    private DiagramView getActiveView() {
         return views.get(activeViewIndex);
     }
 
@@ -291,7 +395,7 @@ public class SubWindow implements DiagramObserver {
      * @param y The y coordinate to check with.
      * @return True if and only if the given coordinates lie within this subwindow's title bar.
      */
-    public boolean titleBarEncloses(int x, int y) {
+    private boolean titleBarEncloses(int x, int y) {
         return (this.getFrame().encloses(x,y) && y < getFrame().getY() + TITLE_BAR_HEIGHT);
     }
 
@@ -333,7 +437,7 @@ public class SubWindow implements DiagramObserver {
      * @param y The y coordinate to check with.
      * @return An integer representing the borders lying at the given coordinates.
      */
-    public int getBordersAt(int x, int y) {
+    private int getBordersAt(int x, int y) {
         int borderCode = 0;
         if (Math.abs(getFrame().getX() - x) <= 10)
             borderCode |= SubWindowBorder.WEST.code;

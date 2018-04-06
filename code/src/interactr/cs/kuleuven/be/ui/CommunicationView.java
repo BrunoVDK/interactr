@@ -28,7 +28,4 @@ public class CommunicationView extends DiagramView {
         return "Communication View";
     }
 
-    public boolean canAddMessage(Party sender, Party receiver, int y){return false;}
-
-
 }

@@ -9,6 +9,7 @@ package interactr.cs.kuleuven.be.ui;
  */
 public enum DiagramUpdateType {
     ADD_PARTY,
+    REPLACE_PARTY,
     ADD_MESSAGE,
     DELETE_PARTY,
     DELETE_MESSAGE,

@@ -20,37 +20,18 @@ import interactr.cs.kuleuven.be.ui.geometry.Link;
 public class SequenceView extends DiagramView {
 
     /**
-     * The height of the party row.
-     */
-    private static int PARTY_ROW_HEIGHT = 75;
-
-    /**
-     * The height of each message row.
-     */
-    private static int MESSAGE_ROW_HEIGHT = 40;
-
-    /**
-     * The width of activation bars.
-     */
-    private static int ACTIVATION_BAR_WIDTH = 10;
-
-    /**
-     * The color used to draw activation bars.
-     */
-    private static Colour ACTIVATION_COLOR = new Colour(216/360f, 35/360f, 0.66f);
-
-    /**
      * Initialize this new diagram view with the given diagram.
      *
      * @param diagram The diagram to associate this diagram view with.
      * @throws IllegalArgumentException If the given diagram is null.
      */
-    public SequenceView(Diagram diagram) {
+    SequenceView(Diagram diagram) {
         super(diagram);
     }
 
-    public void display(PaintBoard paintBoard, Diagram diagram) {
-        displayFigures(paintBoard, diagram);
+    @Override
+    public void display(PaintBoard paintBoard) {
+        displayFigures(paintBoard);
         paintBoard.setColour(Colour.GRAY);
         for (Party party : figures.keySet()) {
             Figure partyFigure = figures.get(party);
@@ -61,11 +42,11 @@ public class SequenceView extends DiagramView {
         }
         paintBoard.setColour(Colour.BLACK);
         paintBoard.drawLine(0, PARTY_ROW_HEIGHT, paintBoard.getWidth(), PARTY_ROW_HEIGHT);
-        displayMessages(paintBoard, diagram);
+        displayMessages(paintBoard);
     }
 
     @Override
-    protected void displayMessages(PaintBoard paintBoard, Diagram diagram) {
+    protected void displayMessages(PaintBoard paintBoard) {
 
         // Pre-processing
         Party initiator = diagram.getInitiator();
@@ -115,22 +96,22 @@ public class SequenceView extends DiagramView {
                     drawActivationBar(paintBoard, barX, barY, barHeight);
 
                     // Draw invocation link (calculate offset!)
-                    boolean isSelected = diagram.isSelected(message);
-                    boolean isActive = diagram.getActiveComponent() == message;
+                    boolean isSelected = false /*diagram.isSelected(message)*/;
+                    boolean isActive = false /*diagram.getActiveComponent() == message*/;
                     paintBoard.setColour((isSelected || isActive ? Colour.BLUE : Colour.BLACK));
                     if (isActive)
-                        messageLink.setLabel(diagram.getTemporaryLabel() + "|");
+                        messageLink.setLabel("TEMP" + "|");
                     messageLink.setStartX(messageX - (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
                     messageLink.setEndX(barX + (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
                     messageLink.draw(paintBoard);
                     paintBoard.setColour(Colour.BLACK);
 
                     // Draw receiver link (calculate offset!)
-                    isSelected = diagram.isSelected(associatedMessage);
-                    isActive = diagram.getActiveComponent() == associatedMessage;
+                    isSelected = false /*diagram.isSelected(associatedMessage)*/;
+                    isActive = false /*diagram.getActiveComponent() == associatedMessage*/;
                     paintBoard.setColour((isSelected || isActive ? Colour.BLUE : Colour.BLACK));
                     if (isActive)
-                        associatedMessageLink.setLabel(diagram.getTemporaryLabel() + "|");
+                        associatedMessageLink.setLabel("TEMP" + "|");
                     associatedMessageLink.setEndX(messageX - (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
                     associatedMessageLink.setStartX(barX + (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
                     associatedMessageLink.draw(paintBoard);
@@ -165,10 +146,10 @@ public class SequenceView extends DiagramView {
     }
 
     @Override
-    public void addParty(Diagram diagram, Party party, int x, int y) throws InvalidAddPartyException {
+    public void createParty(int x, int y) throws InvalidAddPartyException {
         if (y >= PARTY_ROW_HEIGHT)
             throw new InvalidAddPartyException();
-        super.addParty(diagram, party, x, 5);
+        super.createParty(x, 5);
     }
 
     @Override
@@ -177,8 +158,8 @@ public class SequenceView extends DiagramView {
     }
 
     @Override
-    public void moveParty(Diagram diagram, Party party, int x, int y){
-        super.moveParty(diagram, party, x, 5);
+    public void moveParty(Party party, int x, int y){
+        super.moveParty(party, x, 5);
     }
 
     @Override
@@ -208,7 +189,7 @@ public class SequenceView extends DiagramView {
     }
 
     @Override
-    public boolean canInsertMessageAt(Diagram diagram, int fromX, int fromY, int toX, int toY) {
+    public boolean canInsertMessageAt(int fromX, int fromY, int toX, int toY) {
         if (fromY < PARTY_ROW_HEIGHT || toY < PARTY_ROW_HEIGHT)
             return false;
         int min = Math.min(fromY, toY);
@@ -222,7 +203,7 @@ public class SequenceView extends DiagramView {
     }
 
     @Override
-    public void registerMessages(Diagram diagram, InvocationMessage invocation, ResultMessage resultMessage, int fromX, int fromY, int toX, int toY) {
+    public void registerMessages(InvocationMessage invocation, ResultMessage resultMessage, int fromX, int fromY, int toX, int toY) {
         int min = Math.min(fromY, toY);
         Link invocationLink = createLinkForMessage(invocation, fromX, min, toX, min);
         int max = Math.max(fromY, toY);
@@ -243,7 +224,7 @@ public class SequenceView extends DiagramView {
 
     @Override
     public InvocationMessage getInvocationMessageForCoordinates(int fromX, int fromY, int toX, int toY) {
-        Party fromParty = getPartyAt(fromX, 10), toParty = getPartyAt(toX, 10);
+        Party fromParty = getParty(fromX, 10), toParty = getParty(toX, 10);
         if (fromParty == null || toParty == null)
             return null;
         Figure fromFigure = figureForParty(fromParty), toFigure = figureForParty(toParty);
@@ -256,6 +237,26 @@ public class SequenceView extends DiagramView {
         catch (Exception e) {}
         return null;
     }
+
+    /**
+     * The height of the party row.
+     */
+    private static final int PARTY_ROW_HEIGHT = 75;
+
+    /**
+     * The height of each message row.
+     */
+    private static final int MESSAGE_ROW_HEIGHT = 40;
+
+    /**
+     * The width of activation bars.
+     */
+    private static final int ACTIVATION_BAR_WIDTH = 10;
+
+    /**
+     * The color used to draw activation bars.
+     */
+    private static final Colour ACTIVATION_COLOR = new Colour(216/360f, 35/360f, 0.66f);
 
     @Override
     public String viewName() {

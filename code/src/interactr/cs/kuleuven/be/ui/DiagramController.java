@@ -50,7 +50,7 @@ public class DiagramController {
      *  This method can be used to improve performance if nothing but the contents of the active subwindow
      *  was changed.
      */
-    public void displaySubWindow() {
+    public void displayActiveSubWindow() {
         if (getActiveSubwindow() != null)
             getActiveSubwindow().displayView(getPaintBoard());
     }
@@ -163,40 +163,45 @@ public class DiagramController {
     private ArrayList<SubWindow> subWindows = new ArrayList<SubWindow>();
 
     /**
-     * Add a new party at the given x and y coordinate.
+     * Add a new party to the active subwindow at the given x and y coordinate.
      *
      * @param x The x coordinate for the new party.
      * @param y The y coordinate for the new party.
-     * @throws InvalidAddPartyException The given coordinates point to a component already.
+     * @throws InvalidAddPartyException The operation was not successful.
      */
-    public void addPartyAt(int x, int y) throws InvalidAddPartyException {
+    public void addParty(int x, int y) throws InvalidAddPartyException {
         try {
             if (getActiveSubwindow() != null) {
-                getActiveSubwindow().addPartyAt(x, y);
+                getActiveSubwindow().addParty(
+                        x - getActiveSubwindow().getFrame().getX(),
+                        y - getActiveSubwindow().getFrame().getY());
                 getPaintBoard().refresh();
             }
         }
-        catch (InvalidAddPartyException addException){
-            throw addException;
-        }
+        catch (InvalidAddPartyException e) {throw e;}
     }
 
     /**
-     * Adds a message from the given start coordinate to the given end coordinate.
+     * Adds a message to the active subwindow from the given start coordinate to the given end coordinate.
      *
      * @param fromX The start x coordinate for the add.
      * @param fromY The start y coordinate for the add.
      * @param toX The end x coordinate for the add.
      * @param toY The end y coordinate for the add.
+     * @throws InvalidAddMessageException The operation was not successful.
      */
-    public void addMessageFrom(int fromX, int fromY, int toX, int toY) {
+    public void addMessage(int fromX, int fromY, int toX, int toY) throws InvalidAddMessageException {
         try {
-            getActiveSubwindow().addMessage(fromX, fromY, toX, toY);
-            getPaintBoard().refresh();
+            if (getActiveSubwindow() != null) {
+                getActiveSubwindow().addMessage(
+                        fromX - getActiveSubwindow().getFrame().getX(),
+                        fromY - getActiveSubwindow().getFrame().getY(),
+                        toX - getActiveSubwindow().getFrame().getX(),
+                        toY - getActiveSubwindow().getFrame().getY());
+                getPaintBoard().refresh();
+            }
         }
-        catch(InvalidAddMessageException addException){
-            throw addException;
-        }
+        catch(InvalidAddMessageException e) {throw e;}
     }
 
     /**
@@ -205,23 +210,28 @@ public class DiagramController {
      * @param x The x coordinate of the component that is to be selected.
      * @param y The y coordinate of the component that is to be selected.
      */
-    public void selectComponentAt(int x, int y) {
+    public void selectComponent(int x, int y) {
         if (getActiveSubwindow() != null) {
-            getActiveSubwindow().selectComponentAt(x, y);
+            getActiveSubwindow().selectComponent(
+                    x - getActiveSubwindow().getFrame().getX(),
+                    y - getActiveSubwindow().getFrame().getY());
             getPaintBoard().refresh();
         }
     }
 
     /**
-     * Returns the party at the given coordinate, or null if there is none.
+     * Switches the type of the party at the given coordinate, or null if there is none.
      *
      * @param x The x coordinate for the party.
      * @param y The y coordinate for the party.
-     * @return The party at the given coordinate, or null if there is none.
      */
-    public void switchPartyTypeAt(int x, int y) {
-        if (getActiveSubwindow() != null)
-            getActiveSubwindow().switchTypeOfPartyAt(x,y);
+    public void switchTypeOfParty(int x, int y) {
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().switchTypeOfParty(
+                    x - getActiveSubwindow().getFrame().getX(),
+                    y - getActiveSubwindow().getFrame().getY());
+            getPaintBoard().refresh();
+        }
     }
 
     /**
@@ -234,7 +244,11 @@ public class DiagramController {
      */
     public void moveParty(int fromX, int fromY, int toX, int toY) {
         if (getActiveSubwindow() != null) {
-            getActiveSubwindow().moveParty(fromX, fromY, toX, toY);
+            getActiveSubwindow().moveParty(
+                    fromX - getActiveSubwindow().getFrame().getX(),
+                    fromY - getActiveSubwindow().getFrame().getY(),
+                    toX - getActiveSubwindow().getFrame().getX(),
+                    toY - getActiveSubwindow().getFrame().getY());
             getPaintBoard().refresh();
         }
     }
@@ -255,7 +269,7 @@ public class DiagramController {
     public boolean isEditing() {
         return false;
         // return getDiagram().getActiveComponent() != null;
-    };
+    }
 
     /**
      * A method that terminates the editing

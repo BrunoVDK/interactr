@@ -33,4 +33,7 @@ public class ObjectParty extends Party {
         super(party);
     }
 
+    @Override
+    public Party proposedReplacement() {return new ActorParty(this);}
+
 }

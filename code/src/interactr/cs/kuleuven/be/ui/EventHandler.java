@@ -66,28 +66,28 @@ public class EventHandler {
      * @param clickCount The click count.
      */
     private void handleMouseClick(int x, int y, int clickCount) {
-        switch (clickCount) {
-            case 1: // Single click
-                try {
-                    getDiagramController().activateSubWindow(x,y);
+        try {
+            getDiagramController().activateSubWindow(x, y);
+            switch (clickCount) {
+                case 1: // Single click
                     try {
                         getDiagramController().closeSubWindow(x,y);
                     }
                     catch (InvalidCloseWindowException e) {
-                        getDiagramController().selectComponentAt(x,y);
+                        getDiagramController().selectComponent(x,y);
                     }
-                }
-                catch (NoSuchWindowException ignored) {}
-                break;
-            case 2: // Double click
-                try {
-                    getDiagramController().addPartyAt(x,y);
-                }
-                catch (InvalidAddPartyException exception) {
-                    getDiagramController().switchPartyTypeAt(x, y);
-                }
-                break;
+                    break;
+                case 2: // Double click
+                    try {
+                        getDiagramController().addParty(x,y);
+                    }
+                    catch (InvalidAddPartyException exception) {
+                        getDiagramController().switchTypeOfParty(x, y);
+                    }
+                    break;
+            }
         }
+        catch (NoSuchWindowException ignored) {}
     }
 
     /**
@@ -169,7 +169,7 @@ public class EventHandler {
      */
     private void handleMouseReleased(int x, int y) {
         if (dragOperationType == DragOperationType.DRAG_VALID)
-            getDiagramController().addMessageFrom(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
+            getDiagramController().addMessage(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
         dragOperationType = DragOperationType.DRAG_NONE;
     }
 

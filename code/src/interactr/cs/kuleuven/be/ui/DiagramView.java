@@ -40,17 +40,17 @@ public class DiagramView implements DiagramObserver {
      * @param diagram The new diagram associated with this diagram view.
      * @throws IllegalArgumentException If the given diagram is null.
      */
-    public void setDiagram(Diagram diagram) {
+    public void setDiagram(Diagram diagram) throws IllegalArgumentException {
         if (diagram == null)
             throw new IllegalArgumentException("Diagram cannot be null.");
         this.diagram = diagram;
-        // TODO : add listeners
+        DiagramNotificationCenter.defaultCenter().registerObserver(diagram, this);
     }
 
     /**
      * The diagram associated with this diagram view.
      */
-    private Diagram diagram;
+    protected Diagram diagram;
 
     /**
      * Display the given diagram in this view using the given paintboard.
@@ -58,24 +58,23 @@ public class DiagramView implements DiagramObserver {
      * @param paintBoard The paintboard to use when displaying the view.
      */
     public void display(PaintBoard paintBoard) {
-        displayFigures(paintBoard, diagram);
-        displayMessages(paintBoard, diagram);
+        displayFigures(paintBoard);
+        displayMessages(paintBoard);
     }
 
     /**
-     * Display the figures of the given diagram diagram in this view using the given paintboard.
+     * Display the figures of the given diagram diagram in this view using the given paint board.
      *
      * @param paintBoard The paintboard to use when displaying the view.
-     * @param diagram The diagram that is to be displayed in this view.
      */
-    protected void displayFigures(PaintBoard paintBoard, Diagram diagram) {
+    protected void displayFigures(PaintBoard paintBoard) {
         for (Party party : figures.keySet()) {
-            boolean isSelected = diagram.isSelected(party);
-            boolean isActive = diagram.getActiveComponent() == party;
+            boolean isSelected = false;
+            boolean isActive = false;
             paintBoard.setColour((isSelected || isActive ? Colour.BLUE : Colour.BLACK));
             Figure partyFigure = figureForParty(party);
-            if (isActive)
-                partyFigure.setLabel(diagram.getTemporaryLabel() + "|");
+            // if (isActive)
+                // partyFigure.setLabel(diagram.getTemporaryLabel() + "|");
             partyFigure.draw(paintBoard);
             paintBoard.setColour(Colour.BLACK);
         }
@@ -85,17 +84,16 @@ public class DiagramView implements DiagramObserver {
      * Display the messages of the given diagram diagram in this view using the given paintboard.
      *
      * @param paintBoard The paintboard to use when displaying the view.
-     * @param diagram The diagram that is to be displayed in this view.
      */
-    protected void displayMessages(PaintBoard paintBoard, Diagram diagram) {
+    protected void displayMessages(PaintBoard paintBoard) {
         for (Message message : links.keySet()) {
-            boolean isSelected = diagram.isSelected(message);
-            boolean isActive = diagram.getActiveComponent() == message;
+            boolean isSelected = false;
+            boolean isActive = false;
             paintBoard.setColour((isSelected || isActive ? Colour.BLUE : Colour.BLACK));
             Link messageLink = linkForMessage(message);
-            if (isActive)
-                messageLink.setLabel(diagram.getTemporaryLabel() + "|");
-            else
+            // if (isActive)
+                // messageLink.setLabel(diagram.getTemporaryLabel() + "|");
+            // else
                 messageLink.setLabel(diagram.getPrefix(message) + " " + messageLink.getLabel());
             messageLink.draw(paintBoard);
             paintBoard.setColour(Colour.BLACK);
@@ -103,22 +101,34 @@ public class DiagramView implements DiagramObserver {
     }
 
     /**
-     * Adds the given party to this view at the given coordinates.
+     * Creates a new party at the given coordinates in this view's diagram.
      *
-     * @param diagram The diagram the party is gonna be added to.
-     * @param party The party that is to be added.
      * @param x The x coordinate of the new party.
      * @param y The y coordinate of the new party.
      * @throws InvalidAddPartyException The given party cannot be added to this diagram view at the given coordinate.
      */
-    public void addParty(Diagram diagram, Party party, int x, int y) throws InvalidAddPartyException {
+    public void createParty(int x, int y) throws InvalidAddPartyException {
+        System.out.println("B " + x + " - " + y);
         for (Party p : figures.keySet()) {
             Figure figure = figureForParty(p);
             if (figure.isHit(x,y))
                 throw new InvalidAddPartyException();
         }
+        Party party = Party.createParty();
         if (!figures.containsKey(party))
             figures = figures.plus(party, createFigureForParty(party, x, y));
+    }
+
+    /**
+     * Switch the type of the party at given coordinates.
+     *
+     * @param x The x coordinate of the party.
+     * @param y The y coordinate of the party.
+     */
+    public void switchTypeOfParty(int x, int y) {
+        Party party = getParty(x,y);
+        Party newParty = party.proposedReplacement();
+        // TODO
     }
 
     /**
@@ -134,36 +144,15 @@ public class DiagramView implements DiagramObserver {
     }
 
     /**
-     * Notify this view of the fact that the given 'old' party was replaced
-     *  with a 'new' party.
-     *
-     * @param oldParty The old party to be replaced.
-     * @param newParty The party to replace the old party with.
-     */
-    public void registerPartyReplace(Party oldParty, Party newParty) {
-        Figure oldFigure = figureForParty(oldParty);
-        if (oldFigure == null)
-            return;
-        Figure newFigure = createFigureForParty(newParty, 0, 0);
-        newFigure.setX(oldFigure.getX());
-        newFigure.setY(oldFigure.getY());
-        newFigure.setWidth(oldFigure.getWidth());
-        newFigure.setHeight(oldFigure.getHeight());
-        figures = figures.minus(oldParty);
-        figures = figures.plus(newParty, newFigure);
-    }
-
-    /**
      * Returns a selectable diagram component at given location, or null
      *  if no component is selectable at that coordinate.
      *
-     * @param diagram The diagram whose components are to be considered.
      * @param x The x coordinate to look at.
      * @param y The y coordinate to look at.
      * @return The selectable diagram's component at given location in this view,
      *  or null if no such component is visible at the given coordinate.
      */
-    public DiagramComponent selectableComponentAt(Diagram diagram, int x, int y) {
+    public DiagramComponent getSelectableComponent(int x, int y) {
         for (Message message : links.keySet()) {
             if (linkForMessage(message).isLabelHit(x,y))
                 return message;
@@ -179,13 +168,12 @@ public class DiagramView implements DiagramObserver {
      * Returns the diagram component at given location, or null
      *  if no component is present at that coordinate.
      *
-     * @param diagram The diagram whose components are to be considered.
      * @param x The x coordinate to look at.
      * @param y The y coordinate to look at.
      * @return The diagram component at given location in this view,
      *  or null if no such component is visible at the given coordinate.
      */
-    public DiagramComponent componentAt(Diagram diagram, int x, int y) {
+    public DiagramComponent getComponent(int x, int y) {
         for (Message message : links.keySet()) {
             if (linkForMessage(message).isLabelHit(x,y))
                 return message;
@@ -202,7 +190,6 @@ public class DiagramView implements DiagramObserver {
      *  if no component is present at that coordinate.
      *  The given excluded component, if not null, is ignored.
      *
-     * @param diagram The diagram whose components are to be considered.
      * @param x The x coordinate to look at.
      * @param y The y coordinate to look at.
      * @param excludedComponent The component to ignore when look for the component at given coordinate.
@@ -210,7 +197,7 @@ public class DiagramView implements DiagramObserver {
      *  or null if no such component is visible at the given coordinate.
      * @note This method can be used when looking for a place to move a certain component.
      */
-    protected DiagramComponent componentAt(Diagram diagram, int x, int y, DiagramComponent excludedComponent) {
+    protected DiagramComponent getComponent(int x, int y, DiagramComponent excludedComponent) {
         for (Party party : diagram.getParties()) {
             if (party != excludedComponent && figureForParty(party).isHit(x,y))
                 return party;
@@ -270,7 +257,7 @@ public class DiagramView implements DiagramObserver {
      * @param y The y coordinate to look at.
      * @return The party at the given coordinate.
      */
-    public Party getPartyAt(int x, int y) {
+    public Party getParty(int x, int y) {
         for (Party p : figures.keySet()) {
             Figure figure = figureForParty(p);
             if (figure.isHit(x,y) && !figure.isLabelHit(x,y))
@@ -280,15 +267,14 @@ public class DiagramView implements DiagramObserver {
     }
 
     /**
-     * A mehtod that moves the given party to the given coordinates
+     * A method that moves the given party to the given coordinates
      *
-     * @param diagram The diagram in which to draw the label.
      * @param party The party that has te be moved
      * @param x The new absolute x coordinate of the given Party
      * @param y The new absolute y coordinate of the given Party
      */
-    public void moveParty(Diagram diagram, Party party, int x ,int y) {
-        DiagramComponent component = componentAt(diagram, x, y, party);
+    public void moveParty(Party party, int x ,int y) {
+        DiagramComponent component = getComponent(x, y, party);
         if (component != null && component != party)
             return;
         Figure figure = figures.get(party);
@@ -346,14 +332,13 @@ public class DiagramView implements DiagramObserver {
     /**
      * Returns the index of the message lying right above a message, if inserted at the the given coordinates.
      *
-     * @param diagram The diagram in which the message is to be inserted.
      * @param fromX The start x coordinate for the message to insert.
      * @param fromY The start x coordinate for the message to insert.
      * @param toX The start x coordinate for the message to insert.
      * @param toY The start x coordinate for the message to insert.
      * @return The index at which a message should be inserted if added at the given coordinates.
      */
-    public int getMessageInsertionIndex(Diagram diagram, int fromX, int fromY, int toX, int toY) {
+    public int getMessageInsertionIndex(int fromX, int fromY, int toX, int toY) {
         PList<Message> messages = diagram.getMessages();
         for (int i=0 ; i<messages.size() ; i++) {
             Link link = linkForMessage(messages.get(i));
@@ -367,16 +352,16 @@ public class DiagramView implements DiagramObserver {
     /**
      * Checks whether a message can be inserted at the given coordinates.
      *
-     * @param diagram The diagram in which the message should be inserted.
+     * This method does not check for validity of the callstack after addition of the message
+     *  to the diagram itself.
+     *
      * @param fromX The start x coordinate for the message.
      * @param fromY The start y coordinate for the message.
      * @param toX The end x coordinate for the message.
      * @param toY The end y coordinate for the message.
      * @return True if and only if a message can be inserted at the given coordinates.
-     * @note This method does not check for validity of the callstack after addition of the message
-     *  to the diagram itself.
      */
-    public boolean canInsertMessageAt(Diagram diagram, int fromX, int fromY, int toX, int toY) {
+    public boolean canInsertMessageAt(int fromX, int fromY, int toX, int toY) {
         return false; // Default behaviour is inability to add anything
     }
 
@@ -384,7 +369,6 @@ public class DiagramView implements DiagramObserver {
      * Registers the given invocation message and result message in this diagram view,
      *  using the given start/end coordinates.
      *
-     * @param diagram The diagram in which the messages were added.
      * @param invocation The invocation message that is to be registered.
      * @param resultMessage The result message that is to be registered.
      * @param fromX The start x coordinate for the invocation message's link.
@@ -392,7 +376,7 @@ public class DiagramView implements DiagramObserver {
      * @param toX The end x coordinate for the invocation message's link.
      * @param toY The end y coordinate for the invocation message's link.
      */
-    public void registerMessages(Diagram diagram, InvocationMessage invocation, ResultMessage resultMessage, int fromX, int fromY, int toX, int toY) {
+    public void registerMessages(InvocationMessage invocation, ResultMessage resultMessage, int fromX, int fromY, int toX, int toY) {
         // Result messages are ignored!
         Link invocationLink = createLinkForMessage(invocation, fromX, fromY, toX, toY);
         // Link resultLink = createLinkForMessage(resultMessage, fromX, fromY, toX, toY);
@@ -417,22 +401,6 @@ public class DiagramView implements DiagramObserver {
      * A hashmap containing links of all messages in this diagram view.
      */
     protected PMap<Message, Link> links = PMap.<Message, Link>empty();
-
-    /**
-     * Make sure no link or figure is held by this view if it doesn't have a corresponding component in the given diagram.
-     *
-     * @param diagram The diagram to synchronize with.
-     */
-    public void synchronize(Diagram diagram) {
-        PList<Message> diagramMessages = diagram.getMessages();
-        for (Message message : links.keySet())
-            if (!diagramMessages.contains(message))
-                links = links.minus(message);
-        PList<Party> diagramParties = diagram.getParties();
-        for (Party party : figures.keySet())
-            if (!diagramParties.contains(party))
-                figures = figures.minus(party);
-    }
 
     /**
      * Returns the name of this diagram view as a string.

@@ -12,6 +12,15 @@ import interactr.cs.kuleuven.be.ui.geometry.Figure;
 public class Party extends DiagramComponent {
 
     /**
+     * Creates a novel party.
+     *
+     * @return The newly created party.
+     */
+    public static Party createParty() {
+        return new ObjectParty();
+    }
+
+    /**
      * Initialize this new party with a ':Class' label.
      */
     public Party() {
@@ -35,6 +44,13 @@ public class Party extends DiagramComponent {
     public Party(Party party) {
         super(party.getLabel());
     }
+
+    /**
+     * Returns a proposed party to replace this one when the type of party is to be changed.
+     *
+     * @return A proposed replacement for this party, possibly of different type.
+     */
+    public Party proposedReplacement() {return new ObjectParty(this);}
 
     /**
      * Returns a proposal for how this component should be drawn, by returning a mock-up figure.
@@ -71,10 +87,4 @@ public class Party extends DiagramComponent {
         return super.toString();
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if(other == null) return false;
-        if(other == this) return true;
-        else return false;
-    }
 }

@@ -9,11 +9,12 @@ import java.util.HashMap;
 /**
  * A class of notification centers for notifying registered observers of changes to a diagram.
  *
- * @author Team 25
- * @version  1.0
- * @note Currently this notification center (an event bus - pattern = singleton/mediator/observer) only knows
+ *  Currently this notification center (an event bus - pattern = singleton/mediator/observer) only knows
  *  of diagram observers. It could be written to notify subwindows and diagram views of specific notifications
  *  tailored to their needs, but it would be less extensible that way.
+ *
+ * @author Team 25
+ * @version  1.0
  */
 public class DiagramNotificationCenter {
 
@@ -23,8 +24,7 @@ public class DiagramNotificationCenter {
 
     /**
      * Get the default notification center for diagrams.
-     *
-     * @note This is a singleton.
+     *  This is a singleton.
      */
     public static DiagramNotificationCenter defaultCenter() {
         return defaultCenter;
@@ -67,6 +67,19 @@ public class DiagramNotificationCenter {
         }
         if (!observers.contains(observer))
             observers.add(observer);
+    }
+
+    /**
+     * Remove the given observer. If the observer was previously associated with the given diagram,
+     *  than it is unregistered as an observer (i.e. it won't receive any updates anymore).
+     *
+     * @param diagram The diagram to register the observer with.
+     * @param observer The observer that is to be registered.
+     */
+    public void unregisterObserver(Diagram diagram, DiagramObserver observer) {
+        ArrayList<DiagramObserver> observers = this.observers.get(diagram);
+        if (observers != null)
+            observers.remove(observer);
     }
 
     /**
