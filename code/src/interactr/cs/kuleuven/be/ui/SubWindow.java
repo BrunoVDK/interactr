@@ -321,9 +321,11 @@ public class SubWindow implements DiagramObserver {
     public void displayView(PaintBoard paintBoard) {
 
         Rectangle frame = getFrame();
+        paintBoard.setClipRect(frame); // Make sure no drawing is done outside the frame
+
+        // Draw white background and view on top of it
         paintBoard.setColour(Colour.WHITE);
         paintBoard.fillRectangle(frame.getX(), frame.getY(), frame.getWidth(), frame.getHeight());
-        paintBoard.setClipRect(frame); // Make sure no drawing is done outside the frame
         paintBoard.translateOrigin(getFrame().getX(), getFrame().getY() + TITLE_BAR_HEIGHT);
         getActiveView().display(paintBoard); // Draw view contents
         paintBoard.translateOrigin(-getFrame().getX(), -getFrame().getY() - TITLE_BAR_HEIGHT);
