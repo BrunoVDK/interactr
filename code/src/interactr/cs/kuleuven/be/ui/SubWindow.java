@@ -39,7 +39,7 @@ public class SubWindow implements DiagramObserver {
             views = views.plus(new CommunicationView(adoptedDiagram));
         }
         else {
-            setFrame(new Rectangle(subWindow.getFrame()));
+            setFrame(new Rectangle(0, 0, subWindow.getFrame().getWidth(), subWindow.getFrame().getHeight()));
             for (DiagramView view : subWindow.getViews())
                 views = views.plus(view.clone());
         }

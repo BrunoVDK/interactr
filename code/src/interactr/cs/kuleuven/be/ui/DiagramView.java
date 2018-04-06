@@ -1,9 +1,7 @@
 package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.domain.*;
-import interactr.cs.kuleuven.be.exceptions.InvalidAddMessageException;
-import interactr.cs.kuleuven.be.exceptions.InvalidMovePartyException;
-import interactr.cs.kuleuven.be.exceptions.NoSuchPartyException;
+import interactr.cs.kuleuven.be.exceptions.*;
 import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.purecollections.PMap;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
@@ -541,33 +539,7 @@ public class DiagramView implements DiagramObserver, Cloneable {
     public DiagramView clone() {
         final DiagramView clone;
         try {
-
             clone = (DiagramView)super.clone();
-            clone.setDiagram(getDiagram());
-
-            // TODO MAKE DEEP COPY OF FIGURES THEMSELVES
-
-            // Register parties
-            for (Party party : figures.keySet()) {
-                Figure partyFigure = figures.get(party);
-                clone.registerParty(party, new Point(partyFigure.getX(), partyFigure.getY()));
-            }
-
-            // Register messages
-            /*
-            for (int i=0 ; i<diagram.getNbMessages() ; i++) { // Drawing is done in pairs
-
-                Message message = diagram.getMessageAtIndex(i);
-                Link messageLink = linkForMessage(message);
-                int associatedIndex = diagram.getIndexOfAssociatedMessage(i);
-                Message associatedMessage = diagram.getMessageAtIndex(associatedIndex);
-                Link associatedMessageLink = linkForMessage(diagram.getMessageAtIndex(associatedIndex));
-
-                clone.registerMessages(message, associatedMessage, );
-
-            }
-            */
-
         }
         catch (CloneNotSupportedException ignored) {throw new RuntimeException("Failed to clone diagram view.");}
         return clone;
