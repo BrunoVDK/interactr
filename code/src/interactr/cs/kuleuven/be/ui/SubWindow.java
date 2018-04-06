@@ -5,6 +5,7 @@ import interactr.cs.kuleuven.be.exceptions.*;
 import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.purecollections.PMap;
 import interactr.cs.kuleuven.be.ui.geometry.Colour;
+import interactr.cs.kuleuven.be.ui.geometry.Point;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 import java.util.ArrayList;
@@ -285,8 +286,17 @@ public class SubWindow implements DiagramObserver {
         if (activeLabel != null)
             return;
         else if (getActiveComponent() != null) {
+
+            // Delete component & post a notification
             getActiveComponent().deleteFrom(getDiagram());
-            deselectAll();
+            PMap<String , Object> notificationParameters = PMap.<String, Object>empty();
+            notificationParameters = notificationParameters.plus("component", getActiveComponent());
+            DiagramNotificationCenter.defaultCenter().postNotification(
+                    getDiagram(),
+                    DiagramUpdateType.DELETE_COMPONENT,
+                    notificationParameters);
+            deselectAll(); // Now deselect everything
+
         }
     }
 

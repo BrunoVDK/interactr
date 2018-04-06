@@ -473,10 +473,15 @@ public class DiagramView implements DiagramObserver {
                 if (oldParty instanceof Party && newParty instanceof Party)
                     registerPartyReplace((Party)oldParty, (Party)newParty);
                 break;
-            case DELETE_PARTY:
-                // Synchronize parties
-            case DELETE_MESSAGE:
-                // Synchronize messages
+            case DELETE_COMPONENT: // Synchronize here
+                PList<Message> diagramMessages = diagram.getMessages();
+                for (Message message : links.keySet())
+                    if (!diagramMessages.contains(message))
+                        links = links.minus(message);
+                PList<Party> diagramParties = diagram.getParties();
+                for (Party p : figures.keySet())
+                    if (!diagramParties.contains(p))
+                        figures = figures.minus(p);
                 break;
         }
     }

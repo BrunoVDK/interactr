@@ -3,10 +3,7 @@ package interactr.cs.kuleuven.be.ui;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
-
 import interactr.cs.kuleuven.be.exceptions.*;
-import interactr.cs.kuleuven.be.exceptions.NoSuchPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.Point;
 
 /**

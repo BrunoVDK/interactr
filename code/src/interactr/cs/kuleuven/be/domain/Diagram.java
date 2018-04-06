@@ -262,7 +262,7 @@ public class Diagram {
      */
     public String getPrefix(Message message) {
         int index = getIndexOfMessage(message);
-        return associatedPrefix.get(index);
+        return associatedPrefixes.get(index);
     }
 
     /**
@@ -272,7 +272,7 @@ public class Diagram {
      */
     private void addPrefix(ResultMessage message){
         int index = this.getIndexOfAssociatedMessage(this.getIndexOfMessage(message));
-        this.associatedPrefix.add(index+1, null);
+        this.associatedPrefixes.add(index+1, null);
     }
 
     /**
@@ -284,18 +284,18 @@ public class Diagram {
         Message prev = this.getPreviousInvocationMessage(message, index);
 
         if (prev == null){
-            this.associatedPrefix.add(index, "1.");
+            this.associatedPrefixes.add(index, "1.");
         }
         else if (message.getSender() == prev.getSender()) {
-            String previousPrefix = this.associatedPrefix.get(this.getIndexOfMessage(prev));
+            String previousPrefix = this.associatedPrefixes.get(this.getIndexOfMessage(prev));
             int prefixLast = Integer.parseInt(previousPrefix.substring(previousPrefix.length()-2, previousPrefix.length()-1));
             int prefixNew = prefixLast + 1;
             String prefix = previousPrefix.substring(0 , previousPrefix.length()-2) + prefixNew + ".";
-            this.associatedPrefix.add(index, prefix);
+            this.associatedPrefixes.add(index, prefix);
         }
         else if (message.getSender() == prev.getReceiver()){
-            String prefix = this.associatedPrefix.get((this.getIndexOfMessage(prev))) + "1.";
-            this.associatedPrefix.add(index, prefix);
+            String prefix = this.associatedPrefixes.get((this.getIndexOfMessage(prev))) + "1.";
+            this.associatedPrefixes.add(index, prefix);
         }
     }
 
@@ -331,6 +331,6 @@ public class Diagram {
     /**
      * The prefixes associated with the messages.
      */
-    private ArrayList<String> associatedPrefix = new ArrayList<String>();
+    private ArrayList<String> associatedPrefixes = new ArrayList<String>();
 
 }
