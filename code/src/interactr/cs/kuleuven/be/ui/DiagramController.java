@@ -107,6 +107,7 @@ public class DiagramController {
     public void closeSubWindow(int x, int y) throws InvalidCloseWindowException {
         SubWindow subWindow = subWindows.stream().filter( s -> s.closeButtonEncloses(x,y)).findFirst().orElse(null);
         if (subWindow != null) {
+            subWindow.close();
             subWindows.remove(subWindow);
             getPaintBoard().refresh();
         }

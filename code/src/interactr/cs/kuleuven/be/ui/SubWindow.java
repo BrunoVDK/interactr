@@ -431,4 +431,14 @@ public class SubWindow implements DiagramObserver {
         // TODO
     }
 
+    /**
+     * Close this subwindow.
+     *  This unregisters it as an observer.
+     */
+    public void close() {
+        DiagramNotificationCenter.defaultCenter().unregisterObserver(getDiagram(), this);
+        for (DiagramView view : views)
+            view.close(); // Close all views too, but only after unregistering this subwindow as observer
+    }
+
 }

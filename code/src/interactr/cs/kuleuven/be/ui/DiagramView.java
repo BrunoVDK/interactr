@@ -500,4 +500,12 @@ public class DiagramView implements DiagramObserver {
         // links = links.plus(resultMessage, resultLink);
     }
 
+    /**
+     * Close this view.
+     *  This unregisters it as an observer.
+     */
+    public void close() {
+        DiagramNotificationCenter.defaultCenter().unregisterObserver(diagram, this);
+    }
+
 }
