@@ -108,16 +108,28 @@ public class DiagramView implements DiagramObserver {
      * @param y The y coordinate of the new party.
      * @throws InvalidAddPartyException The given party cannot be added to this diagram view at the given coordinate.
      */
-    public void createParty(int x, int y) throws InvalidAddPartyException {
-        System.out.println("B " + x + " - " + y);
+    public void addParty(int x, int y) throws InvalidAddPartyException {
+
+        // Make sure there is nothing at the given coordinates
         for (Party p : figures.keySet()) {
             Figure figure = figureForParty(p);
             if (figure.isHit(x,y))
                 throw new InvalidAddPartyException();
         }
+
+        // Create the new party
         Party party = Party.createParty();
-        if (!figures.containsKey(party))
-            figures = figures.plus(party, createFigureForParty(party, x, y));
+        diagram.addParty(party);
+
+        // Post a notification of the update
+        PMap<String , Object> notificationParameters = PMap.<String, Object>empty();
+        notificationParameters = notificationParameters.plus("party", party);
+        notificationParameters = notificationParameters.plus("coordinates", new Point(x,y));
+        DiagramNotificationCenter.defaultCenter().postNotification(
+                diagram,
+                DiagramUpdateType.ADD_PARTY,
+                notificationParameters);
+
     }
 
     /**
@@ -133,9 +145,9 @@ public class DiagramView implements DiagramObserver {
             // Replace the party in the diagram
             Party newParty = oldParty.proposedReplacement();
             diagram.replaceParty(oldParty, newParty);
-            PMap<String , Object> notificationParameters = PMap.<String, Object>empty();
 
             // Post a notification of the update
+            PMap<String , Object> notificationParameters = PMap.<String, Object>empty();
             notificationParameters = notificationParameters.plus("oldParty", oldParty);
             notificationParameters = notificationParameters.plus("newParty", newParty);
             DiagramNotificationCenter.defaultCenter().postNotification(

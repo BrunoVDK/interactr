@@ -40,7 +40,6 @@ public class SequenceView extends DiagramView {
         }
         paintBoard.setColour(Colour.BLACK);
         paintBoard.drawLine(0, PARTY_ROW_HEIGHT, paintBoard.getWidth(), PARTY_ROW_HEIGHT);
-        System.out.println(new Rectangle(0, PARTY_ROW_HEIGHT, paintBoard.getWidth(), PARTY_ROW_HEIGHT));
         displayMessages(paintBoard);
     }
 
@@ -145,10 +144,10 @@ public class SequenceView extends DiagramView {
     }
 
     @Override
-    public void createParty(int x, int y) throws InvalidAddPartyException {
+    public void addParty(int x, int y) throws InvalidAddPartyException {
         if (y >= PARTY_ROW_HEIGHT)
             throw new InvalidAddPartyException();
-        super.createParty(x, 5);
+        super.addParty(x, 5);
     }
 
     @Override

@@ -179,7 +179,7 @@ public class SubWindow implements DiagramObserver {
             throw new InvalidAddPartyException();
         y -= TITLE_BAR_HEIGHT;
         try {
-            getActiveView().createParty(x,y);
+            getActiveView().addParty(x,y);
         }
         catch (InvalidAddPartyException e) {throw e;}
     }
