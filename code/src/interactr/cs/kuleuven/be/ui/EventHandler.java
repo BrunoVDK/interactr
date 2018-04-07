@@ -36,7 +36,7 @@ public class EventHandler {
     public void handleMouseEvent(int id, int x, int y, int clickCount) throws IllegalArgumentException {
 
         // Mouse events are ignored when the diagram controller is editing
-        if (getDiagramController() != null && ! getDiagramController().isEditing()) {
+        if (getDiagramController() != null) {
             switch (id) {
                 case MouseEvent.MOUSE_CLICKED:
                     handleMouseClick(x,y,clickCount);

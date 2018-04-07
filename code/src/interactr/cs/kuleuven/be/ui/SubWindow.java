@@ -43,6 +43,7 @@ public class SubWindow implements DiagramObserver {
             for (DiagramView view : subWindow.getViews())
                 views = views.plus(view.clone());
         }
+        DiagramNotificationCenter.defaultCenter().registerObserver(getDiagram(), this);
     }
 
     /**
@@ -335,6 +336,8 @@ public class SubWindow implements DiagramObserver {
      * @throws InvalidMovePartyException If the party could not be moved to the given end coordinates.
      */
     public void moveParty(int fromX, int fromY, int toX, int toY) throws NoSuchPartyException, InvalidMovePartyException {
+        if (selectionIsActive())
+            return;
         getActiveView().moveParty(fromX, fromY - TITLE_BAR_HEIGHT, toX, toY - TITLE_BAR_HEIGHT);
     }
 
@@ -474,7 +477,7 @@ public class SubWindow implements DiagramObserver {
                 if (component instanceof DiagramComponent
                         && isSelected((DiagramComponent)component)
                         && selectionIsActive())
-                    setSelectedLabel(((DiagramComponent) component).getLabel());
+                    this.selectedLabel = ((DiagramComponent) component).getLabel();
                 break;
         }
     }
