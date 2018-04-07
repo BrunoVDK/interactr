@@ -29,8 +29,8 @@ public class SequenceView extends DiagramView {
     }
 
     @Override
-    public void display(PaintBoard paintBoard) {
-        displayFigures(paintBoard);
+    public void display(PaintBoard paintBoard, DiagramComponent selectedComponent, String selectedLabel) {
+        displayFigures(paintBoard, selectedComponent, selectedLabel);
         paintBoard.setColour(Colour.GRAY);
         for (Party party : figures.keySet()) {
             Figure partyFigure = figures.get(party);
@@ -41,11 +41,11 @@ public class SequenceView extends DiagramView {
         }
         paintBoard.setColour(Colour.BLACK);
         paintBoard.drawLine(0, PARTY_ROW_HEIGHT, paintBoard.getWidth(), PARTY_ROW_HEIGHT);
-        displayMessages(paintBoard);
+        displayMessages(paintBoard, selectedComponent, selectedLabel);
     }
 
     @Override
-    protected void displayMessages(PaintBoard paintBoard) {
+    protected void displayMessages(PaintBoard paintBoard, DiagramComponent selectedComponent, String selectedLabel) {
 
         // Pre-processing
         Party initiator = diagram.getInitiator();
@@ -95,9 +95,10 @@ public class SequenceView extends DiagramView {
                     drawActivationBar(paintBoard, barX, barY, barHeight);
 
                     // Draw invocation link (calculate offset!)
-                    boolean isSelected = false /*diagram.isSelected(message)*/;
-                    boolean isActive = false /*diagram.getActiveComponent() == message*/;
-                    paintBoard.setColour((isSelected || isActive ? Colour.BLUE : Colour.BLACK));
+                    boolean isSelected = (message == selectedComponent), isActive = (isSelected && selectedLabel != null);
+                    paintBoard.setColour((isSelected || isActive)
+                            ? ((isActive && !selectedComponent.canHaveAsLabel(selectedLabel)) ? Colour.RED : Colour.BLUE)
+                            : Colour.BLACK);
                     if (isActive)
                         messageLink.setLabel("TEMP" + "|");
                     messageLink.setStartX(messageX - (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
@@ -106,9 +107,11 @@ public class SequenceView extends DiagramView {
                     paintBoard.setColour(Colour.BLACK);
 
                     // Draw receiver link (calculate offset!)
-                    isSelected = false /*diagram.isSelected(associatedMessage)*/;
-                    isActive = false /*diagram.getActiveComponent() == associatedMessage*/;
-                    paintBoard.setColour((isSelected || isActive ? Colour.BLUE : Colour.BLACK));
+                    isSelected = (message == selectedComponent);
+                    isActive = (isSelected && selectedLabel != null);
+                    paintBoard.setColour((isSelected || isActive)
+                            ? ((isActive && !selectedComponent.canHaveAsLabel(selectedLabel)) ? Colour.RED : Colour.BLUE)
+                            : Colour.BLACK);
                     if (isActive)
                         associatedMessageLink.setLabel("TEMP" + "|");
                     associatedMessageLink.setEndX(messageX - (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));

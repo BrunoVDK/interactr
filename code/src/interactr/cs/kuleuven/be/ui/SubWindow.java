@@ -213,7 +213,12 @@ public class SubWindow implements DiagramObserver {
      * @param y The y coordinate of the component that is to be selected.
      */
     public void selectComponent(int x, int y) {
-        setActiveComponent(getActiveView().getSelectableComponent(x, y-TITLE_BAR_HEIGHT));
+        DiagramComponent component = getActiveView().getSelectableComponent(x, y-TITLE_BAR_HEIGHT);
+        if (component != null) {
+            if (isSelected(component)) // Component already selected, activate it
+                setSelectedLabel("");
+            setSelectedComponent(component);
+        }
     }
 
     /**
@@ -223,14 +228,14 @@ public class SubWindow implements DiagramObserver {
      * @return True if and only if the given diagram component is currently selected.
      */
     private boolean isSelected(DiagramComponent component) {
-        return getActiveComponent() == component;
+        return getSelectedComponent() == component;
     }
 
     /**
      * Returns the diagram component that is currently active in this diagram.
      */
-    private DiagramComponent getActiveComponent() {
-        return activeComponent;
+    private DiagramComponent getSelectedComponent() {
+        return selectedComponent;
     }
 
     /**
@@ -238,64 +243,70 @@ public class SubWindow implements DiagramObserver {
      *
      * @param component the diagram component that needs to be set as active component.
      */
-    private void setActiveComponent(DiagramComponent component) {
-        deselectAll();
-        setActiveLabel("");
-        this.activeComponent = component;
+    private void setSelectedComponent(DiagramComponent component) {
+        this.selectedComponent = component;
     }
 
     /**
-     * Deselects the currently active component(s).
+     * Deselects the currently selected component.
+     *
+     * @throws InvalidLabelException If the selected component is active and its label is invalid.
      */
-    private void deselectAll(){
-        if (activeLabel == null)
-            setActiveComponent(null);
+    public void deselectAll() throws InvalidLabelException {
+        if (selectionIsActive() && !getSelectedComponent().canHaveAsLabel(getSelectedLabel()))
+            throw new InvalidLabelException();
+        setSelectedComponent(null);
+        setSelectedLabel(null);
+    }
+
+    /**
+     * Returns whether or not the selection for this subwindow is active (that is, in edit mode).
+     *
+     * @return True if and only if the selected label is not null.
+     */
+    public boolean selectionIsActive() {
+        return selectedLabel != null;
     }
 
     /**
      * Registers the active component in this diagram.
      */
-    private DiagramComponent activeComponent;
+    private DiagramComponent selectedComponent = null;
 
     /**
      * Sets the temporary label for the active component to the given one.
      *
-     * @param label The new temporary label for the active component.
+     * @param selectedLabel The new temporary label for the active component.
      */
-    private void setActiveLabel(String label){
-        this.activeLabel = label;
+    public void setSelectedLabel(String selectedLabel){
+        this.selectedLabel = selectedLabel;
     }
 
     /**
      * Returns the temporary label of the currently active component in this diagram.
      */
-    public String getActiveLabel(){
-        return activeLabel;
+    public String getSelectedLabel(){
+        return selectedLabel;
     }
 
     /**
      * The temporary label for the active component of this diagram.
      */
-    private String activeLabel = "";
+    private String selectedLabel = null;
 
     /**
      * Removes the currently selected component from this subwindow's diagram.
      */
     public void deleteSelection(){
-        if (activeLabel != null)
-            return;
-        else if (getActiveComponent() != null) {
-
-            // Delete component & post a notification
-            getActiveComponent().deleteFrom(getDiagram());
+        if (selectedLabel == null && getSelectedComponent() != null) { // Only delete if not active
+            getSelectedComponent().deleteFrom(getDiagram());
             PMap<String , Object> notificationParameters = PMap.<String, Object>empty();
-            notificationParameters = notificationParameters.plus("component", getActiveComponent());
+            notificationParameters = notificationParameters.plus("component", getSelectedComponent());
             DiagramNotificationCenter.defaultCenter().postNotification(
                     getDiagram(),
                     DiagramUpdateType.DELETE_COMPONENT,
                     notificationParameters);
             deselectAll(); // Now deselect everything
-
         }
     }
 
@@ -334,7 +345,7 @@ public class SubWindow implements DiagramObserver {
         paintBoard.setColour(Colour.WHITE);
         paintBoard.fillRectangle(frame.getX(), frame.getY(), frame.getWidth(), frame.getHeight());
         paintBoard.translateOrigin(getFrame().getX(), getFrame().getY() + TITLE_BAR_HEIGHT);
-        getActiveView().display(paintBoard); // Draw view contents
+        getActiveView().display(paintBoard, getSelectedComponent(), getSelectedLabel()); // Draw view contents
         paintBoard.translateOrigin(-getFrame().getX(), -getFrame().getY() - TITLE_BAR_HEIGHT);
 
         // Draw the frame (including title bar)

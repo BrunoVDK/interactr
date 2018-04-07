@@ -208,8 +208,12 @@ public class EventHandler {
         if (getDiagramController() != null) {
             switch (id) {
                 case KeyEvent.KEY_PRESSED:
-                    if (keyCode == KeyEvent.VK_ENTER)
-                        getDiagramController().abortEditing();
+                    if (keyCode == KeyEvent.VK_ENTER) {
+                        try {
+                            getDiagramController().abortEditing();
+                        }
+                        catch (InvalidLabelException e) {}
+                    }
                     else if (keyCode == KeyEvent.VK_BACK_SPACE) {
                         if (getDiagramController().isEditing())
                             getDiagramController().removeLastChar();

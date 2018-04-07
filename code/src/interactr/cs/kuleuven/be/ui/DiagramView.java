@@ -54,27 +54,32 @@ public class DiagramView implements DiagramObserver, Cloneable {
      * Display the given diagram in this view using the given paintboard.
      *
      * @param paintBoard The paintboard to use when displaying the view.
+     * @param selectedComponent The selected component, if any.
+     * @param selectedLabel The temporary label of the selected component, if any.
      */
-    public void display(PaintBoard paintBoard) {
-        displayFigures(paintBoard);
-        displayMessages(paintBoard);
+    public void display(PaintBoard paintBoard, DiagramComponent selectedComponent, String selectedLabel) {
+        displayFigures(paintBoard, selectedComponent, selectedLabel);
+        displayMessages(paintBoard, selectedComponent, selectedLabel);
     }
 
     /**
      * Display the figures of the given diagram diagram in this view using the given paint board.
      *
      * @param paintBoard The paintboard to use when displaying the view.
+     * @param selectedComponent The selected component, if any.
+     * @param selectedLabel The temporary label of the selected component, if any.
      */
-    protected void displayFigures(PaintBoard paintBoard) {
+    protected void displayFigures(PaintBoard paintBoard, DiagramComponent selectedComponent, String selectedLabel) {
         for (Party party : figures.keySet()) {
-            boolean isSelected = false;
-            boolean isActive = false;
-            paintBoard.setColour((isSelected || isActive ? Colour.BLUE : Colour.BLACK));
+            boolean isSelected = (party == selectedComponent), isActive = (isSelected && selectedLabel != null);
+            paintBoard.setColour((isSelected || isActive)
+                    ? ((isActive && !selectedComponent.canHaveAsLabel(selectedLabel)) ? Colour.RED : Colour.BLUE)
+                    : Colour.BLACK);
+            paintBoard.setColour((isSelected || isActive) ? Colour.BLUE : Colour.BLACK);
             Figure partyFigure = figureForParty(party);
-            // if (isActive)
-                // partyFigure.setLabel(diagram.getTemporaryLabel() + "|");
+            if (isActive)
+                partyFigure.setLabel(selectedLabel + "|");
             partyFigure.draw(paintBoard);
-            paintBoard.setColour(Colour.BLACK);
         }
     }
 
@@ -82,19 +87,21 @@ public class DiagramView implements DiagramObserver, Cloneable {
      * Display the messages of the given diagram diagram in this view using the given paintboard.
      *
      * @param paintBoard The paintboard to use when displaying the view.
+     * @param selectedComponent The selected component, if any.
+     * @param selectedLabel The temporary label of the selected component, if any.
      */
-    protected void displayMessages(PaintBoard paintBoard) {
+    protected void displayMessages(PaintBoard paintBoard, DiagramComponent selectedComponent, String selectedLabel) {
         for (Message message : links.keySet()) {
-            boolean isSelected = false;
-            boolean isActive = false;
-            paintBoard.setColour((isSelected || isActive ? Colour.BLUE : Colour.BLACK));
+            boolean isSelected = (message == selectedComponent), isActive = (isSelected && selectedLabel != null);
+            paintBoard.setColour((isSelected || isActive)
+                    ? ((isActive && !selectedComponent.canHaveAsLabel(selectedLabel)) ? Colour.RED : Colour.BLUE)
+                    : Colour.BLACK);
             Link messageLink = linkForMessage(message);
-            // if (isActive)
-                // messageLink.setLabel(diagram.getTemporaryLabel() + "|");
-            // else
+            if (isActive)
+                messageLink.setLabel(selectedLabel + "|");
+            else
                 messageLink.setLabel(diagram.getPrefix(message) + " " + messageLink.getLabel());
             messageLink.draw(paintBoard);
-            paintBoard.setColour(Colour.BLACK);
         }
     }
 
@@ -558,7 +565,6 @@ public class DiagramView implements DiagramObserver, Cloneable {
     protected void registerFigure(Party party, Figure figure) {
         if (figure == null)
             return;
-        System.out.println("ok");
         figures = figures.minus(party);
         figures = figures.plus(party, figure.clone());
     }

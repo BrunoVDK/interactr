@@ -216,6 +216,7 @@ public class DiagramController {
             getActiveSubwindow().selectComponent(
                     x - getActiveSubwindow().getFrame().getX(),
                     y - getActiveSubwindow().getFrame().getY());
+            setTemporaryLabel(getActiveSubwindow().getSelectedLabel());
             getPaintBoard().refresh();
         }
     }
@@ -267,27 +268,27 @@ public class DiagramController {
     }
 
     /**
-     * A method that returns the editing mode of the selectionManager
+     * Returns whether or not the active subwindow is currently editing a component.
+     *
+     * @return True if and only if the active subwindow exists and its selection is active.
      */
     public boolean isEditing() {
+        if (getActiveSubwindow() != null)
+            return getActiveSubwindow().selectionIsActive();
         return false;
-        // return getDiagram().getActiveComponent() != null;
     }
 
     /**
-     * A method that terminates the editing
+     * Terminate the current editing session, if any.
+     *
+     * @throws InvalidLabelException If the current label for the editing session is not a valid one
+     *  for the selected component.
      */
-    public void abortEditing(){
-        /*
-        if (getDiagram().getActiveComponent() != null){
-            try {
-                getDiagram().getActiveComponent().setLabel(getDiagram().getTemporaryLabel());
-                getDiagram().setActiveComponent(null);
-                getPaintBoard().refresh();
-            }
-            catch (InvalidLabelException e) {}
+    public void abortEditing() throws InvalidLabelException {
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().deselectAll();
+            getPaintBoard().refresh();
         }
-        */
     }
 
     /**
@@ -295,23 +296,48 @@ public class DiagramController {
      *
      * @param c The char that is to be appended.
      */
-    public void appendChar(char c){
-        // this.getDiagram().setTemporaryLabel(this.getDiagram().getTemporaryLabel() + c);
-        getPaintBoard().refresh();
+    public void appendChar(char c) {
+        if (getActiveSubwindow() != null) {
+            setTemporaryLabel(getTemporaryLabel() + c);
+            getActiveSubwindow().setSelectedLabel(getTemporaryLabel());
+            getPaintBoard().refresh();
+        }
     }
 
     /**
      * Removes the last char from the label of the active component.
      */
     public void removeLastChar() {
-        /*
-        String temp = this.getDiagram().getTemporaryLabel();
-        if (temp.length() > 0) {
-            this.getDiagram().setTemporaryLabel(temp.substring(0, temp.length()-1));
-            getPaintBoard().refresh();
+        if (getActiveSubwindow() != null) {
+            String temp = getTemporaryLabel();
+            if (temp.length() > 0) {
+                setTemporaryLabel(temp.substring(0, temp.length()-1));
+                getActiveSubwindow().setSelectedLabel(getTemporaryLabel());
+                getPaintBoard().refresh();
+            }
         }
-        */
     }
+
+    /**
+     * Returns the temporary label for this diagram controller.
+     */
+    private String getTemporaryLabel() {
+        return temporaryLabel;
+    }
+
+    /**
+     * Sets the temporary label of this controller to the given one.
+     *
+     * @param temporaryLabel The new temporary label.
+     */
+    private void setTemporaryLabel(String temporaryLabel) {
+        this.temporaryLabel = temporaryLabel;
+    }
+
+    /**
+     * Registers the label currently used
+     */
+    private String temporaryLabel = null;
 
     /**
      * Returns the paint board associated with this diagram controller.
