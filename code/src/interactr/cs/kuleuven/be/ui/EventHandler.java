@@ -155,8 +155,7 @@ public class EventHandler {
             lastDragCoordinate = new Point(x,y);
 
         }
-        catch (NoSuchPartyException ignored) {}
-        catch (InvalidMovePartyException ignored) {}
+        catch (Exception ignored) {}
     }
 
     /**
@@ -203,16 +202,18 @@ public class EventHandler {
      * @param id The type of key event.
      * @param keyCode The key code for the key event.
      * @param keyChar The key char for the key event.
+     * @param keyModifiers The key modifiers for the key event.
      */
-    void handleKeyEvent(int id, int keyCode, char keyChar) {
+    void handleKeyEvent(int id, int keyCode, char keyChar, int keyModifiers) {
         if (getDiagramController() != null) {
+            boolean controlIsPressed = (keyModifiers & KeyEvent.CTRL_DOWN_MASK) != 0;
             switch (id) {
                 case KeyEvent.KEY_PRESSED:
                     if (keyCode == KeyEvent.VK_ENTER) {
                         try {
                             getDiagramController().abortEditing();
                         }
-                        catch (InvalidLabelException e) {}
+                        catch (InvalidLabelException ignored) {}
                     }
                     else if (keyCode == KeyEvent.VK_BACK_SPACE) {
                         if (getDiagramController().isEditing())
@@ -220,8 +221,6 @@ public class EventHandler {
                         else
                             getDiagramController().deleteSelection();
                     }
-                    else if (keyCode == KeyEvent.VK_CONTROL)
-                        controlIsPressed = true;
                     else if (keyCode == KeyEvent.VK_N && controlIsPressed)
                         getDiagramController().createSubWindow();
                     else if (keyCode == KeyEvent.VK_D && controlIsPressed)
@@ -230,8 +229,6 @@ public class EventHandler {
                 case KeyEvent.KEY_TYPED:
                     if (keyChar == KeyEvent.VK_TAB && !getDiagramController().isEditing())
                         getDiagramController().toggleActiveSubWindowView();
-                    else if(keyChar == KeyEvent.VK_CONTROL)
-                        controlIsPressed = false;
                     else if (Character.isLetter(keyChar)
                             || Character.isDigit(keyChar)
                             || ":();-_<>*&[]".indexOf(Character.toString(keyChar)) != -1)
@@ -261,10 +258,5 @@ public class EventHandler {
      * Variable registering the diagram controller of this event handler.
      */
     private DiagramController diagramController;
-
-    /**
-     * A boolean that returns if the control key is pressed on the moment
-     */
-    private boolean controlIsPressed = false;
 
 }

@@ -75,7 +75,6 @@ public class DiagramView implements DiagramObserver, Cloneable {
             paintBoard.setColour((isSelected || isActive)
                     ? ((isActive && !selectedComponent.canHaveAsLabel(selectedLabel)) ? Colour.RED : Colour.BLUE)
                     : Colour.BLACK);
-            paintBoard.setColour((isSelected || isActive) ? Colour.BLUE : Colour.BLACK);
             Figure partyFigure = figureForParty(party);
             if (isActive)
                 partyFigure.setLabel(selectedLabel + "|");
