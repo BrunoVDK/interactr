@@ -63,6 +63,8 @@ public class Party extends DiagramComponent {
 
     @Override
     public boolean canHaveAsLabel(String label) {
+        if (!super.canHaveAsLabel(label))
+            return false;
         boolean validCharacters = true;
         String[] parts = label.split(":");
         if (parts.length == 2) {
@@ -74,7 +76,7 @@ public class Party extends DiagramComponent {
         }
         else
             validCharacters = false;
-        return (validCharacters && super.canHaveAsLabel(label));
+        return validCharacters;
     }
 
     @Override

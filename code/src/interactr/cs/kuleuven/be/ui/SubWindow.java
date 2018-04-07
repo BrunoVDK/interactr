@@ -179,6 +179,8 @@ public class SubWindow implements DiagramObserver {
         else y -= TITLE_BAR_HEIGHT;
         try {
             getActiveView().addParty(x,y);
+            setSelectedComponent(getActiveView().getParty(x,y));
+            setSelectedLabel("");
         }
         catch (InvalidAddPartyException e) {throw e;}
     }
@@ -203,7 +205,10 @@ public class SubWindow implements DiagramObserver {
      * @throws InvalidAddMessageException The operation was not successful.
      */
     public void addMessage(int fromX, int fromY, int toX, int toY) throws InvalidAddMessageException {
-        getActiveView().addMessage(fromX, fromY - TITLE_BAR_HEIGHT, toX, toY - TITLE_BAR_HEIGHT);
+        InvocationMessage message = getActiveView().getInvocationMessageForCoordinates(fromX, fromY, toX, toY);
+        getActiveView().addMessage(message, fromX, fromY - TITLE_BAR_HEIGHT, toX, toY - TITLE_BAR_HEIGHT);
+        setSelectedComponent(message);
+        setSelectedLabel("");
     }
 
     /**
@@ -255,8 +260,8 @@ public class SubWindow implements DiagramObserver {
     public void deselectAll() throws InvalidLabelException {
         if (selectionIsActive() && !getSelectedComponent().canHaveAsLabel(getSelectedLabel()))
             throw new InvalidLabelException();
-        setSelectedComponent(null);
         setSelectedLabel(null);
+        setSelectedComponent(null);
     }
 
     /**
@@ -280,6 +285,15 @@ public class SubWindow implements DiagramObserver {
      */
     public void setSelectedLabel(String selectedLabel){
         this.selectedLabel = selectedLabel;
+        if (selectedComponent != null && selectedComponent.canHaveAsLabel(selectedLabel)) {
+            selectedComponent.setLabel(selectedLabel);
+            PMap<String , Object> notificationParameters = PMap.<String, Object>empty();
+            notificationParameters = notificationParameters.plus("component", getSelectedComponent());
+            DiagramNotificationCenter.defaultCenter().postNotification(
+                    getDiagram(),
+                    DiagramUpdateType.EDIT_LABEL,
+                    notificationParameters);
+        }
     }
 
     /**
@@ -456,7 +470,11 @@ public class SubWindow implements DiagramObserver {
     public void diagramDidUpdate(Diagram diagram, DiagramUpdateType updateType, PMap<String, Object> parameters) {
         switch (updateType) {
             case EDIT_LABEL:
-                // TODO
+                Object component = parameters.get("component");
+                if (component instanceof DiagramComponent
+                        && isSelected((DiagramComponent)component)
+                        && selectionIsActive())
+                    setSelectedLabel(((DiagramComponent) component).getLabel());
                 break;
         }
     }

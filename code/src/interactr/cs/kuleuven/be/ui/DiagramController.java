@@ -192,17 +192,14 @@ public class DiagramController {
      * @throws InvalidAddMessageException The operation was not successful.
      */
     public void addMessage(int fromX, int fromY, int toX, int toY) throws InvalidAddMessageException {
-        try {
-            if (getActiveSubwindow() != null) {
-                getActiveSubwindow().addMessage(
-                        fromX - getActiveSubwindow().getFrame().getX(),
-                        fromY - getActiveSubwindow().getFrame().getY(),
-                        toX - getActiveSubwindow().getFrame().getX(),
-                        toY - getActiveSubwindow().getFrame().getY());
-                getPaintBoard().refresh();
-            }
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().addMessage(
+                    fromX - getActiveSubwindow().getFrame().getX(),
+                    fromY - getActiveSubwindow().getFrame().getY(),
+                    toX - getActiveSubwindow().getFrame().getX(),
+                    toY - getActiveSubwindow().getFrame().getY());
+            getPaintBoard().refresh();
         }
-        catch(InvalidAddMessageException e) {throw e;}
     }
 
     /**
@@ -216,7 +213,6 @@ public class DiagramController {
             getActiveSubwindow().selectComponent(
                     x - getActiveSubwindow().getFrame().getX(),
                     y - getActiveSubwindow().getFrame().getY());
-            setTemporaryLabel(getActiveSubwindow().getSelectedLabel());
             getPaintBoard().refresh();
         }
     }
@@ -273,9 +269,7 @@ public class DiagramController {
      * @return True if and only if the active subwindow exists and its selection is active.
      */
     public boolean isEditing() {
-        if (getActiveSubwindow() != null)
-            return getActiveSubwindow().selectionIsActive();
-        return false;
+        return (getActiveSubwindow() != null && getActiveSubwindow().selectionIsActive());
     }
 
     /**
@@ -285,7 +279,7 @@ public class DiagramController {
      *  for the selected component.
      */
     public void abortEditing() throws InvalidLabelException {
-        if (getActiveSubwindow() != null) {
+        if (isEditing()) {
             getActiveSubwindow().deselectAll();
             getPaintBoard().refresh();
         }
@@ -297,9 +291,8 @@ public class DiagramController {
      * @param c The char that is to be appended.
      */
     public void appendChar(char c) {
-        if (getActiveSubwindow() != null) {
-            setTemporaryLabel(getTemporaryLabel() + c);
-            getActiveSubwindow().setSelectedLabel(getTemporaryLabel());
+        if (isEditing()) {
+            getActiveSubwindow().setSelectedLabel(getActiveSubwindow().getSelectedLabel() + c);
             getPaintBoard().refresh();
         }
     }
@@ -308,36 +301,14 @@ public class DiagramController {
      * Removes the last char from the label of the active component.
      */
     public void removeLastChar() {
-        if (getActiveSubwindow() != null) {
-            String temp = getTemporaryLabel();
+        if (isEditing()) {
+            String temp = getActiveSubwindow().getSelectedLabel();
             if (temp.length() > 0) {
-                setTemporaryLabel(temp.substring(0, temp.length()-1));
-                getActiveSubwindow().setSelectedLabel(getTemporaryLabel());
+                getActiveSubwindow().setSelectedLabel(temp.substring(0, temp.length()-1));
                 getPaintBoard().refresh();
             }
         }
     }
-
-    /**
-     * Returns the temporary label for this diagram controller.
-     */
-    private String getTemporaryLabel() {
-        return temporaryLabel;
-    }
-
-    /**
-     * Sets the temporary label of this controller to the given one.
-     *
-     * @param temporaryLabel The new temporary label.
-     */
-    private void setTemporaryLabel(String temporaryLabel) {
-        this.temporaryLabel = temporaryLabel;
-    }
-
-    /**
-     * Registers the label currently used
-     */
-    private String temporaryLabel = null;
 
     /**
      * Returns the paint board associated with this diagram controller.

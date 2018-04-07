@@ -79,11 +79,6 @@ public class Message extends DiagramComponent {
     }
 
     @Override
-    public boolean canHaveAsLabel(String label) {
-        return label.length() <= 30;
-    }
-
-    @Override
     public void deleteFrom(Diagram diagram) {
         diagram.deleteMessage(this);
     }

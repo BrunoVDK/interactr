@@ -100,20 +100,20 @@ public class SequenceView extends DiagramView {
                             ? ((isActive && !selectedComponent.canHaveAsLabel(selectedLabel)) ? Colour.RED : Colour.BLUE)
                             : Colour.BLACK);
                     if (isActive)
-                        messageLink.setLabel("TEMP" + "|");
+                        messageLink.setLabel(selectedLabel + "|");
                     messageLink.setStartX(messageX - (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
                     messageLink.setEndX(barX + (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
                     messageLink.draw(paintBoard);
                     paintBoard.setColour(Colour.BLACK);
 
                     // Draw receiver link (calculate offset!)
-                    isSelected = (message == selectedComponent);
+                    isSelected = (associatedMessage == selectedComponent);
                     isActive = (isSelected && selectedLabel != null);
                     paintBoard.setColour((isSelected || isActive)
                             ? ((isActive && !selectedComponent.canHaveAsLabel(selectedLabel)) ? Colour.RED : Colour.BLUE)
                             : Colour.BLACK);
                     if (isActive)
-                        associatedMessageLink.setLabel("TEMP" + "|");
+                        associatedMessageLink.setLabel(selectedLabel + "|");
                     associatedMessageLink.setEndX(messageX - (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
                     associatedMessageLink.setStartX(barX + (fromLeft ? 0 : ACTIVATION_BAR_WIDTH));
                     associatedMessageLink.draw(paintBoard);

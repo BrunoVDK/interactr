@@ -388,38 +388,38 @@ public class DiagramView implements DiagramObserver, Cloneable {
     }
 
     /**
-     * Add a new message from the given start to the given end coordinates.
+     * Add the given message from the given start to the given end coordinates.
      *
+     * @param message The message that is to be added.
      * @param fromX The start x coordinate for the message.
      * @param fromY The start y coordinate for the message.
      * @param toX The end x coordinate for the message.
      * @param toY The end y coordinate for the message.
      * @throws InvalidAddMessageException If a message could not be added.
      */
-    public void addMessage(int fromX, int fromY, int toX, int toY) {
+    public void addMessage(InvocationMessage message, int fromX, int fromY, int toX, int toY) {
+        if (message == null)
+            throw new InvalidAddMessageException();
         if (canInsertMessageAt(fromX, fromY, toX, toY)) {
             int index = getMessageInsertionIndex(fromX, fromY, toX, toY);
-            InvocationMessage message = getInvocationMessageForCoordinates(fromX, fromY, toX, toY);
-            if (message != null) {
-                try {
+            try {
 
-                    diagram.insertInvocationMessageAtIndex(message, index);
-                    ResultMessage result = diagram.getResultMessageForInvocationMessage(message);
+                diagram.insertInvocationMessageAtIndex(message, index);
+                ResultMessage result = diagram.getResultMessageForInvocationMessage(message);
 
-                    // Post a notification of the update
-                    PMap<String , Object> notificationParameters = PMap.<String, Object>empty();
-                    notificationParameters = notificationParameters.plus("invocation", message);
-                    notificationParameters = notificationParameters.plus("result", result);
-                    notificationParameters = notificationParameters.plus("startCoordinates", new Point(fromX,fromY));
-                    notificationParameters = notificationParameters.plus("endCoordinates", new Point(toX,toY));
-                    DiagramNotificationCenter.defaultCenter().postNotification(
-                            diagram,
-                            DiagramUpdateType.ADD_MESSAGE,
-                            notificationParameters);
+                // Post a notification of the update
+                PMap<String , Object> notificationParameters = PMap.<String, Object>empty();
+                notificationParameters = notificationParameters.plus("invocation", message);
+                notificationParameters = notificationParameters.plus("result", result);
+                notificationParameters = notificationParameters.plus("startCoordinates", new Point(fromX,fromY));
+                notificationParameters = notificationParameters.plus("endCoordinates", new Point(toX,toY));
+                DiagramNotificationCenter.defaultCenter().postNotification(
+                        diagram,
+                        DiagramUpdateType.ADD_MESSAGE,
+                        notificationParameters);
 
-                }
-                catch(InvalidAddMessageException e) {throw e;}
             }
+            catch(InvalidAddMessageException e) {throw e;}
         }
     }
 

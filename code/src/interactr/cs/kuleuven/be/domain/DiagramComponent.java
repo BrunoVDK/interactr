@@ -31,10 +31,10 @@ public abstract class DiagramComponent {
      * Checks whether or not this diagram component can have the given string as its label.
      *
      * @param label The string to check with.
-     * @return True if and only if the given string is at most 30 characters long.
+     * @return True if and only if the given string is not null and is at most 30 characters long.
      */
     public boolean canHaveAsLabel(String label) {
-        return (label.length() <= 30);
+        return (label != null && label.length() <= 30);
     }
 
     /**
