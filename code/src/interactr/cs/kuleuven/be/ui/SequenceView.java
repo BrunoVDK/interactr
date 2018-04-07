@@ -24,7 +24,7 @@ public class SequenceView extends DiagramView {
      * @param diagram The diagram to associate this diagram view with.
      * @throws IllegalArgumentException If the given diagram is null.
      */
-    SequenceView(Diagram diagram) {
+    public SequenceView(Diagram diagram) {
         super(diagram);
     }
 

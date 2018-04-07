@@ -7,6 +7,7 @@ import interactr.cs.kuleuven.be.purecollections.PMap;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.*;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 
 /**
@@ -539,9 +540,16 @@ public class DiagramView implements DiagramObserver, Cloneable {
     public DiagramView clone() {
         final DiagramView clone;
         try {
-            clone = (DiagramView)super.clone();
+
+            clone = getClass().getConstructor(Diagram.class).newInstance(diagram);
+
+            for (Party party : figures.keySet()) {
+                Figure partyFigure = figures.get(party);
+                clone.registerParty(party, new Point(partyFigure.getX(), partyFigure.getY()));
+            }
+
         }
-        catch (CloneNotSupportedException ignored) {throw new RuntimeException("Failed to clone diagram view.");}
+        catch (Exception ignored) {throw new RuntimeException("Failed to clone diagram view." + ignored.getClass().toString());}
         return clone;
     }
 
