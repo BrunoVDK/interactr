@@ -539,14 +539,39 @@ public class DiagramView implements DiagramObserver, Cloneable {
 
             clone = getClass().getConstructor(Diagram.class).newInstance(diagram);
 
-            for (Party party : figures.keySet()) {
-                Figure partyFigure = figures.get(party);
-                clone.registerParty(party, new Point(partyFigure.getX(), partyFigure.getY()));
-            }
+            for (Party party : figures.keySet())
+                clone.registerFigure(party, figures.get(party));
+            for (Message message : links.keySet())
+                clone.registerLink(message, links.get(message));
 
         }
         catch (Exception ignored) {throw new RuntimeException("Failed to clone diagram view." + ignored.getClass().toString());}
         return clone;
+    }
+
+    /**
+     * Register the given figure for the given party.
+     *
+     * @param party The party to register a figure for.
+     * @param figure The figure that is to be registered.
+     */
+    protected void registerFigure(Party party, Figure figure) {
+        if (figure == null)
+            return;
+        System.out.println("ok");
+        figures = figures.minus(party);
+        figures = figures.plus(party, figure.clone());
+    }
+
+    /**
+     * Register the given link for the given message.
+     *
+     * @param message The party to register a figure for.
+     * @param link The figure that is to be registered.
+     */
+    protected void registerLink(Message message, Link link) {
+        links = links.minus(message);
+        links = links.plus(message, link.clone());
     }
 
     /**

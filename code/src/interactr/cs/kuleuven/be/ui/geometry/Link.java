@@ -159,4 +159,14 @@ public class Link extends Model {
         return (val > 0 ? 1 : 2);
     }
 
+    @Override
+    public Link clone() {
+        final Link clone;
+        try {
+            clone = (Link)super.clone();
+        }
+        catch (Exception e) {throw new RuntimeException("Failed to clone link.");};
+        return clone;
+    }
+
 }
