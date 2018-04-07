@@ -216,8 +216,7 @@ public class SequenceView extends DiagramView {
 
     @Override
     public void registerParty(Party party, Point coordinates) {
-        coordinates.setY(5);
-        super.registerParty(party, coordinates);
+        super.registerParty(party, new Point(coordinates.getX(), 5));
     }
 
     @Override

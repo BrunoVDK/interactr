@@ -4,11 +4,7 @@ import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.*;
 import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.purecollections.PMap;
-import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.*;
-
-import java.lang.reflect.Constructor;
-import java.util.HashMap;
 
 /**
  * An abstract interface for diagram views. Diagram views can display diagrams in
