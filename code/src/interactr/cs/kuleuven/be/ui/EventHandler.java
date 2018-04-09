@@ -1,5 +1,7 @@
 package interactr.cs.kuleuven.be.ui;
 
+import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
