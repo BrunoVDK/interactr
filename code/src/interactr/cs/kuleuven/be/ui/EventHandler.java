@@ -5,11 +5,8 @@ import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.*;
-import interactr.cs.kuleuven.be.exceptions.NoSuchPartyException;
 import interactr.cs.kuleuven.be.ui.geometry.Point;
-
 
 /**
  * A class of event handlers for interpreting incoming mouse/key events
@@ -25,7 +22,7 @@ public class EventHandler {
      *
      * @param diagramController The diagram controller to associate this event handler with.
      */
-    public EventHandler(DiagramController diagramController) {
+    EventHandler(DiagramController diagramController) {
         setDiagramController(diagramController);
     }
 
@@ -41,7 +38,7 @@ public class EventHandler {
     public void handleMouseEvent(int id, int x, int y, int clickCount) throws IllegalArgumentException {
 
         // Mouse events are ignored when the diagram controller is editing
-        if (getDiagramController() != null && ! getDiagramController().isEditing()) {
+        if (getDiagramController() != null) {
             switch (id) {
                 case MouseEvent.MOUSE_CLICKED:
                     handleMouseClick(x,y,clickCount);
@@ -68,19 +65,28 @@ public class EventHandler {
      * @param clickCount The click count.
      */
     private void handleMouseClick(int x, int y, int clickCount) {
-        switch (clickCount) {
-            case 1: // Single click
-                getDiagramController().selectComponentAt(x,y);
-                break;
-            case 2: // Double click
-                try {
-                    getDiagramController().addPartyAt(x,y);
-                }
-                catch (InvalidAddPartyException exception) {
-                    getDiagramController().switchPartyTypeAt(x, y);
-                }
-                break;
+        try {
+            getDiagramController().activateSubWindow(x, y);
+            switch (clickCount) {
+                case 1: // Single click
+                    try {
+                        getDiagramController().closeSubWindow(x,y);
+                    }
+                    catch (InvalidCloseWindowException e) {
+                        getDiagramController().selectComponent(x,y);
+                    }
+                    break;
+                case 2: // Double click
+                    try {
+                        getDiagramController().addParty(x,y);
+                    }
+                    catch (InvalidAddPartyException exception) {
+                        getDiagramController().switchTypeOfParty(x, y);
+                    }
+                    break;
+            }
         }
+        catch (NoSuchWindowException ignored) {}
     }
 
     /**
@@ -95,7 +101,7 @@ public class EventHandler {
             getDiagramController().activateSubWindow(x,y);
             dragOperationType = DragOperationType.DRAG_VALID;
         }
-        catch (NoSuchWindowException e) {}
+        catch (NoSuchWindowException ignored) {}
     }
 
     /**
@@ -118,13 +124,13 @@ public class EventHandler {
         }
         else {
             try {
-                getDiagramController().moveSubWindow(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
+                getDiagramController().resizeSubWindow(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
             }
-            catch (InvalidMoveWindowException e1) {
+            catch (InvalidResizeWindowException e1) {
                 try {
-                    getDiagramController().resizeSubWindow(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
+                    getDiagramController().moveSubWindow(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
                 }
-                catch (InvalidResizeWindowException e2) {
+                catch (InvalidMoveWindowException e2) {
                     moveParty(x,y);
                     return;
                 }
@@ -144,14 +150,14 @@ public class EventHandler {
         try {
 
             // Move party
-            getDiagramController().movePartyTo(x,y);
+            getDiagramController().moveParty(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
 
             // Move party was successful, keep track of the changes
             dragOperationType = DragOperationType.DRAG_DIAGRAM;
             lastDragCoordinate = new Point(x,y);
 
         }
-        catch (NoSuchPartyException e) {}
+        catch (Exception ignored) {}
     }
 
     /**
@@ -161,8 +167,11 @@ public class EventHandler {
      * @param y The y coordinate of the mouse release.
      */
     private void handleMouseReleased(int x, int y) {
-        if (dragOperationType == DragOperationType.DRAG_NONE)
-            getDiagramController().addMessageFrom(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
+        if (dragOperationType == DragOperationType.DRAG_VALID)
+            try {
+                getDiagramController().addMessage(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
+            }
+            catch (InvalidAddMessageException ignored) {}
         dragOperationType = DragOperationType.DRAG_NONE;
     }
 
@@ -170,7 +179,7 @@ public class EventHandler {
      * An enumeration of drag operation types.
      *  This is used to override the priority of a particular type of operation.
      *  Default priority :
-     *   MOVE > RESIZE > DRAG IN DIAGRAM
+     *   RESIZE > MOVE > DRAG IN DIAGRAM
      *  If something is dragged within a diagram, this operation type is prioritised.
      */
     private enum DragOperationType {
@@ -195,60 +204,46 @@ public class EventHandler {
      * @param id The type of key event.
      * @param keyCode The key code for the key event.
      * @param keyChar The key char for the key event.
+     * @param keyModifiers The key modifiers for the key event.
      */
-    void handleKeyEvent(int id, int keyCode, char keyChar) {
-
+    void handleKeyEvent(int id, int keyCode, char keyChar, int keyModifiers) {
         if (getDiagramController() != null) {
+            boolean controlIsPressed = (keyModifiers & KeyEvent.CTRL_DOWN_MASK) != 0;
             switch (id) {
                 case KeyEvent.KEY_PRESSED:
-                    if (keyCode == KeyEvent.VK_ENTER)
-                        getDiagramController().abortEditing();
+                    if (keyCode == KeyEvent.VK_ENTER) {
+                        try {
+                            getDiagramController().abortEditing();
+                        }
+                        catch (InvalidLabelException ignored) {}
+                    }
                     else if (keyCode == KeyEvent.VK_BACK_SPACE) {
                         if (getDiagramController().isEditing())
                             getDiagramController().removeLastChar();
                         else
                             getDiagramController().deleteSelection();
                     }
-                    else if (keyCode == KeyEvent.VK_CONTROL)
-                        controlIsPressed = true;
-
-                    else if(keyCode == KeyEvent.VK_N && controlIsPressed)
+                    else if (keyCode == KeyEvent.VK_N && controlIsPressed)
                         getDiagramController().createSubWindow();
-
-                    else if(keyCode == KeyEvent.VK_D && controlIsPressed)
+                    else if (keyCode == KeyEvent.VK_D && controlIsPressed)
                         getDiagramController().duplicateSubWindow();
-
                     break;
                 case KeyEvent.KEY_TYPED:
                     if (keyChar == KeyEvent.VK_TAB && !getDiagramController().isEditing())
                         getDiagramController().toggleActiveSubWindowView();
-
-                    else if(keyChar == KeyEvent.VK_CONTROL)
-                        controlIsPressed = false;
-
                     else if (Character.isLetter(keyChar)
                             || Character.isDigit(keyChar)
                             || ":();-_<>*&[]".indexOf(Character.toString(keyChar)) != -1)
                         getDiagramController().appendChar(keyChar);
-
+                    break;
             }
         }
     }
 
     /**
-     * Registers the focused party for this event handler.
-     */
-    private Party focusedParty = null;
-
-    /**
-     * Registers the focus coordinate for this event handler.
-     */
-    private Point focusCoordinate = null;
-
-    /**
      * Returns the diagram controller associated with this event handler.
      */
-    public DiagramController getDiagramController() {
+    private DiagramController getDiagramController() {
         return diagramController;
     }
 
@@ -256,9 +251,8 @@ public class EventHandler {
      * Set the diagram controller for this event handler to the given one.
      *
      * @param diagramController The new diagram controller for this event handler.
-     * @post The diagram controller associated with this event handler matches the given one.
      */
-    public void setDiagramController(DiagramController diagramController) {
+    private void setDiagramController(DiagramController diagramController) {
         this.diagramController = diagramController;
     }
 
@@ -266,10 +260,5 @@ public class EventHandler {
      * Variable registering the diagram controller of this event handler.
      */
     private DiagramController diagramController;
-
-    /**
-     * A boolean that returns if the control key is pressed on the moment
-     */
-    private boolean controlIsPressed = false;
 
 }

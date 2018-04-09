@@ -13,7 +13,7 @@ import java.util.*;
 public class DiagramController {
 
     /**
-     * Initialize this new diagram controller with given diagram and diagram views.
+     * Initialize this new diagram controller without any subwindows.
      */
     public DiagramController() {
         this.subWindows = new ArrayList<SubWindow>();
@@ -31,23 +31,28 @@ public class DiagramController {
      * Toggle the diagram view in this controller's active subwindow
      */
     public void toggleActiveSubWindowView() {
-        getActiveSubwindow().nextView();
-        getPaintBoard().refresh();
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().nextView();
+            getPaintBoard().refresh();
+        }
     }
 
     /**
      * Display all subwindows in this diagram controller.
      */
     public void displayAllSubWindows() {
-        for (SubWindow window : subWindows)
-            window.displayView(getPaintBoard());
+        for (int i=subWindows.size()-1 ; i>=0 ; i--) // Last window first
+            subWindows.get(i).displayView(getPaintBoard());
     }
 
     /**
      * Display the currently active subwindow of this diagram controller.
+     *  This method can be used to improve performance if nothing but the contents of the active subwindow
+     *  was changed.
      */
-    public void displaySubWindow() {
-        getActiveSubwindow().displayView(getPaintBoard());
+    public void displayActiveSubWindow() {
+        if (getActiveSubwindow() != null)
+            getActiveSubwindow().displayView(getPaintBoard());
     }
 
     /**
@@ -55,7 +60,7 @@ public class DiagramController {
      *
      * @return The diagram view of this controller that's currently active.
      */
-    public SubWindow getActiveSubwindow(){
+    private SubWindow getActiveSubwindow() {
         return (subWindows.isEmpty() ? null : subWindows.get(0));
     }
 
@@ -64,18 +69,17 @@ public class DiagramController {
      */
     public void createSubWindow(){
         subWindows.add(0, new SubWindow());
+        getPaintBoard().refresh();
     }
 
     /**
      * Duplicate the currently active subwindow.
-     *
-     * @throws NoSuchWindowException If no window is currently active.
      */
     public void duplicateSubWindow() {
-        if (getActiveSubwindow() != null)
+        if (getActiveSubwindow() != null) {
             subWindows.add(0, new SubWindow(getActiveSubwindow()));
-        else
-            throw new NoSuchWindowException();
+            getPaintBoard().refresh();
+        }
     }
 
     /**
@@ -86,49 +90,73 @@ public class DiagramController {
      * @throws NoSuchWindowException If no subwindow lies at the given coordinates.
      */
     public void activateSubWindow(int x, int y) throws NoSuchWindowException {
-        SubWindow sub = subWindows.stream().filter( s -> s.getFrame().encloses(x,y)).findFirst().orElse(null);
-        if (sub == null)
+        SubWindow subWindow = getSubWindowAt(x, y);
+        if (subWindow == null)
             throw new NoSuchWindowException();
-        subWindows.add(0, subWindows.remove(subWindows.indexOf(sub)));
+        subWindows.add(0, subWindows.remove(subWindows.indexOf(subWindow)));
     }
 
     /**
-     * TODO relative resizing better? there is no blocking here, like there is with party moving
+     * Close the subwindow at the given coordinates.
+     *  The given coordinates should lie within the subwindow's close button.
      *
-     * @param x
-     * @param y
+     * @param x The x coordinate for the subwindow.
+     * @param y The y coordinate for the subwindow.
+     * @throws InvalidCloseWindowException When the given coordinates don't lie in any subwindow's close button.
+     */
+    public void closeSubWindow(int x, int y) throws InvalidCloseWindowException {
+        SubWindow subWindow = subWindows.stream().filter( s -> s.closeButtonEncloses(x,y)).findFirst().orElse(null);
+        if (subWindow != null) {
+            subWindow.close();
+            subWindows.remove(subWindow);
+            getPaintBoard().refresh();
+        }
+        else
+            throw new InvalidCloseWindowException();
+    }
+
+    /**
+     * Move the active subwindow from the given coordinates to the given coordinates.
+     *
+     * @param fromX The start x coordinate for the move.
+     * @param fromY The start y coordinate for the move.
+     * @param toX The end x coordinate for the move.
+     * @param toY The end y coordinate for the move.
+     * @throws InvalidMoveWindowException The resize operation was not successful.
+     */
+    public void moveSubWindow(int fromX, int fromY, int toX, int toY) throws InvalidMoveWindowException {
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().move(fromX, fromY, toX, toY);
+            getPaintBoard().refresh();
+        }
+    }
+
+    /**
+     * Resize the active subwindow from the given coordinates to the given coordinates.
+     *
+     * @param fromX The start x coordinate for the resize.
+     * @param fromY The start y coordinate for the resize.
+     * @param toX The end x coordinate for the resize.
+     * @param toY The end y coordinate for the resize.
+     * @throws InvalidResizeWindowException The resize operation was not successful.
      */
     public void resizeSubWindow(int fromX, int fromY, int toX, int toY) {
-        getActiveSubwindow().resizeSubWindowFrame(toX, toY);
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().resize(fromX, fromY, toX, toY);
+            getPaintBoard().refresh();
+        }
     }
 
     /**
-     * TODO relative moving better? there is no blocking here, like there is with party moving
+     * Get the subwindow at the given coordinates.
      *
-     * @param x The x coordinate to move the subwindow to.
-     * @param y The y coordinate to move the subwindow to.
+     * @param x The x coordinate to look at.
+     * @param y The y coordinate to look at.
+     * @return The subwindow at the given coordinates or null if there is none.
      */
-    public void moveSubWindow(int fromX, int fromY, int toX, int toY){
-        getActiveSubwindow().moveSubWindowFrame(toX, toY);
+    private SubWindow getSubWindowAt(int x, int y) {
+        return subWindows.stream().filter( s -> s.getBorderedFrame().encloses(x,y)).findFirst().orElse(null);
     }
-
-    /**
-     * TODO semantics probably unnecessary ; only subwindow needs to know of this stuff
-     *
-     * A method that calls the reset operation of the just moved party
-     */
-    public void resetResizeRhumb(){
-        getActiveSubwindow().resetResizeRhumb();
-    }
-
-    /**
-     * TODO active subwindow is the selected one? EAST etc. should maybe put in subwindow itself
-     *
-     * A subwindow that is currently selected for moving or resizing
-     */
-    public static final int EAST = 2;
-    public static final int SOUTH = 3;
-    public static final int WEST = 5;
 
     /**
      * The list of all diagram views kept by this diagram handler.
@@ -136,112 +164,125 @@ public class DiagramController {
     private ArrayList<SubWindow> subWindows = new ArrayList<SubWindow>();
 
     /**
-     * Add a new party at the given x and y coordinate.
+     * Add a new party to the active subwindow at the given x and y coordinate.
      *
      * @param x The x coordinate for the new party.
      * @param y The y coordinate for the new party.
-     * @throws InvalidAddPartyException The given coordinates point to a component already.
+     * @throws InvalidAddPartyException The operation was not successful.
      */
-    public void addPartyAt(int x, int y) throws InvalidAddPartyException {
+    public void addParty(int x, int y) throws InvalidAddPartyException {
         try {
-            getActiveSubwindow().addPartyAt(x, y);
-            getPaintBoard().refresh();
-        }
-        catch (InvalidAddPartyException addException){
-            throw addException;
-        }
-    }
-
-    /**
-     * Adds a message using the given start and end coordinates of a drag session.
-     *
-     * @param x1 The start x coordinate for the session.
-     * @param y1 The start y coordinate for the session.
-     * @param x2 The end x coordinate for the session.
-     * @param y2 The end y coordinate for the session.
-     */
-    public void addMessageFrom(int x1, int y1, int x2, int y2) {
-        try {
-            getActiveSubwindow().addMessage(x1, y1, x2, y2);
-            getPaintBoard().refresh();
-        }
-        catch(InvalidAddMessageException addException){
-            throw addException;
-        }
-    }
-        /**
-         * A method that returns the editing mode of the selectionManager
-         */
-    public boolean isEditing() {
-        return false;
-        // return getDiagram().getActiveComponent() != null;
-    };
-
-    /**
-     * A method that terminates the editing
-     */
-    public void abortEditing(){
-        /*
-        if (getDiagram().getActiveComponent() != null){
-            try {
-                getDiagram().getActiveComponent().setLabel(getDiagram().getTemporaryLabel());
-                getDiagram().setActiveComponent(null);
+            if (getActiveSubwindow() != null) {
+                getActiveSubwindow().addParty(
+                        x - getActiveSubwindow().getFrame().getX(),
+                        y - getActiveSubwindow().getFrame().getY());
                 getPaintBoard().refresh();
             }
-            catch (InvalidLabelException e) {}
         }
-        */
+        catch (InvalidAddPartyException e) {throw e;}
+    }
+
+    /**
+     * Adds a message to the active subwindow from the given start coordinate to the given end coordinate.
+     *
+     * @param fromX The start x coordinate for the add.
+     * @param fromY The start y coordinate for the add.
+     * @param toX The end x coordinate for the add.
+     * @param toY The end y coordinate for the add.
+     * @throws InvalidAddMessageException The operation was not successful.
+     */
+    public void addMessage(int fromX, int fromY, int toX, int toY) throws InvalidAddMessageException {
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().addMessage(
+                    fromX - getActiveSubwindow().getFrame().getX(),
+                    fromY - getActiveSubwindow().getFrame().getY(),
+                    toX - getActiveSubwindow().getFrame().getX(),
+                    toY - getActiveSubwindow().getFrame().getY());
+            getPaintBoard().refresh();
+        }
     }
 
     /**
      * The x & y coordinates of the component.
      *
      * @param x The x coordinate of the component that is to be selected.
-     * @param y The y coordinate of the commponent that is to be selected.
+     * @param y The y coordinate of the component that is to be selected.
      */
-    public void selectComponentAt(int x, int y) {
-        getActiveSubwindow().selectComponentAt(x, y);
-        getPaintBoard().refresh();
+    public void selectComponent(int x, int y) {
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().selectComponent(
+                    x - getActiveSubwindow().getFrame().getX(),
+                    y - getActiveSubwindow().getFrame().getY());
+            getPaintBoard().refresh();
+        }
     }
 
     /**
-     * Returns the party at the given coordinate, or null if there is none.
+     * Switches the type of the party at the given coordinate, or null if there is none.
      *
      * @param x The x coordinate for the party.
      * @param y The y coordinate for the party.
-     * @return The party at the given coordinate, or null if there is none.
      */
-    public void switchPartyTypeAt(int x,int y ){
-        getActiveSubwindow().switchTypeOfPartyAt(x,y);
+    public void switchTypeOfParty(int x, int y) {
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().switchTypeOfParty(
+                    x - getActiveSubwindow().getFrame().getX(),
+                    y - getActiveSubwindow().getFrame().getY());
+            getPaintBoard().refresh();
+        }
     }
 
     /**
-     * Move the party at the given coordinates. This starts a move session for the given party.
-     *  If no party is located at the given coordinates, an exception is thrown.
+     * Moves the party at the given start coordinates to the given end coordinates.
      *
-     * @param x The x coordinate at which a party is looked for.
-     * @param y The y coordinate at which a party is looked for.
+     * @param fromX The start x coordinate for the add.
+     * @param fromY The start y coordinate for the add.
+     * @param toX The end x coordinate for the add.
+     * @param toY The end y coordinate for the add.
+     * @throws NoSuchPartyException If there is no party at the given start coordinates.
+     * @throws InvalidMovePartyException If the party could not be moved to the given end coordinates.
      */
-    public void movePartyAt(int x, int y){
-        getActiveSubwindow().movePartyAt(x,y);
-    }
-
-    /**
-     * Moves the given party to the given x and y coordinates.
-     * @param x The new x coordinate for the party.
-     * @param y The new y coordinate for the party.
-     */
-    public void movePartyTo(int x, int y){
-        getActiveSubwindow().movePartyTo(x,y);
-        getPaintBoard().refresh();
+    public void moveParty(int fromX, int fromY, int toX, int toY) throws NoSuchPartyException, InvalidMovePartyException {
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().moveParty(
+                    fromX - getActiveSubwindow().getFrame().getX(),
+                    fromY - getActiveSubwindow().getFrame().getY(),
+                    toX - getActiveSubwindow().getFrame().getX(),
+                    toY - getActiveSubwindow().getFrame().getY());
+            getPaintBoard().refresh();
+        }
     }
 
     /**
      * Removes all components in the current selection from this controller's diagram.
      */
-    public void deleteSelection(){
-        getActiveSubwindow().deleteSelection();
-        this.getPaintBoard().refresh();
+    public void deleteSelection() {
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().deleteSelection();
+            getPaintBoard().refresh();
+        }
+    }
+
+    /**
+     * Returns whether or not the active subwindow is currently editing a component.
+     *
+     * @return True if and only if the active subwindow exists and its selection is active.
+     */
+    public boolean isEditing() {
+        return (getActiveSubwindow() != null && getActiveSubwindow().selectionIsActive());
+    }
+
+    /**
+     * Terminate the current editing session, if any.
+     *
+     * @throws InvalidLabelException If the current label for the editing session is not a valid one
+     *  for the selected component.
+     */
+    public void abortEditing() throws InvalidLabelException {
+        if (isEditing()) {
+            getActiveSubwindow().deselectAll();
+            getPaintBoard().refresh();
+        }
     }
 
     /**
@@ -249,22 +290,24 @@ public class DiagramController {
      *
      * @param c The char that is to be appended.
      */
-    public void appendChar(char c){
-        // this.getDiagram().setTemporaryLabel(this.getDiagram().getTemporaryLabel() + c);
-        getPaintBoard().refresh();
+    public void appendChar(char c) {
+        if (isEditing()) {
+            getActiveSubwindow().setSelectedLabel(getActiveSubwindow().getSelectedLabel() + c);
+            getPaintBoard().refresh();
+        }
     }
 
     /**
      * Removes the last char from the label of the active component.
      */
     public void removeLastChar() {
-        /*
-        String temp = this.getDiagram().getTemporaryLabel();
-        if (temp.length() > 0) {
-            this.getDiagram().setTemporaryLabel(temp.substring(0, temp.length()-1));
-            getPaintBoard().refresh();
+        if (isEditing()) {
+            String temp = getActiveSubwindow().getSelectedLabel();
+            if (temp.length() > 0) {
+                getActiveSubwindow().setSelectedLabel(temp.substring(0, temp.length()-1));
+                getPaintBoard().refresh();
+            }
         }
-        */
     }
 
     /**

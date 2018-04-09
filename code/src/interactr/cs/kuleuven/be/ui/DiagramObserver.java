@@ -1,15 +1,27 @@
 package interactr.cs.kuleuven.be.ui;
 
+import interactr.cs.kuleuven.be.domain.Diagram;
+import interactr.cs.kuleuven.be.purecollections.PMap;
+
+import java.util.HashMap;
+
 /**
- * An interface for diagram observers.
+ * An interface for diagram observers. Each diagram observer is notified of changes to the diagram
+ *  that it observes.
+ *  Each change is of a certain type, each type of update has a specific set of parameters.
  *
  * @author Team 25
  * @version 1.0
  */
 public interface DiagramObserver {
 
-    // Either a full interface (for every update a method), or only a -diagramDidUpdate: method
-    //  with maybe a type parameter (type of the update), diagram parameter (what diagram updated),
-    //  and additional parameters in a dictionary for example for more information about the update
+    /**
+     * Called when a diagram did update in any which way.
+     *
+     * @param diagram The diagram that was updated.
+     * @param updateType The type of update.
+     * @param parameters The parameters for the update.
+     */
+    public void diagramDidUpdate(Diagram diagram, DiagramUpdateType updateType, PMap<String, Object> parameters);
 
 }

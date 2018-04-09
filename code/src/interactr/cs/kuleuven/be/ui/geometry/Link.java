@@ -149,15 +149,24 @@ public class Link extends Model {
     }
 
     /**
-     * Convenience method for checking line intersections.
-     *
-     * @note https://stackoverflow.com/questions/25830932/how-to-find-if-two-line-segments-intersect-or-not-in-java
+     * Convenience method for checking for line intersections.
+     *  From https://stackoverflow.com/questions/25830932/how-to-find-if-two-line-segments-intersect-or-not-in-java
      */
     private static int orientation(int x1, int y1, int x2, int y2, int x3, int y3) {
         double val = (y2 - y1) * (x3 - x2) - (x2 - x1) * (y3 - y2);
         if (val == 0.0)
             return 0;
         return (val > 0 ? 1 : 2);
+    }
+
+    @Override
+    public Link clone() {
+        final Link clone;
+        try {
+            clone = (Link)super.clone();
+        }
+        catch (Exception e) {throw new RuntimeException("Failed to clone link.");};
+        return clone;
     }
 
 }

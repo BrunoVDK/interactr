@@ -44,8 +44,6 @@ public class PaintBoard {
     public void paint(Graphics context) {
         currentContext = context;
         context.setFont(defaultFont);
-        // Alternatively, ask for figures (basic geometric shapes) to draw and
-        //  draw them with private methods
         getDiagramController().displayAllSubWindows();
     }
 
@@ -111,6 +109,18 @@ public class PaintBoard {
     public void fillRectangle(int x, int y, int width, int height) {
         if (currentContext != null)
             currentContext.fillRect(x, y, width, height);
+    }
+
+    /**
+     * Translate the origin of this paintboard to the given coordinate.
+     *  All drawing in subsequent calls will be relative to this new origin.
+     *
+     * @param x The new x coordinate for the origin.
+     * @param y The new y coordinate for the origin.
+     */
+    public void translateOrigin(int x, int y) {
+        if (currentContext != null)
+            currentContext.translate(x, y);
     }
 
     /**
