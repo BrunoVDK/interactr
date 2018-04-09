@@ -11,24 +11,30 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class ObjectTest {
 
     @BeforeEach
-    public void setUp() {
-
+    void setUp() {
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
     }
 
     @Test
-    public void constructorTestInvalid() {
+    void canHaveAsLabelTest() {
+        assert(new ObjectParty().canHaveAsLabel("a:A"));
+        assert(!new ObjectParty().canHaveAsLabel("A:A"));
+    }
+
+    @Test
+    void constructorTestInvalid() {
         assertThrows(InvalidLabelException.class, () ->
-        {new ObjectParty("kzajrmazj");});
+        {ObjectParty party = new ObjectParty("a:");});
     }
 
     @Test
-    public void constructorTestValid() {
+    void constructorTestValid() {
         try {
-            new ObjectParty("valid:Label");
+            new ObjectParty("a:A");
+            new ObjectParty(":A");
         } catch(InvalidLabelException e) {
             assert(false);
         }

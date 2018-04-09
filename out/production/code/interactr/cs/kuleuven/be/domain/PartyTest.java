@@ -1,29 +1,39 @@
 package interactr.cs.kuleuven.be.domain;
 
+import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
+import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class PartyTest {
 
-    private Party party;
-
-    @BeforeEach
+    @Before
     void setUp() {
-        party = new Party("valid:Party");
     }
 
     @Test
     void canHaveAsLabelTest() {
-        assert(party.canHaveAsLabel("valid:Label"));
-        assert(!party.canHaveAsLabel("Invalid:Label"));
+        assert(new Party().canHaveAsLabel("a:A"));
+        assert(!new Party().canHaveAsLabel("A:A"));
     }
 
     @Test
-    void deleteTest() {
-        Diagram diagram = new Diagram();
-        diagram.addParty(party);
-        party.delete(diagram);
-        assert(!diagram.getParties().contains(party));
+    void constructorTestInvalid() {
+        assertThrows(InvalidLabelException.class, () ->
+        {Party party = new Party("a:");});
+    }
+
+    @Test
+    void constructorTestValid() {
+        try {
+            new Party("a:A");
+            new Party(":A");
+        } catch(InvalidLabelException e) {
+            assert(false);
+        }
     }
 
 }

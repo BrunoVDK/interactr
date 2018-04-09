@@ -18,15 +18,22 @@ public class ActorTest {
     }
 
     @Test
+    void canHaveAsLabelTest() {
+        assert(new ActorParty().canHaveAsLabel("a:A"));
+        assert(!(new ActorParty().canHaveAsLabel("A:A")));
+    }
+
+    @Test
     void constructorTestInvalid() {
         assertThrows(InvalidLabelException.class, () ->
-        {ActorParty party = new ActorParty("no");});
+        {ActorParty party = new ActorParty("a:");});
     }
 
     @Test
     void constructorTestValid() {
         try {
-            new ActorParty("some:Actor");
+            new ActorParty("a:A");
+            new ActorParty(":A");
         } catch(InvalidLabelException e) {
             assert(false);
         }
