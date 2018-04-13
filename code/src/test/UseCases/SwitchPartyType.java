@@ -1,5 +1,7 @@
-package interactr.cs.kuleuven.be.UseCases;
+package UseCases;
 
+import interactr.cs.kuleuven.be.domain.ActorParty;
+import interactr.cs.kuleuven.be.domain.ObjectParty;
 import interactr.cs.kuleuven.be.ui.DiagramController;
 import interactr.cs.kuleuven.be.ui.DiagramWindow;
 import interactr.cs.kuleuven.be.ui.EventHandler;
@@ -7,11 +9,11 @@ import interactr.cs.kuleuven.be.ui.PaintBoard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class EditLabel {
+public class SwitchPartyType {
 
     private DiagramWindow diagramWindow = new DiagramWindow();
+
 
     @BeforeEach
     void setUp(){
@@ -27,15 +29,19 @@ public class EditLabel {
     }
 
     @Test
-    void editLabelOfPartySequence(){
-        DiagramWindow.replayRecording("mousePressOnLabel.txt",diagramWindow);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        DiagramWindow.replayRecording("mousePressOnLabel.txt",diagramWindow);
-        DiagramWindow.replayRecording("writeLabelB.txt",diagramWindow);
-        assertEquals("b:B",diagramWindow.getEventHandler().getDiagramController().getActiveView().getPartyAt(10,10).getLabel());
+    void switchFromObjectToActorSequence(){
+        DiagramWindow.replayRecording("doubleClick.txt", diagramWindow);
+        assert (diagramWindow.getEventHandler().getDiagramController().getDiagram().getParties().getFirst() instanceof ActorParty);
     }
+
+
+    @Test
+    void SwitchFromActorToObjectSequence(){
+        DiagramWindow.replayRecording("doubleClick.txt", diagramWindow);
+        DiagramWindow.replayRecording("doubleClick.txt", diagramWindow);
+        assert (diagramWindow.getEventHandler().getDiagramController().getDiagram().getParties().getFirst() instanceof ObjectParty);
+
+    }
+
 }
+

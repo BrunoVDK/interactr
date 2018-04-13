@@ -1,4 +1,4 @@
-package test.interactr.cs.kuleuven.be.ui;
+package ui;
 
 import interactr.cs.kuleuven.be.ui.DiagramController;
 import interactr.cs.kuleuven.be.ui.EventHandler;

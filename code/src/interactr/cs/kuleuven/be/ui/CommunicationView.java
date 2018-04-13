@@ -1,6 +1,7 @@
 package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
+
 import interactr.cs.kuleuven.be.domain.Party;
 
 /**

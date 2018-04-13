@@ -1,7 +1,10 @@
-package interactr.cs.kuleuven.be.domain;
+package domain;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import interactr.cs.kuleuven.be.domain.Party;
+import interactr.cs.kuleuven.be.domain.InvocationMessage;
+
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;

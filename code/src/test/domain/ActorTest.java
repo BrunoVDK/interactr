@@ -1,4 +1,4 @@
-package interactr.cs.kuleuven.be.domain;
+package domain;
 
 import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
 import org.junit.jupiter.api.AfterEach;

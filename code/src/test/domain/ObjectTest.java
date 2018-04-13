@@ -1,4 +1,4 @@
-package test.interactr.cs.kuleuven.be.domain;
+package domain;
 
 import interactr.cs.kuleuven.be.domain.ObjectParty;
 import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;

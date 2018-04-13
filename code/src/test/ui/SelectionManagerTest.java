@@ -1,4 +1,4 @@
-package interactr.cs.kuleuven.be.ui;
+package ui;
 
 import interactr.cs.kuleuven.be.domain.DiagramComponent;
 import org.junit.jupiter.api.BeforeEach;

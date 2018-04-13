@@ -1,4 +1,4 @@
-package interactr.cs.kuleuven.be.unitTests;
+package ui;
 
 
 import interactr.cs.kuleuven.be.domain.Diagram;

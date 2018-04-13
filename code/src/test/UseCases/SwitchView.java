@@ -1,4 +1,4 @@
-package interactr.cs.kuleuven.be.UseCases;
+package UseCases;
 
 import interactr.cs.kuleuven.be.ui.DiagramController;
 import interactr.cs.kuleuven.be.ui.DiagramWindow;

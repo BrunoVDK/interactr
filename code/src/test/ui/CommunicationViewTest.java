@@ -1,4 +1,4 @@
-package interactr.cs.kuleuven.be.ui;
+package ui;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.Party;
@@ -7,30 +7,29 @@ import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.mock;
 
-public class SequenceViewTest {
+public class CommunicationViewTest {
 
-    private SequenceView sequenceView;
+    private CommunicationView communicationView;
     private Party party;
     private Diagram diagram;
 
     @BeforeEach
     public void setup() {
-        sequenceView = new SequenceView();
+        communicationView = new CommunicationView();
         party = mock(Party.class);
         diagram = mock(Diagram.class);
     }
 
     @Test
     public void addPartyTest() {
-        sequenceView.addParty(diagram,party,5,5);
-        assert(sequenceView.getPartyAt(5,5) == party);
+        communicationView.addParty(diagram,party,5,5);
+        assert(communicationView.getPartyAt(5,5) == party);
     }
-
 
     @Test
     public void registerPartyTest() {
-        sequenceView.registerParty(party,5,5);
-        assert(sequenceView.getPartyAt(5,5) == party);
+        communicationView.registerParty(party,5,5);
+        assert(communicationView.getPartyAt(5,5) == party);
     }
 
 }
