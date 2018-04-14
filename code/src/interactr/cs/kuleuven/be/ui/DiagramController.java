@@ -116,7 +116,7 @@ public class DiagramController {
      */
     public void closeSubWindow(int x, int y) throws InvalidCloseWindowException {
         SubWindow subWindow = subWindows.stream().filter( s -> s.closeButtonEncloses(x,y)).findFirst().orElse(null);
-        if (subWindow != null) {
+        if (subWindow != null && !(isEditing() && subWindow == getActiveSubwindow())) {
             subWindow.close();
             subWindows.remove(subWindow);
             getPaintBoard().refresh();
@@ -182,7 +182,7 @@ public class DiagramController {
      */
     public void addParty(int x, int y) throws InvalidAddPartyException {
         try {
-            if (getActiveSubwindow() != null) {
+            if (getActiveSubwindow() != null && !isEditing()) {
                 getActiveSubwindow().addParty(
                         x - getActiveSubwindow().getFrame().getX(),
                         y - getActiveSubwindow().getFrame().getY());
@@ -234,7 +234,7 @@ public class DiagramController {
      * @param y The y coordinate for the party.
      */
     public void switchTypeOfParty(int x, int y) {
-        if (getActiveSubwindow() != null) {
+        if (getActiveSubwindow() != null && !isEditing()) {
             getActiveSubwindow().switchTypeOfParty(
                     x - getActiveSubwindow().getFrame().getX(),
                     y - getActiveSubwindow().getFrame().getY());
