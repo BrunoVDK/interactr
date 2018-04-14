@@ -6,7 +6,7 @@ public class Recorder {
 
     public static void main(String[] args) { // No documentation
 
-        String fileName = "test.txt";
+        String fileName = "createNewSubWindow.txt";
         File file = new File(fileName);
         DiagramController con = new DiagramController();
 

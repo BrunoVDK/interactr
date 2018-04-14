@@ -27,7 +27,7 @@ public class DiagramController {
         window.setEventHandler(new EventHandler(this));
 
         if (recording){
-            String fileName = "test.txt";
+            String fileName = "new.txt";
             String path = "code/";
             File file = new File(fileName);
             window.recordSession((path + fileName));

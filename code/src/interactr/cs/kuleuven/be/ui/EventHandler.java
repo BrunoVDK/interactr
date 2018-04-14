@@ -198,6 +198,8 @@ public class EventHandler {
      */
     private Point lastDragCoordinate;
 
+    private boolean controlIsPressed = false;
+
     /**
      * Handle the key event of given type, having the given key code and key char.
      *
@@ -208,7 +210,7 @@ public class EventHandler {
      */
     void handleKeyEvent(int id, int keyCode, char keyChar, int keyModifiers) {
         if (getDiagramController() != null) {
-            boolean controlIsPressed = (keyModifiers & KeyEvent.CTRL_DOWN_MASK) != 0;
+            //boolean controlIsPressed = (keyModifiers & KeyEvent.CTRL_DOWN_MASK) != 0;
             switch (id) {
                 case KeyEvent.KEY_PRESSED:
                     if (keyCode == KeyEvent.VK_ENTER) {
@@ -227,6 +229,8 @@ public class EventHandler {
                         getDiagramController().createSubWindow();
                     else if (keyCode == KeyEvent.VK_D && controlIsPressed)
                         getDiagramController().duplicateSubWindow();
+                    else if (keyCode == KeyEvent.VK_CONTROL)
+                        controlIsPressed = true;
                     break;
                 case KeyEvent.KEY_TYPED:
                     if (keyChar == KeyEvent.VK_TAB && !getDiagramController().isEditing())

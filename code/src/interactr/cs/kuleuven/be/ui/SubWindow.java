@@ -240,7 +240,7 @@ public class SubWindow implements DiagramObserver {
     /**
      * Returns the diagram component that is currently active in this diagram.
      */
-    private DiagramComponent getSelectedComponent() {
+    public DiagramComponent getSelectedComponent() {
         return selectedComponent;
     }
 
@@ -384,7 +384,7 @@ public class SubWindow implements DiagramObserver {
      *
      * @return The active view for this subwindow.
      */
-    private DiagramView getActiveView() {
+    public DiagramView getActiveView() {
         return views.get(activeViewIndex);
     }
 
