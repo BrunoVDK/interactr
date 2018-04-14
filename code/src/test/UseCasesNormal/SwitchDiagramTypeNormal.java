@@ -1,34 +1,34 @@
-package UseCases;
+package UseCasesNormal;
 
 import interactr.cs.kuleuven.be.ui.DiagramController;
 import interactr.cs.kuleuven.be.ui.DiagramWindow;
 import interactr.cs.kuleuven.be.ui.EventHandler;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Field;
+import static org.junit.jupiter.api.Assertions.*;
 
-
-public class SwitchView {
+public class SwitchDiagramTypeNormal {
 
     private DiagramWindow diagramWindow = new DiagramWindow();
 
-    @Test
-    public void switchViewTest() throws InterruptedException, NoSuchFieldException, IllegalAccessException {
+    @BeforeEach
+    void setUp(){
         diagramWindow.setEventHandler(new EventHandler(new DiagramController()));
         diagramWindow.setPaintBoard(new PaintBoard(diagramWindow, diagramWindow.getEventHandler().getDiagramController()));
-
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+    @Test
+    void switchFromObjectToActor(){
+    }
 
-        DiagramWindow.replayRecording("tabkey.txt", diagramWindow);
-        Field f = diagramWindow.getEventHandler().getDiagramController().getClass().getDeclaredField("activeViewIndex"); //NoSuchFieldException
-        f.setAccessible(true);
-        int currentView = (int) f.get(diagramWindow.getEventHandler().getDiagramController());
-        assert(currentView == 1);
+    @Test
+    void switchFromActorToObject(){
     }
 
 

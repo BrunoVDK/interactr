@@ -2,6 +2,7 @@ package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.exceptions.*;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -12,17 +13,26 @@ import java.util.*;
  */
 public class DiagramController {
 
+    private boolean recording = true;
+
     /**
      * Initialize this new diagram controller without any subwindows.
      */
     public DiagramController() {
         this.subWindows = new ArrayList<SubWindow>();
+        DiagramWindow window = new DiagramWindow("New document - Interactr");
+        PaintBoard paintBoard = new PaintBoard(window, this);
+        setPaintBoard(paintBoard);
+        window.setPaintBoard(paintBoard);
+        window.setEventHandler(new EventHandler(this));
+
+        if (recording){
+            String fileName = "test.txt";
+            String path = "code/";
+            File file = new File(fileName);
+            window.recordSession((path + fileName));
+        }
         java.awt.EventQueue.invokeLater(() -> {
-            DiagramWindow window = new DiagramWindow("New document - Interactr");
-            PaintBoard paintBoard = new PaintBoard(window, this);
-            setPaintBoard(paintBoard);
-            window.setPaintBoard(paintBoard);
-            window.setEventHandler(new EventHandler(this));
             window.show();
         });
     }
@@ -60,7 +70,7 @@ public class DiagramController {
      *
      * @return The diagram view of this controller that's currently active.
      */
-    private SubWindow getActiveSubwindow() {
+    public SubWindow getActiveSubwindow() {
         return (subWindows.isEmpty() ? null : subWindows.get(0));
     }
 

@@ -1,4 +1,4 @@
-package UseCases;
+package UseCasesNormal;
 
 import interactr.cs.kuleuven.be.ui.DiagramController;
 import interactr.cs.kuleuven.be.ui.DiagramWindow;
@@ -7,9 +7,9 @@ import interactr.cs.kuleuven.be.ui.PaintBoard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class EditLabel {
+public class CreateNewInteractionNormal {
 
     private DiagramWindow diagramWindow = new DiagramWindow();
 
@@ -22,20 +22,12 @@ public class EditLabel {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        DiagramWindow.replayRecording("addPartyLegalLabel.txt", diagramWindow);
-
     }
-
     @Test
-    void editLabelOfPartySequence(){
-        DiagramWindow.replayRecording("mousePressOnLabel.txt",diagramWindow);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        DiagramWindow.replayRecording("mousePressOnLabel.txt",diagramWindow);
-        DiagramWindow.replayRecording("writeLabelB.txt",diagramWindow);
-        assertEquals("b:B",diagramWindow.getEventHandler().getDiagramController().getActiveView().getPartyAt(10,10).getLabel());
+    void createNewSubWindow(){
+        DiagramWindow.replayRecording("test.txt",diagramWindow);
+        assertNotEquals(null, diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow());
+
     }
+
 }

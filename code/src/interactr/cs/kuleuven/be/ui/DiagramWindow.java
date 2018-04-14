@@ -96,7 +96,7 @@ public class DiagramWindow extends CanvasWindow {
     /**
      * Returns the event handler associated with this diagram window.
      */
-    private EventHandler getEventHandler() {
+    public EventHandler getEventHandler() {
         return eventHandler;
     }
 
