@@ -1,0 +1,111 @@
+\documentclass[10pt]{beamer}
+
+\usetheme[progressbar=frametitle]{metropolis}
+\usepackage{appendixnumberbeamer}
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+\usepackage{graphicx}
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+\title{Interactr}
+\subtitle{Iteration 2}
+\date{\today}
+\author{Jelle de Coninck, Hannes De Smet, Bruno Vandekerkhove, Shani Vanlerberghe}
+\institute{KULeuven}
+% \titlegraphic{\hfill\includegraphics[height=1.5cm]{logo.pdf}}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Table of contents}
+  \setbeamertemplate{section in toc}[sections numbered]
+  \tableofcontents[hideallsubsections]
+\end{frame}
+
+\section{Design}
+
+\begin{frame}[fragile]{Diagram Controller - Painting \& Events}
+\begin{center}
+\includegraphics[width=1\textwidth]{diagram1}
+\vspace{0.5cm}\\\texttt{Controller}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Diagram Controller - Model \& Views}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{diagram2}
+\vspace{0.5cm}\\\texttt{Controller}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Paintboard}
+\begin{center}
+\includegraphics[width=1\textwidth]{diagram7}
+\vspace{0.5cm}\\\texttt{Protected Variations}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Domain Model}
+	\begin{center}
+	\includegraphics[width=0.6\textwidth]{diagram3}
+	\end{center}
+\end{frame}
+
+\section{Extensibility}
+
+\begin{frame}[fragile]{Views}
+	\begin{center}
+	\includegraphics[width=0.6\textwidth]{diagram6}
+	\vspace{0.5cm}\\\texttt{Information Expert - Polymorphism}
+	\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Selection / Diagram Components}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{diagram4}
+\vspace{0.5cm}\\\texttt{Indirection - Pure Fabrication}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Geometry}
+	\begin{center}
+	\includegraphics[width=0.6\textwidth]{diagram5}
+	\vspace{0.5cm}\\\texttt{Polymorphism}
+	\end{center}
+\end{frame}
+
+\section{Testing}
+
+\begin{frame}[fragile]{Testing}
+\includegraphics[width=1\textwidth]{coverage}
+\end{frame}
+
+%\section{Project Management}
+%
+%\begin{frame}[fragile]{Management}
+%\begin{itemize}
+%\item Testing Coordinator : Hannes De Smet
+%\item Design Coordinator : Shani Valerberghe
+%\item Domain Coordinator
+%\end{itemize}
+%\end{frame}
+
+\begin{frame}[fragile]{Time management}
+\begin{itemize}
+\item almost 30 hours working together
+\item +- 40 hours per person
+\item Late start
+\end{itemize}
+\end{frame}
+
+%{\setbeamercolor{palette primary}{fg=black, bg=yellow}
+%\begin{frame}[standout]
+%  Questions?
+%\end{frame}
+%}
+
+\end{document}
