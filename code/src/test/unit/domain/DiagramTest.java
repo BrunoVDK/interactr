@@ -14,21 +14,33 @@ public class DiagramTest {
     void replacePartyTest() {
         Diagram diagram = new Diagram();
         Party party = Party.createParty();
+        Party party2 = Party.createParty();
         diagram.addParty(party);
         assertEquals(diagram.getParties().size(), 1);
+        diagram.addParty(party2);
+        assertEquals(diagram.getParties().size(), 2);
+        diagram.insertInvocationMessageAtIndex(new InvocationMessage(party, party2), 0);
         Party newParty = Party.createParty();
         diagram.replaceParty(party, newParty);
+        diagram.deleteParty(party2);
         assertEquals(diagram.getParties().size(), 1);
         assertEquals(diagram.getParties().get(0), newParty);
+
     }
 
     @Test
     void deletePartyTest() {
         Diagram diagram = new Diagram();
         Party party = Party.createParty();
+        Party party2 = Party.createParty();
         diagram.addParty(party);
         assertEquals(diagram.getParties().size(), 1);
+        diagram.addParty(party2);
+        assertEquals(diagram.getParties().size(), 2);
+        diagram.insertInvocationMessageAtIndex(new InvocationMessage(party, party2), 0);
         diagram.deleteParty(party);
+        assertEquals(diagram.getParties().size(), 1);
+        diagram.deleteParty(party2);
         assertEquals(diagram.getParties().size(), 0);
     }
 
@@ -62,8 +74,8 @@ public class DiagramTest {
         assertThrows(InvalidAddMessageException.class,
                 ()->{diagram.insertInvocationMessageAtIndex(message2,4);});
         assertTrue(diagram.getMessages().size() == 2);
-        InvocationMessage message3 = new InvocationMessage(message.getReceiver(), message.getSender());
-        diagram.insertInvocationMessageAtIndex(message, 4);
+        InvocationMessage message3 = new InvocationMessage(message.getSender(), message.getReceiver());
+        diagram.insertInvocationMessageAtIndex(message3, 4);
         assertTrue(diagram.getMessages().size() == 4);
     }
 
@@ -76,7 +88,11 @@ public class DiagramTest {
         assertTrue(diagram.getMessages().size() == 2);
         diagram.deleteMessage(fake);
         assertTrue(diagram.getMessages().size() == 2);
+        InvocationMessage message2 = new InvocationMessage(message.getSender(), message.getReceiver());
+        diagram.insertInvocationMessageAtIndex(message2, 4);
         diagram.deleteMessage(message);
+        assertTrue(diagram.getMessages().size() == 2);
+        diagram.deleteMessage(message2);
         assertTrue(diagram.getMessages().size() == 0);
     }
 
