@@ -2,58 +2,64 @@ package unit.domain;
 
 import interactr.cs.kuleuven.be.domain.Party;
 import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class PartyTest {
+class PartyTest {
 
     @Test
-    public void createValidTest() {
+    void createValidTest() {
         Party party = new Party("valid:Label");
         assertEquals(party.getLabel(), "valid:Label");
         party = new Party(":Label");
         assertEquals(party.getLabel(), ":Label");
     }
 
-    @Test(expected = InvalidLabelException.class)
-    public void invalidLabelTest1() {
-        new Party("Invalid:Label");
-    }
-
-    @Test(expected = InvalidLabelException.class)
-    public void invalidLabelTest2() {
-        new Party(":label");
-    }
-
-    @Test(expected = InvalidLabelException.class)
-    public void invalidLabelTest3() {
-        new Party("invalid:");
+    @Test
+    void invalidLabelTest1() {
+        assertThrows(InvalidLabelException.class,
+                ()->{new Party("Invalid:Label");});
     }
 
     @Test
-    public void setValidLabelTest() {
+    void invalidLabelTest2() {
+        assertThrows(InvalidLabelException.class,
+                ()->{new Party(":label");});
+    }
+
+    @Test
+    void invalidLabelTest3() {
+        assertThrows(InvalidLabelException.class,
+                ()->{new Party("invalid:");});
+    }
+
+    @Test
+    void setValidLabelTest() {
         Party party = Party.createParty();
         party.setLabel("valid:Label");
         assertEquals(party.getLabel(), "valid:Label");
     }
 
-    @Test(expected = InvalidLabelException.class)
-    public void setInvalidLabelTest() {
+    @Test
+    void setInvalidLabelTest() {
         Party party = Party.createParty();
-        party.setLabel("Invalid:Label");
+        assertThrows(InvalidLabelException.class,
+                ()->{party.setLabel("Invalid:Label");});
     }
 
     @Test
-    public void canHaveAsLabelTest() {
+    void canHaveAsLabelTest() {
         Party party = Party.createParty();
         assertTrue(party.canHaveAsLabel("valid:Label"));
         assertFalse(party.canHaveAsLabel("Invalid:Label"));
     }
 
     @Test
-    public void toStringTest() {
+    void toStringTest() {
         Party party = new Party();
         assertEquals(party.toString(), party.getLabel());
     }
