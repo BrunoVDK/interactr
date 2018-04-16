@@ -417,7 +417,7 @@ public class CanvasWindow {
 	
 	public static void replayRecording(String path, CanvasWindow window) {
 		try {
-			new CanvasWindowRecording(RECORDINGS_PATH + path).replay(window);
+			new CanvasWindowRecording((RECORDINGS_PATH + path)).replay(window);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

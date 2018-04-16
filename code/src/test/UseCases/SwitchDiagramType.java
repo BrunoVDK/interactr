@@ -1,4 +1,4 @@
-package usecases;
+package UseCases;
 
 import interactr.cs.kuleuven.be.ui.*;
 import org.junit.jupiter.api.BeforeEach;
