@@ -20,7 +20,7 @@ public class SubWindow implements DiagramObserver {
     /**
      * Create a new subwindow without duplicating an other one.
      */
-    SubWindow() {
+    public SubWindow() {
         this(null);
     }
 
