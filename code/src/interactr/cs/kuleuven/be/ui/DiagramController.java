@@ -13,7 +13,7 @@ import java.util.*;
  */
 public class DiagramController {
 
-    private boolean recording = true;
+    private boolean recording = false;
 
     /**
      * Initialize this new diagram controller without any subwindows.

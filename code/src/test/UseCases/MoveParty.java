@@ -21,20 +21,31 @@ public class MoveParty {
 
     @Test
     void movePartySequence(){
-        //DiagramWindow.replayRecording("movePartySequence.txt",diagramWindow);
-        //diagramWindow.getEventHandler().getDiagramController().selectComponent(390,25);
-        //assertNotEquals(null,diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getSelectedComponent());
-
+        DiagramWindow.replayRecording("movePartySequence.txt",diagramWindow);
+        // Party added on  x = 6  y = 31 and moved to x = 135 y = 41
+        assertNotEquals(null,diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getActiveView().getSelectableComponent(135,41));
     }
 
     @Test
     void movePartyCommunication(){
+        DiagramWindow.replayRecording("movePartyCommunication.txt",diagramWindow);
+        // Party added on  x = 8  y = 30 and moved to x = 234 y = 40
+        assertNotEquals(null,diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getActiveView().getSelectableComponent(234,40));
+    }
+
+    @Test
+    void movePartyWhileEditingSequence(){
+        DiagramWindow.replayRecording("movePartyWhileEditingSequence.txt",diagramWindow);
+        // Party added on  x = 6  y = 29 and moved to x = 38 y = 289
+        assertEquals(null,diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getActiveView().getSelectableComponent(38,289));
 
     }
 
     @Test
-    void movePartyWhileEditing(){
-
+    void movePartySequenceIllegalPosition(){
+        DiagramWindow.replayRecording("movePartyWhileEditingSequence.txt",diagramWindow);
+        // Party added on  x = 6  y = 29 and moved to x = 38 y = 289
+        assertEquals(null,diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getActiveView().getSelectableComponent(38,289));
     }
 
 }
