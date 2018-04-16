@@ -1,4 +1,4 @@
-package UseCases;
+package usecases;
 
 import interactr.cs.kuleuven.be.ui.DiagramController;
 import interactr.cs.kuleuven.be.ui.DiagramWindow;
@@ -11,15 +11,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class AddParty {
+
     private DiagramWindow diagramWindow = new DiagramWindow();
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         diagramWindow.setEventHandler(new EventHandler(new DiagramController()));
         diagramWindow.setPaintBoard(new PaintBoard(diagramWindow, diagramWindow.getEventHandler().getDiagramController()));
     }
+
     @Test
-    void addPartyValidLabelSequence(){
+    void addPartyValidLabelSequence() {
         DiagramWindow.replayRecording("addPartySequence.txt",diagramWindow);
         assertEquals(1, diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().size());
     }
@@ -61,4 +63,5 @@ public class AddParty {
         DiagramWindow.replayRecording("addPartyIllegalPositionSequence.txt",diagramWindow);
         assertEquals(0, diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().size());
     }
+
 }

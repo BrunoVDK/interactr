@@ -201,7 +201,8 @@ class CanvasWindowRecording {
 				}
 				int keyCode = Integer.parseInt(words[2]);
 				char keyChar = (char)Integer.parseInt(words[3]);
-				items.add(new KeyEventItem(id, keyCode, keyChar, 0));
+				int modifiers = Integer.parseInt(words[4]);
+				items.add(new KeyEventItem(id, keyCode, keyChar, modifiers));
 				break;
 			}
 			case "Paint": {
@@ -416,10 +417,12 @@ public class CanvasWindow {
 	
 	public static void replayRecording(String path, CanvasWindow window) {
 		try {
-			new CanvasWindowRecording(path).replay(window);
+			new CanvasWindowRecording(RECORDINGS_PATH + path).replay(window);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
+
+	private static String RECORDINGS_PATH = "test/recordings/";
 
 }

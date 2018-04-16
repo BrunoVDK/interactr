@@ -13,12 +13,21 @@ import java.util.*;
  */
 public class DiagramController {
 
-    private boolean recording = false;
+    /**
+     * Initialize this new diagram controller without any subwindows and without any recording.
+     */
+    public DiagramController() {
+        this(false);
+    }
 
     /**
      * Initialize this new diagram controller without any subwindows.
+     *
+     * @param record If a recording session is to be used.
      */
-    public DiagramController() {
+    public DiagramController(boolean record) {
+
+        // Initialize window
         this.subWindows = new ArrayList<SubWindow>();
         DiagramWindow window = new DiagramWindow("New document - Interactr");
         PaintBoard paintBoard = new PaintBoard(window, this);
@@ -26,15 +35,19 @@ public class DiagramController {
         window.setPaintBoard(paintBoard);
         window.setEventHandler(new EventHandler(this));
 
-        if (recording){
+        // Toggle recording
+        if (record) {
             String fileName = "new.txt";
             String path = "code/";
             File file = new File(fileName);
             window.recordSession((path + fileName));
         }
+
+        // Start up the window
         java.awt.EventQueue.invokeLater(() -> {
             window.show();
         });
+
     }
 
     /**
@@ -343,7 +356,7 @@ public class DiagramController {
 
     // Entry point
     public static void main(String[] args) { // No documentation
-        new DiagramController();
+        new DiagramController(args.length > 0 && args[0].equalsIgnoreCase("-r"));
     }
 
 }
