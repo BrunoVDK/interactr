@@ -201,7 +201,8 @@ class CanvasWindowRecording {
 				}
 				int keyCode = Integer.parseInt(words[2]);
 				char keyChar = (char)Integer.parseInt(words[3]);
-				items.add(new KeyEventItem(id, keyCode, keyChar, 0));
+				int modifiers = Integer.parseInt(words[4]);
+				items.add(new KeyEventItem(id, keyCode, keyChar, modifiers));
 				break;
 			}
 			case "Paint": {

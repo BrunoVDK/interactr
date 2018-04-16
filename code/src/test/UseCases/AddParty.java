@@ -16,13 +16,12 @@ public class AddParty {
 
     @BeforeEach
     void setUp() {
-        System.out.println("ok");
         diagramWindow.setEventHandler(new EventHandler(new DiagramController()));
         diagramWindow.setPaintBoard(new PaintBoard(diagramWindow, diagramWindow.getEventHandler().getDiagramController()));
     }
 
     @Test
-    void addPartyValidLabelSequence(){
+    void addPartyValidLabelSequence() {
         DiagramWindow.replayRecording("addPartySequence.txt",diagramWindow);
         assertEquals(1, diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().size());
     }
