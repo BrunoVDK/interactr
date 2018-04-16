@@ -210,7 +210,7 @@ public class EventHandler {
      */
     void handleKeyEvent(int id, int keyCode, char keyChar, int keyModifiers) {
         if (getDiagramController() != null) {
-            //boolean controlIsPressed = (keyModifiers & KeyEvent.CTRL_DOWN_MASK) != 0;
+            boolean controlIsPressed = (keyModifiers & KeyEvent.CTRL_DOWN_MASK) != 0;
             switch (id) {
                 case KeyEvent.KEY_PRESSED:
                     if (keyCode == KeyEvent.VK_ENTER) {

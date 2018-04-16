@@ -14,7 +14,7 @@ public class AddParty {
     private DiagramWindow diagramWindow = new DiagramWindow();
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         diagramWindow.setEventHandler(new EventHandler(new DiagramController()));
         diagramWindow.setPaintBoard(new PaintBoard(diagramWindow, diagramWindow.getEventHandler().getDiagramController()));
     }
