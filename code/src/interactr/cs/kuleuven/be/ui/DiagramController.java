@@ -38,7 +38,7 @@ public class DiagramController {
         // Toggle recording
         if (record) {
             String fileName = "new.txt";
-            String path = "code/";
+            String path = "code/src/test/recordings/";
             File file = new File(fileName);
             window.recordSession((path + fileName));
         }
