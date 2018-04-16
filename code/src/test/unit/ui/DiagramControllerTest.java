@@ -1,7 +1,5 @@
 package unit.ui;
 
-import interactr.cs.kuleuven.be.domain.Message;
-import interactr.cs.kuleuven.be.domain.Party;
 import interactr.cs.kuleuven.be.exceptions.NoSuchWindowException;
 import interactr.cs.kuleuven.be.ui.DiagramController;
 import org.junit.jupiter.api.Test;

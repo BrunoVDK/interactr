@@ -3,13 +3,25 @@ package unit.purecollections;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
 import interactr.cs.kuleuven.be.purecollections.PList;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 public class PListTest {
+
+	@Test
+	public void testEmpty() {
+		PList<Integer> list = PList.empty();
+		assertThrows(NoSuchElementException.class,
+				()->{list.getFirst();});
+		assertThrows(NoSuchElementException.class,
+				()->{list.minusFirst();});
+	}
 
 	@Test
 	public void testPlusAndMinusFirst() {
