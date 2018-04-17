@@ -32,7 +32,7 @@ public class CreateNewDiagram {
     }
 
     /**
-     * Adds a ne subwindow, a new party at teh location:
+     * Adds a new subwindow, a new party at the location:
      * After that a new Copy is created and checked if there is a party on the same relative position.
      */
     @Test

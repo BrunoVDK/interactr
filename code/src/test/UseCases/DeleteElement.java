@@ -71,7 +71,7 @@ public class DeleteElement {
     @Test
     void deleteMessageAvalanche(){
         DiagramWindow.replayRecording("deleteMessageAvalanche.txt",diagramWindow);
-        assertEquals(1, diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getMessages().size());
+        assertEquals(2, diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getMessages().size());
         assertEquals(3, diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().size());
     }
 
