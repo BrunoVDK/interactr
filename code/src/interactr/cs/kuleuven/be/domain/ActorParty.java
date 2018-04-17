@@ -36,6 +36,11 @@ public class ActorParty extends Party {
         super(party);
     }
 
+
+    public Party switchType(){
+        return new ObjectParty(this);
+    }
+
     /**
      * A proposed type of figures for drawing this actor.
      */

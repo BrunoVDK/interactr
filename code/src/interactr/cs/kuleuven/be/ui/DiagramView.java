@@ -146,7 +146,7 @@ public class DiagramView implements DiagramObserver, Cloneable {
         if (oldParty != null) {
 
             // Replace the party in the diagram
-            Party newParty = oldParty.proposedReplacement();
+            Party newParty = oldParty.switchType();
             diagram.replaceParty(oldParty, newParty);
 
             // Post a notification of the update
