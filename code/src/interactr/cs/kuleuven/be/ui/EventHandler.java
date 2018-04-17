@@ -99,7 +99,7 @@ public class EventHandler {
         lastDragCoordinate = new Point(x,y); // Keep track of drag coordinates
         try {
             getDiagramController().activateSubWindow(x,y);
-            dragOperationType = DragOperationType.DRAG_VALID;
+            this.setDragOperationType(DragOperationType.DRAG_VALID);
         }
         catch (NoSuchWindowException ignored) {}
     }
@@ -153,7 +153,7 @@ public class EventHandler {
             getDiagramController().moveParty(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
 
             // Move party was successful, keep track of the changes
-            dragOperationType = DragOperationType.DRAG_DIAGRAM;
+            this.setDragOperationType(DragOperationType.DRAG_DIAGRAM);
             lastDragCoordinate = new Point(x,y);
 
         }
@@ -172,7 +172,7 @@ public class EventHandler {
                 getDiagramController().addMessage(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
             }
             catch (InvalidAddMessageException ignored) {}
-        dragOperationType = DragOperationType.DRAG_NONE;
+        this.setDragOperationType(DragOperationType.DRAG_NONE);
     }
 
     /**
@@ -186,6 +186,10 @@ public class EventHandler {
         DRAG_NONE, // When nothing at all is dragged
         DRAG_VALID, // When anything is dragged
         DRAG_DIAGRAM; // When something is dragged within a diagram
+    }
+
+    private void setDragOperationType(DragOperationType type){
+        this.dragOperationType = type;
     }
 
     /**
