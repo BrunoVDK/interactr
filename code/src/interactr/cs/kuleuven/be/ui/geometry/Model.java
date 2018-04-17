@@ -10,7 +10,7 @@ import java.awt.*;
  * @author Team 25
  * @version 1.0
  */
-public abstract class Model implements Cloneable {
+public class Model implements Cloneable {
 
     /**
      * Returns the char height used for labels for models.

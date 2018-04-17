@@ -118,7 +118,7 @@ public class Diagram {
      *  -1 if there is none.
      */
     public int getIndexOfAssociatedMessage(int index) {
-        if (index < associatedMessageIndices.size())
+        if (index >= 0 && index < associatedMessageIndices.size())
             return associatedMessageIndices.get(index);
         return -1;
     }
@@ -138,6 +138,7 @@ public class Diagram {
 
     /**
      * Insert the given invocation message at the given index in this diagram.
+     *  This method also adds a corresponding result message.
      *
      * @param message The invocation message that is to be added.
      * @param index The index to insert this message at.
@@ -179,6 +180,7 @@ public class Diagram {
             this.addPrefix(message, index);
             this.addPrefix(resultMessage);
         }
+
     }
 
     /**
