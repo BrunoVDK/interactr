@@ -37,4 +37,25 @@ public class EditLabel {
         assertEquals("a:A", diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getSelectedComponent().getLabel());
     }
 
+    /**
+     * Change a invocation message label from "c" to "d"
+     */
+    @Test
+    void editLabelInvocationMessage(){
+        DiagramWindow.replayRecording("editLabelInvocationMessage.txt",diagramWindow);
+        assertEquals("d", diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getMessages().getFirst().getLabel());
+    }
+
+
+
+    /**
+     * Change a result message label to "d"
+     */
+    @Test
+    void editLabelResultMessage(){
+        DiagramWindow.replayRecording("editLabelResultMessage.txt",diagramWindow);
+        assertEquals("d", diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getMessages().get(1).getLabel());
+    }
+
+
 }
