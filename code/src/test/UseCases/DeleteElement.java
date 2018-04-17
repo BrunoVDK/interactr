@@ -55,6 +55,26 @@ public class DeleteElement {
         assertEquals(0, diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getMessages().size());
     }
 
+    /**
+     * Adds 3 messages between 3 parties (011220) and deletes the middle party
+     */
+    @Test
+    void deletePartyAvalanche(){
+        DiagramWindow.replayRecording("deletePartyMessageAvalanche.txt",diagramWindow);
+        assertEquals(0, diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getMessages().size());
+        assertEquals(2, diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().size());
+    }
+
+    /**
+     * dds 3 messages between 3 parties (01 12 20) and deletes the second message
+     */
+    @Test
+    void deleteMessageAvalanche(){
+        DiagramWindow.replayRecording("deleteMessageAvalanche.txt",diagramWindow);
+        assertEquals(2, diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getMessages().size());
+        assertEquals(3, diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().size());
+    }
+
 
 
 
