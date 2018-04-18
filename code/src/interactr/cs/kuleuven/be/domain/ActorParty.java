@@ -36,7 +36,7 @@ public class ActorParty extends Party {
         super(party);
     }
 
-
+    @Override
     public Party switchType(){
         return new ObjectParty(this);
     }

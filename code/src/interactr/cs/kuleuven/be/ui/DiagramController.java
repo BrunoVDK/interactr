@@ -64,8 +64,8 @@ public class DiagramController {
      * Display all subwindows in this diagram controller.
      */
     public void displayAllSubWindows() {
-        for (int i=subWindows.size()-1 ; i>=0 ; i--) // Last window first
-            subWindows.get(i).displayView(getPaintBoard());
+        for (int i=this.getSubWindows().size()-1 ; i>=0 ; i--) // Last window first
+            this.getSubWindows().get(i).displayView(getPaintBoard());
     }
 
     /**
@@ -84,14 +84,14 @@ public class DiagramController {
      * @return The diagram view of this controller that's currently active.
      */
     public SubWindow getActiveSubwindow() {
-        return (subWindows.isEmpty() ? null : subWindows.get(0));
+        return (this.getSubWindows().isEmpty() ? null : this.getSubWindows().get(0));
     }
 
     /**
      * Creates a new subwindow with default parameters.
      */
     public void createSubWindow(){
-        subWindows.add(0, new SubWindow());
+        this.addSubWindow(0, new SubWindow());
         getPaintBoard().refresh();
     }
 
@@ -100,9 +100,17 @@ public class DiagramController {
      */
     public void duplicateSubWindow() {
         if (getActiveSubwindow() != null) {
-            subWindows.add(0, new SubWindow(getActiveSubwindow()));
+            this.addSubWindow(0, new SubWindow(getActiveSubwindow()));
             getPaintBoard().refresh();
         }
+    }
+
+    private void addSubWindow(int index, SubWindow subwindow){
+        this.getSubWindows().add(index, subwindow);
+    }
+
+    private ArrayList<SubWindow> getSubWindows(){
+        return subWindows;
     }
 
     /**
@@ -116,7 +124,7 @@ public class DiagramController {
         SubWindow subWindow = getSubWindowAt(x, y);
         if (subWindow == null)
             throw new NoSuchWindowException();
-        subWindows.add(0, subWindows.remove(subWindows.indexOf(subWindow)));
+        this.addSubWindow(0, this.getSubWindows().remove(this.getSubWindows().indexOf(subWindow)));
     }
 
     /**
@@ -128,10 +136,10 @@ public class DiagramController {
      * @throws InvalidCloseWindowException When the given coordinates don't lie in any subwindow's close button.
      */
     public void closeSubWindow(int x, int y) throws InvalidCloseWindowException {
-        SubWindow subWindow = subWindows.stream().filter( s -> s.closeButtonEncloses(x,y)).findFirst().orElse(null);
+        SubWindow subWindow = this.getSubWindows().stream().filter( s -> s.closeButtonEncloses(x,y)).findFirst().orElse(null);
         if (subWindow != null && !(isEditing() && subWindow == getActiveSubwindow())) {
             subWindow.close();
-            subWindows.remove(subWindow);
+            this.getSubWindows().remove(subWindow);
             getPaintBoard().refresh();
         }
         else
@@ -178,7 +186,7 @@ public class DiagramController {
      * @return The subwindow at the given coordinates or null if there is none.
      */
     private SubWindow getSubWindowAt(int x, int y) {
-        return subWindows.stream().filter( s -> s.getBorderedFrame().encloses(x,y)).findFirst().orElse(null);
+        return this.getSubWindows().stream().filter( s -> s.getBorderedFrame().encloses(x,y)).findFirst().orElse(null);
     }
 
     /**

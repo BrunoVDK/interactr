@@ -96,7 +96,7 @@ public class EventHandler {
      * @param y The y coordinate of the mouse press.
      */
     private void handleMousePress(int x, int y) {
-        lastDragCoordinate = new Point(x,y); // Keep track of drag coordinates
+        this.setLastDragCoordinate(x,y); // Keep track of drag coordinates
         try {
             getDiagramController().activateSubWindow(x,y);
             this.setDragOperationType(DragOperationType.DRAG_VALID);
@@ -113,29 +113,29 @@ public class EventHandler {
     private void handleMouseDrag(int x, int y) {
 
         // Nothing to drag
-        if (dragOperationType == DragOperationType.DRAG_NONE)
+        if (this.getDragOperationType() == DragOperationType.DRAG_NONE)
             return;
 
         // Prioritise dragging in a diagram if it was previously successful
         //  This prevents the alteration of subwindow frames when dragging something in a diagram
         //  close to the subwindow's borders / title bar
-        if (dragOperationType == DragOperationType.DRAG_DIAGRAM) {
+        if (this.getDragOperationType() == DragOperationType.DRAG_DIAGRAM) {
             moveParty(x,y);
         }
         else {
             try {
-                getDiagramController().resizeSubWindow(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
+                getDiagramController().resizeSubWindow(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
             }
             catch (InvalidResizeWindowException e1) {
                 try {
-                    getDiagramController().moveSubWindow(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
+                    getDiagramController().moveSubWindow(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
                 }
                 catch (InvalidMoveWindowException e2) {
                     moveParty(x,y);
                     return;
                 }
             }
-            lastDragCoordinate = new Point(x,y);
+            setLastDragCoordinate(x,y);
         }
 
     }
@@ -150,11 +150,11 @@ public class EventHandler {
         try {
 
             // Move party
-            getDiagramController().moveParty(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
+            getDiagramController().moveParty(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
 
             // Move party was successful, keep track of the changes
             this.setDragOperationType(DragOperationType.DRAG_DIAGRAM);
-            lastDragCoordinate = new Point(x,y);
+            this.setLastDragCoordinate(x,y);
 
         }
         catch (Exception ignored) {}
@@ -167,9 +167,9 @@ public class EventHandler {
      * @param y The y coordinate of the mouse release.
      */
     private void handleMouseReleased(int x, int y) {
-        if (dragOperationType == DragOperationType.DRAG_VALID)
+        if (this.getDragOperationType() == DragOperationType.DRAG_VALID)
             try {
-                getDiagramController().addMessage(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
+                getDiagramController().addMessage(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
             }
             catch (InvalidAddMessageException ignored) {}
         this.setDragOperationType(DragOperationType.DRAG_NONE);
@@ -192,6 +192,10 @@ public class EventHandler {
         this.dragOperationType = type;
     }
 
+    public DragOperationType getDragOperationType(){
+        return dragOperationType;
+    }
+
     /**
      * Registers the current type of dragging operation.
      */
@@ -201,6 +205,14 @@ public class EventHandler {
      * The coordinates for the last successful drag operation.
      */
     private Point lastDragCoordinate;
+
+    private void setLastDragCoordinate(int x, int y){
+        lastDragCoordinate = new Point(x, y);
+    }
+
+    public Point getLastDragCoordinate(){
+        return lastDragCoordinate;
+    }
 
     private boolean controlIsPressed = false;
 

@@ -9,7 +9,7 @@ import interactr.cs.kuleuven.be.ui.geometry.Figure;
  * @author Team 25
  * @version 1.0
  */
-abstract public class Party extends DiagramComponent {
+public class Party extends DiagramComponent {
 
     /**
      * Creates a novel party.
@@ -50,7 +50,7 @@ abstract public class Party extends DiagramComponent {
      *
      * @return returns the switched party
      */
-    abstract public Party switchType();
+    public Party switchType(){return null;}
 
     /**
      * Returns a proposal for how this component should be drawn, by returning a mock-up figure.
