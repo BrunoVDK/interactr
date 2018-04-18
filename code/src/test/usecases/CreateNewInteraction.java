@@ -1,4 +1,4 @@
-package usecases;
+package test.usecases;
 
 import interactr.cs.kuleuven.be.ui.DiagramController;
 import interactr.cs.kuleuven.be.ui.DiagramWindow;
@@ -6,9 +6,11 @@ import interactr.cs.kuleuven.be.ui.EventHandler;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
-public class CloseWindow {
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
+public class CreateNewInteraction {
+
     private DiagramWindow diagramWindow = new DiagramWindow();
 
     @BeforeEach
@@ -16,10 +18,10 @@ public class CloseWindow {
         diagramWindow.setEventHandler(new EventHandler(new DiagramController()));
         diagramWindow.setPaintBoard(new PaintBoard(diagramWindow, diagramWindow.getEventHandler().getDiagramController()));
     }
-
     @Test
-    void closeWindow(){
-        DiagramWindow.replayRecording("closeWindow.txt",diagramWindow);
-        assertEquals(null, diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow());
+    void createNewSubWindow(){
+        DiagramWindow.replayRecording("createNewSubWindow.txt",diagramWindow);
+        assertNotEquals(null, diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow());
     }
+
 }
