@@ -179,7 +179,6 @@ public class SubWindow implements DiagramObserver {
         if (y < TITLE_BAR_HEIGHT) throw new InvalidAddPartyException();
         else y -= TITLE_BAR_HEIGHT;
         getActiveView().addParty(x,y);
-        System.out.println("ok");
         setSelectedComponent(getActiveView().getParty(x,y));
         setSelectedLabel("");
     }

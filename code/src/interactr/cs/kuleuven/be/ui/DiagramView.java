@@ -402,7 +402,7 @@ public class DiagramView implements DiagramObserver, Cloneable {
             int index = getMessageInsertionIndex(fromX, fromY, toX, toY);
             diagram.insertInvocationMessageAtIndex(message, index);
             ResultMessage result = diagram.getResultMessageForInvocationMessage(message);
-            
+
             // Post a notification of the update
             PMap<String , Object> notificationParameters = PMap.<String, Object>empty();
             notificationParameters = notificationParameters.plus("invocation", message);
