@@ -20,7 +20,7 @@ public class CreateNewDiagram {
 
     /**
      * Adds a new subwindow, does control D, moves the new window to the right
-     * After that selct the onther subwindow and check if the diagrams are the same
+     * After that select the onther subwindow and check if the diagrams are the same
      */
     @Test
     void createNewEmptyDiagram(){

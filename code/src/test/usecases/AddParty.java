@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class AddParty {
 
@@ -18,6 +19,13 @@ public class AddParty {
     void setUp() {
         diagramWindow.setEventHandler(new EventHandler(new DiagramController()));
         diagramWindow.setPaintBoard(new PaintBoard(diagramWindow, diagramWindow.getEventHandler().getDiagramController()));
+    }
+
+    @Test
+    void stepByStepTest() {
+        DiagramWindow.replayRecording("steps/createNewInteraction.txt",diagramWindow);
+        assertNotNull(diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow());
+        // ADD REST OF TESTS HERE
     }
 
     @Test
