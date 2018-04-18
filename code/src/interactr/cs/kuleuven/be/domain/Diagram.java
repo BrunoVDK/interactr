@@ -147,11 +147,15 @@ public class Diagram {
     public void insertInvocationMessageAtIndex(InvocationMessage message, int index) {
 
         // Only insert if it is a valid message to insert
-        if (!canAddMessageAtIndex(message, index))
+        if (!canInsertMessageAtIndex(message, index))
             throw new InvalidAddMessageException();
 
         // Always insert a corresponding result message
         ResultMessage resultMessage = new ResultMessage(message);
+
+        // Add prefix
+        associatedPrefixes.add(index, null);
+        associatedPrefixes.add(index, null);
 
         // First shift all the indices
         for (int i=0 ; i<messages.size() ; i++) {
@@ -169,16 +173,12 @@ public class Diagram {
             messages = messages.plus(resultMessage);
             associatedMessageIndices.add(index + 1);
             associatedMessageIndices.add(index);
-            this.addPrefix(message, index);
-            this.addPrefix(resultMessage);
         }
         else { // Insert
             messages = messages.plus(index, resultMessage);
             messages = messages.plus(index, message);
             associatedMessageIndices.add(index, index);
             associatedMessageIndices.add(index, index + 1);
-            this.addPrefix(message, index);
-            this.addPrefix(resultMessage);
         }
 
     }
@@ -191,7 +191,7 @@ public class Diagram {
      * @return True if and only if the sender of the given message lie at the top of the call stack
      *  at the given index.
      */
-    private boolean canAddMessageAtIndex(Message message, int index) {
+    private boolean canInsertMessageAtIndex(Message message, int index) {
         if (messages.size() == 0)
             return true;
         if (index >= messages.size())
@@ -272,7 +272,7 @@ public class Diagram {
      *
      * @param message The message to add a prefix to.
      */
-    private void addPrefix(ResultMessage message){
+    private void updatePrefix(ResultMessage message){
         int index = this.getIndexOfAssociatedMessage(this.getIndexOfMessage(message));
         this.associatedPrefixes.add(index+1, null);
     }
@@ -282,7 +282,7 @@ public class Diagram {
      *
      * @param message The message whose prefix should be determined.
      */
-    private void addPrefix(InvocationMessage message, int index) {
+    private void updatePrefix(InvocationMessage message, int index) {
         Message prev = this.getPreviousInvocationMessage(message, index);
 
         if (prev == null){
@@ -302,20 +302,15 @@ public class Diagram {
     }
 
     /**
-     * Returns the previous invocation message for the given message.
+     * Returns the previous invocation message's index for the message at given index.
      *
-     * @param m The message to get the previous invocation for.
      * @param index The index of the message.
-     * @return The previous invocation message for the given message.
+     * @return The index of the previous invocation message for the given message.
      */
-    private Message getPreviousInvocationMessage(Message m, int index){
-        Message prev = null;
-        for (int i=0 ; i<index ; i++)
-            if (i < this.getIndexOfAssociatedMessage(i)
-                    && (m.getSender() == this.getMessageAtIndex(i).getReceiver()
-                        || m.getSender() == this.getMessageAtIndex(i).getSender()))
-                prev = this.getMessageAtIndex(i);
-        return prev;
+    private int getIndexOfPreviousInvocation(int index) {
+        if (index == 0) return 0;
+        int associatedIndex = getIndexOfAssociatedMessage(index-1);
+        return (associatedIndex < (index-1) ? associatedIndex : (index-1));
     }
 
     /**

@@ -398,25 +398,24 @@ public class DiagramView implements DiagramObserver, Cloneable {
      */
     public void addMessage(InvocationMessage message, int fromX, int fromY, int toX, int toY) {
         if (message != null && canInsertMessageAt(fromX, fromY, toX, toY)) {
+
             int index = getMessageInsertionIndex(fromX, fromY, toX, toY);
-            try {
+            diagram.insertInvocationMessageAtIndex(message, index);
+            ResultMessage result = diagram.getResultMessageForInvocationMessage(message);
 
-                diagram.insertInvocationMessageAtIndex(message, index);
-                ResultMessage result = diagram.getResultMessageForInvocationMessage(message);
+            System.out.println("ok");
 
-                // Post a notification of the update
-                PMap<String , Object> notificationParameters = PMap.<String, Object>empty();
-                notificationParameters = notificationParameters.plus("invocation", message);
-                notificationParameters = notificationParameters.plus("result", result);
-                notificationParameters = notificationParameters.plus("startCoordinates", new Point(fromX,fromY));
-                notificationParameters = notificationParameters.plus("endCoordinates", new Point(toX,toY));
-                DiagramNotificationCenter.defaultCenter().postNotification(
-                        diagram,
-                        DiagramUpdateType.ADD_MESSAGE,
-                        notificationParameters);
+            // Post a notification of the update
+            PMap<String , Object> notificationParameters = PMap.<String, Object>empty();
+            notificationParameters = notificationParameters.plus("invocation", message);
+            notificationParameters = notificationParameters.plus("result", result);
+            notificationParameters = notificationParameters.plus("startCoordinates", new Point(fromX,fromY));
+            notificationParameters = notificationParameters.plus("endCoordinates", new Point(toX,toY));
+            DiagramNotificationCenter.defaultCenter().postNotification(
+                    diagram,
+                    DiagramUpdateType.ADD_MESSAGE,
+                    notificationParameters);
 
-            }
-            catch(InvalidAddMessageException e) {throw e;}
         }
         else
             throw new InvalidAddMessageException();

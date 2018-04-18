@@ -190,6 +190,8 @@ public class SequenceView extends DiagramView {
 
     @Override
     public boolean canInsertMessageAt(int fromX, int fromY, int toX, int toY) {
+        if (Math.abs(fromY - toY) > 8)
+            return false;
         if (fromY < PARTY_ROW_HEIGHT || toY < PARTY_ROW_HEIGHT)
             return false;
         int min = Math.min(fromY, toY);
@@ -207,9 +209,11 @@ public class SequenceView extends DiagramView {
         Party fromParty = getParty(fromX, 10), toParty = getParty(toX, 10);
         if (fromParty == null || toParty == null)
             return null;
+        /*
         Figure fromFigure = figureForParty(fromParty), toFigure = figureForParty(toParty);
         if (fromFigure == null || toFigure == null)
             return null;
+            */
         try {
             return new InvocationMessage(fromParty, toParty);
         }
