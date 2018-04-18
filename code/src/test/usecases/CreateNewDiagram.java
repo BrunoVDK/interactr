@@ -1,13 +1,12 @@
 package test.usecases;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
-import interactr.cs.kuleuven.be.ui.DiagramController;
-import interactr.cs.kuleuven.be.ui.DiagramWindow;
-import interactr.cs.kuleuven.be.ui.EventHandler;
-import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.domain.DiagramComponent;
+import interactr.cs.kuleuven.be.ui.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class CreateNewDiagram {
 
@@ -32,13 +31,29 @@ public class CreateNewDiagram {
     }
 
     /**
-     * Adds a new subwindow, a new party at the location:
-     * After that a new Copy is created and checked if there is a party on the same relative position.
+     * Adds a new subwindow, a copy, and a new party in the first subwindow,
+     * Checks whether the party exists in the copied subwindow.
      */
     @Test
     void createNewDiagramWithParty(){
         DiagramWindow.replayRecording("createNewDiagramWithParty01.txt",diagramWindow);
         assertEquals(1,diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().size());
+    }
+
+    /**
+     * Creates a subwindow and adds a party, then copies the subwindow.
+     * Checks that the party is at the same relative position in both subwindows
+     */
+    @Test
+    void copyDiagramWithParty() {
+        DiagramWindow.replayRecording("copyDiagramWithParty.txt",diagramWindow);
+        SubWindow win1 = diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow();
+        diagramWindow.getEventHandler().getDiagramController().activateSubWindow(10,10);
+        SubWindow win2 = diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow();
+        assertNotEquals(win1, win2, "Recording is broken: Selected the same subwindow twice");
+        DiagramComponent comp1 = win1.getActiveView().getComponent(166,66);
+        DiagramComponent comp2 = win2.getActiveView().getComponent(166,66);
+        assertEquals(comp1, comp2);
     }
 
     /**
