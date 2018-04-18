@@ -23,6 +23,7 @@ public class AddParty {
 
     @Test
     void stepByStepTest() {
+        // Precondition
         DiagramWindow.replayRecording("steps/createNewInteraction.txt",diagramWindow);
         assertNotNull(diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow());
         // ADD REST OF TESTS HERE

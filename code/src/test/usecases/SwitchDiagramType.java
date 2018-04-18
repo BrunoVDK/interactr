@@ -15,6 +15,19 @@ public class SwitchDiagramType {
         diagramWindow.setEventHandler(new EventHandler(new DiagramController()));
         diagramWindow.setPaintBoard(new PaintBoard(diagramWindow, diagramWindow.getEventHandler().getDiagramController()));
     }
+
+    @Test
+    void stepByStepTest() {
+        // Precondition
+        DiagramWindow.replayRecording("steps/createNewDiagram.txt",diagramWindow);
+        assertNotNull(diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow());
+        // Steps
+        DiagramView activeView = diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getActiveView();
+        DiagramWindow.replayRecording("steps/pressTabKey.txt",diagramWindow);
+        DiagramView newView = diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getActiveView();
+        assertNotEquals(activeView, newView);
+    }
+
     @Test
     void switchSequenceToCommunication(){
         DiagramWindow.replayRecording("switchSequenceToCommunication.txt",diagramWindow);
@@ -27,6 +40,5 @@ public class SwitchDiagramType {
         assertEquals( true ,diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getActiveView() instanceof SequenceView );
 
     }
-
 
 }
