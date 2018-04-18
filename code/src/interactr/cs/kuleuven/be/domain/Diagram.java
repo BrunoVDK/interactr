@@ -1,11 +1,8 @@
 package interactr.cs.kuleuven.be.domain;
 
 import interactr.cs.kuleuven.be.exceptions.InvalidAddMessageException;
-import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.purecollections.PList;
-import interactr.cs.kuleuven.be.ui.DiagramView;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -173,12 +170,22 @@ public class Diagram {
             messages = messages.plus(resultMessage);
             associatedMessageIndices.add(index + 1);
             associatedMessageIndices.add(index);
+<<<<<<< HEAD
+=======
+            this.updatePrefix(message, index);
+            this.updatePrefix(resultMessage);
+>>>>>>> 907a44a04d29314819a6f9b7c7e829204ad9d846
         }
         else { // Insert
             messages = messages.plus(index, resultMessage);
             messages = messages.plus(index, message);
             associatedMessageIndices.add(index, index);
             associatedMessageIndices.add(index, index + 1);
+<<<<<<< HEAD
+=======
+            this.updatePrefix(message, index);
+            this.updatePrefix(resultMessage);
+>>>>>>> 907a44a04d29314819a6f9b7c7e829204ad9d846
         }
 
     }
@@ -286,7 +293,12 @@ public class Diagram {
         Message prev = this.getPreviousInvocationMessage(message, index);
 
         if (prev == null){
-            this.associatedPrefixes.add(index, "1.");
+            if(this.associatedPrefixes.isEmpty()) {
+                this.associatedPrefixes.add(index, "1.");
+            }
+            else{
+                this.associatedPrefixes.add(index, "1.");
+            }
         }
         else if (message.getSender() == prev.getSender()) {
             String previousPrefix = this.associatedPrefixes.get(this.getIndexOfMessage(prev));
@@ -299,6 +311,10 @@ public class Diagram {
             String prefix = this.associatedPrefixes.get((this.getIndexOfMessage(prev))) + "1.";
             this.associatedPrefixes.add(index, prefix);
         }
+    }
+
+    private void shiftPrefix(InvocationMessage message, int index){
+
     }
 
     /**
