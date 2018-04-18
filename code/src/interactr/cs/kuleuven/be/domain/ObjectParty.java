@@ -24,6 +24,11 @@ public class ObjectParty extends Party {
         super(label);
     }
 
+    @Override
+    public Party switchType(){
+        return new ActorParty(this);
+    }
+
     /**
      * Initialize this new object party with the given party.
      *
@@ -32,8 +37,5 @@ public class ObjectParty extends Party {
     public ObjectParty(Party party) {
         super(party);
     }
-
-    @Override
-    public Party proposedReplacement() {return new ActorParty(this);}
 
 }

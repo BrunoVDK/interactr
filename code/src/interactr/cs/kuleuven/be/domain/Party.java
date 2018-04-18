@@ -46,11 +46,11 @@ public class Party extends DiagramComponent {
     }
 
     /**
-     * Returns a proposed party to replace this one when the type of party is to be changed.
+     * Switches the type of this party
      *
-     * @return A proposed replacement for this party, possibly of different type.
+     * @return returns the switched party
      */
-    public Party proposedReplacement() {return new ObjectParty(this);}
+    public Party switchType(){return null;}
 
     /**
      * Returns a proposal for how this component should be drawn, by returning a mock-up figure.
