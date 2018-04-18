@@ -202,15 +202,12 @@ public class DiagramController {
      * @throws InvalidAddPartyException The operation was not successful.
      */
     public void addParty(int x, int y) throws InvalidAddPartyException {
-        try {
-            if (getActiveSubwindow() != null && !isEditing()) {
-                getActiveSubwindow().addParty(
-                        x - getActiveSubwindow().getFrame().getX(),
-                        y - getActiveSubwindow().getFrame().getY());
-                getPaintBoard().refresh();
-            }
+        if (getActiveSubwindow() != null && !isEditing()) {
+            getActiveSubwindow().addParty(
+                    x - getActiveSubwindow().getFrame().getX(),
+                    y - getActiveSubwindow().getFrame().getY());
+            getPaintBoard().refresh();
         }
-        catch (InvalidAddPartyException e) {throw e;}
     }
 
     /**

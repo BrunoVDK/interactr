@@ -1,4 +1,4 @@
-package usecases;
+package test.usecases;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.ui.DiagramController;
@@ -37,7 +37,7 @@ public class CreateNewDiagram {
      */
     @Test
     void createNewDiagramWithParty(){
-        DiagramWindow.replayRecording("createNewDiagramWithParty1.txt",diagramWindow);
+        DiagramWindow.replayRecording("createNewDiagramWithParty01.txt",diagramWindow);
         assertEquals(1,diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().size());
     }
 
@@ -48,9 +48,8 @@ public class CreateNewDiagram {
      */
     @Test
     void createNewDiagramEditInvalidLabel(){
-        DiagramWindow.replayRecording("createNewDiagramEditInvalidLabel.txt",diagramWindow);
+        DiagramWindow.replayRecording("createNewDiagramEditInvalidLabel01.txt",diagramWindow);
         assertEquals("a:A", diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getSelectedComponent().getLabel());
-
     }
 
 }

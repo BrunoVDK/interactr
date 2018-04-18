@@ -1,4 +1,4 @@
-package unit.ui;
+package test.unit.ui;
 
 import interactr.cs.kuleuven.be.exceptions.IllegalWindowFrameException;
 import interactr.cs.kuleuven.be.ui.SubWindow;

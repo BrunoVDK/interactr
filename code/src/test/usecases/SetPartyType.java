@@ -1,4 +1,4 @@
-package usecases;
+package test.usecases;
 
 import interactr.cs.kuleuven.be.domain.ActorParty;
 import interactr.cs.kuleuven.be.domain.ObjectParty;

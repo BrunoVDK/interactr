@@ -1,4 +1,4 @@
-package usecases;
+package test.usecases;
 
 import interactr.cs.kuleuven.be.ui.DiagramController;
 import interactr.cs.kuleuven.be.ui.DiagramWindow;
@@ -53,7 +53,7 @@ public class EditLabel {
      */
     @Test
     void editLabelResultMessage(){
-        DiagramWindow.replayRecording("editLabelResultMessage.txt",diagramWindow);
+        DiagramWindow.replayRecording("editLabelResultMessage01.txt",diagramWindow);
         assertEquals("d", diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getMessages().get(1).getLabel());
     }
 

@@ -423,6 +423,6 @@ public class CanvasWindow {
 		}
 	}
 
-	private static String RECORDINGS_PATH = "src/test/recordings/";
+	private static String RECORDINGS_PATH = System.getProperty("user.dir") + "/src/test/recordings/";
 
 }
