@@ -6,12 +6,14 @@ import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
 import interactr.cs.kuleuven.be.purecollections.PList;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-
+@Disabled
 public class PListTest {
 
 	@Test

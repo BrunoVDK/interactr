@@ -13,8 +13,10 @@ import java.util.Set;
 import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.purecollections.PMap;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 public class PMapTest {
 
 	@Test
