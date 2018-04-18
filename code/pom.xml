@@ -34,7 +34,7 @@
     </dependencies>
 
     <build>
-        <sourceDirectory>src/interactr</sourceDirectory>
+        <sourceDirectory>src</sourceDirectory>
         <testSourceDirectory>src/test</testSourceDirectory>
         <plugins>
             <plugin>
