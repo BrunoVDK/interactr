@@ -152,9 +152,9 @@ public class Diagram {
 
         // Add prefix
         associatedPrefixes.add(index, null);
-        associatedPrefixes.add(index, null);
+        associatedPrefixes.add(index, calculatePrefix(message, index));
 
-        // First shift all the indices
+        // First shift all the indices (and update the prefixes)
         for (int i=0 ; i<messages.size() ; i++) {
             Integer formerIndex = associatedMessageIndices.get(i);
             if (formerIndex >= index) {
@@ -176,6 +176,12 @@ public class Diagram {
             messages = messages.plus(index, message);
             associatedMessageIndices.add(index, index);
             associatedMessageIndices.add(index, index + 1);
+        }
+
+        for (int i=0 ; i<messages.size() ; i++) {
+            String prefix = calculatePrefix(messages.get(i), i);
+            associatedPrefixes.remove(i);
+            associatedPrefixes.add(i, prefix);
         }
 
     }
@@ -237,7 +243,14 @@ public class Diagram {
         while(i < count) {
             messages = messages.minus(min);
             associatedMessageIndices.remove(min);
+            associatedPrefixes.remove(min);
             i++;
+        }
+
+        for (int j=0 ; j<messages.size() ; j++) {
+            String prefix = calculatePrefix(messages.get(j), j);
+            associatedPrefixes.remove(j);
+            associatedPrefixes.add(j, prefix);
         }
 
     }
@@ -265,42 +278,24 @@ public class Diagram {
     }
 
     /**
-     * Add a prefix to the given result message.
-     *
-     * @param message The message to add a prefix to.
-     */
-    private void updatePrefix(ResultMessage message){
-        int index = this.getIndexOfAssociatedMessage(this.getIndexOfMessage(message));
-        this.associatedPrefixes.add(index+1, null);
-    }
-
-    /**
      * Calculates a prefix for the given message in this diagram.
      *
      * @param message The message whose prefix should be determined.
      */
-    private void updatePrefix(InvocationMessage message, int index) {
-        Message prev = this.getPreviousInvocationMessage(message, index);
-
-        if (prev == null){
-            if(this.associatedPrefixes.isEmpty()) {
-                this.associatedPrefixes.add(index, "1.");
-            }
-            else{
-                this.associatedPrefixes.add(index, "1.");
-            }
-        }
-        else if (message.getSender() == prev.getSender()) {
-            String previousPrefix = this.associatedPrefixes.get(this.getIndexOfMessage(prev));
+    private String calculatePrefix(Message message, int index) {
+        Message previousInvocation = this.getPreviousInvocation(index);
+        if (previousInvocation == null)
+            return "1.";
+        else if (message.getSender() == previousInvocation.getSender()) {
+            String previousPrefix = this.associatedPrefixes.get(this.getIndexOfMessage(previousInvocation));
             int prefixLast = Integer.parseInt(previousPrefix.substring(previousPrefix.length()-2, previousPrefix.length()-1));
             int prefixNew = prefixLast + 1;
-            String prefix = previousPrefix.substring(0 , previousPrefix.length()-2) + prefixNew + ".";
-            this.associatedPrefixes.add(index, prefix);
+            return previousPrefix.substring(0 , previousPrefix.length()-2) + prefixNew + ".";
         }
-        else if (message.getSender() == prev.getReceiver()){
-            String prefix = this.associatedPrefixes.get((this.getIndexOfMessage(prev))) + "1.";
-            this.associatedPrefixes.add(index, prefix);
+        else if (message.getSender() == previousInvocation.getReceiver()){
+            return this.associatedPrefixes.get((this.getIndexOfMessage(previousInvocation))) + "1.";
         }
+        return null;
     }
 
     /**
@@ -309,10 +304,10 @@ public class Diagram {
      * @param index The index of the message.
      * @return The index of the previous invocation message for the given message.
      */
-    private int getIndexOfPreviousInvocation(int index) {
-        if (index == 0) return 0;
+    private Message getPreviousInvocation(int index) {
+        if (index == 0) return null;
         int associatedIndex = getIndexOfAssociatedMessage(index-1);
-        return (associatedIndex < (index-1) ? associatedIndex : (index-1));
+        return getMessageAtIndex(associatedIndex < (index-1) ? associatedIndex : (index-1));
     }
 
     /**
