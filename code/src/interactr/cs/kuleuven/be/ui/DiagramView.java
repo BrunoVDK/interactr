@@ -397,9 +397,7 @@ public class DiagramView implements DiagramObserver, Cloneable {
      * @throws InvalidAddMessageException If a message could not be added.
      */
     public void addMessage(InvocationMessage message, int fromX, int fromY, int toX, int toY) {
-        if (message == null)
-            throw new InvalidAddMessageException();
-        if (canInsertMessageAt(fromX, fromY, toX, toY)) {
+        if (message != null && canInsertMessageAt(fromX, fromY, toX, toY)) {
             int index = getMessageInsertionIndex(fromX, fromY, toX, toY);
             try {
 
@@ -420,6 +418,8 @@ public class DiagramView implements DiagramObserver, Cloneable {
             }
             catch(InvalidAddMessageException e) {throw e;}
         }
+        else
+            throw new InvalidAddMessageException();
     }
 
     /**
