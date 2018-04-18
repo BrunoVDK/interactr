@@ -1,4 +1,4 @@
-package test.usecases;
+package usecases;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.DiagramComponent;

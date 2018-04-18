@@ -1,4 +1,4 @@
-package test.unit.ui.geometry;
+package unit.ui.geometry;
 
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 import org.junit.jupiter.api.Test;

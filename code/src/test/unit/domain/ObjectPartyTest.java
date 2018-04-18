@@ -1,4 +1,4 @@
-package test.unit.domain;
+package unit.domain;
 
 import interactr.cs.kuleuven.be.domain.ObjectParty;
 import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
@@ -46,10 +46,4 @@ class ObjectPartyTest {
         assertNotNull(party.proposedFigure());
     }
 
-   /* @Test
-    void proposedReplacementTest() {
-        ObjectParty party = new ObjectParty();
-        assertNotNull(party.proposedReplacement());
-    }
-*/
 }

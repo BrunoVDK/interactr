@@ -1,4 +1,4 @@
-package test.usecases;
+package usecases;
 
 import interactr.cs.kuleuven.be.ui.DiagramController;
 import interactr.cs.kuleuven.be.ui.DiagramWindow;

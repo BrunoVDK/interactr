@@ -150,11 +150,7 @@ public class Diagram {
         // Always insert a corresponding result message
         ResultMessage resultMessage = new ResultMessage(message);
 
-        // Add prefix
-        associatedPrefixes.add(index, null);
-        associatedPrefixes.add(index, calculatePrefix(message, index));
-
-        // First shift all the indices (and update the prefixes)
+        // First shift all the indices
         for (int i=0 ; i<messages.size() ; i++) {
             Integer formerIndex = associatedMessageIndices.get(i);
             if (formerIndex >= index) {
@@ -170,14 +166,19 @@ public class Diagram {
             messages = messages.plus(resultMessage);
             associatedMessageIndices.add(index + 1);
             associatedMessageIndices.add(index);
+            associatedPrefixes.add(null);
+            associatedPrefixes.add(calculatePrefix(message, index));
         }
         else { // Insert
             messages = messages.plus(index, resultMessage);
             messages = messages.plus(index, message);
             associatedMessageIndices.add(index, index);
             associatedMessageIndices.add(index, index + 1);
+            associatedPrefixes.add(index, null);
+            associatedPrefixes.add(index, calculatePrefix(message, index));
         }
 
+        // Update prefixes
         for (int i=0 ; i<messages.size() ; i++) {
             String prefix = calculatePrefix(messages.get(i), i);
             associatedPrefixes.remove(i);
@@ -247,6 +248,7 @@ public class Diagram {
             i++;
         }
 
+        // Update prefixes
         for (int j=0 ; j<messages.size() ; j++) {
             String prefix = calculatePrefix(messages.get(j), j);
             associatedPrefixes.remove(j);

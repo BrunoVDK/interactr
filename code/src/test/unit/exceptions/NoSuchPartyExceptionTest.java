@@ -1,4 +1,4 @@
-package test.unit.exceptions;
+package unit.exceptions;
 
 import interactr.cs.kuleuven.be.exceptions.NoSuchPartyException;
 import org.junit.jupiter.api.Test;
