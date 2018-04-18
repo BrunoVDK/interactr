@@ -1,5 +1,6 @@
 package usecases;
 
+import interactr.cs.kuleuven.be.domain.Party;
 import interactr.cs.kuleuven.be.ui.DiagramController;
 import interactr.cs.kuleuven.be.ui.DiagramWindow;
 import interactr.cs.kuleuven.be.ui.EventHandler;
@@ -7,9 +8,7 @@ import interactr.cs.kuleuven.be.ui.PaintBoard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AddParty {
 
@@ -23,10 +22,24 @@ public class AddParty {
 
     @Test
     void stepByStepTest() {
+        DiagramController controller = diagramWindow.getEventHandler().getDiagramController();
         // Precondition
-        DiagramWindow.replayRecording("steps/createNewInteraction.txt",diagramWindow);
-        assertNotNull(diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow());
-        // ADD REST OF TESTS HERE
+        DiagramWindow.replayRecording("steps/createNewDiagram.txt",diagramWindow);
+        assertNotNull(controller.getActiveSubwindow());
+        // Create party
+        DiagramWindow.replayRecording("steps/createParty.txt",diagramWindow);
+        assertTrue(controller.getActiveSubwindow().getDiagram().getParties().size() > 0);
+        // Assert that it is selected
+        Party newParty = controller.getActiveSubwindow().getDiagram().getParties().get(0);
+        assertEquals(controller.getActiveSubwindow().getSelectedComponent(), newParty);
+        // Type label
+        DiagramWindow.replayRecording("steps/typePartyLabel.txt",diagramWindow);
+        assertEquals(controller.getActiveSubwindow().getSelectedLabel(), "a:A");
+        assertEquals(newParty.getLabel(), "a:A");
+        // Press enter
+        DiagramWindow.replayRecording("steps/pressEnter.txt",diagramWindow);
+        assertNull(controller.getActiveSubwindow().getSelectedComponent());
+        assertEquals(newParty.getLabel(), "a:A");
     }
 
     @Test
