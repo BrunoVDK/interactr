@@ -48,9 +48,8 @@ public class CreateNewDiagram {
      */
     @Test
     void createNewDiagramEditInvalidLabel(){
-        DiagramWindow.replayRecording("createNewDiagramEditInvalidLabel.txt",diagramWindow);
+        DiagramWindow.replayRecording("createNewDiagramEditInvalidLabel01.txt",diagramWindow);
         assertEquals("a:A", diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getSelectedComponent().getLabel());
-
     }
 
 }
