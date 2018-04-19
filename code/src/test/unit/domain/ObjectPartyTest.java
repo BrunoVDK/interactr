@@ -46,10 +46,4 @@ class ObjectPartyTest {
         assertNotNull(party.proposedFigure());
     }
 
-   /* @Test
-    void proposedReplacementTest() {
-        ObjectParty party = new ObjectParty();
-        assertNotNull(party.proposedReplacement());
-    }
-*/
 }

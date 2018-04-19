@@ -1,4 +1,4 @@
-package test.unit.purecollections;
+package unit.purecollections;
 
 import java.util.ArrayList;
 import java.util.Arrays;

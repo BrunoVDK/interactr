@@ -222,12 +222,12 @@ public class SequenceView extends DiagramView {
     }
 
     @Override
-    public void registerParty(Party party, Point coordinates) {
-        super.registerParty(party, new Point(coordinates.getX(), 5));
+    public void diagramDidAddParty(Diagram diagram, Party party, Point coordinates) {
+        super.diagramDidAddParty(diagram, party, new Point(coordinates.getX(), 5));
     }
 
     @Override
-    public void registerMessages(InvocationMessage invocation, ResultMessage resultMessage, Point startCoordinates, Point endCoordinates) {
+    public void diagramDidAddMessages(Diagram diagram, InvocationMessage invocation, ResultMessage resultMessage, Point startCoordinates, Point endCoordinates) {
         int min = Math.min(startCoordinates.getY(), endCoordinates.getY());
         Link invocationLink = createLinkForMessage(invocation, startCoordinates.getX(), min, endCoordinates.getX(), min);
         int max = Math.max(startCoordinates.getY(), endCoordinates.getY());

@@ -37,10 +37,8 @@ public class DiagramController {
 
         // Toggle recording
         if (record) {
-            String fileName = "new.txt";
-            String path = "code/src/test/recordings/";
-            File file = new File(fileName);
-            window.recordSession((path + fileName));
+            File file = new File(CanvasWindow.RECORDINGS_PATH + "new.txt");
+            window.recordSession(file.getAbsolutePath());
         }
 
         // Start up the window

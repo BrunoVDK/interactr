@@ -15,7 +15,7 @@ import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
  * @author Team 25
  * @version 1.0
  */
-public class SubWindow implements DiagramObserver {
+public class SubWindow {
 
     /**
      * Create a new subwindow without duplicating an other one.
@@ -43,7 +43,7 @@ public class SubWindow implements DiagramObserver {
             for (DiagramView view : subWindow.getViews())
                 views = views.plus(view.clone());
         }
-        DiagramNotificationCenter.defaultCenter().registerObserver(getDiagram(), this);
+        DiagramNotificationCenter.defaultCenter().registerSubWindow(getDiagram(), this);
     }
 
     /**
@@ -179,7 +179,6 @@ public class SubWindow implements DiagramObserver {
         if (y < TITLE_BAR_HEIGHT) throw new InvalidAddPartyException();
         else y -= TITLE_BAR_HEIGHT;
         getActiveView().addParty(x,y);
-        System.out.println("ok");
         setSelectedComponent(getActiveView().getParty(x,y));
         setSelectedLabel("");
     }
@@ -286,12 +285,7 @@ public class SubWindow implements DiagramObserver {
         this.selectedLabel = selectedLabel;
         if (selectedComponent != null && selectedComponent.canHaveAsLabel(selectedLabel)) {
             selectedComponent.setLabel(selectedLabel);
-            PMap<String , Object> notificationParameters = PMap.<String, Object>empty();
-            notificationParameters = notificationParameters.plus("component", getSelectedComponent());
-            DiagramNotificationCenter.defaultCenter().postNotification(
-                    getDiagram(),
-                    DiagramUpdateType.EDIT_LABEL,
-                    notificationParameters);
+            DiagramNotificationCenter.defaultCenter().diagramDidEditLabel(getDiagram(), getSelectedComponent());
         }
     }
 
@@ -313,12 +307,7 @@ public class SubWindow implements DiagramObserver {
     public void deleteSelection(){
         if (selectedLabel == null && getSelectedComponent() != null) { // Only delete if not active
             getSelectedComponent().deleteFrom(getDiagram());
-            PMap<String , Object> notificationParameters = PMap.<String, Object>empty();
-            notificationParameters = notificationParameters.plus("component", getSelectedComponent());
-            DiagramNotificationCenter.defaultCenter().postNotification(
-                    getDiagram(),
-                    DiagramUpdateType.DELETE_COMPONENT,
-                    notificationParameters);
+            DiagramNotificationCenter.defaultCenter().diagramDidDeleteComponent(getDiagram(), getSelectedComponent());
             deselectAll(); // Now deselect everything
         }
     }
@@ -467,17 +456,15 @@ public class SubWindow implements DiagramObserver {
         return borderCode;
     }
 
-    @Override
-    public void diagramDidUpdate(Diagram diagram, DiagramUpdateType updateType, PMap<String, Object> parameters) {
-        switch (updateType) {
-            case EDIT_LABEL:
-                Object component = parameters.get("component");
-                if (component instanceof DiagramComponent
-                        && isSelected((DiagramComponent)component)
-                        && selectionIsActive())
-                    this.selectedLabel = ((DiagramComponent) component).getLabel();
-                break;
-        }
+    /**
+     * Notify this subwindow that the given component in the given diagram changed.
+     *
+     * @param diagram The diagram to which the component belongs.
+     * @param component The component whose label was edited.
+     */
+    public void diagramDidEditLabel(Diagram diagram, DiagramComponent component) {
+        if (isSelected(component) && selectionIsActive())
+            this.selectedLabel = component.getLabel();
     }
 
     /**
@@ -485,7 +472,7 @@ public class SubWindow implements DiagramObserver {
      *  This unregisters it as an observer.
      */
     public void close() {
-        DiagramNotificationCenter.defaultCenter().unregisterObserver(getDiagram(), this);
+        DiagramNotificationCenter.defaultCenter().unregisterSubWindow(getDiagram(), this);
         for (DiagramView view : views)
             view.close(); // Close all views too, but only after unregistering this subwindow as observer
     }

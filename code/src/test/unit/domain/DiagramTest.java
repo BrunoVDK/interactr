@@ -1,4 +1,4 @@
-package test.unit.domain;
+package unit.domain;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.InvocationMessage;

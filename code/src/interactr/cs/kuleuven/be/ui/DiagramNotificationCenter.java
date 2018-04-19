@@ -1,7 +1,8 @@
 package interactr.cs.kuleuven.be.ui;
 
-import interactr.cs.kuleuven.be.domain.Diagram;
+import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.purecollections.PMap;
+import interactr.cs.kuleuven.be.ui.geometry.Point;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,37 +37,111 @@ public class DiagramNotificationCenter {
     private final static DiagramNotificationCenter defaultCenter = new DiagramNotificationCenter();
 
     /**
-     * Post a notification of given type representing a change to the given diagram.
-     *  The given parameters are associated with the notifications.
+     * Notify observers that the given party was added to the given diagram.
      *
-     * This notifies observers associated with the diagram of the update.
-     *
-     * @param diagram The diagram that was updated.
-     * @param type The type of the update.
-     * @param parameters The parameters for the update.
+     * @param diagram The diagram to which the party was added.
+     * @param party The party that was added.
+     * @param coordinates The coordinates at which the party was added.
      */
-    public void postNotification(Diagram diagram, DiagramUpdateType type, PMap<String, Object> parameters) {
-        ArrayList<DiagramObserver> observers = this.observers.get(diagram);
+    public void diagramDidAddParty(Diagram diagram, Party party, Point coordinates) {
+        ArrayList<DiagramView> observers = this.observingDiagramViews.get(diagram);
         if (observers != null)
-            for (DiagramObserver observer : observers)
-                observer.diagramDidUpdate(diagram, type, parameters);
+            for (DiagramView observer : observers)
+                observer.diagramDidAddParty(diagram, party, coordinates);
     }
 
     /**
-     * Register the given observer. This associates the observer with the given diagram so that it can
+     * Notify observers that the given party was replaced in the given diagram.
+     *
+     * @param diagram The diagram to which the party was added.
+     * @param party The party that was replaced.
+     * @param newParty The replacement of the party.
+     */
+    public void diagramDidReplaceParty(Diagram diagram, Party party, Party newParty) {
+        ArrayList<DiagramView> observers = this.observingDiagramViews.get(diagram);
+        if (observers != null)
+            for (DiagramView observer : observers)
+                observer.diagramDidReplaceParty(diagram, party, newParty);
+    }
+
+    /**
+     * Notify observers that the given messages were added to the given diagram.
+     *
+     * @param diagram The diagram to which the party was added.
+     * @param invocationMessage The invocation message that was added.
+     * @param resultMessage The result message that was added.
+     * @param startCoordinates The start coordinates for the invocation message.
+     * @param endCoordinates The end coordinates for the invocation message.
+     */
+    public void diagramDidAddMessages(Diagram diagram,
+                                      InvocationMessage invocationMessage,
+                                      ResultMessage resultMessage,
+                                      Point startCoordinates,
+                                      Point endCoordinates) {
+        ArrayList<DiagramView> observers = this.observingDiagramViews.get(diagram);
+        if (observers != null)
+            for (DiagramView observer : observers)
+                observer.diagramDidAddMessages(diagram, invocationMessage, resultMessage, startCoordinates, endCoordinates);
+    }
+
+    /**
+     * Notify observers that the given component was removed from the given diagram.
+     *
+     * @param diagram The diagram from which the component was removed.
+     * @param component The component that was deleted.
+     */
+    public void diagramDidDeleteComponent(Diagram diagram, DiagramComponent component) {
+        ArrayList<DiagramView> observers = this.observingDiagramViews.get(diagram);
+        if (observers != null)
+            for (DiagramView observer : observers)
+                observer.diagramDidDeleteComponent(diagram, component);
+    }
+
+    /**
+     * Notify observers that the label of the component belonging to the given diagram was edited.
+     *
+     * @param diagram The diagram to which the component belongs.
+     * @param component The component whose label was edited.
+     */
+    public void diagramDidEditLabel(Diagram diagram, DiagramComponent component) {
+        ArrayList<SubWindow> observers = this.observingSubWindows.get(diagram);
+        if (observers != null)
+            for (SubWindow observer : observers)
+                observer.diagramDidEditLabel(diagram, component);
+    }
+
+    /**
+     * Register the given diagram view as an observer. This associates the observer with the given diagram so that it can
      *  be notified of any changes to that diagram.
      *
      * @param diagram The diagram to register the observer with.
-     * @param observer The observer that is to be registered.
+     * @param diagramView The diagram view that is to be registered.
      */
-    public void registerObserver(Diagram diagram, DiagramObserver observer) {
-        ArrayList<DiagramObserver> observers = this.observers.get(diagram);
+    public void registerDiagramView(Diagram diagram, DiagramView diagramView) {
+        ArrayList<DiagramView> observers = this.observingDiagramViews.get(diagram);
         if (observers == null) {
-            observers = new ArrayList<DiagramObserver>();
-            this.observers = this.observers.plus(diagram, observers);
+            observers = new ArrayList<DiagramView>();
+            this.observingDiagramViews = this.observingDiagramViews.plus(diagram, observers);
         }
-        if (!observers.contains(observer))
-            observers.add(observer);
+        if (!observers.contains(diagramView))
+            observers.add(diagramView);
+    }
+
+    /**
+     * Register the given subwindow as an observer. This associates the observer with the given diagram so that it can
+     *  be notified of any changes to that diagram.
+     *
+     * @param diagram The diagram to register the observer with.
+     * @param subWindow The subwindow that is to be registered.
+     */
+    public void registerSubWindow(Diagram diagram, SubWindow subWindow) {
+        ArrayList<SubWindow> observers = this.observingSubWindows.get(diagram);
+        if (observers == null) {
+            observers = new ArrayList<SubWindow>();
+            this.observingSubWindows = this.observingSubWindows.plus(diagram, observers);
+        }
+        if (!observers.contains(subWindow))
+            observers.add(subWindow);
     }
 
     /**
@@ -74,20 +149,34 @@ public class DiagramNotificationCenter {
      *  than it is unregistered as an observer (i.e. it won't receive any updates anymore).
      *
      * @param diagram The diagram to register the observer with.
-     * @param observer The observer that is to be registered.
+     * @param subWindow The observer that is to be registered.
      */
-    public void unregisterObserver(Diagram diagram, DiagramObserver observer) {
+    public void unregisterSubWindow(Diagram diagram, SubWindow subWindow) {
         if (diagram == null)
             return;
-        ArrayList<DiagramObserver> observers = this.observers.get(diagram);
+        ArrayList<SubWindow> observers = this.observingSubWindows.get(diagram);
         if (observers != null)
-            observers.remove(observer);
+            observers.remove(subWindow);
+    }
+
+    public void unregisterDiagramView(Diagram diagram, DiagramView diagramView) {
+        if (diagram == null)
+            return;
+        ArrayList<DiagramView> observers = this.observingDiagramViews.get(diagram);
+        if (observers != null)
+            observers.remove(diagramView);
     }
 
     /**
-     * The list of registered observers kept track of by this center.
+     * The list of observing diagram views kept track of by this center.
      *  This is on a per-diagram basis.
      */
-    protected PMap<Diagram, ArrayList<DiagramObserver>> observers = PMap.empty();
+    protected PMap<Diagram, ArrayList<DiagramView>> observingDiagramViews = PMap.empty();
+
+    /**
+     * The list of observing subwindows kept track of by this center.
+     *  This is on a per-diagram basis.
+     */
+    protected PMap<Diagram, ArrayList<SubWindow>> observingSubWindows = PMap.empty();
 
 }

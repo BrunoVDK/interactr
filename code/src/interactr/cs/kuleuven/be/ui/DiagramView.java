@@ -13,7 +13,7 @@ import interactr.cs.kuleuven.be.ui.geometry.*;
  * @author Team 25
  * @version 1.0
  */
-public class DiagramView implements DiagramObserver, Cloneable {
+public class DiagramView implements Cloneable {
 
     /**
      * Initialize this new diagram view with the given diagram.
@@ -42,7 +42,7 @@ public class DiagramView implements DiagramObserver, Cloneable {
         if (diagram == null)
             throw new IllegalArgumentException("Diagram cannot be null.");
         this.diagram = diagram;
-        DiagramNotificationCenter.defaultCenter().registerObserver(diagram, this);
+        DiagramNotificationCenter.defaultCenter().registerDiagramView(diagram, this);
     }
 
     /**
@@ -120,18 +120,10 @@ public class DiagramView implements DiagramObserver, Cloneable {
                 throw new InvalidAddPartyException();
         }
 
-        // Create the new party
+        // Create the new party and throw notification
         Party party = Party.createParty();
         diagram.addParty(party);
-
-        // Post a notification of the update
-        PMap<String , Object> notificationParameters = PMap.<String, Object>empty();
-        notificationParameters = notificationParameters.plus("party", party);
-        notificationParameters = notificationParameters.plus("coordinates", new Point(x,y));
-        DiagramNotificationCenter.defaultCenter().postNotification(
-                diagram,
-                DiagramUpdateType.ADD_PARTY,
-                notificationParameters);
+        DiagramNotificationCenter.defaultCenter().diagramDidAddParty(diagram, party, new Point(x,y));
 
     }
 
@@ -144,20 +136,9 @@ public class DiagramView implements DiagramObserver, Cloneable {
     public void switchTypeOfParty(int x, int y) {
         Party oldParty = getParty(x,y);
         if (oldParty != null) {
-
-            // Replace the party in the diagram
             Party newParty = oldParty.switchType();
             diagram.replaceParty(oldParty, newParty);
-
-            // Post a notification of the update
-            PMap<String , Object> notificationParameters = PMap.<String, Object>empty();
-            notificationParameters = notificationParameters.plus("oldParty", oldParty);
-            notificationParameters = notificationParameters.plus("newParty", newParty);
-            DiagramNotificationCenter.defaultCenter().postNotification(
-                    diagram,
-                    DiagramUpdateType.REPLACE_PARTY,
-                    notificationParameters);
-
+            DiagramNotificationCenter.defaultCenter().diagramDidReplaceParty(diagram, oldParty, newParty);
         }
     }
 
@@ -398,24 +379,11 @@ public class DiagramView implements DiagramObserver, Cloneable {
      */
     public void addMessage(InvocationMessage message, int fromX, int fromY, int toX, int toY) {
         if (message != null && canInsertMessageAt(fromX, fromY, toX, toY)) {
-
             int index = getMessageInsertionIndex(fromX, fromY, toX, toY);
             diagram.insertInvocationMessageAtIndex(message, index);
             ResultMessage result = diagram.getResultMessageForInvocationMessage(message);
-
-            System.out.println("ok");
-
-            // Post a notification of the update
-            PMap<String , Object> notificationParameters = PMap.<String, Object>empty();
-            notificationParameters = notificationParameters.plus("invocation", message);
-            notificationParameters = notificationParameters.plus("result", result);
-            notificationParameters = notificationParameters.plus("startCoordinates", new Point(fromX,fromY));
-            notificationParameters = notificationParameters.plus("endCoordinates", new Point(toX,toY));
-            DiagramNotificationCenter.defaultCenter().postNotification(
-                    diagram,
-                    DiagramUpdateType.ADD_MESSAGE,
-                    notificationParameters);
-
+            DiagramNotificationCenter.defaultCenter().diagramDidAddMessages(diagram,
+                    message, result, new Point(fromX, fromY), new Point(toX, toY));
         }
         else
             throw new InvalidAddMessageException();
@@ -448,51 +416,31 @@ public class DiagramView implements DiagramObserver, Cloneable {
         return "Default";
     }
 
-    @Override
-    public void diagramDidUpdate(Diagram diagram, DiagramUpdateType updateType, PMap<String, Object> parameters) {
-        switch (updateType) {
-            case ADD_PARTY:
-                Object party = parameters.get("party"), coordinates = parameters.get("coordinates");
-                if (party instanceof Party && coordinates instanceof Point)
-                    registerParty((Party)party, (Point)coordinates);
-                break;
-            case ADD_MESSAGE:
-                Object invocationMessage = parameters.get("invocation"), resultMessage = parameters.get("result");
-                Object startCoordinates = parameters.get("startCoordinates"), endCoordinates = parameters.get("endCoordinates");
-                if (invocationMessage instanceof InvocationMessage
-                        && resultMessage instanceof ResultMessage
-                        && startCoordinates instanceof Point
-                        && endCoordinates instanceof Point)
-                    registerMessages((InvocationMessage)invocationMessage,
-                            (ResultMessage)resultMessage,
-                            (Point)startCoordinates,
-                            (Point)endCoordinates);
-                break;
-            case REPLACE_PARTY:
-                Object oldParty = parameters.get("oldParty"), newParty = parameters.get("newParty");
-                if (oldParty instanceof Party && newParty instanceof Party)
-                    registerPartyReplace((Party)oldParty, (Party)newParty);
-                break;
-            case DELETE_COMPONENT: // Synchronize here
-                PList<Message> diagramMessages = diagram.getMessages();
-                for (Message message : links.keySet())
-                    if (!diagramMessages.contains(message))
-                        links = links.minus(message);
-                PList<Party> diagramParties = diagram.getParties();
-                for (Party p : figures.keySet())
-                    if (!diagramParties.contains(p))
-                        figures = figures.minus(p);
-                break;
-        }
+    /**
+     * Notifies this diagram view that the given component was removed from the given diagram.
+     *
+     * @param diagram The diagram from which the component was removed.
+     * @param component The component that was removed.
+     */
+    public void diagramDidDeleteComponent(Diagram diagram, DiagramComponent component) {
+        PList<Message> diagramMessages = diagram.getMessages();
+        for (Message message : links.keySet())
+            if (!diagramMessages.contains(message))
+                links = links.minus(message);
+        PList<Party> diagramParties = diagram.getParties();
+        for (Party p : figures.keySet())
+            if (!diagramParties.contains(p))
+                figures = figures.minus(p);
     }
 
     /**
      * Registers the given party at the given coordinate.
      *
+     * @param diagram The diagram to which the party was added.
      * @param party The party to register.
      * @param coordinates The coordinates of the newly created party.
      */
-    protected void registerParty(Party party, Point coordinates) {
+    public void diagramDidAddParty(Diagram diagram, Party party, Point coordinates) {
         if (!figures.containsKey(party))
             figures = figures.plus(party, createFigureForParty(party, coordinates.getX(), coordinates.getY()));
     }
@@ -500,10 +448,11 @@ public class DiagramView implements DiagramObserver, Cloneable {
     /**
      * Registers a replacement of the given old party by the given new party.
      *
+     * @param diagram The diagram in which the replacement occurred.
      * @param oldParty The old party to be replaced.
      * @param newParty The party to replace the old party with.
      */
-    protected void registerPartyReplace(Party oldParty, Party newParty) {
+    public void diagramDidReplaceParty(Diagram diagram, Party oldParty, Party newParty) {
         Figure oldFigure = figureForParty(oldParty);
         if (oldFigure == null)
             return;
@@ -520,12 +469,13 @@ public class DiagramView implements DiagramObserver, Cloneable {
      * Registers the given invocation message and result message in this diagram view,
      *  using the given start/end coordinates.
      *
+     * @param diagram The diagram to which the messages were added.
      * @param invocation The invocation message that is to be registered.
      * @param resultMessage The result message that is to be registered.
      * @param startCoordinates The start coordinates for the invocation message's link.
      * @param endCoordinates The end coordinates for the invocation message's link.
      */
-    protected void registerMessages(InvocationMessage invocation, ResultMessage resultMessage, Point startCoordinates, Point endCoordinates) {
+    protected void diagramDidAddMessages(Diagram diagram, InvocationMessage invocation, ResultMessage resultMessage, Point startCoordinates, Point endCoordinates) {
         // Result messages are ignored!
         Link invocationLink = createLinkForMessage(invocation,
                 startCoordinates.getX(),
@@ -541,14 +491,11 @@ public class DiagramView implements DiagramObserver, Cloneable {
     public DiagramView clone() {
         final DiagramView clone;
         try {
-
             clone = getClass().getConstructor(Diagram.class).newInstance(diagram);
-
             for (Party party : figures.keySet())
                 clone.registerFigure(party, figures.get(party));
             for (Message message : links.keySet())
                 clone.registerLink(message, links.get(message));
-
         }
         catch (Exception ignored) {throw new RuntimeException("Failed to clone diagram view." + ignored.getClass().toString());}
         return clone;
@@ -583,7 +530,7 @@ public class DiagramView implements DiagramObserver, Cloneable {
      *  This unregisters it as an observer.
      */
     public void close() {
-        DiagramNotificationCenter.defaultCenter().unregisterObserver(diagram, this);
+        DiagramNotificationCenter.defaultCenter().unregisterDiagramView(diagram, this);
     }
 
 }

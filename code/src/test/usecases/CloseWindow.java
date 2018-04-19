@@ -18,6 +18,16 @@ public class CloseWindow {
     }
 
     @Test
+    void stepByStep(){
+        DiagramController controller = diagramWindow.getEventHandler().getDiagramController();
+        // Precondition
+        DiagramWindow.replayRecording("steps/createNewDiagram.txt",diagramWindow);
+        assertNotNull(controller.getActiveSubwindow());
+        DiagramWindow.replayRecording("steps/pressCloseButton.txt",diagramWindow);
+        assertNull(controller.getActiveSubwindow());
+    }
+
+    @Test
     void closeWindow(){
         DiagramWindow.replayRecording("closeWindow.txt",diagramWindow);
         assertEquals(null, diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow());

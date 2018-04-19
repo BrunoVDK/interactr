@@ -1,0 +1,19 @@
+Wij gebruik als Observer een DiagramNotificationCenter. Een DiagramObserver kan toegevoegd worden als listener. DiagramObserver is een interface met juist één method :
+
+- public void diagramDidUpdate(Diagram diagram, DiagramUpdateType updateType, PMap<String, Object> parameters);
+
+De DiagramUpdateType is een enum type, bijvoorbeeld met waarde ADD_PARTY.
+Elke DiagramObserver kan zo bepalen of de update relevant is. De parameters geven details over de update zelf (eg. voor key "coordinates" krijg je de coördinaten van de nieuwe party).
+
+Alternatief kunnen de verschillende soorten listeners (SubWindow of DiagramView) apart genotified worden, maar dit leek ons minder uitbreidbaar.
+Is dit degelijk?
+
+---
+
+Wij doen de label editing door per SubWindow een selectedComponent bij te houden. De DiagramController houdt de complete label (in edit mode) bij en stuurt die telkens volledig door aan de SubWindow (appendChar etc. wordt dus enkel bij DiagramController gedaan).
+
+Is dit degelijk?
+
+---
+
+Step-by-step test cases ; gewoon een recording voor elke aparte stap eg. CTRL-N voor new subwindow?

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class CreateNewDiagram {
 
@@ -18,9 +19,17 @@ public class CreateNewDiagram {
         diagramWindow.setPaintBoard(new PaintBoard(diagramWindow, diagramWindow.getEventHandler().getDiagramController()));
     }
 
+    @Test
+    void stepByStep(){
+        DiagramController controller = diagramWindow.getEventHandler().getDiagramController();
+        // Precondition
+        DiagramWindow.replayRecording("steps/createNewDiagram.txt",diagramWindow);
+        assertNotNull(controller.getActiveSubwindow());
+    }
+
     /**
      * Adds a new subwindow, does control D, moves the new window to the right
-     * After that selct the onther subwindow and check if the diagrams are the same
+     * After that select the onther subwindow and check if the diagrams are the same
      */
     @Test
     void createNewEmptyDiagram(){
