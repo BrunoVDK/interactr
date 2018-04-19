@@ -1,16 +1,12 @@
 package interactr.cs.kuleuven.be.ui;
 
-import interactr.cs.kuleuven.be.domain.*;
-import interactr.cs.kuleuven.be.exceptions.InvalidAddMessageException;
-import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
-import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
+import interactr.cs.kuleuven.be.exceptions.*;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.util.*;
 
 /**
- * A class of diagram controllers for managing a diagram and associated diagram views.
- *  Diagram controllers allow for manipulation and selection of diagram components such as parties and messages,
- *  as well as cycling between available diagram views.
+ * A class of diagram controllers for managing subwindows within a diagram window.
  *
  * @author Team 25
  * @version 1.0
@@ -18,61 +14,66 @@ import java.util.ArrayList;
 public class DiagramController {
 
     /**
-     * Returns a default list of views for diagram controllers.
-     *
-     * @return An arraylist with a sequence - and a communication view.
-     */
-    public static ArrayList<DiagramView> defaultViews() {
-        ArrayList<DiagramView> views = new ArrayList<DiagramView>();
-        views.add(new SequenceView());
-        views.add(new CommunicationView());
-        return views;
-    }
-
-    /**
-     * Initialize this new diagram controller with a communication & sequence view,
-     *  and an empty diagram.
+     * Initialize this new diagram controller without any subwindows and without any recording.
      */
     public DiagramController() {
-        this(new Diagram(), defaultViews());
+        this(false);
     }
 
     /**
-     * Initialize this new diagram controller with given diagram and diagram views.
+     * Initialize this new diagram controller without any subwindows.
      *
-     * @param diagram The diagram to initialize this controller with.
-     * @param views The views for this new diagram.
+     * @param record If a recording session is to be used.
      */
-    public DiagramController(Diagram diagram, ArrayList<DiagramView> views) {
-        this.diagram = diagram;
-        this.views = new ArrayList<DiagramView>();
-        if (views != null)
-            for (DiagramView view : views)
-                this.views.add(view);
+    public DiagramController(boolean record) {
+
+        // Initialize window
+        this.subWindows = new ArrayList<SubWindow>();
+        DiagramWindow window = new DiagramWindow("New document - Interactr");
+        PaintBoard paintBoard = new PaintBoard(window, this);
+        setPaintBoard(paintBoard);
+        window.setPaintBoard(paintBoard);
+        window.setEventHandler(new EventHandler(this));
+
+        // Toggle recording
+        if (record) {
+            File file = new File(CanvasWindow.RECORDINGS_PATH + "new.txt");
+            window.recordSession(file.getAbsolutePath());
+        }
+
+        // Start up the window
         java.awt.EventQueue.invokeLater(() -> {
-            DiagramWindow window = new DiagramWindow("New document - Interactr");
-            PaintBoard paintBoard = new PaintBoard(window, this);
-            setPaintBoard(paintBoard);
-            window.setPaintBoard(paintBoard);
-            window.setEventHandler(new EventHandler(this));
             window.show();
         });
+
     }
 
     /**
-     * Select the next diagram view associated with this controller and display it
-     *  in this controller's diagram window.
+     * Toggle the diagram view in this controller's active subwindow
      */
-    public void nextView() {
-        activeViewIndex = (activeViewIndex + 1) % views.size();
-        getPaintBoard().refresh();
+    public void toggleActiveSubWindowView() {
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().nextView();
+            getPaintBoard().refresh();
+        }
     }
 
     /**
-     * Display the currently active diagram view by making use of the given paintboard.
+     * Display all subwindows in this diagram controller.
      */
-    public void displayView() {
-        getActiveView().display(getPaintBoard(), getDiagram());
+    public void displayAllSubWindows() {
+        for (int i=this.getSubWindows().size()-1 ; i>=0 ; i--) // Last window first
+            this.getSubWindows().get(i).displayView(getPaintBoard());
+    }
+
+    /**
+     * Display the currently active subwindow of this diagram controller.
+     *  This method can be used to improve performance if nothing but the contents of the active subwindow
+     *  was changed.
+     */
+    public void displayActiveSubWindow() {
+        if (getActiveSubwindow() != null)
+            getActiveSubwindow().displayView(getPaintBoard());
     }
 
     /**
@@ -80,124 +81,234 @@ public class DiagramController {
      *
      * @return The diagram view of this controller that's currently active.
      */
-    public DiagramView getActiveView() {
-        return views.get(activeViewIndex);
+    public SubWindow getActiveSubwindow() {
+        return (this.getSubWindows().isEmpty() ? null : this.getSubWindows().get(0));
     }
 
     /**
-     * Registers the index of the currently active view.
+     * Creates a new subwindow with default parameters.
      */
-    private int activeViewIndex = 0;
+    public void createSubWindow(){
+        this.addSubWindow(0, new SubWindow());
+        getPaintBoard().refresh();
+    }
+
+    /**
+     * Duplicate the currently active subwindow.
+     */
+    public void duplicateSubWindow() {
+        if (getActiveSubwindow() != null) {
+            this.addSubWindow(0, new SubWindow(getActiveSubwindow()));
+            getPaintBoard().refresh();
+        }
+    }
+
+    private void addSubWindow(int index, SubWindow subwindow){
+        this.getSubWindows().add(index, subwindow);
+    }
+
+    private ArrayList<SubWindow> getSubWindows(){
+        return subWindows;
+    }
+
+    /**
+     * Activate the subwindow at the given x and y.
+     *
+     * @param x The x coordinate at which the subwindow lies.
+     * @param y The y coordinate at which the subwindow lies.
+     * @throws NoSuchWindowException If no subwindow lies at the given coordinates.
+     */
+    public void activateSubWindow(int x, int y) throws NoSuchWindowException {
+        SubWindow subWindow = getSubWindowAt(x, y);
+        if (subWindow == null)
+            throw new NoSuchWindowException();
+        this.addSubWindow(0, this.getSubWindows().remove(this.getSubWindows().indexOf(subWindow)));
+    }
+
+    /**
+     * Close the subwindow at the given coordinates.
+     *  The given coordinates should lie within the subwindow's close button.
+     *
+     * @param x The x coordinate for the subwindow.
+     * @param y The y coordinate for the subwindow.
+     * @throws InvalidCloseWindowException When the given coordinates don't lie in any subwindow's close button.
+     */
+    public void closeSubWindow(int x, int y) throws InvalidCloseWindowException {
+        SubWindow subWindow = this.getSubWindows().stream().filter( s -> s.closeButtonEncloses(x,y)).findFirst().orElse(null);
+        if (subWindow != null && !(isEditing() && subWindow == getActiveSubwindow())) {
+            subWindow.close();
+            this.getSubWindows().remove(subWindow);
+            getPaintBoard().refresh();
+        }
+        else
+            throw new InvalidCloseWindowException();
+    }
+
+    /**
+     * Move the active subwindow from the given coordinates to the given coordinates.
+     *
+     * @param fromX The start x coordinate for the move.
+     * @param fromY The start y coordinate for the move.
+     * @param toX The end x coordinate for the move.
+     * @param toY The end y coordinate for the move.
+     * @throws InvalidMoveWindowException The resize operation was not successful.
+     */
+    public void moveSubWindow(int fromX, int fromY, int toX, int toY) throws InvalidMoveWindowException {
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().move(fromX, fromY, toX, toY);
+            getPaintBoard().refresh();
+        }
+    }
+
+    /**
+     * Resize the active subwindow from the given coordinates to the given coordinates.
+     *
+     * @param fromX The start x coordinate for the resize.
+     * @param fromY The start y coordinate for the resize.
+     * @param toX The end x coordinate for the resize.
+     * @param toY The end y coordinate for the resize.
+     * @throws InvalidResizeWindowException The resize operation was not successful.
+     */
+    public void resizeSubWindow(int fromX, int fromY, int toX, int toY) {
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().resize(fromX, fromY, toX, toY);
+            getPaintBoard().refresh();
+        }
+    }
+
+    /**
+     * Get the subwindow at the given coordinates.
+     *
+     * @param x The x coordinate to look at.
+     * @param y The y coordinate to look at.
+     * @return The subwindow at the given coordinates or null if there is none.
+     */
+    private SubWindow getSubWindowAt(int x, int y) {
+        return this.getSubWindows().stream().filter( s -> s.getBorderedFrame().encloses(x,y)).findFirst().orElse(null);
+    }
 
     /**
      * The list of all diagram views kept by this diagram handler.
      */
-    private ArrayList<DiagramView> views = new ArrayList<DiagramView>();
+    private ArrayList<SubWindow> subWindows = new ArrayList<SubWindow>();
 
     /**
-     * Add a new party at the given x and y coordinate.
+     * Add a new party to the active subwindow at the given x and y coordinate.
      *
      * @param x The x coordinate for the new party.
      * @param y The y coordinate for the new party.
-     * @throws InvalidAddPartyException The given coordinates point to a component already.
+     * @throws InvalidAddPartyException The operation was not successful.
      */
-    public void addPartyAt(int x, int y) throws InvalidAddPartyException {
-        try {
-            getDiagram().addParty(x, y, this.getActiveView(), views);
+    public void addParty(int x, int y) throws InvalidAddPartyException {
+        if (getActiveSubwindow() != null && !isEditing()) {
+            getActiveSubwindow().addParty(
+                    x - getActiveSubwindow().getFrame().getX(),
+                    y - getActiveSubwindow().getFrame().getY());
             getPaintBoard().refresh();
         }
-        catch (InvalidAddPartyException addException){
-            throw addException;
-        }
     }
 
     /**
-     * Adds a message using the given start and end coordinates of a drag session.
+     * Adds a message to the active subwindow from the given start coordinate to the given end coordinate.
      *
-     * @param x1 The start x coordinate for the session.
-     * @param y1 The start y coordinate for the session.
-     * @param x2 The end x coordinate for the session.
-     * @param y2 The end y coordinate for the session.
+     * @param fromX The start x coordinate for the add.
+     * @param fromY The start y coordinate for the add.
+     * @param toX The end x coordinate for the add.
+     * @param toY The end y coordinate for the add.
+     * @throws InvalidAddMessageException The operation was not successful.
      */
-    public void addMessageFrom(int x1, int y1, int x2, int y2) {
-        try {
-            getDiagram().addMessageFrom(x1, y1, x2, y2, this.getActiveView(), views);
+    public void addMessage(int fromX, int fromY, int toX, int toY) throws InvalidAddMessageException {
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().addMessage(
+                    fromX - getActiveSubwindow().getFrame().getX(),
+                    fromY - getActiveSubwindow().getFrame().getY(),
+                    toX - getActiveSubwindow().getFrame().getX(),
+                    toY - getActiveSubwindow().getFrame().getY());
             getPaintBoard().refresh();
         }
-        catch(InvalidAddMessageException addException){
-            throw addException;
-        }
-    }
-        /**
-         * A method that returns the editing mode of the selectionManager
-         */
-    public boolean isEditing() { return getDiagram().getActiveComponent() != null;};
-
-    /**
-     * A method that terminates the editing
-     */
-    public void abortEditing(){
-        if (getDiagram().getActiveComponent() != null){
-            try {
-                getDiagram().getActiveComponent().setLabel(getDiagram().getTemporaryLabel());
-                getDiagram().setActiveComponent(null);
-                getPaintBoard().refresh();
-            }
-            catch (InvalidLabelException e) {}
-        }
-    }
-
-    /**
-     * Switch the type of the given party.
-     *
-     * @param party The party whose type is to be switched.
-     */
-    public void switchPartyType(Party party){
-        getDiagram().replaceParty(party, views);
-        getPaintBoard().refresh();
     }
 
     /**
      * The x & y coordinates of the component.
      *
      * @param x The x coordinate of the component that is to be selected.
-     * @param y The y coordinate of the commponent that is to be selected.
+     * @param y The y coordinate of the component that is to be selected.
      */
-    public void selectComponentAt(int x, int y) {
-        DiagramComponent component = getActiveView().selectableComponentAt(getDiagram(), x, y);
-        getDiagram().addToSelection(component);
-        this.getPaintBoard().refresh();
+    public void selectComponent(int x, int y) {
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().selectComponent(
+                    x - getActiveSubwindow().getFrame().getX(),
+                    y - getActiveSubwindow().getFrame().getY());
+            getPaintBoard().refresh();
+        }
     }
 
     /**
-     * Returns the party at the given coordinate, or null if there is none.
+     * Switches the type of the party at the given coordinate, or null if there is none.
      *
      * @param x The x coordinate for the party.
      * @param y The y coordinate for the party.
-     * @return The party at the given coordinate, or null if there is none.
      */
-    public Party getPartyAt(int x,int y ){
-        return getActiveView().getPartyAt(x,y);
+    public void switchTypeOfParty(int x, int y) {
+        if (getActiveSubwindow() != null && !isEditing()) {
+            getActiveSubwindow().switchTypeOfParty(
+                    x - getActiveSubwindow().getFrame().getX(),
+                    y - getActiveSubwindow().getFrame().getY());
+            getPaintBoard().refresh();
+        }
     }
 
     /**
-     * Moves the given party to the given x and y coordinates.
+     * Moves the party at the given start coordinates to the given end coordinates.
      *
-     * @param party The party that is to be moved.
-     * @param x The new x coordinate for the party.
-     * @param y The new y coordinate for the party.
+     * @param fromX The start x coordinate for the add.
+     * @param fromY The start y coordinate for the add.
+     * @param toX The end x coordinate for the add.
+     * @param toY The end y coordinate for the add.
+     * @throws NoSuchPartyException If there is no party at the given start coordinates.
+     * @throws InvalidMovePartyException If the party could not be moved to the given end coordinates.
      */
-    public void moveParty(Party party ,int x, int y){
-        getActiveView().moveParty(getDiagram(), party,x,y);
-        getPaintBoard().refresh();
+    public void moveParty(int fromX, int fromY, int toX, int toY) throws NoSuchPartyException, InvalidMovePartyException {
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().moveParty(
+                    fromX - getActiveSubwindow().getFrame().getX(),
+                    fromY - getActiveSubwindow().getFrame().getY(),
+                    toX - getActiveSubwindow().getFrame().getX(),
+                    toY - getActiveSubwindow().getFrame().getY());
+            getPaintBoard().refresh();
+        }
     }
 
     /**
      * Removes all components in the current selection from this controller's diagram.
      */
-    public void deleteSelection(){
-        this.getDiagram().deleteSelection(this.views);
-        this.getPaintBoard().refresh();
+    public void deleteSelection() {
+        if (getActiveSubwindow() != null) {
+            getActiveSubwindow().deleteSelection();
+            getPaintBoard().refresh();
+        }
+    }
+
+    /**
+     * Returns whether or not the active subwindow is currently editing a component.
+     *
+     * @return True if and only if the active subwindow exists and its selection is active.
+     */
+    public boolean isEditing() {
+        return (getActiveSubwindow() != null && getActiveSubwindow().selectionIsActive());
+    }
+
+    /**
+     * Terminate the current editing session, if any.
+     *
+     * @throws InvalidLabelException If the current label for the editing session is not a valid one
+     *  for the selected component.
+     */
+    public void abortEditing() throws InvalidLabelException {
+        if (isEditing()) {
+            getActiveSubwindow().deselectAll();
+            getPaintBoard().refresh();
+        }
     }
 
     /**
@@ -205,35 +316,25 @@ public class DiagramController {
      *
      * @param c The char that is to be appended.
      */
-    public void appendChar(char c){
-        this.getDiagram().setTemporaryLabel(this.getDiagram().getTemporaryLabel() + c);
-        getPaintBoard().refresh();
+    public void appendChar(char c) {
+        if (isEditing()) {
+            getActiveSubwindow().setSelectedLabel(getActiveSubwindow().getSelectedLabel() + c);
+            getPaintBoard().refresh();
+        }
     }
 
     /**
      * Removes the last char from the label of the active component.
      */
     public void removeLastChar() {
-        String temp = this.getDiagram().getTemporaryLabel();
-        if (temp.length() > 0) {
-            this.getDiagram().setTemporaryLabel(temp.substring(0, temp.length()-1));
-            getPaintBoard().refresh();
+        if (isEditing()) {
+            String temp = getActiveSubwindow().getSelectedLabel();
+            if (temp.length() > 0) {
+                getActiveSubwindow().setSelectedLabel(temp.substring(0, temp.length()-1));
+                getPaintBoard().refresh();
+            }
         }
     }
-
-    /**
-     * Returns the diagram associated with this diagram controller.
-     *
-     * @return The diagram associated with this diagram controller.
-     */
-    public Diagram getDiagram() {
-        return this.diagram;
-    }
-
-    /**
-     * The diagram associated with this diagram handler.
-     */
-    private Diagram diagram;
 
     /**
      * Returns the paint board associated with this diagram controller.
@@ -256,7 +357,9 @@ public class DiagramController {
      */
     private PaintBoard paintBoard;
 
+    // Entry point
     public static void main(String[] args) { // No documentation
-        new DiagramController();
+        new DiagramController(args.length > 0 && args[0].equalsIgnoreCase("-r"));
     }
+
 }

@@ -28,6 +28,15 @@ public class Rectangle {
     }
 
     /**
+     * Initialize this new rectangle with the given rectangle.
+     *
+     * @param rectangle The rectangle to initialize this rectangle with.
+     */
+    public Rectangle(Rectangle rectangle) {
+        this(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
+    }
+
+    /**
      * Returns the x coordinate of this point.
      */
     public int getX() {
@@ -137,6 +146,11 @@ public class Rectangle {
                 && x <= getX() + getWidth()
                 && y >= getY() - getHeight()
                 && y <= getY());
+    }
+
+    @Override
+    public String toString() {
+        return "[" + getX() + " " + getY() + " " + getWidth() + " " + getHeight() + "]";
     }
 
 }

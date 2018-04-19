@@ -12,8 +12,6 @@ public class DiagramWindow extends CanvasWindow {
 
     /**
      * Initializes this new window with an empty title.
-     *
-     * @post The title of this window equals an empty string.
      */
     public DiagramWindow() {
         this("");
@@ -23,9 +21,8 @@ public class DiagramWindow extends CanvasWindow {
      * Initializes this new window with given title and diagram handler.
      *
      * @param title The title for the new window.
-     * @post The title of this window equals the given one.
      */
-    public DiagramWindow(String title) {
+    DiagramWindow(String title) {
         super(title);
     }
 
@@ -63,11 +60,12 @@ public class DiagramWindow extends CanvasWindow {
      * @param id the type of mouseEvent (PRESSSED, TYPED).
      * @param keyCode The key code for the event.
      * @param keyChar The key char for the event.
+     * @param keyModifiers The key modifiers.
      */
     @Override
-    protected void handleKeyEvent(int id, int keyCode, char keyChar) {
+    protected void handleKeyEvent(int id, int keyCode, char keyChar, int keyModifiers) {
         if (getEventHandler() != null)
-            getEventHandler().handleKeyEvent(id, keyCode, keyChar);
+            getEventHandler().handleKeyEvent(id, keyCode, keyChar, keyModifiers);
     }
 
     /**

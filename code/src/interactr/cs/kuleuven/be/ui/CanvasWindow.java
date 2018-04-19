@@ -83,11 +83,13 @@ class KeyEventItem extends RecordingItem {
 	int id;
 	int keyCode;
 	char keyChar;
+	int keyModifiers;
 	
-	KeyEventItem(int id, int keyCode, char keyChar) {
+	KeyEventItem(int id, int keyCode, char keyChar, int keyModifiers) {
 		this.id = id;
 		this.keyCode = keyCode;
 		this.keyChar = keyChar;
+		this.keyModifiers = keyModifiers;
 	}
 
 	@Override
@@ -98,12 +100,12 @@ class KeyEventItem extends RecordingItem {
 		case KeyEvent.KEY_TYPED: id = "KEY_TYPED"; break;
 		default: id = "unknown"; break;
 		}
-		writer.println("KeyEvent " + id + " " + keyCode + " " + (int)keyChar);
+		writer.println("KeyEvent " + id + " " + keyCode + " " + (int)keyChar + " " + keyModifiers);
 	}
 
 	@Override
 	void replay(int itemIndex, CanvasWindow window) {
-		window.handleKeyEvent(id, keyCode, keyChar);
+		window.handleKeyEvent(id, keyCode, keyChar, keyModifiers);
 	}
 }
 class PaintItem extends RecordingItem {
@@ -199,7 +201,8 @@ class CanvasWindowRecording {
 				}
 				int keyCode = Integer.parseInt(words[2]);
 				char keyChar = (char)Integer.parseInt(words[3]);
-				items.add(new KeyEventItem(id, keyCode, keyChar));
+				int modifiers = Integer.parseInt(words[4]);
+				items.add(new KeyEventItem(id, keyCode, keyChar, modifiers));
 				break;
 			}
 			case "Paint": {
@@ -223,8 +226,8 @@ class CanvasWindowRecording {
 
 public class CanvasWindow {
 	
-	int width = 600;
-	int height = 600;
+	int width = 1024;
+	int height = 768;
 	String title;
 	Panel panel;
 	private Frame frame;
@@ -283,7 +286,6 @@ public class CanvasWindow {
 	/**
 	 * Called when the user presses (id == MouseEvent.MOUSE_PRESSED), releases (id == MouseEvent.MOUSE_RELEASED), or drags (id == MouseEvent.MOUSE_DRAGGED) the mouse.
 	 * 
-	 * @param e Details about the event
 	 */
 	protected void handleMouseEvent(int id, int x, int y, int clickCount) {
 	}
@@ -291,16 +293,15 @@ public class CanvasWindow {
 	private void handleKeyEvent_(KeyEvent e) {
 		System.out.println(e);
 		if (recording != null)
-			recording.items.add(new KeyEventItem(e.getID(), e.getKeyCode(), e.getKeyChar()));
-		handleKeyEvent(e.getID(), e.getKeyCode(), e.getKeyChar());
+			recording.items.add(new KeyEventItem(e.getID(), e.getKeyCode(), e.getKeyChar(), e.getModifiersEx()));
+		handleKeyEvent(e.getID(), e.getKeyCode(), e.getKeyChar(), e.getModifiersEx());
 	}
 	
 	/**
 	 * Called when the user presses a key (id == KeyEvent.KEY_PRESSED) or enters a character (id == KeyEvent.KEY_TYPED).
 	 * 
-	 * @param e
 	 */
-	protected void handleKeyEvent(int id, int keyCode, char keyChar) {
+	protected void handleKeyEvent(int id, int keyCode, char keyChar, int modifiers) {
 	}
 
 	BufferedImage captureImage() {
@@ -317,7 +318,7 @@ public class CanvasWindow {
 		
 		{
 			setPreferredSize(new Dimension(width, height));
-			setBackground(Color.WHITE);
+			setBackground(Color.GRAY);
 			setFocusable(true);
 			setFocusTraversalKeysEnabled(false);
 			addMouseListener(new MouseAdapter() {
@@ -416,10 +417,12 @@ public class CanvasWindow {
 	
 	public static void replayRecording(String path, CanvasWindow window) {
 		try {
-			new CanvasWindowRecording(path).replay(window);
+			new CanvasWindowRecording((RECORDINGS_PATH + path)).replay(window);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
+
+	static String RECORDINGS_PATH = System.getProperty("user.dir") + "/src/test/recordings/";
 
 }

@@ -1,5 +1,7 @@
 package interactr.cs.kuleuven.be.ui;
 
+import interactr.cs.kuleuven.be.domain.Diagram;
+
 import interactr.cs.kuleuven.be.domain.Party;
 
 /**
@@ -11,13 +13,20 @@ import interactr.cs.kuleuven.be.domain.Party;
  * @version 1.0
  */
 public class CommunicationView extends DiagramView {
-    
+
+    /**
+     * Initialize this new diagram view with the given diagram.
+     *
+     * @param diagram The diagram to associate this diagram view with.
+     * @throws IllegalArgumentException If the given diagram is null.
+     */
+    public CommunicationView(Diagram diagram) {
+        super(diagram);
+    }
+
     @Override
     public String viewName() {
         return "Communication View";
     }
-
-    public boolean canAddMessage(Party sender, Party receiver, int y){return false;}
-
 
 }

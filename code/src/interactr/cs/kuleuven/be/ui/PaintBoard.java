@@ -1,6 +1,8 @@
 package interactr.cs.kuleuven.be.ui;
 
+import interactr.cs.kuleuven.be.ui.geometry.Colour;
 import interactr.cs.kuleuven.be.ui.geometry.Model;
+import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 import java.awt.*;
 
@@ -42,9 +44,7 @@ public class PaintBoard {
     public void paint(Graphics context) {
         currentContext = context;
         context.setFont(defaultFont);
-        // Alternatively, ask for figures (basic geometric shapes) to draw and
-        //  draw them with private methods
-        getDiagramController().displayView();
+        getDiagramController().displayAllSubWindows();
     }
 
     /**
@@ -112,13 +112,25 @@ public class PaintBoard {
     }
 
     /**
-     * Sets the color for this paint board.
+     * Translate the origin of this paintboard to the given coordinate.
+     *  All drawing in subsequent calls will be relative to this new origin.
      *
-     * @param color The color to use for this paint board.
+     * @param x The new x coordinate for the origin.
+     * @param y The new y coordinate for the origin.
      */
-    public void setColor(Color color) {
+    public void translateOrigin(int x, int y) {
         if (currentContext != null)
-            currentContext.setColor(color);
+            currentContext.translate(x, y);
+    }
+
+    /**
+     * Sets the colour for this paint board.
+     *
+     * @param colour The colour to use for this paint board.
+     */
+    public void setColour(Colour colour) {
+        if (currentContext != null)
+            currentContext.setColor(Color.getHSBColor(colour.getHue(), colour.getSaturation(), colour.getBrightness()));
     }
 
     /**
@@ -149,6 +161,15 @@ public class PaintBoard {
      */
     public int getHeight() {
         return getDiagramWindow().getHeight();
+    }
+
+    /**
+     * The new clipping rectangle for this paintboard.
+     *
+     * @param clipRect The new clipping rectangle for this paintboard.
+     */
+    public void setClipRect(Rectangle clipRect) {
+        this.currentContext.setClip(new java.awt.Rectangle(clipRect.getX(), clipRect.getY(), clipRect.getWidth(), clipRect.getHeight()));
     }
 
     /**

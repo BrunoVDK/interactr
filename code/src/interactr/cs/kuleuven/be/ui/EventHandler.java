@@ -2,12 +2,11 @@ package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 
-
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import interactr.cs.kuleuven.be.domain.*;
-import interactr.cs.kuleuven.be.ui.geometry.Point;
 
+import interactr.cs.kuleuven.be.exceptions.*;
+import interactr.cs.kuleuven.be.ui.geometry.Point;
 
 /**
  * A class of event handlers for interpreting incoming mouse/key events
@@ -36,59 +35,186 @@ public class EventHandler {
      * @param y The y coordinate for the mouse event.
      * @param clickCount The amount of clicks for this mouse events.
      */
-    public void handleMouseEvent(int id, int x, int y, int clickCount) throws IllegalArgumentException{
+    public void handleMouseEvent(int id, int x, int y, int clickCount) throws IllegalArgumentException {
 
         // Mouse events are ignored when the diagram controller is editing
-        if (getDiagramController() != null && ! getDiagramController().isEditing()) {
-
-            // Mouse click
-            if (id == MouseEvent.MOUSE_CLICKED) {
-                switch (clickCount) {
-                    case 1: // Single click
-                        getDiagramController().selectComponentAt(x,y);
-                        break;
-                    case 2: // Double click
-                        try {
-                            getDiagramController().addPartyAt(x,y);
-                        }
-                        catch (InvalidAddPartyException exception) {
-                            Party party = getDiagramController().getPartyAt(x, y);
-                            if (party != null)
-                                getDiagramController().switchPartyType(party);
-                        }
-                        break;
-                }
+        if (getDiagramController() != null) {
+            switch (id) {
+                case MouseEvent.MOUSE_CLICKED:
+                    handleMouseClick(x,y,clickCount);
+                    break;
+                case MouseEvent.MOUSE_PRESSED:
+                    handleMousePress(x,y);
+                    break;
+                case MouseEvent.MOUSE_DRAGGED:
+                    handleMouseDrag(x,y);
+                    break;
+                case MouseEvent.MOUSE_RELEASED:
+                    handleMouseReleased(x,y);
+                    break;
             }
-
-            // Mouse press
-            if(id == MouseEvent.MOUSE_PRESSED){
-                focusedParty = getDiagramController().getPartyAt(x,y);
-                focusCoordinate = new Point(x,y);
-            }
-
-            // Mouse drag
-            if(id == MouseEvent.MOUSE_DRAGGED){
-                if(focusedParty != null){
-                    getDiagramController().moveParty(focusedParty, x, y);
-                }
-            }
-
-            // Mouse release
-            if(id == MouseEvent.MOUSE_RELEASED){
-                if (focusedParty == null && focusCoordinate != null) {
-                    getDiagramController().addMessageFrom(focusCoordinate.getX()
-                            ,focusCoordinate.getY(),x,y);
-                }
-                else if(focusedParty != null) {
-                    focusedParty = null;
-                    focusCoordinate = null;
-                }
-
-            }
-
         }
 
     }
+
+    /**
+     * Handle a mouse click at the given coordinates and with given click count.
+     *
+     * @param x The x coordinate of the mouse click.
+     * @param y The y coordinate of the mouse click.
+     * @param clickCount The click count.
+     */
+    private void handleMouseClick(int x, int y, int clickCount) {
+        try {
+            getDiagramController().activateSubWindow(x, y);
+            switch (clickCount) {
+                case 1: // Single click
+                    try {
+                        getDiagramController().closeSubWindow(x,y);
+                    }
+                    catch (InvalidCloseWindowException e) {
+                        getDiagramController().selectComponent(x,y);
+                    }
+                    break;
+                case 2: // Double click
+                    try {
+                        getDiagramController().addParty(x,y);
+                    }
+                    catch (InvalidAddPartyException exception) {
+                        getDiagramController().switchTypeOfParty(x, y);
+                    }
+                    break;
+            }
+        }
+        catch (NoSuchWindowException ignored) {}
+    }
+
+    /**
+     * Handle a mouse press at the given coordinates.
+     *
+     * @param x The x coordinate of the mouse press.
+     * @param y The y coordinate of the mouse press.
+     */
+    private void handleMousePress(int x, int y) {
+        this.setLastDragCoordinate(x,y); // Keep track of drag coordinates
+        try {
+            getDiagramController().activateSubWindow(x,y);
+            this.setDragOperationType(DragOperationType.DRAG_VALID);
+        }
+        catch (NoSuchWindowException ignored) {}
+    }
+
+    /**
+     * Handle a mouse drag at the given coordinates.
+     *
+     * @param x The x coordinate of the mouse drag.
+     * @param y The y coordinate of the mouse drag.
+     */
+    private void handleMouseDrag(int x, int y) {
+
+        // Nothing to drag
+        if (this.getDragOperationType() == DragOperationType.DRAG_NONE)
+            return;
+
+        // Prioritise dragging in a diagram if it was previously successful
+        //  This prevents the alteration of subwindow frames when dragging something in a diagram
+        //  close to the subwindow's borders / title bar
+        if (this.getDragOperationType() == DragOperationType.DRAG_DIAGRAM) {
+            moveParty(x,y);
+        }
+        else {
+            try {
+                getDiagramController().resizeSubWindow(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
+            }
+            catch (InvalidResizeWindowException e1) {
+                try {
+                    getDiagramController().moveSubWindow(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
+                }
+                catch (InvalidMoveWindowException e2) {
+                    moveParty(x,y);
+                    return;
+                }
+            }
+            setLastDragCoordinate(x,y);
+        }
+
+    }
+
+    /**
+     * Move a party at the given coordinates.
+     *
+     * @param x The x coordinate to move the party to.
+     * @param y The y coordinate to move the party to.
+     */
+    private void moveParty(int x, int y) {
+        try {
+
+            // Move party
+            getDiagramController().moveParty(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
+
+            // Move party was successful, keep track of the changes
+            this.setDragOperationType(DragOperationType.DRAG_DIAGRAM);
+            this.setLastDragCoordinate(x,y);
+
+        }
+        catch (Exception ignored) {}
+    }
+
+    /**
+     * Handle a mouse release at the given coordinates.
+     *
+     * @param x The x coordinate of the mouse release.
+     * @param y The y coordinate of the mouse release.
+     */
+    private void handleMouseReleased(int x, int y) {
+        if (this.getDragOperationType() == DragOperationType.DRAG_VALID)
+            try {
+                getDiagramController().addMessage(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
+            }
+            catch (InvalidAddMessageException ignored) {}
+        this.setDragOperationType(DragOperationType.DRAG_NONE);
+    }
+
+    /**
+     * An enumeration of drag operation types.
+     *  This is used to override the priority of a particular type of operation.
+     *  Default priority :
+     *   RESIZE > MOVE > DRAG IN DIAGRAM
+     *  If something is dragged within a diagram, this operation type is prioritised.
+     */
+    private enum DragOperationType {
+        DRAG_NONE, // When nothing at all is dragged
+        DRAG_VALID, // When anything is dragged
+        DRAG_DIAGRAM; // When something is dragged within a diagram
+    }
+
+    private void setDragOperationType(DragOperationType type){
+        this.dragOperationType = type;
+    }
+
+    public DragOperationType getDragOperationType(){
+        return dragOperationType;
+    }
+
+    /**
+     * Registers the current type of dragging operation.
+     */
+    private DragOperationType dragOperationType = DragOperationType.DRAG_NONE;
+
+    /**
+     * The coordinates for the last successful drag operation.
+     */
+    private Point lastDragCoordinate;
+
+    private void setLastDragCoordinate(int x, int y){
+        lastDragCoordinate = new Point(x, y);
+    }
+
+    public Point getLastDragCoordinate(){
+        return lastDragCoordinate;
+    }
+
+    private boolean controlIsPressed = false;
 
     /**
      * Handle the key event of given type, having the given key code and key char.
@@ -96,42 +222,43 @@ public class EventHandler {
      * @param id The type of key event.
      * @param keyCode The key code for the key event.
      * @param keyChar The key char for the key event.
+     * @param keyModifiers The key modifiers for the key event.
      */
-    void handleKeyEvent(int id, int keyCode, char keyChar) {
-
+    void handleKeyEvent(int id, int keyCode, char keyChar, int keyModifiers) {
         if (getDiagramController() != null) {
+            boolean controlIsPressed = (keyModifiers & KeyEvent.CTRL_DOWN_MASK) != 0;
             switch (id) {
                 case KeyEvent.KEY_PRESSED:
-                    if (keyCode == KeyEvent.VK_ENTER)
-                        getDiagramController().abortEditing();
+                    if (keyCode == KeyEvent.VK_ENTER) {
+                        try {
+                            getDiagramController().abortEditing();
+                        }
+                        catch (InvalidLabelException ignored) {}
+                    }
                     else if (keyCode == KeyEvent.VK_BACK_SPACE) {
                         if (getDiagramController().isEditing())
                             getDiagramController().removeLastChar();
                         else
                             getDiagramController().deleteSelection();
                     }
+                    else if (keyCode == KeyEvent.VK_N && controlIsPressed)
+                        getDiagramController().createSubWindow();
+                    else if (keyCode == KeyEvent.VK_D && controlIsPressed)
+                        getDiagramController().duplicateSubWindow();
+                    else if (keyCode == KeyEvent.VK_CONTROL)
+                        controlIsPressed = true;
                     break;
                 case KeyEvent.KEY_TYPED:
                     if (keyChar == KeyEvent.VK_TAB && !getDiagramController().isEditing())
-                        getDiagramController().nextView();
+                        getDiagramController().toggleActiveSubWindowView();
                     else if (Character.isLetter(keyChar)
                             || Character.isDigit(keyChar)
                             || ":();-_<>*&[]".indexOf(Character.toString(keyChar)) != -1)
                         getDiagramController().appendChar(keyChar);
-
+                    break;
             }
         }
     }
-
-    /**
-     * Registers the focused party for this event handler.
-     */
-    private Party focusedParty = null;
-
-    /**
-     * Registers the focus coordinate for this event handler.
-     */
-    private Point focusCoordinate = null;
 
     /**
      * Returns the diagram controller associated with this event handler.
@@ -144,9 +271,8 @@ public class EventHandler {
      * Set the diagram controller for this event handler to the given one.
      *
      * @param diagramController The new diagram controller for this event handler.
-     * @post The diagram controller associated with this event handler matches the given one.
      */
-    public void setDiagramController(DiagramController diagramController) {
+    private void setDiagramController(DiagramController diagramController) {
         this.diagramController = diagramController;
     }
 

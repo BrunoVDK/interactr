@@ -24,6 +24,11 @@ public class ObjectParty extends Party {
         super(label);
     }
 
+    @Override
+    public Party switchType(){
+        return new ActorParty(this);
+    }
+
     /**
      * Initialize this new object party with the given party.
      *

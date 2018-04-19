@@ -134,4 +134,14 @@ public class Figure extends Model {
      */
     protected int height;
 
+    @Override
+    public Figure clone() {
+        final Figure clone;
+        try {
+            clone = (Figure)super.clone();
+        }
+        catch (Exception e) {throw new RuntimeException("Failed to clone figure.");};
+        return clone;
+    }
+
 }

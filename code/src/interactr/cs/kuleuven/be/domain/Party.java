@@ -1,6 +1,7 @@
 package interactr.cs.kuleuven.be.domain;
 
 import interactr.cs.kuleuven.be.ui.geometry.Box;
+import interactr.cs.kuleuven.be.ui.geometry.Figure;
 
 /**
  * A class of parties.
@@ -9,6 +10,15 @@ import interactr.cs.kuleuven.be.ui.geometry.Box;
  * @version 1.0
  */
 public class Party extends DiagramComponent {
+
+    /**
+     * Creates a novel party.
+     *
+     * @return The newly created party.
+     */
+    public static Party createParty() {
+        return new ObjectParty();
+    }
 
     /**
      * Initialize this new party with a ':Class' label.
@@ -36,16 +46,25 @@ public class Party extends DiagramComponent {
     }
 
     /**
+     * Switches the type of this party
+     *
+     * @return returns the switched party
+     */
+    public Party switchType(){return null;}
+
+    /**
      * Returns a proposal for how this component should be drawn, by returning a mock-up figure.
      *
      * @return A mock-up for how this component should be drawn.
      */
-    public Class proposedFigure() {
-        return Box.class;
+    public Figure proposedFigure() {
+        return new Box();
     }
 
     @Override
     public boolean canHaveAsLabel(String label) {
+        if (!super.canHaveAsLabel(label))
+            return false;
         boolean validCharacters = true;
         String[] parts = label.split(":");
         if (parts.length == 2) {
@@ -57,7 +76,7 @@ public class Party extends DiagramComponent {
         }
         else
             validCharacters = false;
-        return (validCharacters && super.canHaveAsLabel(label));
+        return validCharacters;
     }
 
     @Override
@@ -70,10 +89,4 @@ public class Party extends DiagramComponent {
         return super.toString();
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if(other == null) return false;
-        if(other == this) return true;
-        else return false;
-    }
 }

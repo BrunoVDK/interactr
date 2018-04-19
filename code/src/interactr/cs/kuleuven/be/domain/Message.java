@@ -1,6 +1,7 @@
 package interactr.cs.kuleuven.be.domain;
 
 import interactr.cs.kuleuven.be.ui.geometry.Arrow;
+import interactr.cs.kuleuven.be.ui.geometry.Link;
 
 /**
  * A  class of messages. Each message has a receiving - and a sender party.
@@ -73,13 +74,8 @@ public class Message extends DiagramComponent {
      *
      * @return A link type for drawing this message.
      */
-    public Class proposedLinkType() {
-        return Arrow.class;
-    }
-
-    @Override
-    public boolean canHaveAsLabel(String label) {
-        return label.length() <= 30;
+    public Link proposedLink() {
+        return new Arrow();
     }
 
     @Override

@@ -10,7 +10,7 @@ import java.awt.*;
  * @author Team 25
  * @version 1.0
  */
-public abstract class Model {
+public class Model implements Cloneable {
 
     /**
      * Returns the char height used for labels for models.
@@ -109,6 +109,16 @@ public abstract class Model {
     protected void drawLabel(PaintBoard paintBoard) {
         Rectangle labelBounds = getLabelBounds();
         paintBoard.drawString(getLabel(), labelBounds.getX(), labelBounds.getY());
+    }
+
+    @Override
+    public Model clone() {
+        final Model clone;
+        try {
+            clone = (Model)super.clone();
+        }
+        catch (Exception e) {throw new RuntimeException("Failed to clone model.");};
+        return clone;
     }
 
 }
