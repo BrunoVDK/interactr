@@ -1,0 +1,11 @@
+Voordeel methode 1 (interface, enum, diagramDidUpdate met params) : 
+- DiagramNotificationCenter is veel simpeler en hoeft van niets anders af te weten dan van Observers
+
+Voordeel methode 2 (SubWindow / DiagramView apart observer) :
+- Methods zijn allemaal korter, geen instanceof meer nodig, geen switch statements, sneller, net zo uitbreidbaar.
+
+Bijkomende methode :
+interface DiagramObserver met alle methodes voor elke type update
+enkel de relevante implementeren, rest zijn default methods die niets doen
+-> notification center is dan nog steeds compact (moet niet afweten van subwindows etc.)
+-> efficiëntie iets beter dan methode 1 (geen switch statement)
