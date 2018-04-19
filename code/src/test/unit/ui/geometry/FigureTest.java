@@ -1,4 +1,4 @@
-package unit.ui.geometry;
+package test.unit.ui.geometry;
 
 import interactr.cs.kuleuven.be.ui.geometry.Figure;
 import org.junit.jupiter.api.Test;

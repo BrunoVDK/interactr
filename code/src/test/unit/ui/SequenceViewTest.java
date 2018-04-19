@@ -1,4 +1,4 @@
-package unit.ui;
+package test.unit.ui;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.ui.SequenceView;

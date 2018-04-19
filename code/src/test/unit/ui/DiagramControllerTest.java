@@ -1,4 +1,4 @@
-package unit.ui;
+package test.unit.ui;
 
 import interactr.cs.kuleuven.be.exceptions.NoSuchWindowException;
 import interactr.cs.kuleuven.be.ui.DiagramController;
