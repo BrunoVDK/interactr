@@ -166,23 +166,14 @@ public class Diagram {
             messages = messages.plus(resultMessage);
             associatedMessageIndices.add(index + 1);
             associatedMessageIndices.add(index);
-<<<<<<< HEAD
-            this.addPrefix(message, index);
-            this.addPrefix(resultMessage);
-=======
             associatedPrefixes.add(null);
             associatedPrefixes.add(calculatePrefix(message, index));
->>>>>>> eb01afd7369b7bce3b001947c6eb973816a98d00
         }
         else { // Insert
             messages = messages.plus(index, resultMessage);
             messages = messages.plus(index, message);
             associatedMessageIndices.add(index, index);
             associatedMessageIndices.add(index, index + 1);
-<<<<<<< HEAD
-            this.addPrefix(message, index);
-            this.addPrefix(resultMessage);
-=======
             associatedPrefixes.add(index, null);
             associatedPrefixes.add(index, calculatePrefix(message, index));
         }
@@ -198,7 +189,6 @@ public class Diagram {
             String prefix = calculatePrefix(messages.get(i), i);
             associatedPrefixes.remove(i);
             associatedPrefixes.add(i, prefix);
->>>>>>> eb01afd7369b7bce3b001947c6eb973816a98d00
         }
 
     }
@@ -284,87 +274,12 @@ public class Diagram {
         return null;
     }
 
-
-    public String getPrefix(Message m){
-        int index = getIndexOfMessage(m);
-        return associatedPrefix.get(index);
-    }
-
-    public  void addPrefix(ResultMessage message){
-        int index = this.getIndexOfAssociatedMessage(this.getIndexOfMessage(message));
-        this.associatedPrefix.add(index+1, null);
-    }
-
     /**
      * Returns the prefix for the given message.
      *
      * @param message The message to get the prefix for.
      * @return The prefix for the given message.
      */
-<<<<<<< HEAD
-    public void addPrefix(InvocationMessage message, int index) {
-        Message prev = this.getPreviousInvocationMessage(message, index);
-
-        if(prev == null){
-            this.associatedPrefix.add(index, "1.");
-        }
-        else if(message.getSender().equals(prev.getSender())){
-            String previousPrefix = this.associatedPrefix.get(this.getIndexOfMessage(prev));
-            int prefixLast = Integer.parseInt(previousPrefix.substring(previousPrefix.length()-2, previousPrefix.length()-1));
-            int prefixNew = prefixLast + 1;
-            String prefix = previousPrefix.substring(0 , previousPrefix.length()-2) + prefixNew + ".";
-            this.associatedPrefix.add(index, prefix);
-        }
-        else if( message.getSender().equals(prev.getReceiver())){
-            String prefix = this.associatedPrefix.get((this.getIndexOfMessage(prev))) + "1.";
-            this.associatedPrefix.add(index, prefix);
-        }
-    }
-
-    public Message getPreviousInvocationMessage(Message m, int index){
-        Message prev = null;
-        for(int i = 0; i < index; i++){
-            if (i < this.getIndexOfAssociatedMessage(i) && (m.getSender().equals(this.getMessageAtIndex(i).getReceiver()) || m.getSender().equals(this.getMessageAtIndex(i).getSender()))){
-                prev = this.getMessageAtIndex(i);
-            }
-        }
-        return prev;
-    }
-
-    /**
-     * The messages held by this diagram.
-     */
-    private PList<Message> messages = PList.<Message>empty();
-
-    /**
-     * The indices of associated messages for the messages held by this diagram.
-     *
-     * @note Each entry in this array gives the associated message of the message at the same index
-     *  in the messages list.
-     */
-    private ArrayList<Integer> associatedMessageIndices = new ArrayList<Integer>();
-
-    /**
-     * The prefixes associated with the messages.
-     */
-    private ArrayList<String> associatedPrefix = new ArrayList<String>();
-
-    /**
-     * List registering selected diagramcomponents.
-     */
-    private PList<DiagramComponent> selection = PList.<DiagramComponent>empty();
-
-    /**
-     * Returns the list of selected components.
-     */
-    public PList<DiagramComponent> getSelectedComponents(){
-        return this.selection;
-    }
-
-    /**
-     * Adds the given component to the selected components in this diagram.
-     *  If the given component is already selected, it is activated.
-=======
     public String getPrefix(Message message) {
         int index = getIndexOfMessage(message);
         return associatedPrefixes.get(index);
@@ -372,7 +287,6 @@ public class Diagram {
 
     /**
      * Calculates a prefix for the given message in this diagram.
->>>>>>> eb01afd7369b7bce3b001947c6eb973816a98d00
      *
      * @param message The message whose prefix should be determined.
      */
