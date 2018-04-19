@@ -1,12 +1,10 @@
 package usecases;
 
-import interactr.cs.kuleuven.be.ui.DiagramController;
-import interactr.cs.kuleuven.be.ui.DiagramWindow;
-import interactr.cs.kuleuven.be.ui.EventHandler;
-import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MoveSubwindow {
@@ -17,6 +15,18 @@ public class MoveSubwindow {
     void setUp(){
         diagramWindow.setEventHandler(new EventHandler(new DiagramController()));
         diagramWindow.setPaintBoard(new PaintBoard(diagramWindow, diagramWindow.getEventHandler().getDiagramController()));
+    }
+
+    @Test
+    void stepByStep(){
+        DiagramController controller = diagramWindow.getEventHandler().getDiagramController();
+        // Precondition
+        DiagramWindow.replayRecording("steps/createNewDiagram.txt",diagramWindow);
+        SubWindow original = controller.getActiveSubwindow();
+        assertNotNull(original);
+        DiagramWindow.replayRecording("steps/moveNewDiagram.txt",diagramWindow);
+        assertTrue(0 < controller.getActiveSubwindow().getFrame().getX());
+        assertTrue(0 < controller.getActiveSubwindow().getFrame().getY());
     }
 
     @Test
