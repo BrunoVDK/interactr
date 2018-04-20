@@ -22,6 +22,8 @@ public class Diagram {
 
     /**
      * Add the given party to this diagram.
+     *
+     * @param party The party that is to be added to this diagram.
      */
     public void addParty(Party party) {
         parties = parties.plus(party);

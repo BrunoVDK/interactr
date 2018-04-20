@@ -159,10 +159,22 @@ public class DiagramNotificationCenter {
         }
     }
 
+    /**
+     * Returns the observing subwindows for the given diagram.
+     *
+     * @param diagram The diagram observed by the desired subwindows.
+     * @return A list of subwindows observing the given diagram.
+     */
     private ArrayList<SubWindow> getObservingSubWindowsForDiagram(Diagram diagram){
         return observingSubWindows.get(diagram);
     }
 
+    /**
+     * Removes the given subwindow as an observer from the given list of observers.
+     *
+     * @param observers The list of observers to remove the subwindow from.
+     * @param subWindow The subwindow that is to be removed.
+     */
     private void removeObservingSubWindow(ArrayList<SubWindow> observers, SubWindow subWindow){
         observers.remove(subWindow);
     }
