@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class CreateNewDiagram {
 
@@ -16,6 +17,14 @@ public class CreateNewDiagram {
     void setUp(){
         diagramWindow.setEventHandler(new EventHandler(new DiagramController()));
         diagramWindow.setPaintBoard(new PaintBoard(diagramWindow, diagramWindow.getEventHandler().getDiagramController()));
+    }
+
+    @Test
+    void stepByStep(){
+        DiagramController controller = diagramWindow.getEventHandler().getDiagramController();
+        // Precondition
+        DiagramWindow.replayRecording("steps/createNewDiagram.txt",diagramWindow);
+        assertNotNull(controller.getActiveSubwindow());
     }
 
     /**

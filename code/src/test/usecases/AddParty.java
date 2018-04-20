@@ -33,7 +33,7 @@ public class AddParty {
         Party newParty = controller.getActiveSubwindow().getDiagram().getParties().get(0);
         assertEquals(controller.getActiveSubwindow().getSelectedComponent(), newParty);
         // Type label
-        DiagramWindow.replayRecording("steps/typePartyLabel.txt",diagramWindow);
+        DiagramWindow.replayRecording("steps/typePartyLabela:A.txt",diagramWindow);
         assertEquals(controller.getActiveSubwindow().getSelectedLabel(), "a:A");
         assertEquals(newParty.getLabel(), "a:A");
         // Press enter
