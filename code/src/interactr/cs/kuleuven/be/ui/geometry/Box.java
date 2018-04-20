@@ -20,7 +20,7 @@ public class Box extends Figure {
     public Rectangle getLabelBounds() {
         Rectangle bounds = super.getLabelBounds();
         bounds.setX(getX() + getWidth()/2 - bounds.getWidth()/2);
-        bounds.setY(getY() + getHeight()/2 + charHeight/2);
+        bounds.setY(getY() + getHeight()/2 + PaintBoard.charHeight/2);
         return bounds;
     }
 

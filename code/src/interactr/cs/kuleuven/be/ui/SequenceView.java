@@ -29,7 +29,7 @@ public class SequenceView extends DiagramView {
     }
 
     @Override
-    public void display(PaintBoard paintBoard, DiagramComponent selectedComponent, String selectedLabel) {
+    public void display(PaintBoard paintBoard, DiagramComponent selectedComponent, String selectedLabel, Rectangle frame) {
         displayFigures(paintBoard, selectedComponent, selectedLabel);
         paintBoard.setColour(Colour.GRAY);
         for (Party party : figures.keySet()) {
@@ -37,7 +37,7 @@ public class SequenceView extends DiagramView {
             paintBoard.drawLine(partyFigure.getX() + partyFigure.getWidth() / 2,
                     PARTY_ROW_HEIGHT,
                     partyFigure.getX() + partyFigure.getWidth() / 2,
-                    paintBoard.getHeight());
+                    frame.getHeight());
         }
         paintBoard.setColour(Colour.BLACK);
         paintBoard.drawLine(0, PARTY_ROW_HEIGHT, paintBoard.getWidth(), PARTY_ROW_HEIGHT);
