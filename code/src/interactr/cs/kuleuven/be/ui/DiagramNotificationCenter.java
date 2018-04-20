@@ -154,9 +154,17 @@ public class DiagramNotificationCenter {
     public void unregisterSubWindow(Diagram diagram, SubWindow subWindow) {
         if (diagram == null)
             return;
-        ArrayList<SubWindow> observers = this.observingSubWindows.get(diagram);
-        if (observers != null)
-            observers.remove(subWindow);
+        ArrayList<SubWindow> observersForDiagram = this.getObservingSubWindowsForDiagram(diagram);
+        if (observersForDiagram != null)
+            this.removeObservingSubWindow(observersForDiagram, subWindow);
+    }
+
+    private ArrayList<SubWindow> getObservingSubWindowsForDiagram(Diagram diagram){
+        return observingSubWindows.get(diagram);
+    }
+
+    private void removeObservingSubWindow(ArrayList<SubWindow> observers, SubWindow subWindow){
+        observers.remove(subWindow);
     }
 
     public void unregisterDiagramView(Diagram diagram, DiagramView diagramView) {
