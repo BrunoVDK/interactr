@@ -145,18 +145,18 @@ public class DiagramNotificationCenter {
     }
 
     /**
-     * Remove the given observer. If the observer was previously associated with the given diagram,
+     * Remove the given subwindow as an observer. If the observer was previously associated with the given diagram,
      *  than it is unregistered as an observer (i.e. it won't receive any updates anymore).
      *
      * @param diagram The diagram to register the observer with.
-     * @param subWindow The observer that is to be registered.
+     * @param subWindow The subwindow that is to be removed as an observer.
      */
     public void unregisterSubWindow(Diagram diagram, SubWindow subWindow) {
-        if (diagram == null)
-            return;
-        ArrayList<SubWindow> observersForDiagram = this.getObservingSubWindowsForDiagram(diagram);
-        if (observersForDiagram != null)
-            this.removeObservingSubWindow(observersForDiagram, subWindow);
+        if (diagram != null) {
+            ArrayList<SubWindow> observersForDiagram = this.getObservingSubWindowsForDiagram(diagram);
+            if (observersForDiagram != null)
+                this.removeObservingSubWindow(observersForDiagram, subWindow);
+        }
     }
 
     private ArrayList<SubWindow> getObservingSubWindowsForDiagram(Diagram diagram){
@@ -167,24 +167,31 @@ public class DiagramNotificationCenter {
         observers.remove(subWindow);
     }
 
+    /**
+     * Remove the given diagram view as an observer. If the observer was previously associated with the given diagram,
+     *  than it is unregistered as an observer (i.e. it won't receive any updates anymore).
+     *
+     * @param diagram The diagram to register the observer with.
+     * @param diagramView The diagram view that is to be removed as an observer.
+     */
     public void unregisterDiagramView(Diagram diagram, DiagramView diagramView) {
-        if (diagram == null)
-            return;
-        ArrayList<DiagramView> observers = this.observingDiagramViews.get(diagram);
-        if (observers != null)
-            observers.remove(diagramView);
+        if (diagram != null) {
+            ArrayList<DiagramView> observers = this.observingDiagramViews.get(diagram);
+            if (observers != null)
+                observers.remove(diagramView);
+        }
     }
 
     /**
      * The list of observing diagram views kept track of by this center.
      *  This is on a per-diagram basis.
      */
-    protected PMap<Diagram, ArrayList<DiagramView>> observingDiagramViews = PMap.empty();
+    private PMap<Diagram, ArrayList<DiagramView>> observingDiagramViews = PMap.empty();
 
     /**
      * The list of observing subwindows kept track of by this center.
      *  This is on a per-diagram basis.
      */
-    protected PMap<Diagram, ArrayList<SubWindow>> observingSubWindows = PMap.empty();
+    private PMap<Diagram, ArrayList<SubWindow>> observingSubWindows = PMap.empty();
 
 }
