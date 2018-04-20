@@ -42,6 +42,7 @@ public class SubWindow {
             setFrame(new Rectangle(0, 0, subWindow.getFrame().getWidth(), subWindow.getFrame().getHeight()));
             for (DiagramView view : subWindow.getViews())
                 views = views.plus(view.clone());
+            activeViewIndex = subWindow.getViews().indexOf(subWindow.getActiveView());
         }
         DiagramNotificationCenter.defaultCenter().registerSubWindow(getDiagram(), this);
     }
