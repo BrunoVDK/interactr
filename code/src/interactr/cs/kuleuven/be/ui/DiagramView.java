@@ -122,7 +122,7 @@ public class DiagramView implements Cloneable {
 
         // Create the new party and throw notification
         Party party = Party.createParty();
-        diagram.addParty(party);
+        this.getDiagram().addParty(party);
         DiagramNotificationCenter.defaultCenter().diagramDidAddParty(diagram, party, new Point(x,y));
 
     }
