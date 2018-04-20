@@ -107,6 +107,10 @@ public class DiagramController {
         this.getSubWindows().add(index, subwindow);
     }
 
+    private SubWindow removeSubWindow(SubWindow subWindow){
+        return this.getSubWindows().remove(this.getSubWindows().indexOf(subWindow));
+    }
+
     private ArrayList<SubWindow> getSubWindows(){
         return subWindows;
     }
@@ -119,10 +123,9 @@ public class DiagramController {
      * @throws NoSuchWindowException If no subwindow lies at the given coordinates.
      */
     public void activateSubWindow(int x, int y) throws NoSuchWindowException {
-        SubWindow subWindow = getSubWindowAt(x, y);
-        if (subWindow == null)
+        if (getSubWindowAt(x, y) == null)
             throw new NoSuchWindowException();
-        this.addSubWindow(0, this.getSubWindows().remove(this.getSubWindows().indexOf(subWindow)));
+        this.addSubWindow(0, removeSubWindow(getSubWindowAt(x, y)));
     }
 
     /**
@@ -137,7 +140,7 @@ public class DiagramController {
         SubWindow subWindow = this.getSubWindows().stream().filter( s -> s.closeButtonEncloses(x,y)).findFirst().orElse(null);
         if (subWindow != null && !(isEditing() && subWindow == getActiveSubwindow())) {
             subWindow.close();
-            this.getSubWindows().remove(subWindow);
+            this.removeSubWindow(subWindow);
             getPaintBoard().refresh();
         }
         else

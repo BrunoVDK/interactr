@@ -134,18 +134,6 @@ public class PaintBoard {
     }
 
     /**
-     * Get the width of the given string when drawn in this paint board.
-     *
-     * @param string The string whose display width is desired.
-     * @return The width of the given string when drawn in this paint board.
-     */
-    public int getWidthForString(String string) {
-        if (currentContext != null)
-            return currentContext.getFontMetrics().stringWidth(string);
-        return 0;
-    }
-
-    /**
      * Returns the width for this board.
      *
      * @return The width of this paint board.
@@ -194,7 +182,7 @@ public class PaintBoard {
      *
      * @param diagramController The diagram controller associated with this paint board.
      */
-    public void setDiagramController(DiagramController diagramController) {
+    private void setDiagramController(DiagramController diagramController) {
         this.diagramController = diagramController;
     }
 

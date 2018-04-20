@@ -79,9 +79,17 @@ public class DiagramNotificationCenter {
     public void unregisterObserver(Diagram diagram, DiagramObserver observer) {
         if (diagram == null)
             return;
-        ArrayList<DiagramObserver> observers = this.observers.get(diagram);
-        if (observers != null)
-            observers.remove(observer);
+        ArrayList<DiagramObserver> observersForDiagram = this.getObserversForDiagram(diagram);
+        if (observersForDiagram != null)
+            removeObserver(observersForDiagram, observer);
+    }
+
+    private ArrayList<DiagramObserver> getObserversForDiagram(Diagram diagram){
+        return this.observers.get(diagram);
+    }
+
+    private void removeObserver(ArrayList<DiagramObserver> observersForDiagram, DiagramObserver observer){
+        observersForDiagram.remove(observer);
     }
 
     /**

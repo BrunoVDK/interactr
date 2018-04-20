@@ -185,14 +185,14 @@ public class EventHandler {
     private enum DragOperationType {
         DRAG_NONE, // When nothing at all is dragged
         DRAG_VALID, // When anything is dragged
-        DRAG_DIAGRAM; // When something is dragged within a diagram
+        DRAG_DIAGRAM // When something is dragged within a diagram
     }
 
     private void setDragOperationType(DragOperationType type){
         this.dragOperationType = type;
     }
 
-    public DragOperationType getDragOperationType(){
+    private DragOperationType getDragOperationType(){
         return dragOperationType;
     }
 
@@ -210,11 +210,9 @@ public class EventHandler {
         lastDragCoordinate = new Point(x, y);
     }
 
-    public Point getLastDragCoordinate(){
+    private Point getLastDragCoordinate(){
         return lastDragCoordinate;
     }
-
-    private boolean controlIsPressed = false;
 
     /**
      * Handle the key event of given type, having the given key code and key char.
@@ -253,7 +251,7 @@ public class EventHandler {
                         getDiagramController().toggleActiveSubWindowView();
                     else if (Character.isLetter(keyChar)
                             || Character.isDigit(keyChar)
-                            || ":();-_<>*&[]".indexOf(Character.toString(keyChar)) != -1)
+                            || ":();-_<>*&[]".contains(Character.toString(keyChar)))
                         getDiagramController().appendChar(keyChar);
                     break;
             }
