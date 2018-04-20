@@ -75,6 +75,20 @@ public class SubWindow {
     }
 
     /**
+     * Returns the frame in which views of this subwindow are drawn.
+     *
+     * @return The frame in which views of this subwindow are drawn.
+     */
+    public Rectangle getViewFrame() {
+        return new Rectangle(
+                frame.getX(),
+                frame.getY() + TITLE_BAR_HEIGHT,
+                frame.getWidth(),
+                frame.getHeight() - TITLE_BAR_HEIGHT
+        );
+    }
+
+    /**
      * Returns whether or not this subwindow can have the given frame as its frame.
      *
      * @param frame The frame to check with.
@@ -342,29 +356,47 @@ public class SubWindow {
      * @param paintBoard The paintboard on which should be drawn.
      */
     public void displayView(PaintBoard paintBoard) {
-
-        Rectangle frame = getFrame();
-        paintBoard.setClipRect(frame); // Make sure no drawing is done outside the frame
-
-        // Draw white background and view on top of it
-        paintBoard.setColour(Colour.WHITE);
-        paintBoard.fillRectangle(frame.getX(), frame.getY(), frame.getWidth(), frame.getHeight());
+        paintBoard.setClipRect(getFrame()); // Make sure no drawing is done outside the frame
+        displayBackground(paintBoard);
         paintBoard.translateOrigin(getFrame().getX(), getFrame().getY() + TITLE_BAR_HEIGHT);
-        getActiveView().display(paintBoard, getSelectedComponent(), getSelectedLabel()); // Draw view contents
+        getActiveView().display(paintBoard, getSelectedComponent(), getSelectedLabel(), getViewFrame()); // Draw view contents
         paintBoard.translateOrigin(-getFrame().getX(), -getFrame().getY() - TITLE_BAR_HEIGHT);
+        displayTitleBar(paintBoard);
+        displayCloseButton(paintBoard);
+    }
 
-        // Draw the frame (including title bar)
+    /**
+     * Displays the background for this subwindow.
+     *
+     * @param paintBoard The paintboard on which should be drawn.
+     */
+    private void displayBackground(PaintBoard paintBoard) {
+        paintBoard.setColour(Colour.WHITE);
+        paintBoard.fillRectangle(getFrame().getX(), getFrame().getY(), getFrame().getWidth(), getFrame().getHeight());
+    }
+
+    /**
+     * Displays the title bar for this subwindow.
+     *
+     * @param paintBoard The paintboard on which should be drawn.
+     */
+    private void displayTitleBar(PaintBoard paintBoard) {
         paintBoard.setColour(Colour.LIGHT_GRAY);
-        paintBoard.fillRectangle(frame.getX(), frame.getY(), frame.getWidth()-1, TITLE_BAR_HEIGHT);
+        paintBoard.fillRectangle(getFrame().getX(), getFrame().getY(), getFrame().getWidth()-1, TITLE_BAR_HEIGHT);
         paintBoard.setColour(Colour.GRAY);
-        paintBoard.drawRectangle(frame.getX(), frame.getY(), frame.getWidth()-1, frame.getHeight()-1);
+        paintBoard.drawRectangle(getFrame().getX(), getFrame().getY(), getFrame().getWidth()-1, getFrame().getHeight()-1);
+    }
 
-        // Draw the close button
+    /**
+     * Displays the close button for this subwindow.
+     *
+     * @param paintBoard The paintboard on which should be drawn.
+     */
+    private void displayCloseButton(PaintBoard paintBoard) {
         Rectangle closeButtonFrame = getCloseButtonFrame();
         paintBoard.drawRectangle(closeButtonFrame.getX(), closeButtonFrame.getY(), closeButtonFrame.getWidth(), closeButtonFrame.getHeight());
         paintBoard.drawLine(closeButtonFrame.getX(), closeButtonFrame.getY(), closeButtonFrame.getX() + CLOSE_BUTTON_SIZE, closeButtonFrame.getY() + CLOSE_BUTTON_SIZE);
         paintBoard.drawLine(closeButtonFrame.getX(), closeButtonFrame.getY() + CLOSE_BUTTON_SIZE, closeButtonFrame.getX() + CLOSE_BUTTON_SIZE, closeButtonFrame.getY());
-
     }
 
     /**

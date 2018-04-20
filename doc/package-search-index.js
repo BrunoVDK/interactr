@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"interactr.cs.kuleuven.be.domain"},{"l":"interactr.cs.kuleuven.be.exceptions"},{"l":"interactr.cs.kuleuven.be.purecollections"},{"l":"interactr.cs.kuleuven.be.ui"},{"l":"interactr.cs.kuleuven.be.ui.geometry"}]
+packageSearchIndex = [{"l":"interactr.cs.kuleuven.be.domain"},{"l":"interactr.cs.kuleuven.be.exceptions"},{"l":"interactr.cs.kuleuven.be.purecollections"},{"l":"interactr.cs.kuleuven.be.ui"},{"l":"interactr.cs.kuleuven.be.ui.geometry"},{"l":"unit.domain"},{"l":"unit.purecollections"},{"l":"usecases"}]

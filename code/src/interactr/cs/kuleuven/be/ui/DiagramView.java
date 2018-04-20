@@ -56,8 +56,9 @@ public class DiagramView implements Cloneable {
      * @param paintBoard The paintboard to use when displaying the view.
      * @param selectedComponent The selected component, if any.
      * @param selectedLabel The temporary label of the selected component, if any.
+     * @param frame The frame in which to draw the view.
      */
-    public void display(PaintBoard paintBoard, DiagramComponent selectedComponent, String selectedLabel) {
+    public void display(PaintBoard paintBoard, DiagramComponent selectedComponent, String selectedLabel, Rectangle frame) {
         displayFigures(paintBoard, selectedComponent, selectedLabel);
         displayMessages(paintBoard, selectedComponent, selectedLabel);
     }

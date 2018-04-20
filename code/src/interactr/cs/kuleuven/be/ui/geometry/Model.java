@@ -13,16 +13,6 @@ import java.awt.*;
 public class Model implements Cloneable {
 
     /**
-     * Returns the char height used for labels for models.
-     */
-    public static int charHeight = 12;
-
-    /**
-     * Returns the char width used for labels for models.
-     */
-    public static int charWidth = 6;
-
-    /**
      * Initialize this new model with given label.
      *
      * @param label The label to initialize this model with.
@@ -67,7 +57,7 @@ public class Model implements Cloneable {
         if (getLabel() != null)
             length = getLabel().length();
         if (length < 3) length = 3;
-        return new Rectangle(0, 0, length * charWidth, charHeight);
+        return new Rectangle(0, 0, length * PaintBoard.charWidth, PaintBoard.charHeight);
     }
 
     /**

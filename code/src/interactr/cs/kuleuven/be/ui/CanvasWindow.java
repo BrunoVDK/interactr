@@ -426,6 +426,6 @@ public class CanvasWindow {
 	/**
 	 * The path were test session recordings are hosted.
 	 */
-	public static String RECORDINGS_PATH = System.getProperty("user.dir") + "/src/test/recordings/code";
+	public static String RECORDINGS_PATH = System.getProperty("user.dir") + "/src/test/recordings/";
 
 }

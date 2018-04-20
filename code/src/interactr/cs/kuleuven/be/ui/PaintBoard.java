@@ -204,11 +204,21 @@ public class PaintBoard {
     private static Font defaultFont = new Font("Monospaced", Font.PLAIN, 12);
 
     /**
+     * Returns the char height used for labels.
+     */
+    public static int charHeight = 12;
+
+    /**
+     * Returns the char width used for labels.
+     */
+    public static int charWidth = 6;
+
+    /**
      * Pre-process font metrics.
      */
     static {
-        Model.charHeight = defaultFont.getSize();
-        Model.charWidth = java.awt.Toolkit.getDefaultToolkit().getFontMetrics(defaultFont).charWidth('a');
+        PaintBoard.charHeight = defaultFont.getSize();
+        PaintBoard.charWidth = java.awt.Toolkit.getDefaultToolkit().getFontMetrics(defaultFont).charWidth('a');
     }
 
 }

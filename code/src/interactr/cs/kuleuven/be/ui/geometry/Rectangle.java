@@ -9,7 +9,7 @@ package interactr.cs.kuleuven.be.ui.geometry;
 public class Rectangle {
 
     /**
-     * Initialize this new rectangle with given x & y coordinates and given width & height..
+     * Initialize this new rectangle with given x and y coordinates and given width and height..
      *
      * @param x The x coordinate for this new rectangle.
      * @param y The y coordinate for this new rectangle.

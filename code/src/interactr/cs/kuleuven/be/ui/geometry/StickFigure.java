@@ -21,7 +21,7 @@ public class StickFigure extends Figure {
     @Override
     public void draw(PaintBoard paintBoard) {
 
-        int manWidth = getWidth(), manHeight = getHeight() - charHeight - 4;
+        int manWidth = getWidth(), manHeight = getHeight() - PaintBoard.charHeight - 4;
         int headWidth = Math.min(getWidth(), manHeight/2) - 5;
 
         // Draw stick figure
