@@ -39,3 +39,15 @@ target/
 *.synctex
 *.toc
 *.vrb
+
+# LaTeX
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
+*.dvi
+*.fdb_latexmk
+*.fls
