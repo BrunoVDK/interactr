@@ -1,7 +1,6 @@
 package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.ui.geometry.Colour;
-import interactr.cs.kuleuven.be.ui.geometry.Model;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 import java.awt.*;
