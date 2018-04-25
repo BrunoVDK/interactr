@@ -30,7 +30,7 @@
 
 \begin{frame}[fragile]{Design - Typical Flow}
 \begin{center}
-Prezi
+
 \end{center}
 \end{frame}
 
@@ -51,7 +51,8 @@ Prezi
 \begin{frame}[fragile]{Design - DiagramController}
 \begin{itemize}
 \item Used to be quite central (managed \texttt{Diagram} itself)
-\item Now the \texttt{DiagramView} manages the \texttt{Diagram} directly
+\item Now only keeps track of subwindows
+\item Each \texttt{DiagramView} manages the \texttt{Diagram} directly
 \item Synchronisation done with Observer pattern (see later)
 \end{itemize}
 \begin{center}
