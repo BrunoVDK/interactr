@@ -30,36 +30,47 @@
 
 \begin{frame}[fragile]{Design - Overview}
 \begin{center}
-See Prezi
+Prezi
 \end{center}
-\end{frame}
-
-\begin{frame}[fragile]{Design - Windows}
-\begin{itemize}
-\item Class \texttt{SubWindow}
-\item Draws itself and delegates view drawing to views
-\item Drawing makes use of clipping rectangle set on \texttt{PaintBoard}
-\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Design - DiagramController}
 \begin{itemize}
 \item Used to be quite central (managed \texttt{Diagram} itself)
 \item Now the \texttt{DiagramView} manages the \texttt{Diagram} directly
-\item Synchronisation done with Observer pattern
+\item Synchronisation done with Observer pattern (see later)
 \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Design - DiagramNotificationCenter}
 \begin{center}
-\includegraphics[width=1\textwidth]{diagram7}
-\vspace{0.5cm}\\\texttt{Protected Variations}
+\vspace{1cm}
+\texttt{Low Coupling}
 \end{center}
 \end{frame}
 
-\begin{frame}[fragile]{Domain Model}
+\begin{frame}[fragile]{Design - Windows}
+\texttt{DiagramController} uses sorted list of subwindows (drawn in reverse order)
+\begin{itemize}
+\item Class \texttt{SubWindow}
+\item Subwindows and views draw themselves (i.e. drawing is delegated)
+\item Use of clipping rectangle set on \texttt{PaintBoard}
+\end{itemize}
+\begin{center}
+\vspace{1cm}
+\texttt{Information Expert}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Design - Synchronisation}
+\begin{center}
+\vspace{1cm}
+\texttt{Observer (GoF)}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Design - Domain Model (Mapping)}
 	\begin{center}
-	\includegraphics[width=0.6\textwidth]{diagram3}
+	\item Low representation gap
+	\item Virtually nothing changed
+	\item Prefixes fixed
 	\end{center}
 \end{frame}
 
