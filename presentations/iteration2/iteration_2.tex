@@ -28,63 +28,105 @@
 
 \section{Design}
 
-\begin{frame}[fragile]{Diagram Controller - Painting \& Events}
+\begin{frame}[fragile]{Design - Typical Flow}
 \begin{center}
-\includegraphics[width=1\textwidth]{diagram1}
-\vspace{0.5cm}\\\texttt{Controller}
+
 \end{center}
 \end{frame}
 
-\begin{frame}[fragile]{Diagram Controller - Model \& Views}
+\begin{frame}[fragile]{Design - Domain Model (Mapping)}
+\noindent\begin{minipage}{0.5\textwidth}% adapt widths of minipages to your needs
+\includegraphics[width=1\textwidth]{domain}
+\end{minipage}%
+\hfill%
+\begin{minipage}{0.5\textwidth}\raggedleft
+\begin{itemize}
+	\item Low representational gap
+	\item Virtually nothing changed
+	\item Prefixes fixed
+	\end{itemize}
+\end{minipage}
+\end{frame}
+
+\begin{frame}[fragile]{Design - DiagramController}
+\begin{itemize}
+\item Used to be quite central (managed \texttt{Diagram} itself)
+\item Now only keeps track of subwindows
+\item Each \texttt{DiagramView} manages the \texttt{Diagram} directly
+\item Synchronisation done with Observer pattern (see later)
+\end{itemize}
 \begin{center}
-\includegraphics[width=0.8\textwidth]{diagram2}
-\vspace{0.5cm}\\\texttt{Controller}
+\vspace{1cm}
+\texttt{Controller - Low Coupling}
 \end{center}
 \end{frame}
 
-\begin{frame}[fragile]{Paintboard}
+\begin{frame}[fragile]{Design - Subwindows}
+\texttt{DiagramController} uses sorted list of subwindows (drawn in reverse order)
+\begin{itemize}
+\item Class \texttt{SubWindow}
+\item Subwindows and views draw themselves (i.e. drawing is delegated)
+\item Use of clipping rectangle set on \texttt{PaintBoard}
+\end{itemize}
 \begin{center}
-\includegraphics[width=1\textwidth]{diagram7}
-\vspace{0.5cm}\\\texttt{Protected Variations}
+\vspace{1cm}
+\texttt{Information Expert - Polymorphism}
 \end{center}
 \end{frame}
 
-\begin{frame}[fragile]{Domain Model}
-	\begin{center}
-	\includegraphics[width=0.6\textwidth]{diagram3}
-	\end{center}
+\begin{frame}[fragile]{Design - Synchronisation}
+\begin{center}
+\vspace{1cm}
+\texttt{Pure Fabrication - Observer (GoF)}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Design - GoF Patterns}
+4 patterns :
+\begin{itemize}
+\item \texttt{PaintBoard} : Facade
+\item \texttt{proposedFigure()} : Factory Method
+\item \texttt{DiagramNotificationCenter} : Singleton \& Observer
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Design - Coding}
+\begin{itemize}
+\item Refactored here and there (eg. \texttt{Extract Method} in response to \texttt{Duplication})
+\item Defensive programming - use of exceptions
+\item Everything is documented (informally)
+\end{itemize}
 \end{frame}
 
 \section{Extensibility}
 
-\begin{frame}[fragile]{Views}
-	\begin{center}
-	\includegraphics[width=0.6\textwidth]{diagram6}
-	\vspace{0.5cm}\\\texttt{Information Expert - Polymorphism}
-	\end{center}
-\end{frame}
-
-\begin{frame}[fragile]{Selection / Diagram Components}
-\begin{center}
-\includegraphics[width=0.8\textwidth]{diagram4}
-\vspace{0.5cm}\\\texttt{Indirection - Pure Fabrication}
-\end{center}
-\end{frame}
-
-\begin{frame}[fragile]{Geometry}
-	\begin{center}
-	\includegraphics[width=0.6\textwidth]{diagram5}
-	\vspace{0.5cm}\\\texttt{Polymorphism}
-	\end{center}
+\begin{frame}[fragile]{Extensibility - Observer}
+3 methods considered :
+\begin{itemize}
+\item \texttt{DiagramObserver} interface with one method \texttt{diagramDidUpdate}, passing along the update type and associated parameters (in a dictionary)
+\item Keeping \texttt{SubWindow} and \texttt{DiagramView} in separate lists as observers
+\item \texttt{DiagramObserver} interface with methods with \texttt{default} implementations
+\end{itemize}
+Second method currently in use, last two methods similar in terms of extensibility. First method causes messy code with lots of \texttt{instanceof}.
 \end{frame}
 
 \section{Testing}
 
-\begin{frame}[fragile]{Testing}
-\includegraphics[width=1\textwidth]{coverage}
+\begin{frame}[fragile]{Testing - Methods}
+Combination of :
+\begin{itemize}
+\item Recordings
+\item Step-by-step recordings
+\item Unit tests
+\end{itemize}
 \end{frame}
 
-%\section{Project Management}
+\begin{frame}[fragile]{Testing - Coverage}
+\includegraphics[width=1\textwidth]{coverage}
+%\includegraphics[width=1\textwidth]{coverage2}
+\end{frame}
+
+\section{Project Management}
 %
 %\begin{frame}[fragile]{Management}
 %\begin{itemize}
@@ -94,18 +136,19 @@
 %\end{itemize}
 %\end{frame}
 
-\begin{frame}[fragile]{Time management}
+\begin{frame}[fragile]{Project Management - Overview}
 \begin{itemize}
-\item almost 30 hours working together
-\item +- 40 hours per person
-\item Late start
+\item +- 50 hours per person
+\item Started early with design
+\item Code was nearly finished early on
+\item Last weeks were spent on refactoring and testing
 \end{itemize}
 \end{frame}
 
-%{\setbeamercolor{palette primary}{fg=black, bg=yellow}
-%\begin{frame}[standout]
-%  Questions?
-%\end{frame}
-%}
+{\setbeamercolor{palette primary}{fg=black, bg=lightgray}
+\begin{frame}[standout]
+  Demonstration
+\end{frame}
+}
 
 \end{document}

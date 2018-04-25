@@ -15,7 +15,7 @@ import java.util.HashMap;
  *  tailored to their needs, but it would be less extensible that way.
  *
  * @author Team 25
- * @version  1.0
+ * @version 1.0
  */
 public class DiagramNotificationCenter {
 

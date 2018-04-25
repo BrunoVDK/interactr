@@ -188,10 +188,10 @@ public class EventHandler {
         DRAG_DIAGRAM // When something is dragged within a diagram
     }
 
+    // Getter/Setter
     private void setDragOperationType(DragOperationType type){
         this.dragOperationType = type;
     }
-
     private DragOperationType getDragOperationType(){
         return dragOperationType;
     }
@@ -206,10 +206,10 @@ public class EventHandler {
      */
     private Point lastDragCoordinate;
 
+    // Getter/Setter
     private void setLastDragCoordinate(int x, int y){
         lastDragCoordinate = new Point(x, y);
     }
-
     private Point getLastDragCoordinate(){
         return lastDragCoordinate;
     }

@@ -32,3 +32,10 @@ target/
 *.zip
 *.tar.gz
 *.rar
+*.aux
+*.nav
+*.out
+*.snm
+*.synctex
+*.toc
+*.vrb
