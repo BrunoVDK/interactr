@@ -51,7 +51,7 @@
 \begin{frame}[fragile]{Design - DiagramController}
 \begin{itemize}
 \item Used to be quite central (managed \texttt{Diagram} itself)
-\item Now only keeps track of subwindows
+\item Has sorted list of subwindows which keep track of diagram views
 \item Each \texttt{DiagramView} manages the \texttt{Diagram} directly
 \item Synchronisation done with Observer pattern (see later)
 \end{itemize}
@@ -64,8 +64,19 @@
 \begin{frame}[fragile]{Design - Subwindows}
 \texttt{DiagramController} uses sorted list of subwindows (drawn in reverse order)
 \begin{itemize}
-\item Class \texttt{SubWindow}
-\item Subwindows and views draw themselves (i.e. drawing is delegated)
+\item Each subwindow has frame
+\item Responsible for moving and resizing this frame
+\item Use of bitflags
+\end{itemize}
+$\Rightarrow$ Sequence Diagram (Resize Subwindow) 
+\begin{center}
+\vspace{1cm}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Design - Drawing}
+\begin{itemize}
+\item \texttt{DiagramController}, \texttt{SubWindow} and \texttt{DiagramView} draw themselves.
 \item Use of clipping rectangle set on \texttt{PaintBoard}
 \end{itemize}
 \begin{center}
@@ -96,6 +107,12 @@
 \item Defensive programming - use of exceptions
 \item Everything is documented (informally)
 \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Design - Edit Label}
+\begin{center}
+$\Rightarrow$ Sequence Diagram (Edit Label) 
+\end{center}
 \end{frame}
 
 \section{Extensibility}
