@@ -498,7 +498,7 @@ public class DiagramView implements Cloneable {
             for (Message message : links.keySet())
                 clone.registerLink(message, links.get(message));
         }
-        catch (Exception ignored) {throw new RuntimeException("Failed to clone diagram view." + ignored.getClass().toString());}
+        catch (Exception e) {throw new RuntimeException("Failed to clone diagram view." + ignored.getClass().toString());}
         return clone;
     }
 
