@@ -236,7 +236,7 @@ public class EventHandler {
                         }
                         catch (InvalidLabelException ignored) {}
                     }
-                    else if (keyCode == KeyEvent.VK_BACK_SPACE) {
+                    else if (keyCode == KeyEvent.VK_BACK_SPACE || keyCode == KeyEvent.VK_DELETE) {
                         if (getDiagramController().isEditing())
                             getDiagramController().removeLastChar();
                         else
