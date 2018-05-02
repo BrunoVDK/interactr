@@ -29,7 +29,7 @@ public class DiagramController {
 
         // Initialize window
         this.subWindows = new ArrayList<SubWindow>();
-        DiagramWindow window = new DiagramWindow("New document - Interactr");
+        Window window = new Window("New document - Interactr");
         PaintBoard paintBoard = new PaintBoard(window, this);
         setPaintBoard(paintBoard);
         window.setPaintBoard(paintBoard);

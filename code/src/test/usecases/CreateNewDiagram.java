@@ -11,19 +11,19 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class CreateNewDiagram {
 
-    private DiagramWindow diagramWindow = new DiagramWindow();
+    private Window window = new Window();
 
     @BeforeEach
     void setUp(){
-        diagramWindow.setEventHandler(new EventHandler(new DiagramController()));
-        diagramWindow.setPaintBoard(new PaintBoard(diagramWindow, diagramWindow.getEventHandler().getDiagramController()));
+        window.setEventHandler(new EventHandler(new DiagramController()));
+        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getDiagramController()));
     }
 
     @Test
     void stepByStep(){
-        DiagramController controller = diagramWindow.getEventHandler().getDiagramController();
+        DiagramController controller = window.getEventHandler().getDiagramController();
         // Precondition
-        DiagramWindow.replayRecording("steps/createNewDiagram.txt",diagramWindow);
+        Window.replayRecording("steps/createNewDiagram.txt", window);
         assertNotNull(controller.getActiveSubwindow());
     }
 
@@ -33,10 +33,10 @@ public class CreateNewDiagram {
      */
     @Test
     void createNewEmptyDiagram(){
-        DiagramWindow.replayRecording("createNewEmptyDiagram1.txt",diagramWindow);
-        Diagram diagram = diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram();
-        DiagramWindow.replayRecording("createNewEmptyDiagram2.txt",diagramWindow);
-        assertEquals(diagram,diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram() );
+        Window.replayRecording("createNewEmptyDiagram1.txt", window);
+        Diagram diagram = window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram();
+        Window.replayRecording("createNewEmptyDiagram2.txt", window);
+        assertEquals(diagram, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram() );
     }
 
     /**
@@ -45,8 +45,8 @@ public class CreateNewDiagram {
      */
     @Test
     void createNewDiagramWithParty(){
-        DiagramWindow.replayRecording("createNewDiagramWithParty01.txt",diagramWindow);
-        assertEquals(1,diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().size());
+        Window.replayRecording("createNewDiagramWithParty01.txt", window);
+        assertEquals(1, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().size());
     }
 
     /**
@@ -55,10 +55,10 @@ public class CreateNewDiagram {
      */
     @Test
     void copyDiagramWithParty() {
-        DiagramWindow.replayRecording("copyDiagramWithParty.txt",diagramWindow);
-        SubWindow win1 = diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow();
-        diagramWindow.getEventHandler().getDiagramController().activateSubWindow(10,10);
-        SubWindow win2 = diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow();
+        Window.replayRecording("copyDiagramWithParty.txt", window);
+        SubWindow win1 = window.getEventHandler().getDiagramController().getActiveSubwindow();
+        window.getEventHandler().getDiagramController().activateSubWindow(10,10);
+        SubWindow win2 = window.getEventHandler().getDiagramController().getActiveSubwindow();
         assertNotEquals(win1, win2, "Recording is broken: Selected the same subwindow twice");
         DiagramComponent comp1 = win1.getActiveView().getComponent(166,66);
         DiagramComponent comp2 = win2.getActiveView().getComponent(166,66);
@@ -72,8 +72,8 @@ public class CreateNewDiagram {
      */
     @Test
     void createNewDiagramEditInvalidLabel(){
-        DiagramWindow.replayRecording("createNewDiagramEditInvalidLabel01.txt",diagramWindow);
-        assertEquals("a:A", diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getSelectedComponent().getLabel());
+        Window.replayRecording("createNewDiagramEditInvalidLabel01.txt", window);
+        assertEquals("a:A", window.getEventHandler().getDiagramController().getActiveSubwindow().getSelectedComponent().getLabel());
     }
 
 }

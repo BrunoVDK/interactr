@@ -131,10 +131,12 @@ public class EventHandler {
                     getDiagramController().moveSubWindow(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
                 }
                 catch (InvalidMoveWindowException e2) {
-                    moveParty(x,y);
+                    if (this.getDragOperationType() != DragOperationType.DRAG_WINDOW)
+                        moveParty(x,y);
                     return;
                 }
             }
+            this.setDragOperationType(DragOperationType.DRAG_WINDOW);
             setLastDragCoordinate(x,y);
         }
 
@@ -185,6 +187,7 @@ public class EventHandler {
     private enum DragOperationType {
         DRAG_NONE, // When nothing at all is dragged
         DRAG_VALID, // When anything is dragged
+        DRAG_WINDOW, // When a window is dragged
         DRAG_DIAGRAM // When something is dragged within a diagram
     }
 

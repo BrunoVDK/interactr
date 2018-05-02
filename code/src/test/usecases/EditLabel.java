@@ -2,7 +2,7 @@ package usecases;
 
 import interactr.cs.kuleuven.be.domain.Party;
 import interactr.cs.kuleuven.be.ui.DiagramController;
-import interactr.cs.kuleuven.be.ui.DiagramWindow;
+import interactr.cs.kuleuven.be.ui.Window;
 import interactr.cs.kuleuven.be.ui.EventHandler;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,40 +13,40 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class EditLabel {
-    private DiagramWindow diagramWindow = new DiagramWindow();
+    private Window window = new Window();
 
     @BeforeEach
     void setUp(){
-        diagramWindow.setEventHandler(new EventHandler(new DiagramController()));
-        diagramWindow.setPaintBoard(new PaintBoard(diagramWindow, diagramWindow.getEventHandler().getDiagramController()));
+        window.setEventHandler(new EventHandler(new DiagramController()));
+        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getDiagramController()));
     }
 
     @Test
     void stepByStep(){
-        DiagramController controller = diagramWindow.getEventHandler().getDiagramController();
+        DiagramController controller = window.getEventHandler().getDiagramController();
         // Precondition
-        DiagramWindow.replayRecording("steps/createNewDiagram.txt",diagramWindow);
+        Window.replayRecording("steps/createNewDiagram.txt", window);
         //At party at 100 x
-        DiagramWindow.replayRecording("steps/createPartyAt100.txt",diagramWindow);
+        Window.replayRecording("steps/createPartyAt100.txt", window);
         assertTrue(controller.getActiveSubwindow().getDiagram().getParties().size() > 0);
         // Assert that it is selected
         Party newParty = controller.getActiveSubwindow().getDiagram().getParties().get(0);
         assertEquals(controller.getActiveSubwindow().getSelectedComponent(), newParty);
         // Type label
-        DiagramWindow.replayRecording("steps/typePartyLabela:A.txt",diagramWindow);
+        Window.replayRecording("steps/typePartyLabela:A.txt", window);
         assertEquals(controller.getActiveSubwindow().getSelectedLabel(), "a:A");
         assertEquals(newParty.getLabel(), "a:A");
         // Press enter
-        DiagramWindow.replayRecording("steps/pressEnter.txt",diagramWindow);
+        Window.replayRecording("steps/pressEnter.txt", window);
         assertNull(controller.getActiveSubwindow().getSelectedComponent());
         assertEquals(newParty.getLabel(), "a:A");
 
-        DiagramWindow.replayRecording("steps/selectPartyAt100.txt",diagramWindow);
-        DiagramWindow.replayRecording("steps/selectPartyAt100.txt",diagramWindow);
+        Window.replayRecording("steps/selectPartyAt100.txt", window);
+        Window.replayRecording("steps/selectPartyAt100.txt", window);
 
-        DiagramWindow.replayRecording("steps/typePartyLabelb:B.txt",diagramWindow);
-        DiagramWindow.replayRecording("steps/pressEnter.txt",diagramWindow);
-        DiagramWindow.replayRecording("steps/selectPartyAt100.txt",diagramWindow);
+        Window.replayRecording("steps/typePartyLabelb:B.txt", window);
+        Window.replayRecording("steps/pressEnter.txt", window);
+        Window.replayRecording("steps/selectPartyAt100.txt", window);
         assertEquals(controller.getActiveSubwindow().getSelectedComponent().getLabel(), "b:B");
 
     }
@@ -56,8 +56,8 @@ public class EditLabel {
      * The partys label is changedfrom a:A to b:B
      */
     void editLabelParty(){
-        DiagramWindow.replayRecording("editLabelParty.txt",diagramWindow);
-        assertEquals("b:B", diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getSelectedComponent().getLabel());
+        Window.replayRecording("editLabelParty.txt", window);
+        assertEquals("b:B", window.getEventHandler().getDiagramController().getActiveSubwindow().getSelectedComponent().getLabel());
     }
 
     @Test
@@ -65,8 +65,8 @@ public class EditLabel {
      * The partys label is changedfrom a:A to b
      */
     void editLabelPartyIllegalLabel(){
-        DiagramWindow.replayRecording("editLabelPartyIllegalLabel.txt",diagramWindow);
-        assertEquals("a:A", diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getSelectedComponent().getLabel());
+        Window.replayRecording("editLabelPartyIllegalLabel.txt", window);
+        assertEquals("a:A", window.getEventHandler().getDiagramController().getActiveSubwindow().getSelectedComponent().getLabel());
     }
 
     /**
@@ -74,8 +74,8 @@ public class EditLabel {
      */
     @Test
     void editLabelInvocationMessage(){
-        DiagramWindow.replayRecording("editLabelInvocationMessage.txt",diagramWindow);
-        assertEquals("d", diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getMessages().getFirst().getLabel());
+        Window.replayRecording("editLabelInvocationMessage.txt", window);
+        assertEquals("d", window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getMessages().getFirst().getLabel());
     }
 
 
@@ -85,8 +85,8 @@ public class EditLabel {
      */
     @Test
     void editLabelResultMessage(){
-        DiagramWindow.replayRecording("editLabelResultMessage01.txt",diagramWindow);
-        assertEquals("d", diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getMessages().get(1).getLabel());
+        Window.replayRecording("editLabelResultMessage01.txt", window);
+        assertEquals("d", window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getMessages().get(1).getLabel());
     }
 
 

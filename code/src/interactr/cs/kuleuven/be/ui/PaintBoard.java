@@ -17,14 +17,14 @@ public class PaintBoard {
     /**
      * Initialize this new paint board with given diagram window and diagram controller.
      *
-     * @param diagramWindow The diagram window to associate this paint board with.
+     * @param window The diagram window to associate this paint board with.
      * @param diagramController The diagram controller to associate this paint board with.
      * @throws IllegalArgumentException The given window is nil.
      */
-    public PaintBoard(DiagramWindow diagramWindow, DiagramController diagramController) throws IllegalArgumentException {
-        if (diagramWindow == null)
+    public PaintBoard(Window window, DiagramController diagramController) throws IllegalArgumentException {
+        if (window == null)
             throw new IllegalArgumentException("Null window.");
-        this.diagramWindow = diagramWindow;
+        this.window = window;
         setDiagramController(diagramController);
     }
 
@@ -32,7 +32,7 @@ public class PaintBoard {
      * Refresh this paint board by redrawing its contents.
      */
     public void refresh() {
-        this.getDiagramWindow().repaint();
+        this.getWindow().repaint();
     }
 
     /**
@@ -138,7 +138,7 @@ public class PaintBoard {
      * @return The width of this paint board.
      */
     public int getWidth() {
-        return getDiagramWindow().getWidth();
+        return getWindow().getWidth();
     }
 
     /**
@@ -147,7 +147,7 @@ public class PaintBoard {
      * @return The height of this paint board.
      */
     public int getHeight() {
-        return getDiagramWindow().getHeight();
+        return getWindow().getHeight();
     }
 
     /**
@@ -167,14 +167,14 @@ public class PaintBoard {
     /**
      * Returns the diagram window associated with this paint board.
      */
-    public DiagramWindow getDiagramWindow() {
-        return diagramWindow;
+    public Window getWindow() {
+        return window;
     }
 
     /**
      * Variable registering the diagram window associated with this paint board.
      */
-    private DiagramWindow diagramWindow;
+    private Window window;
 
     /**
      * Associate the given diagram controller with this paint board.

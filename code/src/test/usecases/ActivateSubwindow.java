@@ -7,27 +7,27 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ActivateSubwindow {
 
-    private DiagramWindow diagramWindow = new DiagramWindow();
+    private Window window = new Window();
 
     @BeforeEach
     void setUp(){
-        diagramWindow.setEventHandler(new EventHandler(new DiagramController()));
-        diagramWindow.setPaintBoard(new PaintBoard(diagramWindow, diagramWindow.getEventHandler().getDiagramController()));
+        window.setEventHandler(new EventHandler(new DiagramController()));
+        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getDiagramController()));
     }
 
     @Test
     void stepByStep(){
-        DiagramController controller = diagramWindow.getEventHandler().getDiagramController();
+        DiagramController controller = window.getEventHandler().getDiagramController();
         // Precondition
-        DiagramWindow.replayRecording("steps/createNewDiagram.txt",diagramWindow);
+        Window.replayRecording("steps/createNewDiagram.txt", window);
         SubWindow original = controller.getActiveSubwindow();
         assertNotNull(original);
-        DiagramWindow.replayRecording("steps/moveNewDiagram.txt",diagramWindow);
+        Window.replayRecording("steps/moveNewDiagram.txt", window);
         assertTrue(0 < controller.getActiveSubwindow().getFrame().getX());
         assertTrue(0 < controller.getActiveSubwindow().getFrame().getY());
-        DiagramWindow.replayRecording("steps/createCopyDiagram.txt",diagramWindow);
+        Window.replayRecording("steps/createCopyDiagram.txt", window);
         assertNotEquals(original, controller.getActiveSubwindow());
-        DiagramWindow.replayRecording("steps/selectMovedDiagram.txt",diagramWindow);
+        Window.replayRecording("steps/selectMovedDiagram.txt", window);
         assertEquals(original, controller.getActiveSubwindow());
 
     }
@@ -38,10 +38,10 @@ class ActivateSubwindow {
      */
     @Test
     void activateSubwindow(){
-        DiagramWindow.replayRecording("activateSubwindow1.txt",diagramWindow);
-        SubWindow first = diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow();
-        DiagramWindow.replayRecording("activateSubwindow2.txt",diagramWindow);
-        assertNotEquals(first,diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow());
+        Window.replayRecording("activateSubwindow1.txt", window);
+        SubWindow first = window.getEventHandler().getDiagramController().getActiveSubwindow();
+        Window.replayRecording("activateSubwindow2.txt", window);
+        assertNotEquals(first, window.getEventHandler().getDiagramController().getActiveSubwindow());
     }
 
 }

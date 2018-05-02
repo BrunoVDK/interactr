@@ -4,7 +4,7 @@ import interactr.cs.kuleuven.be.domain.ActorParty;
 import interactr.cs.kuleuven.be.domain.ObjectParty;
 import interactr.cs.kuleuven.be.domain.Party;
 import interactr.cs.kuleuven.be.ui.DiagramController;
-import interactr.cs.kuleuven.be.ui.DiagramWindow;
+import interactr.cs.kuleuven.be.ui.Window;
 import interactr.cs.kuleuven.be.ui.EventHandler;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,65 +14,65 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SetPartyType {
 
-    private DiagramWindow diagramWindow = new DiagramWindow();
+    private Window window = new Window();
 
     @BeforeEach
     void setUp(){
-        diagramWindow.setEventHandler(new EventHandler(new DiagramController()));
-        diagramWindow.setPaintBoard(new PaintBoard(diagramWindow, diagramWindow.getEventHandler().getDiagramController()));
+        window.setEventHandler(new EventHandler(new DiagramController()));
+        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getDiagramController()));
     }
 
     @Test
     void stepByStepTest() {
-        DiagramController controller = diagramWindow.getEventHandler().getDiagramController();
+        DiagramController controller = window.getEventHandler().getDiagramController();
         // Precondition
-        DiagramWindow.replayRecording("steps/createNewDiagram.txt",diagramWindow);
+        Window.replayRecording("steps/createNewDiagram.txt", window);
         assertNotNull(controller.getActiveSubwindow());
-        DiagramWindow.replayRecording("steps/createParty.txt",diagramWindow);
+        Window.replayRecording("steps/createParty.txt", window);
         assertTrue(controller.getActiveSubwindow().getDiagram().getParties().size() > 0);
         // Switch type
         Party newParty = controller.getActiveSubwindow().getDiagram().getParties().get(0);
         assertEquals(controller.getActiveSubwindow().getSelectedComponent(), newParty);
         // Type label
-        DiagramWindow.replayRecording("steps/typePartyLabela:A.txt",diagramWindow);
+        Window.replayRecording("steps/typePartyLabela:A.txt", window);
         assertEquals(controller.getActiveSubwindow().getSelectedLabel(), "a:A");
         assertEquals(newParty.getLabel(), "a:A");
         // Press enter
-        DiagramWindow.replayRecording("steps/pressEnter.txt",diagramWindow);
+        Window.replayRecording("steps/pressEnter.txt", window);
         assertNull(controller.getActiveSubwindow().getSelectedComponent());
         assertEquals(newParty.getLabel(), "a:A");
         // Switch type
-        DiagramWindow.replayRecording("steps/switchPartyType.txt",diagramWindow);
+        Window.replayRecording("steps/switchPartyType.txt", window);
         Party switchedParty = controller.getActiveSubwindow().getDiagram().getParties().get(0);
         assertNotEquals(switchedParty, newParty);
     }
 
     @Test
     void switchObjectToActorSequence(){
-        DiagramWindow.replayRecording("switchObjectToActorSequence.txt",diagramWindow);
-        assertEquals(true,diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().getFirst() instanceof ActorParty);
+        Window.replayRecording("switchObjectToActorSequence.txt", window);
+        assertEquals(true, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().getFirst() instanceof ActorParty);
     }
 
     @Test
     void switchActorToObjectSequence(){
-        DiagramWindow.replayRecording("switchActorToObjectSequence.txt",diagramWindow);
-        assertEquals(true,diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().getFirst() instanceof ObjectParty);
+        Window.replayRecording("switchActorToObjectSequence.txt", window);
+        assertEquals(true, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().getFirst() instanceof ObjectParty);
     }
     @Test
     void switchObjectToActorCommunication(){
-        DiagramWindow.replayRecording("switchObjectToActorCommunication.txt",diagramWindow);
-        assertEquals(true,diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().getFirst() instanceof ActorParty);
+        Window.replayRecording("switchObjectToActorCommunication.txt", window);
+        assertEquals(true, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().getFirst() instanceof ActorParty);
     }
 
     @Test
     void switchActorToObjectCommunication(){
-        DiagramWindow.replayRecording("switchActorToObjectCommunication.txt",diagramWindow);
-        assertEquals(true,diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().getFirst() instanceof ObjectParty);
+        Window.replayRecording("switchActorToObjectCommunication.txt", window);
+        assertEquals(true, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().getFirst() instanceof ObjectParty);
     }
 
     @Test
     void switchWhileEditing(){
-        DiagramWindow.replayRecording("switchWhileEditing.txt",diagramWindow);
-        assertEquals(true,diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().getFirst() instanceof ObjectParty);
+        Window.replayRecording("switchWhileEditing.txt", window);
+        assertEquals(true, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().getFirst() instanceof ObjectParty);
     }
 }

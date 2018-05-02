@@ -8,12 +8,12 @@ import java.awt.*;
  * @author Team 25
  * @version 1.0
  */
-public class DiagramWindow extends CanvasWindow {
+public class Window extends CanvasWindow {
 
     /**
      * Initializes this new window with an empty title.
      */
-    public DiagramWindow() {
+    public Window() {
         this("");
     }
 
@@ -22,7 +22,7 @@ public class DiagramWindow extends CanvasWindow {
      *
      * @param title The title for the new window.
      */
-    DiagramWindow(String title) {
+    Window(String title) {
         super(title);
     }
 
@@ -83,7 +83,7 @@ public class DiagramWindow extends CanvasWindow {
      *  equal this diagram window.
      */
     public void setPaintBoard(PaintBoard paintBoard) throws IllegalArgumentException {
-        if (paintBoard.getDiagramWindow() != this)
+        if (paintBoard.getWindow() != this)
             throw new IllegalArgumentException("Paintboard's window invalid.");
         this.paintBoard = paintBoard;
     }
