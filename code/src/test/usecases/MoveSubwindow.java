@@ -1,6 +1,7 @@
 package usecases;
 
 import interactr.cs.kuleuven.be.ui.*;
+import interactr.cs.kuleuven.be.ui.control.SubWindow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,13 +14,13 @@ public class MoveSubwindow {
 
     @BeforeEach
     void setUp(){
-        window.setEventHandler(new EventHandler(new DiagramController()));
-        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getDiagramController()));
+        window.setEventHandler(new EventHandler(new Controller()));
+        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getController()));
     }
 
     @Test
     void stepByStep(){
-        DiagramController controller = window.getEventHandler().getDiagramController();
+        Controller controller = window.getEventHandler().getController();
         // Precondition
         Window.replayRecording("steps/createNewDiagram.txt", window);
         SubWindow original = controller.getActiveSubwindow();
@@ -32,7 +33,7 @@ public class MoveSubwindow {
     @Test
     void moveSubwindow(){
         Window.replayRecording("moveSubwindow.txt", window);
-        assertTrue(window.getEventHandler().getDiagramController().getActiveSubwindow().getFrame().getX() > 0);
-        assertTrue(window.getEventHandler().getDiagramController().getActiveSubwindow().getFrame().getY() > 0);
+        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getX() > 0);
+        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getY() > 0);
     }
 }

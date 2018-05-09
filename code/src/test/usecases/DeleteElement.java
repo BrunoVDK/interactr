@@ -1,7 +1,7 @@
 package usecases;
 
 import interactr.cs.kuleuven.be.domain.Party;
-import interactr.cs.kuleuven.be.ui.DiagramController;
+import interactr.cs.kuleuven.be.ui.Controller;
 import interactr.cs.kuleuven.be.ui.Window;
 import interactr.cs.kuleuven.be.ui.EventHandler;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
@@ -18,13 +18,13 @@ public class DeleteElement {
 
     @BeforeEach
     void setUp(){
-        window.setEventHandler(new EventHandler(new DiagramController()));
-        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getDiagramController()));
+        window.setEventHandler(new EventHandler(new Controller()));
+        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getController()));
     }
 
     @Test
     void stepByStep(){
-        DiagramController controller = window.getEventHandler().getDiagramController();
+        Controller controller = window.getEventHandler().getController();
         // Precondition
         Window.replayRecording("steps/createNewDiagram.txt", window);
         //At party at 100 x
@@ -55,7 +55,7 @@ public class DeleteElement {
     @Test
     void deletePartySequence(){
         Window.replayRecording("deletePartySequence.txt", window);
-        assertEquals(0, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().size());
+        assertEquals(0, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getParties().size());
     }
 
     /**
@@ -64,7 +64,7 @@ public class DeleteElement {
     @Test
     void deletePartyCommunication(){
         Window.replayRecording("deletePartyCommunication.txt", window);
-        assertEquals(0, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().size());
+        assertEquals(0, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getParties().size());
     }
 
     /**
@@ -73,7 +73,7 @@ public class DeleteElement {
     @Test
     void deleteMessageSequence(){
         Window.replayRecording("deleteMessageSequence.txt", window);
-        assertEquals(0, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getMessages().size());
+        assertEquals(0, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getMessages().size());
     }
 
     /**
@@ -82,7 +82,7 @@ public class DeleteElement {
     @Test
     void deleteMessageCommunication(){
         Window.replayRecording("deleteMessageCommunication.txt", window);
-        assertEquals(0, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getMessages().size());
+        assertEquals(0, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getMessages().size());
     }
 
     /**
@@ -91,8 +91,8 @@ public class DeleteElement {
     @Test
     void deletePartyAvalanche(){
         Window.replayRecording("deletePartyMessageAvalanche.txt", window);
-        assertEquals(0, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getMessages().size());
-        assertEquals(2, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().size());
+        assertEquals(0, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getMessages().size());
+        assertEquals(2, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getParties().size());
     }
 
     /**
@@ -101,16 +101,8 @@ public class DeleteElement {
     @Test
     void deleteMessageAvalanche(){
         Window.replayRecording("deleteMessageAvalanche.txt", window);
-        assertEquals(2, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getMessages().size());
-        assertEquals(3, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().size());
+        assertEquals(2, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getMessages().size());
+        assertEquals(3, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getParties().size());
     }
-
-
-
-
-
-
-
-
 
 }

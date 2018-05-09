@@ -1,6 +1,6 @@
 package interactr.cs.kuleuven.be.ui;
 
-import interactr.cs.kuleuven.be.ui.geometry.Colour;
+import interactr.cs.kuleuven.be.ui.design.Colour;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 import java.awt.*;
@@ -18,14 +18,14 @@ public class PaintBoard {
      * Initialize this new paint board with given diagram window and diagram controller.
      *
      * @param window The diagram window to associate this paint board with.
-     * @param diagramController The diagram controller to associate this paint board with.
+     * @param controller The diagram controller to associate this paint board with.
      * @throws IllegalArgumentException The given window is nil.
      */
-    public PaintBoard(Window window, DiagramController diagramController) throws IllegalArgumentException {
+    public PaintBoard(Window window, Controller controller) throws IllegalArgumentException {
         if (window == null)
             throw new IllegalArgumentException("Null window.");
         this.window = window;
-        setDiagramController(diagramController);
+        setController(controller);
     }
 
     /**
@@ -43,7 +43,7 @@ public class PaintBoard {
     public void paint(Graphics context) {
         currentContext = context;
         context.setFont(defaultFont);
-        getDiagramController().displayAllSubWindows();
+        getController().displayAllSubWindows();
     }
 
     /**
@@ -179,23 +179,23 @@ public class PaintBoard {
     /**
      * Associate the given diagram controller with this paint board.
      *
-     * @param diagramController The diagram controller associated with this paint board.
+     * @param controller The diagram controller associated with this paint board.
      */
-    private void setDiagramController(DiagramController diagramController) {
-        this.diagramController = diagramController;
+    private void setController(Controller controller) {
+        this.controller = controller;
     }
 
     /**
      * Returns the diagram controller associated with this paint board.
      */
-    public DiagramController getDiagramController() {
-        return this.diagramController;
+    private Controller getController() {
+        return this.controller;
     }
 
     /**
      * Variable registering the diagram controller associated with this paint board.
      */
-    private DiagramController diagramController;
+    private Controller controller;
 
     /**
      * The default font used by this paint board.
@@ -212,9 +212,6 @@ public class PaintBoard {
      */
     public static int charWidth = 6;
 
-    /**
-     * Pre-process font metrics.
-     */
     static {
         PaintBoard.charHeight = defaultFont.getSize();
         PaintBoard.charWidth = java.awt.Toolkit.getDefaultToolkit().getFontMetrics(defaultFont).charWidth('a');

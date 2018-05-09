@@ -1,7 +1,7 @@
 package usecases;
 
 import interactr.cs.kuleuven.be.domain.Party;
-import interactr.cs.kuleuven.be.ui.DiagramController;
+import interactr.cs.kuleuven.be.ui.Controller;
 import interactr.cs.kuleuven.be.ui.Window;
 import interactr.cs.kuleuven.be.ui.EventHandler;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
@@ -17,13 +17,13 @@ public class EditLabel {
 
     @BeforeEach
     void setUp(){
-        window.setEventHandler(new EventHandler(new DiagramController()));
-        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getDiagramController()));
+        window.setEventHandler(new EventHandler(new Controller()));
+        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getController()));
     }
 
     @Test
     void stepByStep(){
-        DiagramController controller = window.getEventHandler().getDiagramController();
+        Controller controller = window.getEventHandler().getController();
         // Precondition
         Window.replayRecording("steps/createNewDiagram.txt", window);
         //At party at 100 x
@@ -57,7 +57,7 @@ public class EditLabel {
      */
     void editLabelParty(){
         Window.replayRecording("editLabelParty.txt", window);
-        assertEquals("b:B", window.getEventHandler().getDiagramController().getActiveSubwindow().getSelectedComponent().getLabel());
+        assertEquals("b:B", window.getEventHandler().getController().getActiveSubwindow().getSelectedComponent().getLabel());
     }
 
     @Test
@@ -66,7 +66,7 @@ public class EditLabel {
      */
     void editLabelPartyIllegalLabel(){
         Window.replayRecording("editLabelPartyIllegalLabel.txt", window);
-        assertEquals("a:A", window.getEventHandler().getDiagramController().getActiveSubwindow().getSelectedComponent().getLabel());
+        assertEquals("a:A", window.getEventHandler().getController().getActiveSubwindow().getSelectedComponent().getLabel());
     }
 
     /**
@@ -75,7 +75,7 @@ public class EditLabel {
     @Test
     void editLabelInvocationMessage(){
         Window.replayRecording("editLabelInvocationMessage.txt", window);
-        assertEquals("d", window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getMessages().getFirst().getLabel());
+        assertEquals("d", window.getEventHandler().getController().getActiveSubwindow().getDiagram().getMessages().getFirst().getLabel());
     }
 
 
@@ -86,7 +86,7 @@ public class EditLabel {
     @Test
     void editLabelResultMessage(){
         Window.replayRecording("editLabelResultMessage01.txt", window);
-        assertEquals("d", window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getMessages().get(1).getLabel());
+        assertEquals("d", window.getEventHandler().getController().getActiveSubwindow().getDiagram().getMessages().get(1).getLabel());
     }
 
 

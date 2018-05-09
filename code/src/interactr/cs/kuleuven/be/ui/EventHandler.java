@@ -20,10 +20,10 @@ public class EventHandler {
     /**
      * Initialize this new event handler with given diagram controller.
      *
-     * @param diagramController The diagram controller to associate this event handler with.
+     * @param controller The diagram controller to associate this event handler with.
      */
-    public EventHandler(DiagramController diagramController) {
-        setDiagramController(diagramController);
+    EventHandler(Controller controller) {
+        setController(controller);
     }
 
     /**
@@ -36,9 +36,7 @@ public class EventHandler {
      * @param clickCount The amount of clicks for this mouse events.
      */
     public void handleMouseEvent(int id, int x, int y, int clickCount) throws IllegalArgumentException {
-
-        // Mouse events are ignored when the diagram controller is editing
-        if (getDiagramController() != null) {
+        if (getController() != null) {
             switch (id) {
                 case MouseEvent.MOUSE_CLICKED:
                     handleMouseClick(x,y,clickCount);
@@ -54,7 +52,6 @@ public class EventHandler {
                     break;
             }
         }
-
     }
 
     /**
@@ -66,22 +63,22 @@ public class EventHandler {
      */
     private void handleMouseClick(int x, int y, int clickCount) {
         try {
-            getDiagramController().activateSubWindow(x, y);
+            getController().activateSubWindow(x, y);
             switch (clickCount) {
                 case 1: // Single click
                     try {
-                        getDiagramController().closeSubWindow(x,y);
+                        getController().closeSubWindow(x,y);
                     }
                     catch (InvalidCloseWindowException e) {
-                        getDiagramController().selectComponent(x,y);
+                        getController().selectComponent(x,y);
                     }
                     break;
                 case 2: // Double click
                     try {
-                        getDiagramController().addParty(x,y);
+                        getController().addParty(x,y);
                     }
                     catch (InvalidAddPartyException exception) {
-                        getDiagramController().switchTypeOfParty(x, y);
+                        getController().switchTypeOfParty(x, y);
                     }
                     break;
             }
@@ -98,7 +95,7 @@ public class EventHandler {
     private void handleMousePress(int x, int y) {
         this.setLastDragCoordinate(x,y); // Keep track of drag coordinates
         try {
-            getDiagramController().activateSubWindow(x,y);
+            getController().activateSubWindow(x,y);
             this.setDragOperationType(DragOperationType.DRAG_VALID);
         }
         catch (NoSuchWindowException ignored) {}
@@ -117,18 +114,17 @@ public class EventHandler {
             return;
 
         // Prioritise dragging in a diagram if it was previously successful
-        //  This prevents the alteration of subwindow frames when dragging something in a diagram
-        //  close to the subwindow's borders / title bar
+        //  (otherwise a drag in a diagram could lead to a resize of a window when dragging outside the frame)
         if (this.getDragOperationType() == DragOperationType.DRAG_DIAGRAM) {
             moveParty(x,y);
         }
         else {
             try {
-                getDiagramController().resizeSubWindow(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
+                getController().resizeSubWindow(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
             }
             catch (InvalidResizeWindowException e1) {
                 try {
-                    getDiagramController().moveSubWindow(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
+                    getController().moveSubWindow(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
                 }
                 catch (InvalidMoveWindowException e2) {
                     if (this.getDragOperationType() != DragOperationType.DRAG_WINDOW)
@@ -152,7 +148,7 @@ public class EventHandler {
         try {
 
             // Move party
-            getDiagramController().moveParty(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
+            getController().moveParty(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
 
             // Move party was successful, keep track of the changes
             this.setDragOperationType(DragOperationType.DRAG_DIAGRAM);
@@ -171,7 +167,7 @@ public class EventHandler {
     private void handleMouseReleased(int x, int y) {
         if (this.getDragOperationType() == DragOperationType.DRAG_VALID)
             try {
-                getDiagramController().addMessage(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
+                getController().addMessage(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
             }
             catch (InvalidAddMessageException ignored) {}
         this.setDragOperationType(DragOperationType.DRAG_NONE);
@@ -226,60 +222,77 @@ public class EventHandler {
      * @param keyModifiers The key modifiers for the key event.
      */
     void handleKeyEvent(int id, int keyCode, char keyChar, int keyModifiers) {
-        if (getDiagramController() != null) {
+        if (getController() != null) {
             boolean controlIsPressed = (keyModifiers & KeyEvent.CTRL_DOWN_MASK) != 0;
             switch (id) {
                 case KeyEvent.KEY_PRESSED:
-                    if (keyCode == KeyEvent.VK_ENTER) {
-                        try {
-                            getDiagramController().abortEditing();
-                        }
-                        catch (InvalidLabelException ignored) {}
-                    }
-                    else if (keyCode == KeyEvent.VK_BACK_SPACE || keyCode == KeyEvent.VK_DELETE) {
-                        if (getDiagramController().isEditing())
-                            getDiagramController().removeLastChar();
-                        else
-                            getDiagramController().deleteSelection();
-                    }
-                    else if (keyCode == KeyEvent.VK_N && controlIsPressed)
-                        getDiagramController().createSubWindow();
-                    else if (keyCode == KeyEvent.VK_D && controlIsPressed)
-                        getDiagramController().duplicateSubWindow();
-                    else if (keyCode == KeyEvent.VK_CONTROL)
-                        controlIsPressed = true;
+                    handleKeyPress(keyCode, controlIsPressed);
                     break;
                 case KeyEvent.KEY_TYPED:
-                    if (keyChar == KeyEvent.VK_TAB && !getDiagramController().isEditing())
-                        getDiagramController().toggleActiveSubWindowView();
-                    else if (Character.isLetter(keyChar)
-                            || Character.isDigit(keyChar)
-                            || ":();-_<>*&[]".contains(Character.toString(keyChar)))
-                        getDiagramController().appendChar(keyChar);
+                    handleKeyTyped(keyChar);
                     break;
             }
         }
     }
 
     /**
+     * Handle a key press.
+     *
+     * @param keyCode The key code for the key press.
+     * @param controlIsPressed True if and only if the key was pressed while the control key was pressed.
+     */
+    private void handleKeyPress(int keyCode, boolean controlIsPressed) {
+        if (keyCode == KeyEvent.VK_ENTER) {
+            try {
+                getController().abortEditing();
+            }
+            catch (InvalidLabelException ignored) {}
+        }
+        else if (keyCode == KeyEvent.VK_BACK_SPACE || keyCode == KeyEvent.VK_DELETE) {
+            if (getController().isEditing())
+                getController().removeLastChar();
+            else
+                getController().deleteSelection();
+        }
+        else if (keyCode == KeyEvent.VK_N && controlIsPressed)
+            getController().createSubWindow();
+        else if (keyCode == KeyEvent.VK_D && controlIsPressed)
+            getController().duplicateSubWindow();
+    }
+
+    /**
+     * Handle a key typed event.
+     *
+     * @param keyChar The key char for the key that was typed.
+     */
+    private void handleKeyTyped(char keyChar) {
+        if (keyChar == KeyEvent.VK_TAB && !getController().isEditing())
+            getController().toggleActiveSubWindowView();
+        else if (Character.isLetter(keyChar)
+                || Character.isDigit(keyChar)
+                || ":();-_<>*&[]".contains(Character.toString(keyChar)))
+            getController().appendChar(keyChar);
+    }
+
+    /**
      * Returns the diagram controller associated with this event handler.
      */
-    public DiagramController getDiagramController() {
-        return diagramController;
+    private Controller getController() {
+        return controller;
     }
 
     /**
      * Set the diagram controller for this event handler to the given one.
      *
-     * @param diagramController The new diagram controller for this event handler.
+     * @param controller The new diagram controller for this event handler.
      */
-    private void setDiagramController(DiagramController diagramController) {
-        this.diagramController = diagramController;
+    private void setController(Controller controller) {
+        this.controller = controller;
     }
 
     /**
      * Variable registering the diagram controller of this event handler.
      */
-    private DiagramController diagramController;
+    private Controller controller;
 
 }

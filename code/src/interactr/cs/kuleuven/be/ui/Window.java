@@ -11,13 +11,6 @@ import java.awt.*;
 public class Window extends CanvasWindow {
 
     /**
-     * Initializes this new window with an empty title.
-     */
-    public Window() {
-        this("");
-    }
-
-    /**
      * Initializes this new window with given title and diagram handler.
      *
      * @param title The title for the new window.
@@ -96,7 +89,7 @@ public class Window extends CanvasWindow {
     /**
      * Returns the event handler associated with this diagram window.
      */
-    public EventHandler getEventHandler() {
+    private EventHandler getEventHandler() {
         return eventHandler;
     }
 

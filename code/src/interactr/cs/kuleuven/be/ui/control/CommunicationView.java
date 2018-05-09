@@ -1,8 +1,6 @@
-package interactr.cs.kuleuven.be.ui;
+package interactr.cs.kuleuven.be.ui.control;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
-
-import interactr.cs.kuleuven.be.domain.Party;
 
 /**
  * A class of communication views. Communication views display diagrams

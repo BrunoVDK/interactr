@@ -1,7 +1,7 @@
 package usecases;
 
 import interactr.cs.kuleuven.be.domain.Party;
-import interactr.cs.kuleuven.be.ui.DiagramController;
+import interactr.cs.kuleuven.be.ui.Controller;
 import interactr.cs.kuleuven.be.ui.Window;
 import interactr.cs.kuleuven.be.ui.EventHandler;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
@@ -16,13 +16,13 @@ public class AddParty {
 
     @BeforeEach
     void setUp() {
-        window.setEventHandler(new EventHandler(new DiagramController()));
-        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getDiagramController()));
+        window.setEventHandler(new EventHandler(new Controller()));
+        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getController()));
     }
 
     @Test
     void stepByStepTest() {
-        DiagramController controller = window.getEventHandler().getDiagramController();
+        Controller controller = window.getEventHandler().getController();
         // Precondition
         Window.replayRecording("steps/createNewDiagram.txt", window);
         assertNotNull(controller.getActiveSubwindow());
@@ -45,45 +45,45 @@ public class AddParty {
     @Test
     void addPartyValidLabelSequence() {
         Window.replayRecording("addPartySequence.txt", window);
-        assertEquals(1, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().size());
+        assertEquals(1, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getParties().size());
     }
 
     @Test
     void addPartyValidLabelCommunication(){
         Window.replayRecording("addPartyCommunication.txt", window);
-        assertEquals(1, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().size());
+        assertEquals(1, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getParties().size());
     }
 
     @Test
     void checkLabelSequence(){
         Window.replayRecording("addPartySequence.txt", window);
-        assertEquals("a:A", window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().getFirst().getLabel() );
+        assertEquals("a:A", window.getEventHandler().getController().getActiveSubwindow().getDiagram().getParties().getFirst().getLabel() );
 
     }
 
     @Test
     void checkLabelCommunication(){
         Window.replayRecording("addPartyCommunication.txt", window);
-        assertEquals("a:A", window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().getFirst().getLabel() );
+        assertEquals("a:A", window.getEventHandler().getController().getActiveSubwindow().getDiagram().getParties().getFirst().getLabel() );
 
     }
 
     @Test
     void addPartyInvalidLabelSequence(){
         Window.replayRecording("addPartyInvalidLabelSequence.txt", window);
-        assertEquals(true, window.getEventHandler().getDiagramController().isEditing());
+        assertEquals(true, window.getEventHandler().getController().isEditing());
     }
 
     @Test
     void addPartyInvalidLabelCommunication(){
         Window.replayRecording("addPartyInvalidLabelCommunication.txt", window);
-        assertEquals(true, window.getEventHandler().getDiagramController().isEditing());
+        assertEquals(true, window.getEventHandler().getController().isEditing());
     }
 
     @Test
     void addPartyIllegalPositionSequence(){
         Window.replayRecording("addPartyIllegalPositionSequence.txt", window);
-        assertEquals(0, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().size());
+        assertEquals(0, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getParties().size());
     }
 
 }

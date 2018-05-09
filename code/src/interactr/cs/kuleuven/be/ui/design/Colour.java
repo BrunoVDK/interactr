@@ -1,4 +1,4 @@
-package interactr.cs.kuleuven.be.ui.geometry;
+package interactr.cs.kuleuven.be.ui.design;
 
 /**
  * A class of colours represented by a HSB values.

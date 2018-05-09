@@ -1,10 +1,13 @@
-package interactr.cs.kuleuven.be.ui;
+package interactr.cs.kuleuven.be.ui.control;
 
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.exceptions.InvalidMovePartyException;
 import interactr.cs.kuleuven.be.purecollections.PList;
-import interactr.cs.kuleuven.be.ui.geometry.*;
+import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.design.*;
+import interactr.cs.kuleuven.be.ui.geometry.Point;
+import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
  * A class of sequence diagram views. Sequence diagram views display diagrams

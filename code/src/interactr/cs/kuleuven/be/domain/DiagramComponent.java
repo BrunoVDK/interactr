@@ -13,7 +13,7 @@ public abstract class DiagramComponent {
     /**
      * Initialize this new diagram component with an empty label.
      */
-    public DiagramComponent() {
+    DiagramComponent() {
         this("");
     }
 
@@ -23,7 +23,7 @@ public abstract class DiagramComponent {
      * @param label The label to initialize this component with.
      * @throws InvalidLabelException If the new component can not have the given label.
      */
-    public DiagramComponent(String label) throws InvalidLabelException {
+    DiagramComponent(String label) throws InvalidLabelException {
         setLabel(label);
     }
 
@@ -72,4 +72,5 @@ public abstract class DiagramComponent {
     public String toString() {
         return this.getLabel();
     }
+
 }

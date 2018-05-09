@@ -3,7 +3,7 @@ package usecases;
 import interactr.cs.kuleuven.be.domain.ActorParty;
 import interactr.cs.kuleuven.be.domain.ObjectParty;
 import interactr.cs.kuleuven.be.domain.Party;
-import interactr.cs.kuleuven.be.ui.DiagramController;
+import interactr.cs.kuleuven.be.ui.Controller;
 import interactr.cs.kuleuven.be.ui.Window;
 import interactr.cs.kuleuven.be.ui.EventHandler;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
@@ -18,13 +18,13 @@ public class SetPartyType {
 
     @BeforeEach
     void setUp(){
-        window.setEventHandler(new EventHandler(new DiagramController()));
-        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getDiagramController()));
+        window.setEventHandler(new EventHandler(new Controller()));
+        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getController()));
     }
 
     @Test
     void stepByStepTest() {
-        DiagramController controller = window.getEventHandler().getDiagramController();
+        Controller controller = window.getEventHandler().getController();
         // Precondition
         Window.replayRecording("steps/createNewDiagram.txt", window);
         assertNotNull(controller.getActiveSubwindow());
@@ -50,29 +50,29 @@ public class SetPartyType {
     @Test
     void switchObjectToActorSequence(){
         Window.replayRecording("switchObjectToActorSequence.txt", window);
-        assertEquals(true, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().getFirst() instanceof ActorParty);
+        assertEquals(true, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getParties().getFirst() instanceof ActorParty);
     }
 
     @Test
     void switchActorToObjectSequence(){
         Window.replayRecording("switchActorToObjectSequence.txt", window);
-        assertEquals(true, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().getFirst() instanceof ObjectParty);
+        assertEquals(true, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getParties().getFirst() instanceof ObjectParty);
     }
     @Test
     void switchObjectToActorCommunication(){
         Window.replayRecording("switchObjectToActorCommunication.txt", window);
-        assertEquals(true, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().getFirst() instanceof ActorParty);
+        assertEquals(true, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getParties().getFirst() instanceof ActorParty);
     }
 
     @Test
     void switchActorToObjectCommunication(){
         Window.replayRecording("switchActorToObjectCommunication.txt", window);
-        assertEquals(true, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().getFirst() instanceof ObjectParty);
+        assertEquals(true, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getParties().getFirst() instanceof ObjectParty);
     }
 
     @Test
     void switchWhileEditing(){
         Window.replayRecording("switchWhileEditing.txt", window);
-        assertEquals(true, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().getFirst() instanceof ObjectParty);
+        assertEquals(true, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getParties().getFirst() instanceof ObjectParty);
     }
 }

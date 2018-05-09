@@ -1,8 +1,7 @@
-package interactr.cs.kuleuven.be.ui.geometry;
+package interactr.cs.kuleuven.be.ui.design;
 
 import interactr.cs.kuleuven.be.ui.PaintBoard;
-
-import java.awt.*;
+import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
  * A class of models for drawing. Each model has a label.
@@ -10,7 +9,7 @@ import java.awt.*;
  * @author Team 25
  * @version 1.0
  */
-public class Model implements Cloneable {
+public class Model implements Cloneable, Drawable {
 
     /**
      * Initialize this new model with given label.
@@ -18,7 +17,7 @@ public class Model implements Cloneable {
      * @param label The label to initialize this model with.
      * @throws IllegalArgumentException If the given label is null.
      */
-    public Model(String label) {
+    Model(String label) {
         if (label == null)
             throw new IllegalArgumentException("Null label given for new model.");
         setLabel(label);
@@ -96,7 +95,7 @@ public class Model implements Cloneable {
      *
      * @param paintBoard The board in which to draw the label.
      */
-    protected void drawLabel(PaintBoard paintBoard) {
+    void drawLabel(PaintBoard paintBoard) {
         Rectangle labelBounds = getLabelBounds();
         paintBoard.drawString(getLabel(), labelBounds.getX(), labelBounds.getY());
     }
@@ -107,7 +106,7 @@ public class Model implements Cloneable {
         try {
             clone = (Model)super.clone();
         }
-        catch (Exception e) {throw new RuntimeException("Failed to clone model.");};
+        catch (Exception e) {throw new RuntimeException("Failed to clone model.");}
         return clone;
     }
 

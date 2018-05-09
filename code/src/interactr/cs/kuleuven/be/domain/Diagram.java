@@ -1,7 +1,9 @@
 package interactr.cs.kuleuven.be.domain;
 
 import interactr.cs.kuleuven.be.exceptions.InvalidAddMessageException;
+import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
 import interactr.cs.kuleuven.be.purecollections.PList;
+import interactr.cs.kuleuven.be.ui.DiagramObserver;
 
 import java.util.*;
 
@@ -14,10 +16,28 @@ import java.util.*;
 public class Diagram {
 
     /**
+     * The number of diagrams that have been generated so far.
+     */
+    private static int nbOfDiagrams = 0;
+
+    /**
      * Initialize this new diagram without any messages or parties.
      */
     public Diagram() {
+        nbOfDiagrams++;
+        sequenceNumber = nbOfDiagrams;
+    }
 
+    /**
+     * Registers the sequence number for this diagram.
+     */
+    private static int sequenceNumber;
+
+    /**
+     * Returns the sequence number for this diagram.
+     */
+    public int getSequenceNumber() {
+        return sequenceNumber;
     }
 
     /**
@@ -27,6 +47,8 @@ public class Diagram {
      */
     public void addParty(Party party) {
         parties = parties.plus(party);
+        for (DiagramObserver observer : observers)
+            observer.diagramDidAddParty(this, party);
     }
 
     /**
@@ -38,11 +60,14 @@ public class Diagram {
     public void replaceParty(Party oldParty, Party newParty) {
         parties = parties.minus(oldParty);
         parties = parties.plus(newParty);
-        for (Message message : messages)
+        for (Message message : messages) {
             if (message.getSender() == oldParty)
                 message.setSender(newParty);
             else if (message.getReceiver() == oldParty)
                 message.setReceiver(newParty);
+        }
+        for (DiagramObserver observer : observers)
+            observer.diagramDidReplaceParty(this, oldParty, newParty);
     }
 
     /**
@@ -54,9 +79,8 @@ public class Diagram {
         boolean keepOnGoing = true;
         while (keepOnGoing) {
             keepOnGoing = false;
-            for (int i=0 ; i<messages.size() ; i++) {
-                Message message = messages.get(i);
-                if (messages.get(i).getSender() == party || message.getReceiver() == party) {
+            for (Message message : messages) {
+                if (message.getSender() == party || message.getReceiver() == party) {
                     deleteMessage(message);
                     keepOnGoing = true;
                     break;
@@ -64,6 +88,42 @@ public class Diagram {
             }
         }
         parties = parties.minus(party);
+        for (DiagramObserver observer : observers)
+            observer.diagramDidDeleteComponent(this, party);
+    }
+
+    /**
+     * Removes the given message from this diagram, as well as its dependencies.
+     *
+     * @param message The message that is to be removed.
+     */
+    public void deleteMessage(Message message) {
+        int count = getNbMessagesToRemove(message); // Refactor temp variable to getter?
+        if (count > 0) {
+            for (int j=0 ; j<messages.size() ; j++) {
+                Integer formerIndex = associatedMessageIndices.get(j);
+                if (formerIndex > getMaximumIndex(message)) {
+                    associatedMessageIndices.remove(j);
+                    associatedMessageIndices.add(j, formerIndex - count); // Shift count upwards because of removal
+                }
+            }
+            for (int i=0 ; i<count ; i++)
+                deleteMessageAtIndex(getMinimumIndex(message));
+            calculateAllPrefixes();
+        }
+    }
+
+    /**
+     * Sets the label of the given component to the given one.
+     *
+     * @param component The component whose label is to be changed.
+     * @param label The new label for the component.
+     * @throws InvalidLabelException If the given label is not a valid one for the given component.
+     */
+    public void setLabelOfComponent(DiagramComponent component, String label) throws InvalidLabelException {
+        component.setLabel(label);
+        for (DiagramObserver observer : observers)
+            observer.diagramDidEditLabel(this, component);
     }
 
     /**
@@ -77,7 +137,7 @@ public class Diagram {
     /**
      * A list of parties associated with this diagram.
      */
-    private PList<Party> parties = PList.<Party>empty();
+    private PList<Party> parties = PList.empty();
 
     /**
      * Returns a list of all messages in this diagram.
@@ -144,53 +204,62 @@ public class Diagram {
      * @throws InvalidAddMessageException The given message could not be added at the given index in this diagram.
      */
     public void insertInvocationMessageAtIndex(InvocationMessage message, int index) {
-
-        // Only insert if it is a valid message to insert
         if (!canInsertMessageAtIndex(message, index))
             throw new InvalidAddMessageException();
-
-        // Always insert a corresponding result message
-        ResultMessage resultMessage = new ResultMessage(message);
-
-        // First shift all the indices
-        for (int i=0 ; i<messages.size() ; i++) {
+        for (int i=0 ; i<messages.size() ; i++) { // Shift indices
             Integer formerIndex = associatedMessageIndices.get(i);
             if (formerIndex >= index) {
                 associatedMessageIndices.remove(i);
                 associatedMessageIndices.add(i, formerIndex + 2); // Shift two downwards because of insert
             }
         }
+        if (messages.size() == 0 || index >= messages.size())
+            appendMessagesToEnd(message, new ResultMessage(message));
+        else
+            insertMessagesAtIndex(message, new ResultMessage(message), index);
+        calculateAllPrefixes();
+    }
 
-        // Insert the message
-        if (messages.size() == 0 || index >= messages.size()) { // Append to end
-            index = messages.size();
-            messages = messages.plus(message);
-            messages = messages.plus(resultMessage);
-            associatedMessageIndices.add(index + 1);
-            associatedMessageIndices.add(index);
-            associatedPrefixes.add(null);
-            associatedPrefixes.add(calculatePrefix(message, index));
-        }
-        else { // Insert
-            messages = messages.plus(index, resultMessage);
-            messages = messages.plus(index, message);
-            associatedMessageIndices.add(index, index);
-            associatedMessageIndices.add(index, index + 1);
-            associatedPrefixes.add(index, null);
-            associatedPrefixes.add(index, calculatePrefix(message, index));
-        }
+    /**
+     * Insert the given messages at the given index in the callstack.
+     *  This method does not recalculate the associated message indices.
+     *
+     * @param invocation The invocation message that is to be inserted.
+     * @param result The result message that is to be inserted.
+     */
+    private void insertMessagesAtIndex(InvocationMessage invocation, ResultMessage result, int index) {
+        messages = messages.plus(index, result);
+        messages = messages.plus(index, invocation);
+        associatedMessageIndices.add(index, index);
+        associatedMessageIndices.add(index, index + 1);
+        associatedPrefixes.add(index, null);
+        associatedPrefixes.add(index, calculatePrefix(invocation, index));
+        for (DiagramObserver observer : observers)
+            observer.diagramDidAddMessages(this, invocation, result, index);
+    }
 
-        // Update prefixes
-        for (int i=0 ; i<messages.size() ; i++) {
-            String prefix = calculatePrefix(messages.get(i), i);
-            associatedPrefixes.remove(i);
-            associatedPrefixes.add(i, prefix);
-        }
-
+    /**
+     * Append the given messages to the end of the callstack.
+     *  This method does not recalculate the associated message indices.
+     *
+     * @param invocation The invocation message that is to be added.
+     * @param result The result message that is to be added.
+     */
+    private void appendMessagesToEnd(InvocationMessage invocation, ResultMessage result) {
+        int index = messages.size();
+        messages = messages.plus(invocation);
+        messages = messages.plus(result);
+        associatedMessageIndices.add(index + 1);
+        associatedMessageIndices.add(index);
+        associatedPrefixes.add(null);
+        associatedPrefixes.add(calculatePrefix(invocation, index));
+        for (DiagramObserver observer : observers)
+            observer.diagramDidAddMessages(this, invocation, result, index);
     }
 
     /**
      * Checks whether or not the given message can be added at the given index in this diagram .
+     *  This method does not recalculate the associated message indices.
      *
      * @param message The message that is to be added.
      * @param index The index at which the message should be added.
@@ -211,52 +280,66 @@ public class Diagram {
      * Returns the index of the given message for this diagram.
      *
      * @param message The message whose index is desired.
-     * @return The index of the message.
+     * @return The index of the message or -1 if no such message was found.
      */
     public int getIndexOfMessage(Message message) {
         return messages.indexOf(message);
     }
 
     /**
-     * Removes the given message from this diagram, as well as its dependencies.
+     * Returns the maximum index for the given message and its associated index.
      *
-     * @param message The message that is to be removed.
+     * @param message The message whose max index is desired.
+     * @return The maximum index for the given message and its associated index, or -1 if the message is not in the
+     *  callstack.
      */
-    public void deleteMessage(Message message) {
-
-        // Pre-processing
+    private int getMaximumIndex(Message message) {
         int messageIndex = getIndexOfMessage(message);
-        if (messageIndex < 0)
-            return; // Message not in stack
         int associatedMessageIndex = associatedMessageIndices.get(messageIndex);
-        int min = Math.min(messageIndex, associatedMessageIndex), max = Math.max(messageIndex, associatedMessageIndex);
-        int count = max - min + 1; // Number of messages to remove
-        int i = 0; // Current index of message to be removed
+        int max = Math.max(messageIndex, associatedMessageIndex);
+        return (messageIndex >= 0 ? max : -1);
+    }
 
-        // First update associated message indices
-        for (int j=0 ; j<messages.size() ; j++) {
-            Integer formerIndex = associatedMessageIndices.get(j);
-            if (formerIndex > max) {
-                associatedMessageIndices.remove(j);
-                associatedMessageIndices.add(j, formerIndex - count); // Shift count upwards because of removal
-            }
-        }
+    /**
+     * Returns the minimum index for the given message and its associated index.
+     *
+     * @param message The message whose max index is desired.
+     * @return The maximum index for the given message and its associated index, or -1 if the message is not in the
+     *  callstack.
+     */
+    private int getMinimumIndex(Message message) {
+        int messageIndex = getIndexOfMessage(message);
+        int associatedMessageIndex = associatedMessageIndices.get(messageIndex);
+        int min = Math.min(messageIndex, associatedMessageIndex);
+        return (messageIndex >= 0 ? min : -1);
+    }
 
-        // Now remove the messages
-        while(i < count) {
-            messages = messages.minus(min);
-            associatedMessageIndices.remove(min);
-            associatedPrefixes.remove(min);
-            i++;
-        }
+    /**
+     * Returns the number of messages to remove from this diagram when removing the given one.
+     *
+     * @param message The message to remove.
+     * @return The number of messages that have to be removed upon removal of the given one.
+     */
+    private int getNbMessagesToRemove(Message message) {
+        if (getIndexOfMessage(message) >= 0)
+            return getMaximumIndex(message) - getMaximumIndex(message) + 1;
+        return 0;
+    }
 
-        // Update prefixes
-        for (int j=0 ; j<messages.size() ; j++) {
-            String prefix = calculatePrefix(messages.get(j), j);
-            associatedPrefixes.remove(j);
-            associatedPrefixes.add(j, prefix);
-        }
-
+    /**
+     * Delete the message at the given index.
+     *  This method does not ensure the validity of the associated message indices, prefixes, ...
+     *   after processing.
+     *
+     * @param index The index of the message that is to be removed.
+     */
+    private void deleteMessageAtIndex(int index) {
+        Message message = messages.get(index);
+        messages = messages.minus(index);
+        associatedMessageIndices.remove(index);
+        associatedPrefixes.remove(index);
+        for (DiagramObserver observer : observers)
+            observer.diagramDidDeleteComponent(this, message);
     }
 
     /**
@@ -303,6 +386,17 @@ public class Diagram {
     }
 
     /**
+     * Calculates the prefixes of all messages in this diagram.
+     */
+    private void calculateAllPrefixes() {
+        for (int i=0 ; i<messages.size() ; i++) {
+            String prefix = calculatePrefix(messages.get(i), i);
+            associatedPrefixes.remove(i);
+            associatedPrefixes.add(i, prefix);
+        }
+    }
+
+    /**
      * Returns the previous invocation message's index for the message at given index.
      *
      * @param index The index of the message.
@@ -324,11 +418,35 @@ public class Diagram {
      *  Each entry in this array gives the associated message of the message at the same index
      *  in the messages list.
      */
-    private ArrayList<Integer> associatedMessageIndices = new ArrayList<Integer>();
+    private ArrayList<Integer> associatedMessageIndices = new ArrayList<>();
 
     /**
      * The prefixes associated with the messages.
      */
-    private ArrayList<String> associatedPrefixes = new ArrayList<String>();
+    private ArrayList<String> associatedPrefixes = new ArrayList<>();
+
+    /**
+     * Registers the given diagram observer.
+     *
+     * @param observer The new observer that is to be registered.
+     */
+    public void registerObserver(DiagramObserver observer) {
+        if (!observers.contains(observer))
+            observers = observers.plus(observer);
+    }
+
+    /**
+     * Unregisters the given diagram observer.
+     *
+     * @param observer The observer that is to be unregistered.
+     */
+    public void unregisterObserver(DiagramObserver observer) {
+        observers = observers.minus(observer);
+    }
+
+    /**
+     * The list of observers of this diagram.
+     */
+    private PList<DiagramObserver> observers = PList.empty();
 
 }

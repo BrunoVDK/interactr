@@ -1,6 +1,4 @@
-package interactr.cs.kuleuven.be.ui.geometry;
-
-import interactr.cs.kuleuven.be.ui.PaintBoard;
+package interactr.cs.kuleuven.be.ui.design;
 
 /**
  * A class of basic geometrical figures.
@@ -13,7 +11,7 @@ public class Figure extends Model {
     /**
      * Initialize this new figure with zero coordinates and a width and height of 20.
      */
-    public Figure() {
+    Figure() {
         this(0, 0, 20, 20);
     }
 
@@ -25,7 +23,7 @@ public class Figure extends Model {
      * @param width The width for this new figure.
      * @param height The height for this new figure.
      */
-    public Figure(int x, int y, int width, int height) {
+    Figure(int x, int y, int width, int height) {
         super("");
         setX(x);
         setY(y);
@@ -109,7 +107,7 @@ public class Figure extends Model {
     /**
      * The width of this figure.
      */
-    protected int width;
+    private int width;
 
     /**
      * Get the height of this figure.
@@ -132,7 +130,7 @@ public class Figure extends Model {
     /**
      * The height of this figure.
      */
-    protected int height;
+    private int height;
 
     @Override
     public Figure clone() {
@@ -140,7 +138,7 @@ public class Figure extends Model {
         try {
             clone = (Figure)super.clone();
         }
-        catch (Exception e) {throw new RuntimeException("Failed to clone figure.");};
+        catch (Exception e) {throw new RuntimeException("Failed to clone figure.");}
         return clone;
     }
 

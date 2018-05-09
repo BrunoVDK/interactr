@@ -1,6 +1,7 @@
-package interactr.cs.kuleuven.be.ui.geometry;
+package interactr.cs.kuleuven.be.ui.design;
 
 import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
  * A class of boxes.

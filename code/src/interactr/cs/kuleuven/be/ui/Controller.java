@@ -1,6 +1,7 @@
 package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.exceptions.*;
+import interactr.cs.kuleuven.be.ui.control.SubWindow;
 
 import java.io.File;
 import java.util.*;
@@ -11,12 +12,12 @@ import java.util.*;
  * @author Team 25
  * @version 1.0
  */
-public class DiagramController {
+public class Controller {
 
     /**
      * Initialize this new diagram controller without any subwindows and without any recording.
      */
-    public DiagramController() {
+    public Controller() {
         this(false);
     }
 
@@ -25,27 +26,18 @@ public class DiagramController {
      *
      * @param record If a recording session is to be used.
      */
-    public DiagramController(boolean record) {
-
-        // Initialize window
+    private Controller(boolean record) {
         this.subWindows = new ArrayList<SubWindow>();
         Window window = new Window("New document - Interactr");
         PaintBoard paintBoard = new PaintBoard(window, this);
         setPaintBoard(paintBoard);
         window.setPaintBoard(paintBoard);
         window.setEventHandler(new EventHandler(this));
-
-        // Toggle recording
         if (record) {
             File file = new File(CanvasWindow.RECORDINGS_PATH + "new.txt");
             window.recordSession(file.getAbsolutePath());
         }
-
-        // Start up the window
-        java.awt.EventQueue.invokeLater(() -> {
-            window.show();
-        });
-
+        java.awt.EventQueue.invokeLater(window::show);
     }
 
     /**
@@ -81,7 +73,7 @@ public class DiagramController {
      *
      * @return The diagram view of this controller that's currently active.
      */
-    public SubWindow getActiveSubwindow() {
+    private SubWindow getActiveSubwindow() {
         return (this.getSubWindows().isEmpty() ? null : this.getSubWindows().get(0));
     }
 
@@ -103,14 +95,29 @@ public class DiagramController {
         }
     }
 
+    /**
+     * Adds a subwindow at the given index.
+     *
+     * @param index The index at which the subwindow should be inserted.
+     * @param subwindow The subwindow that is to be added.
+     */
     private void addSubWindow(int index, SubWindow subwindow){
         this.getSubWindows().add(index, subwindow);
     }
 
+    /**
+     * Remove the given subwindow from this controller's list of subwindows.
+     *
+     * @param subWindow The subwindow that is to be removed.
+     * @return The subwindow that was removed.
+     */
     private SubWindow removeSubWindow(SubWindow subWindow){
-        return this.getSubWindows().remove(this.getSubWindows().indexOf(subWindow));
+        return getSubWindows().remove(this.getSubWindows().indexOf(subWindow));
     }
 
+    /**
+     * Returns the subwindows of this controller.
+     */
     private ArrayList<SubWindow> getSubWindows(){
         return subWindows;
     }
@@ -362,7 +369,7 @@ public class DiagramController {
 
     // Entry point
     public static void main(String[] args) { // No documentation
-        new DiagramController(args.length > 0 && args[0].equalsIgnoreCase("-r"));
+        new Controller(args.length > 0 && args[0].equalsIgnoreCase("-r"));
     }
 
 }

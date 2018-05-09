@@ -1,10 +1,14 @@
-package interactr.cs.kuleuven.be.ui;
+package interactr.cs.kuleuven.be.ui.control;
 
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.*;
 import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.purecollections.PMap;
-import interactr.cs.kuleuven.be.ui.geometry.*;
+import interactr.cs.kuleuven.be.ui.DiagramObserver;
+import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.design.*;
+import interactr.cs.kuleuven.be.ui.geometry.Point;
+import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
  * An abstract interface for diagram views. Diagram views can display diagrams in
@@ -13,7 +17,7 @@ import interactr.cs.kuleuven.be.ui.geometry.*;
  * @author Team 25
  * @version 1.0
  */
-public class DiagramView implements Cloneable {
+public abstract class DiagramView implements Cloneable, DiagramObserver {
 
     /**
      * Initialize this new diagram view with the given diagram.
@@ -21,7 +25,7 @@ public class DiagramView implements Cloneable {
      * @param diagram The diagram to associate this diagram view with.
      * @throws IllegalArgumentException If the given diagram is null.
      */
-    public DiagramView(Diagram diagram) {
+    DiagramView(Diagram diagram) {
         setDiagram(diagram);
     }
 
@@ -42,7 +46,7 @@ public class DiagramView implements Cloneable {
         if (diagram == null)
             throw new IllegalArgumentException("Diagram cannot be null.");
         this.diagram = diagram;
-        DiagramNotificationCenter.defaultCenter().registerDiagramView(diagram, this);
+        diagram.registerObserver(this);
     }
 
     /**
@@ -70,10 +74,10 @@ public class DiagramView implements Cloneable {
      * @param selectedComponent The selected component, if any.
      * @param selectedLabel The temporary label of the selected component, if any.
      */
-    protected void displayFigures(PaintBoard paintBoard, DiagramComponent selectedComponent, String selectedLabel) {
+    void displayFigures(PaintBoard paintBoard, DiagramComponent selectedComponent, String selectedLabel) {
         for (Party party : figures.keySet()) {
             boolean isSelected = (party == selectedComponent), isActive = (isSelected && selectedLabel != null);
-            paintBoard.setColour((isSelected || isActive)
+            paintBoard.setColour(isSelected
                     ? ((isActive && !selectedComponent.canHaveAsLabel(selectedLabel)) ? Colour.RED : Colour.BLUE)
                     : Colour.BLACK);
             Figure partyFigure = figureForParty(party);
@@ -93,7 +97,7 @@ public class DiagramView implements Cloneable {
     protected void displayMessages(PaintBoard paintBoard, DiagramComponent selectedComponent, String selectedLabel) {
         for (Message message : links.keySet()) {
             boolean isSelected = (message == selectedComponent), isActive = (isSelected && selectedLabel != null);
-            paintBoard.setColour((isSelected || isActive)
+            paintBoard.setColour(isSelected
                     ? ((isActive && !selectedComponent.canHaveAsLabel(selectedLabel)) ? Colour.RED : Colour.BLUE)
                     : Colour.BLACK);
             Link messageLink = linkForMessage(message);
@@ -124,7 +128,6 @@ public class DiagramView implements Cloneable {
         // Create the new party and throw notification
         Party party = Party.createParty();
         this.getDiagram().addParty(party);
-        DiagramNotificationCenter.defaultCenter().diagramDidAddParty(diagram, party, new Point(x,y));
 
     }
 
@@ -139,7 +142,6 @@ public class DiagramView implements Cloneable {
         if (oldParty != null) {
             Party newParty = oldParty.switchType();
             diagram.replaceParty(oldParty, newParty);
-            DiagramNotificationCenter.defaultCenter().diagramDidReplaceParty(diagram, oldParty, newParty);
         }
     }
 
@@ -383,8 +385,6 @@ public class DiagramView implements Cloneable {
             int index = getMessageInsertionIndex(fromX, fromY, toX, toY);
             diagram.insertInvocationMessageAtIndex(message, index);
             ResultMessage result = diagram.getResultMessageForInvocationMessage(message);
-            DiagramNotificationCenter.defaultCenter().diagramDidAddMessages(diagram,
-                    message, result, new Point(fromX, fromY), new Point(toX, toY));
         }
         else
             throw new InvalidAddMessageException();
@@ -476,7 +476,7 @@ public class DiagramView implements Cloneable {
      * @param startCoordinates The start coordinates for the invocation message's link.
      * @param endCoordinates The end coordinates for the invocation message's link.
      */
-    protected void diagramDidAddMessages(Diagram diagram, InvocationMessage invocation, ResultMessage resultMessage, Point startCoordinates, Point endCoordinates) {
+    public void diagramDidAddMessages(Diagram diagram, InvocationMessage invocation, ResultMessage resultMessage, Point startCoordinates, Point endCoordinates) {
         // Result messages are ignored!
         Link invocationLink = createLinkForMessage(invocation,
                 startCoordinates.getX(),
@@ -508,7 +508,7 @@ public class DiagramView implements Cloneable {
      * @param party The party to register a figure for.
      * @param figure The figure that is to be registered.
      */
-    protected void registerFigure(Party party, Figure figure) {
+    private void registerFigure(Party party, Figure figure) {
         if (figure == null)
             return;
         figures = figures.minus(party);
@@ -521,7 +521,7 @@ public class DiagramView implements Cloneable {
      * @param message The party to register a figure for.
      * @param link The figure that is to be registered.
      */
-    protected void registerLink(Message message, Link link) {
+    private void registerLink(Message message, Link link) {
         links = links.minus(message);
         links = links.plus(message, link.clone());
     }
@@ -531,7 +531,7 @@ public class DiagramView implements Cloneable {
      *  This unregisters it as an observer.
      */
     public void close() {
-        DiagramNotificationCenter.defaultCenter().unregisterDiagramView(diagram, this);
+        diagram.unregisterObserver(this);
     }
 
 }

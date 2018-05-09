@@ -1,7 +1,7 @@
 package usecases;
 
 import interactr.cs.kuleuven.be.domain.Party;
-import interactr.cs.kuleuven.be.ui.DiagramController;
+import interactr.cs.kuleuven.be.ui.Controller;
 import interactr.cs.kuleuven.be.ui.Window;
 import interactr.cs.kuleuven.be.ui.EventHandler;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
@@ -16,13 +16,13 @@ public class MoveParty {
 
     @BeforeEach
     void setUp(){
-        window.setEventHandler(new EventHandler(new DiagramController()));
-        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getDiagramController()));
+        window.setEventHandler(new EventHandler(new Controller()));
+        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getController()));
     }
 
     @Test
     void stepByStep(){
-        DiagramController controller = window.getEventHandler().getDiagramController();
+        Controller controller = window.getEventHandler().getController();
         // Precondition
         Window.replayRecording("steps/createNewDiagram.txt", window);
         //At party at 100 x
@@ -48,21 +48,21 @@ public class MoveParty {
     void movePartySequence(){
         Window.replayRecording("movePartySequence.txt", window);
         // Party added on  x = 6  y = 31 and moved to x = 135 y = 41
-        assertNotEquals(null, window.getEventHandler().getDiagramController().getActiveSubwindow().getActiveView().getSelectableComponent(135,41));
+        assertNotEquals(null, window.getEventHandler().getController().getActiveSubwindow().getActiveView().getSelectableComponent(135,41));
     }
 
     @Test
     void movePartyCommunication(){
         Window.replayRecording("movePartyCommunication.txt", window);
         // Party added on  x = 8  y = 30 and moved to x = 234 y = 40
-        assertNotEquals(null, window.getEventHandler().getDiagramController().getActiveSubwindow().getActiveView().getSelectableComponent(234,40));
+        assertNotEquals(null, window.getEventHandler().getController().getActiveSubwindow().getActiveView().getSelectableComponent(234,40));
     }
 
     @Test
     void movePartyWhileEditingSequence(){
         Window.replayRecording("movePartyWhileEditingSequence.txt", window);
         // Party added on  x = 6  y = 29 and moved to x = 38 y = 289
-        assertEquals(null, window.getEventHandler().getDiagramController().getActiveSubwindow().getActiveView().getSelectableComponent(38,289));
+        assertEquals(null, window.getEventHandler().getController().getActiveSubwindow().getActiveView().getSelectableComponent(38,289));
 
     }
 
@@ -70,7 +70,7 @@ public class MoveParty {
     void movePartySequenceIllegalPosition(){
         Window.replayRecording("movePartyWhileEditingSequence.txt", window);
         // Party added on  x = 6  y = 29 and moved to x = 38 y = 289
-        assertEquals(null, window.getEventHandler().getDiagramController().getActiveSubwindow().getActiveView().getSelectableComponent(38,289));
+        assertEquals(null, window.getEventHandler().getController().getActiveSubwindow().getActiveView().getSelectableComponent(38,289));
     }
 
 }

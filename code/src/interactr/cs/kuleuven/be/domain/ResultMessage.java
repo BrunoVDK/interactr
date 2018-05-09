@@ -1,7 +1,7 @@
 package interactr.cs.kuleuven.be.domain;
 
-import interactr.cs.kuleuven.be.ui.geometry.DashedArrow;
-import interactr.cs.kuleuven.be.ui.geometry.Link;
+import interactr.cs.kuleuven.be.ui.design.DashedArrow;
+import interactr.cs.kuleuven.be.ui.design.Link;
 
 /**
  * A class of result messages.

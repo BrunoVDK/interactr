@@ -1,4 +1,4 @@
-package interactr.cs.kuleuven.be.ui;
+package interactr.cs.kuleuven.be.ui.control;
 
 /**
  * An enumeration for borders of a subwindow.

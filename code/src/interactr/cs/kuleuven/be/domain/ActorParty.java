@@ -1,7 +1,7 @@
 package interactr.cs.kuleuven.be.domain;
 
-import interactr.cs.kuleuven.be.ui.geometry.Figure;
-import interactr.cs.kuleuven.be.ui.geometry.StickFigure;
+import interactr.cs.kuleuven.be.ui.design.Figure;
+import interactr.cs.kuleuven.be.ui.design.StickFigure;
 
 /**
  * A class of actors.

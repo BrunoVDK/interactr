@@ -1,7 +1,7 @@
 package unit.ui;
 
 import interactr.cs.kuleuven.be.exceptions.IllegalWindowFrameException;
-import interactr.cs.kuleuven.be.ui.SubWindow;
+import interactr.cs.kuleuven.be.ui.control.SubWindow;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

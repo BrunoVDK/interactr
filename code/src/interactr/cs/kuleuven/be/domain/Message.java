@@ -1,7 +1,7 @@
 package interactr.cs.kuleuven.be.domain;
 
-import interactr.cs.kuleuven.be.ui.geometry.Arrow;
-import interactr.cs.kuleuven.be.ui.geometry.Link;
+import interactr.cs.kuleuven.be.ui.design.Arrow;
+import interactr.cs.kuleuven.be.ui.design.Link;
 
 /**
  * A  class of messages. Each message has a receiving - and a sender party.
@@ -87,4 +87,5 @@ public class Message extends DiagramComponent {
     public String toString() {
         return getSender().toString() + " " + getLabel() + " " + getReceiver().toString();
     }
+
 }

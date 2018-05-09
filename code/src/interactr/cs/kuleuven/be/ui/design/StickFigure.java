@@ -1,6 +1,7 @@
-package interactr.cs.kuleuven.be.ui.geometry;
+package interactr.cs.kuleuven.be.ui.design;
 
 import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
  * A class of stick figures.
@@ -23,12 +24,7 @@ public class StickFigure extends Figure {
 
         int manWidth = getWidth(), manHeight = getHeight() - PaintBoard.charHeight - 4;
         int headWidth = Math.min(getWidth(), manHeight/2) - 5;
-
-        // Draw stick figure
-        paintBoard.drawOval(getX() + (getWidth() - headWidth)/2,
-                getY(),
-                headWidth,
-                headWidth);
+        paintBoard.drawOval(getX() + (getWidth() - headWidth)/2, getY(), headWidth, headWidth);
         paintBoard.drawLine(getX(),
                 getY() + manHeight/2,
                 getX() + manWidth,

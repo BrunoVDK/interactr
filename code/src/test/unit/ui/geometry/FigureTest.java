@@ -1,6 +1,6 @@
 package unit.ui.geometry;
 
-import interactr.cs.kuleuven.be.ui.geometry.Figure;
+import interactr.cs.kuleuven.be.ui.design.Figure;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

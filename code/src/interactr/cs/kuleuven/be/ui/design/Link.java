@@ -1,6 +1,6 @@
-package interactr.cs.kuleuven.be.ui.geometry;
+package interactr.cs.kuleuven.be.ui.design;
 
-import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
  * A class of links.
@@ -13,7 +13,7 @@ public class Link extends Model {
     /**
      * Initialize this new figure with zero coordinates and a width and height of 20.
      */
-    public Link() {
+    Link() {
         this(50, 200, 100, 400);
     }
 
@@ -143,9 +143,7 @@ public class Link extends Model {
         int o2 = orientation(getStartX(), getStartY(), getEndX(), getEndY(), other.getEndX(), other.getEndY());
         int o3 = orientation(other.getStartX(), other.getStartY(), other.getEndX(), other.getEndY(), getStartX(), getStartY());
         int o4 = orientation(other.getStartX(), other.getStartY(), other.getEndX(), other.getEndY(), getEndX(), getEndY());
-        if (o1 != o2 && o3 != o4)
-            return true;
-        return false;
+        return (o1 != o2 && o3 != o4);
     }
 
     /**
@@ -165,7 +163,7 @@ public class Link extends Model {
         try {
             clone = (Link)super.clone();
         }
-        catch (Exception e) {throw new RuntimeException("Failed to clone link.");};
+        catch (Exception e) {throw new RuntimeException("Failed to clone link.");}
         return clone;
     }
 

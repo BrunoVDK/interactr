@@ -1,7 +1,7 @@
 package interactr.cs.kuleuven.be.domain;
 
-import interactr.cs.kuleuven.be.ui.geometry.Box;
-import interactr.cs.kuleuven.be.ui.geometry.Figure;
+import interactr.cs.kuleuven.be.ui.design.Box;
+import interactr.cs.kuleuven.be.ui.design.Figure;
 
 /**
  * A class of parties.

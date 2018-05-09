@@ -1,7 +1,7 @@
 package usecases;
 
 import interactr.cs.kuleuven.be.domain.Party;
-import interactr.cs.kuleuven.be.ui.DiagramController;
+import interactr.cs.kuleuven.be.ui.Controller;
 import interactr.cs.kuleuven.be.ui.Window;
 import interactr.cs.kuleuven.be.ui.EventHandler;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
@@ -18,13 +18,13 @@ public class AddMessage {
 
     @BeforeEach
     void setUp(){
-        window.setEventHandler(new EventHandler(new DiagramController()));
-        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getDiagramController()));
+        window.setEventHandler(new EventHandler(new Controller()));
+        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getController()));
     }
 
     @Test
     void stepByStep(){
-        DiagramController controller = window.getEventHandler().getDiagramController();
+        Controller controller = window.getEventHandler().getController();
         // Precondition
         Window.replayRecording("steps/createNewDiagram.txt", window);
         //At party at 100 x
@@ -61,24 +61,24 @@ public class AddMessage {
     @Test
     void addMessageBetweenTwoParties(){
         Window.replayRecording("addMessageBetweenTwoParties.txt", window);
-        assertEquals( 2, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getMessages().size());
+        assertEquals( 2, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getMessages().size());
     }
 
     @Test
     void moveWithMessagesSequence(){
         Window.replayRecording("moveWithMessagesSequence.txt", window);
-        assertEquals( 2, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getMessages().size());
+        assertEquals( 2, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getMessages().size());
     }
     @Test
     void addIllegaleMessageStack0110(){
         Window.replayRecording("addIllegaleMessageStack0110.txt", window);
-        assertEquals( 2, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getMessages().size());
+        assertEquals( 2, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getMessages().size());
     }
 
     @Test
     void addLegalMessageStack011221(){
         Window.replayRecording("addLegalMessageStack011221.txt", window);
-        assertEquals( 6, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getMessages().size());
+        assertEquals( 6, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getMessages().size());
     }
 
 }

@@ -1,6 +1,7 @@
 package usecases;
 
 import interactr.cs.kuleuven.be.ui.*;
+import interactr.cs.kuleuven.be.ui.control.SubWindow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,12 +15,12 @@ public class CreateNewInteraction {
 
     @BeforeEach
     void setUp(){
-        window.setEventHandler(new EventHandler(new DiagramController()));
-        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getDiagramController()));
+        window.setEventHandler(new EventHandler(new Controller()));
+        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getController()));
     }
     @Test
     void stepByStep(){
-        DiagramController controller = window.getEventHandler().getDiagramController();
+        Controller controller = window.getEventHandler().getController();
         // Precondition
         Window.replayRecording("steps/createNewDiagram.txt", window);
         assertNotNull(controller.getActiveSubwindow());
@@ -32,7 +33,7 @@ public class CreateNewInteraction {
     @Test
     void createNewSubWindow(){
         Window.replayRecording("createNewSubWindow.txt", window);
-        assertNotEquals(null, window.getEventHandler().getDiagramController().getActiveSubwindow());
+        assertNotEquals(null, window.getEventHandler().getController().getActiveSubwindow());
     }
 
 }

@@ -1,10 +1,10 @@
-package interactr.cs.kuleuven.be.ui;
+package interactr.cs.kuleuven.be.ui.control;
 
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.*;
 import interactr.cs.kuleuven.be.purecollections.PList;
-import interactr.cs.kuleuven.be.purecollections.PMap;
-import interactr.cs.kuleuven.be.ui.geometry.Colour;
+import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.design.Colour;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
@@ -18,40 +18,23 @@ import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 public class SubWindow {
 
     /**
-     * Create a new subwindow without duplicating an other one.
+     * Create a new subwindow with a default frame of size 400x400.
      */
     public SubWindow() {
         this(null);
     }
 
     /**
-     * Create a new subwindow with a default frame of size 400x400 as a duplicate of the given subwindow.
-     *  If the given subwindow is null, a subwindow with a new (empty) diagram is created.
-     *  Otherwise the diagram of the given subwindow is adopted by this new subwindow.
+     * Create a new subwindow as a duplicate of the given subwindow.
+     *  If no subwindow is given, a default frame of size 400x400 is used.
      *
      * @param subWindow The subwindow that is to be duplicated by this subwindow.
      */
-    SubWindow(SubWindow subWindow) {
-        if (subWindow == null || subWindow.getDiagram() == null) {
+    public SubWindow(SubWindow subWindow) {
+        if (subWindow == null)
             setFrame(new Rectangle(0, 0, 400, 400));
-            Diagram adoptedDiagram = new Diagram();
-            views = views.plus(new SequenceView(adoptedDiagram));
-            views = views.plus(new CommunicationView(adoptedDiagram));
-        }
-        else {
+        else
             setFrame(new Rectangle(0, 0, subWindow.getFrame().getWidth(), subWindow.getFrame().getHeight()));
-            for (DiagramView view : subWindow.getViews())
-                views = views.plus(view.clone());
-            activeViewIndex = subWindow.getViews().indexOf(subWindow.getActiveView());
-        }
-        DiagramNotificationCenter.defaultCenter().registerSubWindow(getDiagram(), this);
-    }
-
-    /**
-     * Returns the diagram associated with this subwindow.
-     */
-    public Diagram getDiagram() {
-        return (views.size() == 0 ? null : views.get(0).getDiagram());
     }
 
     /**
@@ -79,7 +62,7 @@ public class SubWindow {
      *
      * @return The frame in which views of this subwindow are drawn.
      */
-    public Rectangle getViewFrame() {
+    private Rectangle getViewFrame() {
         return new Rectangle(
                 frame.getX(),
                 frame.getY() + TITLE_BAR_HEIGHT,
@@ -116,7 +99,7 @@ public class SubWindow {
      * @param frame The new frame for this subwindow.
      * @throws IllegalWindowFrameException This subwindow cannot have the given frame as its own frame.
      */
-    private void setFrame(Rectangle frame) throws IllegalWindowFrameException {
+    protected void setFrame(Rectangle frame) throws IllegalWindowFrameException {
         if (!canHaveAsFrame(frame))
             throw new IllegalWindowFrameException();
         this.frame = frame;
@@ -300,7 +283,6 @@ public class SubWindow {
         this.selectedLabel = selectedLabel;
         if (selectedComponent != null && selectedComponent.canHaveAsLabel(selectedLabel)) {
             selectedComponent.setLabel(selectedLabel);
-            DiagramNotificationCenter.defaultCenter().diagramDidEditLabel(getDiagram(), getSelectedComponent());
         }
     }
 
@@ -321,8 +303,7 @@ public class SubWindow {
      */
     public void deleteSelection(){
         if (selectedLabel == null && getSelectedComponent() != null) { // Only delete if not active
-            getSelectedComponent().deleteFrom(getDiagram());
-            DiagramNotificationCenter.defaultCenter().diagramDidDeleteComponent(getDiagram(), getSelectedComponent());
+            //getSelectedComponent().deleteFrom(getDiagram());
             deselectAll(); // Now deselect everything
         }
     }
@@ -409,6 +390,16 @@ public class SubWindow {
     }
 
     /**
+     * Activate the view at the given index.
+     *
+     * @param index The index of the view that is to be activated.
+     */
+    void activateViewAtIndex(int index) {
+        if (index >= 0 && index < views.size())
+            activeViewIndex = index;
+    }
+
+    /**
      * The index of the currently active view in this subwindow.
      */
     private int activeViewIndex = 0;
@@ -425,7 +416,7 @@ public class SubWindow {
     /**
      * A list of diagram views held by this subwindow.
      */
-    private PList<DiagramView> views = PList.<DiagramView>empty();
+    PList<DiagramView> views = PList.<DiagramView>empty();
 
     /**
      * Returns whether or not the given coordinates lie within this subwindow's title bar.
@@ -502,12 +493,8 @@ public class SubWindow {
 
     /**
      * Close this subwindow.
-     *  This unregisters it as an observer.
      */
     public void close() {
-        DiagramNotificationCenter.defaultCenter().unregisterSubWindow(getDiagram(), this);
-        for (DiagramView view : views)
-            view.close(); // Close all views too, but only after unregistering this subwindow as observer
     }
 
 }

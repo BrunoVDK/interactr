@@ -3,6 +3,7 @@ package usecases;
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.DiagramComponent;
 import interactr.cs.kuleuven.be.ui.*;
+import interactr.cs.kuleuven.be.ui.control.SubWindow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,13 +16,13 @@ public class CreateNewDiagram {
 
     @BeforeEach
     void setUp(){
-        window.setEventHandler(new EventHandler(new DiagramController()));
-        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getDiagramController()));
+        window.setEventHandler(new EventHandler(new Controller()));
+        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getController()));
     }
 
     @Test
     void stepByStep(){
-        DiagramController controller = window.getEventHandler().getDiagramController();
+        Controller controller = window.getEventHandler().getController();
         // Precondition
         Window.replayRecording("steps/createNewDiagram.txt", window);
         assertNotNull(controller.getActiveSubwindow());
@@ -34,9 +35,9 @@ public class CreateNewDiagram {
     @Test
     void createNewEmptyDiagram(){
         Window.replayRecording("createNewEmptyDiagram1.txt", window);
-        Diagram diagram = window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram();
+        Diagram diagram = window.getEventHandler().getController().getActiveSubwindow().getDiagram();
         Window.replayRecording("createNewEmptyDiagram2.txt", window);
-        assertEquals(diagram, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram() );
+        assertEquals(diagram, window.getEventHandler().getController().getActiveSubwindow().getDiagram() );
     }
 
     /**
@@ -46,7 +47,7 @@ public class CreateNewDiagram {
     @Test
     void createNewDiagramWithParty(){
         Window.replayRecording("createNewDiagramWithParty01.txt", window);
-        assertEquals(1, window.getEventHandler().getDiagramController().getActiveSubwindow().getDiagram().getParties().size());
+        assertEquals(1, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getParties().size());
     }
 
     /**
@@ -56,9 +57,9 @@ public class CreateNewDiagram {
     @Test
     void copyDiagramWithParty() {
         Window.replayRecording("copyDiagramWithParty.txt", window);
-        SubWindow win1 = window.getEventHandler().getDiagramController().getActiveSubwindow();
-        window.getEventHandler().getDiagramController().activateSubWindow(10,10);
-        SubWindow win2 = window.getEventHandler().getDiagramController().getActiveSubwindow();
+        SubWindow win1 = window.getEventHandler().getController().getActiveSubwindow();
+        window.getEventHandler().getController().activateSubWindow(10,10);
+        SubWindow win2 = window.getEventHandler().getController().getActiveSubwindow();
         assertNotEquals(win1, win2, "Recording is broken: Selected the same subwindow twice");
         DiagramComponent comp1 = win1.getActiveView().getComponent(166,66);
         DiagramComponent comp2 = win2.getActiveView().getComponent(166,66);
@@ -73,7 +74,7 @@ public class CreateNewDiagram {
     @Test
     void createNewDiagramEditInvalidLabel(){
         Window.replayRecording("createNewDiagramEditInvalidLabel01.txt", window);
-        assertEquals("a:A", window.getEventHandler().getDiagramController().getActiveSubwindow().getSelectedComponent().getLabel());
+        assertEquals("a:A", window.getEventHandler().getController().getActiveSubwindow().getSelectedComponent().getLabel());
     }
 
 }
