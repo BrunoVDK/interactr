@@ -1,7 +1,7 @@
 package interactr.cs.kuleuven.be.ui.control;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
-import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
+import interactr.cs.kuleuven.be.exceptions.InvalidAddMessageException;
 
 /**
  * A class of diagram windows with a series of diagram views.
@@ -11,6 +11,12 @@ import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
  */
 public class DiagramWindow extends SubWindow {
 
+    /**
+     * Initialize this new diagram window without any diagram window.
+     */
+    public DiagramWindow() {
+        this(null);
+    }
 
     /**
      * Create a new subwindow with a default frame of size 400x400 as a duplicate of the given subwindow.
@@ -19,19 +25,23 @@ public class DiagramWindow extends SubWindow {
      *
      * @param diagramWindow The subwindow that is to be duplicated by this subwindow.
      */
-    public DiagramWindow(DiagramWindow diagramWindow) {
-        if (diagramWindow == null || diagramWindow.getDiagram() == null) {
-            setFrame(new Rectangle(0, 0, 400, 400));
+     DiagramWindow(DiagramWindow diagramWindow) {
+         super(diagramWindow);
+         if (diagramWindow == null || diagramWindow.getDiagram() == null) {
             Diagram adoptedDiagram = new Diagram();
             views = views.plus(new SequenceView(adoptedDiagram));
             views = views.plus(new CommunicationView(adoptedDiagram));
+            activateViewAtIndex(0);
         }
         else {
-            setFrame(new Rectangle(0, 0, diagramWindow.getFrame().getWidth(), diagramWindow.getFrame().getHeight()));
             for (DiagramView view : diagramWindow.getViews())
                 views = views.plus(view.clone());
             activateViewAtIndex(diagramWindow.getViews().indexOf(diagramWindow.getActiveView()));
         }
+    }
+
+    public void addMessage(int fromX, int fromY, int toX, int toY) throws InvalidAddMessageException {
+        getActiveView().addMessage(fromX, fromY, toX, toY);
     }
 
     /**

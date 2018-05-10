@@ -11,8 +11,17 @@ public class ObjectParty extends Party {
     /**
      * Initialize this new party with a default label.
      */
-    public ObjectParty() {
+    ObjectParty() {
         super();
+    }
+
+    /**
+     * Initialize this new object party with the given party.
+     *
+     * @param party The party to initialize this object party with.
+     */
+    ObjectParty(Party party) {
+        super(party);
     }
 
     /**
@@ -27,15 +36,6 @@ public class ObjectParty extends Party {
     @Override
     public Party switchType(){
         return new ActorParty(this);
-    }
-
-    /**
-     * Initialize this new object party with the given party.
-     *
-     * @param party The party to initialize this object party with.
-     */
-    public ObjectParty(Party party) {
-        super(party);
     }
 
 }

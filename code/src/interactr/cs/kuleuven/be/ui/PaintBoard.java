@@ -123,6 +123,19 @@ public class PaintBoard {
     }
 
     /**
+     * Get the current colour used when drawing.
+     *
+     * @return The colour currently used for drawing in this paintboard.
+     */
+    public Colour getColour() {
+        if (currentContext != null) {
+            float[] components = currentContext.getColor().getColorComponents(null);
+            return new Colour(components[0], components[1], components[2]);
+        }
+        return Colour.BLACK;
+    }
+
+    /**
      * Sets the colour for this paint board.
      *
      * @param colour The colour to use for this paint board.

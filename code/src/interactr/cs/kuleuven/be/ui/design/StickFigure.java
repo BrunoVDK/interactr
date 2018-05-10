@@ -12,11 +12,11 @@ import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 public class StickFigure extends Figure {
 
     /**
-     * Initialize this new stick figure with zero coordinates, a width of 100,
-     *  a height of 200 and an empty label.
+     * Initialize this new stick figure with zero coordinates, a width of 30,
+     *  a height of 65 and an empty label.
      */
     public StickFigure() {
-        super(0, 0, 30, 70);
+        super(0, 0, 30, 65);
     }
 
     @Override

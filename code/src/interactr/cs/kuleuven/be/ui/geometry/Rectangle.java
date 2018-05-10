@@ -121,6 +121,20 @@ public class Rectangle {
     private int height;
 
     /**
+     * Checks whether the given rectangle overlaps with this rectangle.
+     *
+     * @param  	other
+     *         	The rectangle to check with.
+     * @return 	True if and only if the given rectangle overlaps this rectangle.
+     */
+    public boolean overlaps(Rectangle other) {
+        return (other.getX() + other.getWidth() >= getX()
+                && other.getX() <= getX() + getWidth()
+                && other.getY() + other.getHeight() >= getY()
+                && other.getHeight() <= getY() + getHeight());
+    }
+
+    /**
      * Checks whether or not this rectangle encloses the given coordinate.
      *
      * @param x The x coordinate to check for.

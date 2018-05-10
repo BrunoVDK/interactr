@@ -23,7 +23,7 @@ public class CommunicationView extends DiagramView {
     }
 
     @Override
-    public String viewName() {
+    public String toString() {
         return "Communication View";
     }
 

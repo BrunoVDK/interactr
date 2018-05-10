@@ -4,7 +4,7 @@ package interactr.cs.kuleuven.be.domain;
  * A class of result messages.
  *
  * @author Team 25
- * @version 1.0
+ * @version 2.0
  */
 public class InvocationMessage extends Message {
 
@@ -14,7 +14,7 @@ public class InvocationMessage extends Message {
      * @param sender The sender of this invocation message.
      * @param receiver The receiver of this invocation message.
      */
-    public InvocationMessage(Party sender , Party receiver) {super(sender, receiver);}
+    public InvocationMessage(Party sender , Party receiver) {super("test()", sender, receiver);}
 
     @Override
     public boolean canHaveAsLabel(String label) {
@@ -49,8 +49,10 @@ public class InvocationMessage extends Message {
      */
     private String[] argumentsInLabel(String label) {
         String[] parts = label.split("\\(");
-        if (parts.length == 2)
-            return parts[1].split(",");
+        if (parts.length == 2) {
+            if (parts[1].endsWith(")") && parts[1].length() > 1)
+                return parts[1].substring(0, parts[1].length() - 1).split(",");
+        }
         return new String[0];
     }
 

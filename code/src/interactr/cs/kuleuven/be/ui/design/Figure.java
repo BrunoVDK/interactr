@@ -1,5 +1,7 @@
 package interactr.cs.kuleuven.be.ui.design;
 
+import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
+
 /**
  * A class of basic geometrical figures.
  *
@@ -12,7 +14,7 @@ public class Figure extends Model {
      * Initialize this new figure with zero coordinates and a width and height of 20.
      */
     Figure() {
-        this(0, 0, 20, 20);
+        this(0, 0, 60, 65);
     }
 
     /**
@@ -100,7 +102,7 @@ public class Figure extends Model {
      *
      * @param width The new width for this figure.
      */
-    public void setWidth(int width) {
+    private void setWidth(int width) {
         this.width = width;
     }
 
@@ -123,7 +125,7 @@ public class Figure extends Model {
      *
      * @param height The new height for this figure.
      */
-    public void setHeight(int height) {
+    private void setHeight(int height) {
         this.height = height;
     }
 
@@ -131,6 +133,15 @@ public class Figure extends Model {
      * The height of this figure.
      */
     private int height;
+
+    /**
+     * Returns the boudns of this figure.
+     *
+     * @return A rectangle representing the bounds of this figure.
+     */
+    public Rectangle getBounds() {
+        return new Rectangle(getX(), getY(), getWidth(), getHeight());
+    }
 
     @Override
     public Figure clone() {

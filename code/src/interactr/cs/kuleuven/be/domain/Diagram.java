@@ -89,7 +89,7 @@ public class Diagram {
         }
         parties = parties.minus(party);
         for (DiagramObserver observer : observers)
-            observer.diagramDidDeleteComponent(this, party);
+            observer.diagramDidDeleteParty(this, party);
     }
 
     /**
@@ -180,6 +180,16 @@ public class Diagram {
         if (index >= 0 && index < associatedMessageIndices.size())
             return associatedMessageIndices.get(index);
         return -1;
+    }
+
+    /**
+     * Returns the message associated with the given message.
+     *
+     * @param message The message whose associated message is desired.
+     * @return The message associated with the given message.
+     */
+    public Message getAssociatedMessage(Message message) {
+        return getMessageAtIndex(getIndexOfAssociatedMessage(getMessages().indexOf(message)));
     }
 
     /**
@@ -339,7 +349,7 @@ public class Diagram {
         associatedMessageIndices.remove(index);
         associatedPrefixes.remove(index);
         for (DiagramObserver observer : observers)
-            observer.diagramDidDeleteComponent(this, message);
+            observer.diagramDidDeleteMessage(this, message);
     }
 
     /**

@@ -41,12 +41,20 @@ public interface DiagramObserver {
                                        int row) {}
 
     /**
-     * Notify observers that the given component was removed from the given diagram.
+     * Notify observers that the given party was removed from the given diagram.
      *
      * @param diagram The diagram from which the component was removed.
-     * @param component The component that was deleted.
+     * @param party The party that was deleted.
      */
-    default void diagramDidDeleteComponent(Diagram diagram, DiagramComponent component) {}
+    default void diagramDidDeleteParty(Diagram diagram, Party party) {}
+
+    /**
+     * Notify observers that the given message was removed from the given diagram.
+     *
+     * @param diagram The diagram from which the component was removed.
+     * @param message The message that was deleted.
+     */
+    default void diagramDidDeleteMessage(Diagram diagram, Message message) {}
 
     /**
      * Notify observers that the label of the component belonging to the given diagram was edited.

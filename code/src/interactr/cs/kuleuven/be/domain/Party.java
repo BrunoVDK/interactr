@@ -1,8 +1,5 @@
 package interactr.cs.kuleuven.be.domain;
 
-import interactr.cs.kuleuven.be.ui.design.Box;
-import interactr.cs.kuleuven.be.ui.design.Figure;
-
 /**
  * A class of parties.
  *
@@ -52,15 +49,6 @@ public class Party extends DiagramComponent {
      */
     public Party switchType(){
         return null;
-    }
-
-    /**
-     * Returns a proposal for how this component should be drawn, by returning a mock-up figure.
-     *
-     * @return A mock-up for how this component should be drawn.
-     */
-    public Figure proposedFigure() {
-        return new Box();
     }
 
     @Override

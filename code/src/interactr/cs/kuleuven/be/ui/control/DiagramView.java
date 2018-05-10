@@ -10,6 +10,8 @@ import interactr.cs.kuleuven.be.ui.design.*;
 import interactr.cs.kuleuven.be.ui.geometry.Point;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
+import java.util.Map;
+
 /**
  * An abstract interface for diagram views. Diagram views can display diagrams in
  *  a coordinate system. They allow for manipulation and selection of diagram components.
@@ -45,6 +47,8 @@ public abstract class DiagramView implements Cloneable, DiagramObserver {
     public void setDiagram(Diagram diagram) throws IllegalArgumentException {
         if (diagram == null)
             throw new IllegalArgumentException("Diagram cannot be null.");
+        if (this.diagram != null)
+            this.diagram.unregisterObserver(this);
         this.diagram = diagram;
         diagram.registerObserver(this);
     }
@@ -58,55 +62,31 @@ public abstract class DiagramView implements Cloneable, DiagramObserver {
      * Display the given diagram in this view using the given paintboard.
      *
      * @param paintBoard The paintboard to use when displaying the view.
-     * @param selectedComponent The selected component, if any.
-     * @param selectedLabel The temporary label of the selected component, if any.
-     * @param frame The frame in which to draw the view.
      */
-    public void display(PaintBoard paintBoard, DiagramComponent selectedComponent, String selectedLabel, Rectangle frame) {
-        displayFigures(paintBoard, selectedComponent, selectedLabel);
-        displayMessages(paintBoard, selectedComponent, selectedLabel);
+    public void display(PaintBoard paintBoard) {
+        displayFigures(paintBoard);
+        displayMessages(paintBoard);
     }
 
     /**
      * Display the figures of the given diagram diagram in this view using the given paint board.
      *
      * @param paintBoard The paintboard to use when displaying the view.
-     * @param selectedComponent The selected component, if any.
-     * @param selectedLabel The temporary label of the selected component, if any.
      */
-    void displayFigures(PaintBoard paintBoard, DiagramComponent selectedComponent, String selectedLabel) {
-        for (Party party : figures.keySet()) {
-            boolean isSelected = (party == selectedComponent), isActive = (isSelected && selectedLabel != null);
-            paintBoard.setColour(isSelected
-                    ? ((isActive && !selectedComponent.canHaveAsLabel(selectedLabel)) ? Colour.RED : Colour.BLUE)
-                    : Colour.BLACK);
-            Figure partyFigure = figureForParty(party);
-            if (isActive)
-                partyFigure.setLabel(selectedLabel + "|");
-            partyFigure.draw(paintBoard);
-        }
+    void displayFigures(PaintBoard paintBoard) {
+        paintBoard.setColour(Colour.BLACK);
+        for (Party party : getDiagram().getParties())
+            getFigureForParty(party).draw(paintBoard);
     }
 
     /**
      * Display the messages of the given diagram diagram in this view using the given paintboard.
      *
      * @param paintBoard The paintboard to use when displaying the view.
-     * @param selectedComponent The selected component, if any.
-     * @param selectedLabel The temporary label of the selected component, if any.
      */
-    protected void displayMessages(PaintBoard paintBoard, DiagramComponent selectedComponent, String selectedLabel) {
-        for (Message message : links.keySet()) {
-            boolean isSelected = (message == selectedComponent), isActive = (isSelected && selectedLabel != null);
-            paintBoard.setColour(isSelected
-                    ? ((isActive && !selectedComponent.canHaveAsLabel(selectedLabel)) ? Colour.RED : Colour.BLUE)
-                    : Colour.BLACK);
-            Link messageLink = linkForMessage(message);
-            if (isActive)
-                messageLink.setLabel(selectedLabel + "|");
-            else
-                messageLink.setLabel(diagram.getPrefix(message) + " " + messageLink.getLabel());
-            messageLink.draw(paintBoard);
-        }
+    void displayMessages(PaintBoard paintBoard) {
+        for (Message message : getDiagram().getMessages())
+            getLinkForMessage(message).draw(paintBoard);
     }
 
     /**
@@ -117,18 +97,11 @@ public abstract class DiagramView implements Cloneable, DiagramObserver {
      * @throws InvalidAddPartyException The given party cannot be added to this diagram view at the given coordinate.
      */
     public void addParty(int x, int y) throws InvalidAddPartyException {
-
-        // Make sure there is nothing at the given coordinates
-        for (Party p : figures.keySet()) {
-            Figure figure = figureForParty(p);
-            if (figure.isHit(x,y))
-                throw new InvalidAddPartyException();
-        }
-
-        // Create the new party and throw notification
-        Party party = Party.createParty();
-        this.getDiagram().addParty(party);
-
+        if (getParty(x,y) != null)
+            throw new InvalidAddPartyException();
+        Party newParty = Party.createParty();
+        setCoordinateForParty(newParty, new Point(x,y));
+        this.getDiagram().addParty(newParty);
     }
 
     /**
@@ -155,99 +128,13 @@ public abstract class DiagramView implements Cloneable, DiagramObserver {
      *  or null if no such component is visible at the given coordinate.
      */
     public DiagramComponent getSelectableComponent(int x, int y) {
-        for (Message message : links.keySet()) {
-            if (linkForMessage(message).isLabelHit(x,y))
+        for (Message message : getDiagram().getMessages())
+            if (getLinkForMessage(message).isLabelHit(x,y))
                 return message;
-        }
-        for (Party party : figures.keySet()) {
-            if (figureForParty(party).isLabelHit(x,y))
+        for (Party party : getDiagram().getParties())
+            if (getFigureForParty(party).isLabelHit(x,y))
                 return party;
-        }
         return null;
-    }
-
-    /**
-     * Returns the diagram component at given location, or null
-     *  if no component is present at that coordinate.
-     *
-     * @param x The x coordinate to look at.
-     * @param y The y coordinate to look at.
-     * @return The diagram component at given location in this view,
-     *  or null if no such component is visible at the given coordinate.
-     */
-    public DiagramComponent getComponent(int x, int y) {
-        for (Message message : links.keySet()) {
-            if (linkForMessage(message).isLabelHit(x,y))
-                return message;
-        }
-        for (Party party : diagram.getParties()) {
-            if (figureForParty(party).isHit(x,y))
-                return party;
-        }
-        return null;
-    }
-
-    /**
-     * Returns the diagram component at given location, or null if no component is present at that coordinate.
-     *  The given excluded component, if not null, is ignored.
-     *
-     * @param x The x coordinate to look at.
-     * @param y The y coordinate to look at.
-     * @param excludedComponent The component to ignore when looking for the component at given coordinate.
-     * @return The diagram component at given location in this view,
-     *  or null if no such component is visible at the given coordinate.
-     */
-    protected DiagramComponent getComponent(int x, int y, DiagramComponent excludedComponent) {
-        for (Party party : diagram.getParties()) {
-            if (party != excludedComponent && figureForParty(party).isHit(x,y))
-                return party;
-        }
-        return null;
-    }
-
-    /**
-     * Returns the figure for the given party held by this view.
-     *
-     * @param party The party whose figure is desired.
-     * @return The figure associated with the given party, or null if there is none.
-     */
-    protected Figure figureForParty(Party party) {
-        if (party == null)
-            return null;
-        Figure figure = figures.get(party);
-        if (figure != null) {
-            figure.setLabel(party.getLabel());
-        }
-        return figure;
-    }
-
-    /**
-     * Creates a figure for the given party at the given coordinates.
-     *
-     * @param party The party to make a figure for.
-     * @param x The x coordinate for the figure.
-     * @param y The y coordinate for the figure.
-     * @return A figure at given coordinates representing the given party.
-     */
-    protected Figure createFigureForParty(Party party, int x, int y) {
-
-        // Get the figure for the given party, if any
-        Figure figure = figureForParty(party);
-        if (figure != null) {
-            figure.setLabel(party.getLabel());
-            figure.setX(x);
-            figure.setY(y);
-        } else { // No figure has been made for the given party
-            figure = party.proposedFigure();
-            figure.setX(x);
-            figure.setY(y);
-            figure.setWidth(50);
-            figure.setHeight(65);
-            figure.setLabel(party.getLabel());
-        }
-
-        return figure;
-
     }
 
     /**
@@ -257,9 +144,9 @@ public abstract class DiagramView implements Cloneable, DiagramObserver {
      * @param y The y coordinate to look at.
      * @return The party at the given coordinate.
      */
-    public Party getParty(int x, int y) {
-        for (Party p : figures.keySet()) {
-            Figure figure = figureForParty(p);
+    private Party getParty(int x, int y) {
+        for (Party p : getDiagram().getParties()) {
+            Figure figure = getFigureForParty(p);
             if (figure.isHit(x,y) && !figure.isLabelHit(x,y))
                 return p;
         }
@@ -280,58 +167,30 @@ public abstract class DiagramView implements Cloneable, DiagramObserver {
         Party movedParty = getParty(fromX, fromY);
         if (movedParty == null)
             throw new NoSuchPartyException(fromX, fromY);
-        if (getComponent(toX, toY, movedParty) != null)
-            throw new InvalidMovePartyException();
-        Figure figure = figures.get(movedParty);
-        figure.setX(figure.getX() + (toX - fromX));
-        figure.setY(figure.getY() + (toY - fromY));
+        Figure figure = getFigureForParty(movedParty);
+        int newX = figure.getX() + (toX - fromX), newY = figure.getY() + (toY - fromY);
+        figure.setX(newX);
+        figure.setY(newY);
+        for (Party party : getDiagram().getParties())
+            if (party != movedParty && figure.getBounds().overlaps(getFigureForParty(party).getBounds()))
+                throw new InvalidMovePartyException();
+        setCoordinateForParty(movedParty, new Point(newX, newY));
     }
 
     /**
-     * A hashmap containing figures of all parties in this diagram view.
-     */
-    protected PMap<Party, Figure> figures = PMap.<Party, Figure>empty();
-
-    /**
-     * Creates a link for the given message.
+     * Checks whether a message can be added at the given coordinates.
      *
-     * @param message The message for which a link is created.
-     * @return A link representing the given message in this view.
-     */
-    protected Link linkForMessage(Message message) {
-        Link link = links.get(message);
-        if (link != null) {
-            Party sender = message.getSender(), receiver = message.getReceiver();
-            Figure senderFigure = figures.get(sender), receiverFigure = figures.get(receiver);
-            link.setStartX(senderFigure.getX() + (senderFigure.getX() < receiverFigure.getX() ? senderFigure.getWidth() : 0));
-            link.setStartY(senderFigure.getY() + senderFigure.getHeight()/2);
-            link.setEndX(receiverFigure.getX() + (senderFigure.getX() < receiverFigure.getX() ? 0 : receiverFigure.getWidth()));
-            link.setEndY(receiverFigure.getY() + receiverFigure.getHeight()/2);
-            link.setLabel(message.getLabel());
-        }
-        return link;
-    }
-
-    /**
-     * Creates a link for the given message at the given coordinates.
+     * This method does not check for validity of the callstack after addition of the message
+     *  to the diagram itself.
      *
-     * @param message The message to make a link for.
-     * @param fromX The from x coordinate for the message.
-     * @param fromY The from y coordinate for the message.
-     * @param toX The to x coordinate for the message.
-     * @param toY The to y coordinate for the message.
-     * @return A link at given coordinates representing the given message.
+     * @param fromX The start x coordinate for the message.
+     * @param fromY The start y coordinate for the message.
+     * @param toX The end x coordinate for the message.
+     * @param toY The end y coordinate for the message.
+     * @return True if and only if a message can be inserted at the given coordinates.
      */
-    protected Link createLinkForMessage(Message message, int fromX, int fromY, int toX, int toY) {
-        Link link = message.proposedLink();
-        Party sender = message.getSender(), receiver = message.getReceiver();
-        Figure senderFigure = figures.get(sender), receiverFigure = figures.get(receiver);
-        link.setStartX(senderFigure.getX() + (senderFigure.getX() < receiverFigure.getX() ? senderFigure.getWidth() : 0));
-        link.setStartY(senderFigure.getY() + senderFigure.getHeight()/2);
-        link.setEndX(receiverFigure.getX() + (receiverFigure.getX() < receiverFigure.getX() ? 0 : receiverFigure.getWidth()));
-        link.setEndY(receiverFigure.getY() + receiverFigure.getHeight()/2);
-        link.setLabel(message.getLabel());
-        return link;
+    boolean canAddMessageAt(int fromX, int fromY, int toX, int toY) {
+        return false;
     }
 
     /**
@@ -343,107 +202,47 @@ public abstract class DiagramView implements Cloneable, DiagramObserver {
      * @param toY The start x coordinate for the message to insert.
      * @return The index at which a message should be inserted if added at the given coordinates.
      */
-    public int getMessageInsertionIndex(int fromX, int fromY, int toX, int toY) {
-        PList<Message> messages = diagram.getMessages();
-        for (int i=0 ; i<messages.size() ; i++) {
-            Link link = linkForMessage(messages.get(i));
-            if (link.getStartY() > fromY || link.getEndY() > toY)
-                return i;
-
-        }
-        return messages.size();
+    int getMessageInsertionIndex(int fromX, int fromY, int toX, int toY) {
+        return -1;
     }
 
     /**
-     * Checks whether a message can be inserted at the given coordinates.
+     * Add a message from the given start to the given end coordinates.
      *
-     * This method does not check for validity of the callstack after addition of the message
-     *  to the diagram itself.
-     *
-     * @param fromX The start x coordinate for the message.
-     * @param fromY The start y coordinate for the message.
-     * @param toX The end x coordinate for the message.
-     * @param toY The end y coordinate for the message.
-     * @return True if and only if a message can be inserted at the given coordinates.
-     */
-    public boolean canInsertMessageAt(int fromX, int fromY, int toX, int toY) {
-        return false; // Default behaviour is inability to add anything
-    }
-
-    /**
-     * Add the given message from the given start to the given end coordinates.
-     *
-     * @param message The message that is to be added.
      * @param fromX The start x coordinate for the message.
      * @param fromY The start y coordinate for the message.
      * @param toX The end x coordinate for the message.
      * @param toY The end y coordinate for the message.
      * @throws InvalidAddMessageException If a message could not be added.
      */
-    public void addMessage(InvocationMessage message, int fromX, int fromY, int toX, int toY) {
-        if (message != null && canInsertMessageAt(fromX, fromY, toX, toY)) {
+    public void addMessage(int fromX, int fromY, int toX, int toY) {
+        if (canAddMessageAt(fromX, fromY, toX, toY)) {
             int index = getMessageInsertionIndex(fromX, fromY, toX, toY);
-            diagram.insertInvocationMessageAtIndex(message, index);
-            ResultMessage result = diagram.getResultMessageForInvocationMessage(message);
+            Party sender = getParty(fromX, 10), receiver = getParty(toX, 10);
+            diagram.insertInvocationMessageAtIndex(new InvocationMessage(sender, receiver), index);
         }
         else
             throw new InvalidAddMessageException();
     }
 
     /**
-     * Returns the invocation message representing the given coordinates.
-     *
-     * @param fromX The start x coordinate for the message's link.
-     * @param fromY The start y coordinate for the message's link.
-     * @param toX The end x coordinate for the message's link.
-     * @param toY The end y coordinate for the message's link.
-     * @return A message whose link coincides with the given one.
-     */
-    public InvocationMessage getInvocationMessageForCoordinates(int fromX, int fromY, int toX, int toY) {
-        return null;
-    }
-
-    /**
-     * A hashmap containing links of all messages in this diagram view.
-     */
-    protected PMap<Message, Link> links = PMap.<Message, Link>empty();
-
-    /**
-     * Returns the name of this diagram view as a string.
-     *
-     * @return This diagram view's name as a string.
-     */
-    public String viewName() {
-        return "Default";
-    }
-
-    /**
-     * Notifies this diagram view that the given component was removed from the given diagram.
+     * Notifies this diagram view that the given party was removed from the given diagram.
      *
      * @param diagram The diagram from which the component was removed.
-     * @param component The component that was removed.
+     * @param party The party that was removed.
      */
-    public void diagramDidDeleteComponent(Diagram diagram, DiagramComponent component) {
-        PList<Message> diagramMessages = diagram.getMessages();
-        for (Message message : links.keySet())
-            if (!diagramMessages.contains(message))
-                links = links.minus(message);
-        PList<Party> diagramParties = diagram.getParties();
-        for (Party p : figures.keySet())
-            if (!diagramParties.contains(p))
-                figures = figures.minus(p);
+    public void diagramDidDeleteParty(Diagram diagram, Party party) {
+        removeCoordinateForParty(party);
     }
 
     /**
-     * Registers the given party at the given coordinate.
+     * Notifies this diagram that the given party was added to the given diagram.
      *
      * @param diagram The diagram to which the party was added.
      * @param party The party to register.
-     * @param coordinates The coordinates of the newly created party.
      */
-    public void diagramDidAddParty(Diagram diagram, Party party, Point coordinates) {
-        if (!figures.containsKey(party))
-            figures = figures.plus(party, createFigureForParty(party, coordinates.getX(), coordinates.getY()));
+    public void diagramDidAddParty(Diagram diagram, Party party) {
+        setCoordinateForParty(party, findEmptyCoordinateForParty(party));
     }
 
     /**
@@ -454,38 +253,8 @@ public abstract class DiagramView implements Cloneable, DiagramObserver {
      * @param newParty The party to replace the old party with.
      */
     public void diagramDidReplaceParty(Diagram diagram, Party oldParty, Party newParty) {
-        Figure oldFigure = figureForParty(oldParty);
-        if (oldFigure == null)
-            return;
-        Figure newFigure = createFigureForParty(newParty, 0, 0);
-        newFigure.setX(oldFigure.getX());
-        newFigure.setY(oldFigure.getY());
-        newFigure.setWidth(oldFigure.getWidth());
-        newFigure.setHeight(oldFigure.getHeight());
-        figures = figures.minus(oldParty);
-        figures = figures.plus(newParty, newFigure);
-    }
-
-    /**
-     * Registers the given invocation message and result message in this diagram view,
-     *  using the given start/end coordinates.
-     *
-     * @param diagram The diagram to which the messages were added.
-     * @param invocation The invocation message that is to be registered.
-     * @param resultMessage The result message that is to be registered.
-     * @param startCoordinates The start coordinates for the invocation message's link.
-     * @param endCoordinates The end coordinates for the invocation message's link.
-     */
-    public void diagramDidAddMessages(Diagram diagram, InvocationMessage invocation, ResultMessage resultMessage, Point startCoordinates, Point endCoordinates) {
-        // Result messages are ignored!
-        Link invocationLink = createLinkForMessage(invocation,
-                startCoordinates.getX(),
-                startCoordinates.getY(),
-                endCoordinates.getX(),
-                endCoordinates.getY());
-        // Link resultLink = createLinkForMessage(resultMessage, fromX, fromY, toX, toY);
-        links = links.plus(invocation, invocationLink);
-        // links = links.plus(resultMessage, resultLink);
+        setCoordinateForParty(newParty, partyCoordinates.get(oldParty));
+        removeCoordinateForParty(oldParty);
     }
 
     @Override
@@ -493,38 +262,124 @@ public abstract class DiagramView implements Cloneable, DiagramObserver {
         final DiagramView clone;
         try {
             clone = getClass().getConstructor(Diagram.class).newInstance(diagram);
-            for (Party party : figures.keySet())
-                clone.registerFigure(party, figures.get(party));
-            for (Message message : links.keySet())
-                clone.registerLink(message, links.get(message));
+            for (Party party : partyCoordinates.keySet())
+                clone.setCoordinateForParty(party, partyCoordinates.get(party));
         }
         catch (Exception e) {throw new RuntimeException("Failed to clone diagram view." + e.getClass().toString());}
         return clone;
     }
 
     /**
-     * Register the given figure for the given party.
-     *
-     * @param party The party to register a figure for.
-     * @param figure The figure that is to be registered.
+     * Registers flyweight links for messages to be used when drawing.
      */
-    private void registerFigure(Party party, Figure figure) {
-        if (figure == null)
-            return;
-        figures = figures.minus(party);
-        figures = figures.plus(party, figure.clone());
+    private static Map<Class<? extends Message>, Link> links = Map.of(
+            InvocationMessage.class, new Arrow(),
+            ResultMessage.class, new DashedArrow()
+    );
+
+    /**
+     * Returns a link for the given message, to be used as a flyweight when drawing.
+     *
+     * @param message The message for which a link is desired. Cannot be null.
+     * @return A link representing the given message.
+     */
+    Link getLinkForMessage(Message message) {
+        Link link = links.get(message.getClass());
+        Figure senderFigure = getFigureForParty(message.getSender()), receiverFigure = getFigureForParty(message.getReceiver());
+        link.setStartX(senderFigure.getX() + (senderFigure.getX() < receiverFigure.getX() ? senderFigure.getWidth() : 0));
+        link.setStartY(senderFigure.getY() + senderFigure.getHeight()/2);
+        link.setEndX(receiverFigure.getX() + (senderFigure.getX() < receiverFigure.getX() ? 0 : receiverFigure.getWidth()));
+        link.setEndY(receiverFigure.getY() + receiverFigure.getHeight()/2);
+        link.setLabel(message.getLabel());
+        return link;
     }
 
     /**
-     * Register the given link for the given message.
-     *
-     * @param message The party to register a figure for.
-     * @param link The figure that is to be registered.
+     * Registers flyweight figures for parties to be used when drawing.
      */
-    private void registerLink(Message message, Link link) {
-        links = links.minus(message);
-        links = links.plus(message, link.clone());
+    private static Map<Class<? extends Party>, Figure> figures = Map.of(
+            ActorParty.class, new StickFigure(),
+            ObjectParty.class, new Box()
+    );
+
+    /**
+     * Returns a figure for the given party, to be used as a flyweight when drawing.
+     *
+     * @param party The party for which a figure is desired. Cannot be null.
+     * @return A figure representing the given party.
+     */
+    Figure getFigureForParty(Party party) {
+        Figure figure = figures.get(party.getClass());
+        Point coordinate = getCoordinateForParty(party);
+        if (coordinate != null) {
+            figure.setX(coordinate.getX());
+            figure.setY(coordinate.getY());
+            figure.setLabel(party.getLabel());
+        }
+        return figure;
     }
+
+    /**
+     * Determines a coordinate where a party can be placed.
+     *
+     * @return A point such that placing a party at that point would not make any parties overlap.
+     */
+    Point findEmptyCoordinateForParty(Party party) {
+        Point coordinate = getCoordinateForParty(party);
+        if (coordinate == null)
+            coordinate = new Point(5, 5);
+        Figure figure = getFigureForParty(party);
+        Rectangle bounds = figure.getBounds();
+        boolean overlaps = true;
+        while (overlaps) {
+            overlaps = false;
+            for (Party p : getDiagram().getParties()) {
+                if (p != party) {
+                    Figure otherFigure = getFigureForParty(p);
+                    if (bounds.overlaps(otherFigure.getBounds())) {
+                        overlaps = true;
+                        bounds.setX(Math.max(coordinate.getX(), otherFigure.getX() + otherFigure.getWidth() + 5));
+                        break;
+                    }
+                }
+            }
+        }
+        return new Point(bounds.getX(), coordinate.getY());
+    }
+
+    /**
+     * Returns the coordinate for the given party or a default coordinate if none was registered.
+     *
+     * @param party The party whose coordinate is desired.
+     * @return The coordinate for the given party.
+     */
+    private Point getCoordinateForParty(Party party) {
+        return partyCoordinates.get(party);
+    }
+
+    /**
+     * Set the given party's position to the given one.
+     *
+     * @param party The party whose position should be set.
+     * @param position The position for the party.
+     */
+    private void setCoordinateForParty(Party party, Point position) {
+        partyCoordinates = partyCoordinates.plus(party, position);
+    }
+
+    /**
+     * Remove the coordinate entry for the given party.
+     *
+     * @param party The party whose coordinate should be removed from the registry.
+     */
+    private void removeCoordinateForParty(Party party) {
+        partyCoordinates = partyCoordinates.minus(party);
+    }
+
+    /**
+     * A hashmap containing coordinates of all parties in this diagram view.
+     */
+    PMap<Party, Point> partyCoordinates = PMap.empty();
 
     /**
      * Close this view.

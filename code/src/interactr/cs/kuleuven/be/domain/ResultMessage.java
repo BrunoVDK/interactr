@@ -1,8 +1,5 @@
 package interactr.cs.kuleuven.be.domain;
 
-import interactr.cs.kuleuven.be.ui.design.DashedArrow;
-import interactr.cs.kuleuven.be.ui.design.Link;
-
 /**
  * A class of result messages.
  *
@@ -16,7 +13,7 @@ public class ResultMessage extends Message {
      *
      * @param invocation The invocation message to initialize this result message with.
      */
-    public ResultMessage(InvocationMessage invocation) {
+    ResultMessage(InvocationMessage invocation) {
         this(invocation.getReceiver(), invocation.getSender());
     }
 
@@ -26,11 +23,11 @@ public class ResultMessage extends Message {
      * @param sender The sender of this result message.
      * @param receiver The receiver of this result message.
      */
-    public ResultMessage(Party sender, Party receiver) {super(sender,receiver);}
+    private ResultMessage(Party sender, Party receiver) {super("", sender,receiver);}
 
     @Override
-    public Link proposedLink() {
-        return new DashedArrow();
+    public boolean activates(Party party) {
+        return false;
     }
 
 }

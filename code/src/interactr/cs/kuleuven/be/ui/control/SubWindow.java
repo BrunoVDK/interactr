@@ -20,7 +20,7 @@ public class SubWindow {
     /**
      * Create a new subwindow with a default frame of size 400x400.
      */
-    public SubWindow() {
+    SubWindow() {
         this(null);
     }
 
@@ -78,7 +78,7 @@ public class SubWindow {
      * @return True if and only if the given frame's width and height are large enough.
      */
     private boolean canHaveAsFrame(Rectangle frame) {
-        return (frame.getWidth() > CLOSE_BUTTON_SIZE + 10 && frame.getHeight() > TITLE_BAR_HEIGHT + 10);
+        return (frame.getWidth() > CLOSE_BUTTON_SIZE + 10 && frame.getHeight() > TITLE_BAR_HEIGHT + 80);
     }
 
     /**
@@ -177,8 +177,6 @@ public class SubWindow {
         if (y < TITLE_BAR_HEIGHT) throw new InvalidAddPartyException();
         else y -= TITLE_BAR_HEIGHT;
         getActiveView().addParty(x,y);
-        setSelectedComponent(getActiveView().getParty(x,y));
-        setSelectedLabel("");
     }
 
     /**
@@ -201,10 +199,7 @@ public class SubWindow {
      * @throws InvalidAddMessageException The operation was not successful.
      */
     public void addMessage(int fromX, int fromY, int toX, int toY) throws InvalidAddMessageException {
-        InvocationMessage message = getActiveView().getInvocationMessageForCoordinates(fromX, fromY, toX, toY);
-        getActiveView().addMessage(message, fromX, fromY - TITLE_BAR_HEIGHT, toX, toY - TITLE_BAR_HEIGHT);
-        setSelectedComponent(message);
-        setSelectedLabel("");
+
     }
 
     /**
@@ -235,7 +230,7 @@ public class SubWindow {
     /**
      * Returns the diagram component that is currently active in this diagram.
      */
-    public DiagramComponent getSelectedComponent() {
+    DiagramComponent getSelectedComponent() {
         return selectedComponent;
     }
 
@@ -340,7 +335,7 @@ public class SubWindow {
         paintBoard.setClipRect(getFrame()); // Make sure no drawing is done outside the frame
         displayBackground(paintBoard);
         paintBoard.translateOrigin(getFrame().getX(), getFrame().getY() + TITLE_BAR_HEIGHT);
-        getActiveView().display(paintBoard, getSelectedComponent(), getSelectedLabel(), getViewFrame()); // Draw view contents
+        getActiveView().display(paintBoard); // Draw view contents
         paintBoard.translateOrigin(-getFrame().getX(), -getFrame().getY() - TITLE_BAR_HEIGHT);
         displayTitleBar(paintBoard);
         displayCloseButton(paintBoard);

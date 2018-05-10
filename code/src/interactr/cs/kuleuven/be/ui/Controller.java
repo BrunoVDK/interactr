@@ -1,6 +1,7 @@
 package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.exceptions.*;
+import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
 import interactr.cs.kuleuven.be.ui.control.SubWindow;
 
 import java.io.File;
@@ -78,10 +79,10 @@ public class Controller {
     }
 
     /**
-     * Creates a new subwindow with default parameters.
+     * Creates a new diagram with default parameters.
      */
     public void createSubWindow(){
-        this.addSubWindow(0, new SubWindow());
+        this.addSubWindow(0, new DiagramWindow());
         getPaintBoard().refresh();
     }
 

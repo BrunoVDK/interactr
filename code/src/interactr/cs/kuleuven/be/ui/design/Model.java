@@ -9,7 +9,7 @@ import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
  * @author Team 25
  * @version 1.0
  */
-public class Model implements Cloneable, Drawable {
+public class Model implements Cloneable {
 
     /**
      * Initialize this new model with given label.
