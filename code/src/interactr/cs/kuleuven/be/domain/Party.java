@@ -50,7 +50,9 @@ public class Party extends DiagramComponent {
      *
      * @return returns the switched party
      */
-    public Party switchType(){return null;}
+    public Party switchType(){
+        return null;
+    }
 
     /**
      * Returns a proposal for how this component should be drawn, by returning a mock-up figure.
@@ -65,18 +67,15 @@ public class Party extends DiagramComponent {
     public boolean canHaveAsLabel(String label) {
         if (!super.canHaveAsLabel(label))
             return false;
-        boolean validCharacters = true;
         String[] parts = label.split(":");
         if (parts.length == 2) {
-            // Instance doesn't start with lowercase letter
-            if (parts[0].length() != 0 && (!Character.isLowerCase(parts[0].charAt(0)) || !Character.isLetter(parts[0].charAt(0))))
-                validCharacters = false;
-            if (parts[1].length() == 0 || (!Character.isUpperCase(parts[1].charAt(0)) || !Character.isLetter(parts[1].charAt(0))))
-                validCharacters = false;
+            if (parts[0].length() != 0)
+                if (!Character.isLowerCase(parts[0].charAt(0)) || !Character.isLetter(parts[0].charAt(0)))
+                    return false;
+            return (parts[1].length() > 0 && Character.isUpperCase(parts[1].charAt(0)) && Character.isLetter(parts[1].charAt(0)));
         }
         else
-            validCharacters = false;
-        return validCharacters;
+            return false;
     }
 
     @Override
