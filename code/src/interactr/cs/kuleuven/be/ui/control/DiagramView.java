@@ -293,7 +293,7 @@ public abstract class DiagramView implements Cloneable, DiagramObserver {
         link.setStartY(senderCoordinate.getY() + figure.getHeight()/2);
         link.setEndX(receiverCoordinate.getX() + (senderCoordinate.getX() < receiverCoordinate.getX() ? 0 : figure.getWidth()));
         link.setEndY(receiverCoordinate.getY() + figure.getHeight()/2);
-        link.setLabel(message.getLabel());
+        link.setLabel(getDiagram().getPrefix(message) + " " + message.getLabel());
         return link;
     }
 
