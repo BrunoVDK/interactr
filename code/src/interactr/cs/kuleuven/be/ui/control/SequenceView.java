@@ -61,6 +61,7 @@ public class SequenceView extends DiagramView {
             Integer senderActivations = (activations.get(message.getSender()) == null ? 0 : activations.get(message.getSender()));
             Integer receiverActivations = (activations.get(message.getReceiver()) == null ? 0 : activations.get(message.getReceiver()));
             if (senderActivations == null || senderActivations  == 0) {
+                System.out.println(i + " - " + associatedIndex);
                 drawActivationBar(paintBoard, message.getSender(), 0, i, associatedIndex);
                 senderActivations = 1;
             }
@@ -69,13 +70,11 @@ public class SequenceView extends DiagramView {
                 receiverActivations++;
             }
             else {
-                if (message.getReceiver() == getDiagram().getInitiator() && senderActivations == 1) {
+                if (message.getReceiver() == getDiagram().getInitiator() && receiverActivations == 1) {
                     receiverActivations = 0;
                     link.setEndX(link.getEndX() + ACTIVATION_BAR_WIDTH/2);
                 }
-                else {
-                    link.setStartX(link.getStartX() + ACTIVATION_BAR_WIDTH/2);
-                }
+                else link.setStartX(link.getStartX() + ACTIVATION_BAR_WIDTH/2);
                 senderActivations--;
             }
             activations.put(message.getSender(), senderActivations);

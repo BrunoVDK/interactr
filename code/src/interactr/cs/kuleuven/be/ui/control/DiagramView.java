@@ -86,7 +86,8 @@ public abstract class DiagramView implements Cloneable, DiagramObserver {
      */
     void displayMessages(PaintBoard paintBoard) {
         for (Message message : getDiagram().getMessages())
-            getLinkForMessage(message).draw(paintBoard);
+            if (message.activates(message.getReceiver()))
+                getLinkForMessage(message).draw(paintBoard);
     }
 
     /**
@@ -285,11 +286,13 @@ public abstract class DiagramView implements Cloneable, DiagramObserver {
      */
     Link getLinkForMessage(Message message) {
         Link link = links.get(message.getClass());
-        Figure senderFigure = getFigureForParty(message.getSender()), receiverFigure = getFigureForParty(message.getReceiver());
-        link.setStartX(senderFigure.getX() + (senderFigure.getX() < receiverFigure.getX() ? senderFigure.getWidth() : 0));
-        link.setStartY(senderFigure.getY() + senderFigure.getHeight()/2);
-        link.setEndX(receiverFigure.getX() + (senderFigure.getX() < receiverFigure.getX() ? 0 : receiverFigure.getWidth()));
-        link.setEndY(receiverFigure.getY() + receiverFigure.getHeight()/2);
+        Figure figure = getFigureForParty(message.getSender());
+        Point senderCoordinate = getCoordinateForParty(message.getSender());
+        Point receiverCoordinate = getCoordinateForParty(message.getReceiver());
+        link.setStartX(senderCoordinate.getX() + (senderCoordinate.getX() < receiverCoordinate.getX() ? figure.getWidth() : 0));
+        link.setStartY(senderCoordinate.getY() + figure.getHeight()/2);
+        link.setEndX(receiverCoordinate.getX() + (senderCoordinate.getX() < receiverCoordinate.getX() ? 0 : figure.getWidth()));
+        link.setEndY(receiverCoordinate.getY() + figure.getHeight()/2);
         link.setLabel(message.getLabel());
         return link;
     }
