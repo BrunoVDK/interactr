@@ -40,10 +40,6 @@ public class DiagramWindow extends SubWindow {
         }
     }
 
-    public void addMessage(int fromX, int fromY, int toX, int toY) throws InvalidAddMessageException {
-        getActiveView().addMessage(fromX, fromY, toX, toY);
-    }
-
     /**
      * Returns the diagram associated with this subwindow.
      */

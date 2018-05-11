@@ -1,5 +1,6 @@
 package interactr.cs.kuleuven.be.ui.design;
 
+import interactr.cs.kuleuven.be.ui.geometry.Point;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
@@ -133,6 +134,15 @@ public class Figure extends Model {
      * The height of this figure.
      */
     private int height;
+
+    /**
+     * Returns the center point for this figure.
+     *
+     * @return The center point for this figure.
+     */
+    public Point getCenter() {
+        return new Point(getX() + getWidth()/2, getY() + getY()/2);
+    }
 
     /**
      * Returns the boudns of this figure.

@@ -75,7 +75,7 @@ public class Message extends DiagramComponent {
      * @return True if and only if this message activates the given party.
      */
     public boolean activates(Party party) {
-        return party == getReceiver();
+        return (party == getReceiver());
     }
 
     @Override

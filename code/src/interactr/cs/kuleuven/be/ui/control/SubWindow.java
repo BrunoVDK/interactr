@@ -99,7 +99,7 @@ public class SubWindow {
      * @param frame The new frame for this subwindow.
      * @throws IllegalWindowFrameException This subwindow cannot have the given frame as its own frame.
      */
-    protected void setFrame(Rectangle frame) throws IllegalWindowFrameException {
+    private void setFrame(Rectangle frame) throws IllegalWindowFrameException {
         if (!canHaveAsFrame(frame))
             throw new IllegalWindowFrameException();
         this.frame = frame;
@@ -199,7 +199,7 @@ public class SubWindow {
      * @throws InvalidAddMessageException The operation was not successful.
      */
     public void addMessage(int fromX, int fromY, int toX, int toY) throws InvalidAddMessageException {
-
+        getActiveView().addMessage(fromX, fromY - TITLE_BAR_HEIGHT, toX, toY - TITLE_BAR_HEIGHT);
     }
 
     /**

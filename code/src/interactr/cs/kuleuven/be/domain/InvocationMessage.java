@@ -29,6 +29,24 @@ public class InvocationMessage extends Message {
     }
 
     /**
+     * Returns the method name in this message's label.
+     *
+     * @return The method name of this message's label.
+     */
+    public String getMethodName() {
+        return methodNameInLabel(getLabel());
+    }
+
+    /**
+     * Returns the arguments in this message's label.
+     *
+     * @return The argument list of this message's label.
+     */
+    public String[] getArguments() {
+        return argumentsInLabel(getLabel());
+    }
+
+    /**
      * Returns the method name in the given label.
      *
      * @param label The label having the desired method name.
