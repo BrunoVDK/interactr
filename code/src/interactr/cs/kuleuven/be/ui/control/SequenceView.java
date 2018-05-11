@@ -43,12 +43,12 @@ public class SequenceView extends DiagramView {
         for (Party party : getDiagram().getParties()) {
             Figure partyFigure = getFigureForParty(party);
             paintBoard.drawLine(partyFigure.getX() + partyFigure.getWidth() / 2,
-                    PARTY_ROW_HEIGHT - 5,
+                    PARTY_ROW_HEIGHT - 15,
                     partyFigure.getX() + partyFigure.getWidth() / 2,
                     paintBoard.getHeight());
         }
         paintBoard.setColour(Colour.BLACK);
-        paintBoard.drawLine(0, PARTY_ROW_HEIGHT - 5, paintBoard.getWidth(), PARTY_ROW_HEIGHT - 5);
+        paintBoard.drawLine(0, PARTY_ROW_HEIGHT - 15, paintBoard.getWidth(), PARTY_ROW_HEIGHT - 15);
     }
 
     @Override
@@ -61,7 +61,6 @@ public class SequenceView extends DiagramView {
             Integer senderActivations = (activations.get(message.getSender()) == null ? 0 : activations.get(message.getSender()));
             Integer receiverActivations = (activations.get(message.getReceiver()) == null ? 0 : activations.get(message.getReceiver()));
             if (senderActivations == null || senderActivations  == 0) {
-                System.out.println(i + " - " + associatedIndex);
                 drawActivationBar(paintBoard, message.getSender(), 0, i, associatedIndex);
                 senderActivations = 1;
             }
@@ -154,8 +153,6 @@ public class SequenceView extends DiagramView {
     int getMessageInsertionIndex(int fromX, int fromY, int toX, int toY) {
         for (int i=0 ; i<getDiagram().getNbMessages() ; i++) {
             Link link = getLinkForMessage(getDiagram().getMessageAtIndex(i));
-            System.out.println(link.getStartY());
-            System.out.println(fromY);
             if (link.getStartY() > fromY || link.getEndY() > fromY)
                 return i;
         }
@@ -181,7 +178,7 @@ public class SequenceView extends DiagramView {
     /**
      * The height of the party row.
      */
-    private static final int PARTY_ROW_HEIGHT = 80;
+    private static final int PARTY_ROW_HEIGHT = 90;
 
     /**
      * The height of each message row.

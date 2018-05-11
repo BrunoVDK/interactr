@@ -168,12 +168,12 @@ public abstract class DiagramView implements Cloneable, DiagramObserver {
         Party movedParty = getParty(fromX, fromY);
         if (movedParty == null)
             throw new NoSuchPartyException(fromX, fromY);
-        Figure figure = getFigureForParty(movedParty);
-        int newX = figure.getX() + (toX - fromX), newY = figure.getY() + (toY - fromY);
-        figure.setX(newX);
-        figure.setY(newY);
+        Rectangle movedBounds = getFigureForParty(movedParty).getBounds();
+        int newX = movedBounds.getX() + (toX - fromX), newY = movedBounds.getY() + (toY - fromY);
+        movedBounds.setX(newX);
+        movedBounds.setY(newY);
         for (Party party : getDiagram().getParties())
-            if (party != movedParty && figure.getBounds().overlaps(getFigureForParty(party).getBounds()))
+            if (party != movedParty && movedBounds.overlaps(getFigureForParty(party).getBounds()))
                 throw new InvalidMovePartyException();
         setCoordinateForParty(movedParty, new Point(newX, newY));
     }
