@@ -500,4 +500,8 @@ public class SubWindow implements CommandHandler {
         command.executeSubWindow(this);
     }
 
+    @Override
+    public CommandHandler nextHandler() {
+        return new SequenceView(new Diagram());
+    }
 }

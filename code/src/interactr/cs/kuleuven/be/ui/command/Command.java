@@ -54,7 +54,8 @@ public class Command {
      * @param window The subwindow in which the command should be executed.
      * @throws CommandNotProcessedException the command could not be executed by the given receiver.
      */
-    public void executeSubWindow(SubWindow window) {throw new CommandNotProcessedException();}
+    public void executeSubWindow(SubWindow window) {
+        System.out.println("window");throw new CommandNotProcessedException();}
 
     /**
      * Execute this command in the given diagram view.
@@ -62,7 +63,8 @@ public class Command {
      * @param view The view in which the command should be executed.
      * @throws CommandNotProcessedException the command could not be executed by the given receiver.
      */
-    public void executeDiagramView(DiagramView view) {throw new CommandNotProcessedException();}
+    public void executeDiagramView(DiagramView view) {
+        System.out.println("view");throw new CommandNotProcessedException();}
 
     /**
      * Execute this command in the given dialog.

@@ -6,6 +6,9 @@ import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.purecollections.PMap;
 import interactr.cs.kuleuven.be.ui.DiagramObserver;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.command.Command;
+import interactr.cs.kuleuven.be.ui.command.CommandHandler;
+import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
 import interactr.cs.kuleuven.be.ui.design.*;
 import interactr.cs.kuleuven.be.ui.geometry.Point;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
@@ -19,7 +22,7 @@ import java.util.Map;
  * @author Team 25
  * @version 1.0
  */
-public abstract class DiagramView implements Cloneable, DiagramObserver {
+public abstract class DiagramView implements Cloneable, DiagramObserver, CommandHandler {
 
     /**
      * Initialize this new diagram view with the given diagram.
@@ -393,4 +396,8 @@ public abstract class DiagramView implements Cloneable, DiagramObserver {
         diagram.unregisterObserver(this);
     }
 
+    @Override
+    public void executeCommand(Command command) throws CommandNotProcessedException {
+        command.executeDiagramView(this);
+    }
 }
