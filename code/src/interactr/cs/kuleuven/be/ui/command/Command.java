@@ -42,8 +42,7 @@ public class Command {
         catch (CommandNotProcessedException e) {
             if (receiver.nextHandler() != null)
                 execute(receiver.nextHandler());
-            else
-                throw e;
+            else throw e;
         }
         setReceiver(receiver);
     }
