@@ -128,10 +128,10 @@ public class Rectangle {
      * @return 	True if and only if the given rectangle overlaps this rectangle.
      */
     public boolean overlaps(Rectangle other) {
-        return (other.getX() + other.getWidth() >= getX()
-                && other.getX() <= getX() + getWidth()
-                && other.getY() + other.getHeight() >= getY()
-                && other.getHeight() <= getY() + getHeight());
+        return (other.getX() + other.getWidth() >= this.getX()
+                && other.getX() <= this.getX() + this.getWidth()
+                && other.getY() + other.getHeight() >= this.getY()
+                && other.getY() <= this.getY() + this.getHeight());
     }
 
     /**

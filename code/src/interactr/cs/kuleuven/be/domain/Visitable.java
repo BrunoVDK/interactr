@@ -9,9 +9,9 @@ package interactr.cs.kuleuven.be.domain;
 public interface Visitable {
 
     /**
-     * Accept the given visitor.
+     * Accept the given visit.
      *
-     * @param visitor The visitor that is to be accepted.
+     * @param visitor The visit that is to be accepted.
      */
     default void acceptVisitor(DiagramVisitor visitor) {}
 

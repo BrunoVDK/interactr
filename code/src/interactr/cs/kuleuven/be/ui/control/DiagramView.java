@@ -247,7 +247,7 @@ public abstract class DiagramView implements Cloneable, DiagramObserver, Command
      * @param party The party to register.
      */
     public void diagramDidAddParty(Diagram diagram, Party party) {
-        setCoordinateForParty(party, findEmptyCoordinateForParty(party));
+        makeRoomForParty(party);
     }
 
     /**
@@ -318,40 +318,36 @@ public abstract class DiagramView implements Cloneable, DiagramObserver, Command
     Figure getFigureForParty(Party party) {
         Figure figure = figures.get(party.getClass());
         Point coordinate = getCoordinateForParty(party);
-        if (coordinate != null) {
-            figure.setX(coordinate.getX());
-            figure.setY(coordinate.getY());
-            figure.setLabel(party.getLabel());
-        }
+        figure.setX(coordinate.getX());
+        figure.setY(coordinate.getY());
+        figure.setLabel(party.getLabel());
         return figure;
     }
 
     /**
-     * Determines a coordinate where a party can be placed.
+     * Make room for the given party.
+     *  This method shifts all party figures such that the given party's figure is in an empty spot.
      *
-     * @return A point such that placing a party at that point would not make any parties overlap.
+     * @param party The figure to make room for.
      */
-    Point findEmptyCoordinateForParty(Party party) {
-        Point coordinate = getCoordinateForParty(party);
-        if (coordinate == null)
-            coordinate = new Point(5, 5);
-        Figure figure = getFigureForParty(party);
-        Rectangle bounds = figure.getBounds();
-        boolean overlaps = true;
-        while (overlaps) {
-            overlaps = false;
-            for (Party p : getDiagram().getParties()) {
-                if (p != party) {
-                    Figure otherFigure = getFigureForParty(p);
-                    if (bounds.overlaps(otherFigure.getBounds())) {
-                        overlaps = true;
-                        bounds.setX(Math.max(coordinate.getX(), otherFigure.getX() + otherFigure.getWidth() + 5));
-                        break;
-                    }
+    private void makeRoomForParty(Party party) {
+        Rectangle partyBounds = getFigureForParty(party).getBounds(); // Necessary because of flyweight
+        for (Party otherParty : diagram.getParties()) {
+            if (otherParty != party) {
+                Rectangle otherBounds = getFigureForParty(otherParty).getBounds();
+                if (otherBounds.overlaps(partyBounds)) {
+                    if (partyBounds.getX() > otherBounds.getX())
+                        setCoordinateForParty(otherParty, new Point(
+                                partyBounds.getX() - otherBounds.getWidth() - 5,
+                                otherBounds.getY()));
+                    else
+                        setCoordinateForParty(otherParty, new Point(
+                                partyBounds.getX() + partyBounds.getWidth() + 5,
+                                otherBounds.getY()));
+                    makeRoomForParty(otherParty); // Recursive call (keep shifting)
                 }
             }
         }
-        return new Point(bounds.getX(), coordinate.getY());
     }
 
     /**
@@ -361,6 +357,8 @@ public abstract class DiagramView implements Cloneable, DiagramObserver, Command
      * @return The coordinate for the given party.
      */
     private Point getCoordinateForParty(Party party) {
+        if (partyCoordinates.get(party) == null)
+            setCoordinateForParty(party, new Point(5,5));
         return partyCoordinates.get(party);
     }
 
@@ -400,4 +398,5 @@ public abstract class DiagramView implements Cloneable, DiagramObserver, Command
     public void executeCommand(Command command) throws CommandNotProcessedException {
         command.executeDiagramView(this);
     }
+
 }

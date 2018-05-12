@@ -1,4 +1,4 @@
-package interactr.cs.kuleuven.be.ui.visitor;
+package interactr.cs.kuleuven.be.ui.visit;
 
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.ui.control.Dialog;

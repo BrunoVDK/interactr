@@ -13,9 +13,7 @@ public interface DiagramVisitor {
      *
      * @param diagram The diagram that is to be visited.
      */
-    default void visit(Diagram diagram) {
-        System.out.println("diagram");
-    }
+    default void visit(Diagram diagram) {}
 
     /**
      * Visit the given object party.
