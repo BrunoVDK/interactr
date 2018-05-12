@@ -11,7 +11,7 @@ public class ObjectParty extends Party {
     /**
      * Initialize this new party with a default label.
      */
-    ObjectParty() {
+    public ObjectParty() {
         super();
     }
 
@@ -38,4 +38,8 @@ public class ObjectParty extends Party {
         return new ActorParty(this);
     }
 
+    @Override
+    public void acceptVisitor(DiagramVisitor visitor) {
+        visitor.visit(this);
+    }
 }

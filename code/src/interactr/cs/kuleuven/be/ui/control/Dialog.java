@@ -12,6 +12,27 @@ import interactr.cs.kuleuven.be.domain.ResultMessage;
  */
 public abstract class Dialog extends SubWindow {
 
+    /**
+     * Initialize this new dialog with given diagram.
+     *
+     * @param diagram The diagram to initialize this new dialog with.
+     */
+    public Dialog(Diagram diagram) {
+        if (diagram == null)
+            throw new IllegalArgumentException("Diagram cannot be null.");
+        this.diagram = diagram;
+    }
 
+    /**
+     * Returns the diagram associated with this dialog.
+     */
+    public Diagram getDiagram() {
+        return diagram;
+    }
+
+    /**
+     * Registers the diagram associated with this dialog.
+     */
+    private Diagram diagram;
 
 }

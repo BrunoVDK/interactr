@@ -30,4 +30,8 @@ public class ResultMessage extends Message {
         return false;
     }
 
+    @Override
+    public void acceptVisitor(DiagramVisitor visitor) {
+        visitor.visit(this);
+    }
 }

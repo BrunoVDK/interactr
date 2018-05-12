@@ -64,6 +64,7 @@ public abstract class DiagramView implements Cloneable, DiagramObserver {
      * @param paintBoard The paintboard to use when displaying the view.
      */
     public void display(PaintBoard paintBoard) {
+        paintBoard.setColour(Colour.BLACK);
         displayFigures(paintBoard);
         displayMessages(paintBoard);
     }
@@ -74,7 +75,6 @@ public abstract class DiagramView implements Cloneable, DiagramObserver {
      * @param paintBoard The paintboard to use when displaying the view.
      */
     void displayFigures(PaintBoard paintBoard) {
-        paintBoard.setColour(Colour.BLACK);
         for (Party party : getDiagram().getParties())
             getFigureForParty(party).draw(paintBoard);
     }
@@ -169,13 +169,12 @@ public abstract class DiagramView implements Cloneable, DiagramObserver {
         if (movedParty == null)
             throw new NoSuchPartyException(fromX, fromY);
         Rectangle movedBounds = getFigureForParty(movedParty).getBounds();
-        int newX = movedBounds.getX() + (toX - fromX), newY = movedBounds.getY() + (toY - fromY);
-        movedBounds.setX(newX);
-        movedBounds.setY(newY);
+        movedBounds.setX(movedBounds.getX() + (toX - fromX));
+        movedBounds.setY(movedBounds.getY() + (toY - fromY));
         for (Party party : getDiagram().getParties())
             if (party != movedParty && movedBounds.overlaps(getFigureForParty(party).getBounds()))
                 throw new InvalidMovePartyException();
-        setCoordinateForParty(movedParty, new Point(newX, newY));
+        setCoordinateForParty(movedParty, new Point(movedBounds.getX(), movedBounds.getY()));
     }
 
     /**
@@ -220,10 +219,12 @@ public abstract class DiagramView implements Cloneable, DiagramObserver {
         if (canAddMessageAt(fromX, fromY, toX, toY)) {
             int index = getMessageInsertionIndex(fromX, fromY, toX, toY);
             Party sender = getParty(fromX, 10), receiver = getParty(toX, 10);
-            diagram.insertInvocationMessageAtIndex(new InvocationMessage(sender, receiver), index);
+            if (sender != null && receiver != null && sender != receiver) {
+                diagram.insertInvocationMessageAtIndex(new InvocationMessage(sender, receiver), index);
+                return;
+            }
         }
-        else
-            throw new InvalidAddMessageException();
+        throw new InvalidAddMessageException();
     }
 
     /**

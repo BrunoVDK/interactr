@@ -38,4 +38,8 @@ public class ActorParty extends Party {
         return new ObjectParty(this);
     }
 
+    @Override
+    public void acceptVisitor(DiagramVisitor visitor) {
+        visitor.visit(this);
+    }
 }

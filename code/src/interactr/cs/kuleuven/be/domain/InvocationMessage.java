@@ -112,4 +112,8 @@ public class InvocationMessage extends Message {
         return true;
     }
 
+    @Override
+    public void acceptVisitor(DiagramVisitor visitor) {
+        visitor.visit(this);
+    }
 }
