@@ -13,7 +13,7 @@ import interactr.cs.kuleuven.be.ui.control.SubWindow;
  * @author Team 25
  * @version 1.0
  */
-public abstract class Command {
+public class Command {
 
     /**
      * Sets the receiver for this command.
@@ -35,7 +35,7 @@ public abstract class Command {
      * @param receiver The receiver for which the command should be executed.
      * @throws CommandNotProcessedException If the command could not be executed.
      */
-    final void execute(CommandHandler receiver) throws CommandNotProcessedException {
+    public final void execute(CommandHandler receiver) throws CommandNotProcessedException {
         try {
             receiver.executeCommand(this);
         }
@@ -45,7 +45,7 @@ public abstract class Command {
             else
                 throw e;
         }
-        this.receiver = receiver;
+        setReceiver(receiver);
     }
 
     /**
@@ -54,7 +54,7 @@ public abstract class Command {
      * @param window The subwindow in which the command should be executed.
      * @throws CommandNotProcessedException the command could not be executed by the given receiver.
      */
-    void execute(SubWindow window) {throw new CommandNotProcessedException();}
+    public void executeSubWindow(SubWindow window) {throw new CommandNotProcessedException();}
 
     /**
      * Execute this command in the given diagram view.
@@ -62,7 +62,7 @@ public abstract class Command {
      * @param view The view in which the command should be executed.
      * @throws CommandNotProcessedException the command could not be executed by the given receiver.
      */
-    void execute(DiagramView view) {throw new CommandNotProcessedException();}
+    public void executeDiagramView(DiagramView view) {throw new CommandNotProcessedException();}
 
     /**
      * Execute this command in the given dialog.
@@ -70,14 +70,14 @@ public abstract class Command {
      * @param dialog The dialog in which the command should be executed.
      * @throws CommandNotProcessedException the command could not be executed by the given receiver.
      */
-    void execute(Dialog dialog) {throw new CommandNotProcessedException();}
+    public void executeDialog(Dialog dialog) {throw new CommandNotProcessedException();}
 
     /**
      * Undo this command.
      *
      * @throws CommandNotProcessedException The command could not be undone.
      */
-    final void undo() throws CommandNotProcessedException {
+    public final void undo() throws CommandNotProcessedException {
         if (receiver == null)
             throw new CommandNotProcessedException();
         receiver.undoCommand(this);
@@ -89,7 +89,7 @@ public abstract class Command {
      * @param window The subwindow in which the command should be undone.
      * @throws CommandNotProcessedException the command could not be executed by the given receiver.
      */
-    void undo(SubWindow window) {throw new CommandNotProcessedException();}
+    public void undoSubWindow(SubWindow window) {throw new CommandNotProcessedException();}
 
     /**
      * Undo this command in the given diagram view.
@@ -97,7 +97,7 @@ public abstract class Command {
      * @param view The view in which the command should be undone.
      * @throws CommandNotProcessedException the command could not be executed by the given receiver.
      */
-    void undo(DiagramView view) {throw new CommandNotProcessedException();}
+    public void undoDiagramView(DiagramView view) {throw new CommandNotProcessedException();}
 
     /**
      * Undo this command in the given dialog.
@@ -105,6 +105,6 @@ public abstract class Command {
      * @param dialog The dialog in which the command should be undone.
      * @throws CommandNotProcessedException the command could not be executed by the given receiver.
      */
-    void undo(Dialog dialog) {throw new CommandNotProcessedException();}
+    public void undoDialog(Dialog dialog) {throw new CommandNotProcessedException();}
 
 }

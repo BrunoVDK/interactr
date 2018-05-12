@@ -1,6 +1,7 @@
 package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.exceptions.*;
+import interactr.cs.kuleuven.be.ui.command.Command;
 import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
 import interactr.cs.kuleuven.be.ui.control.SubWindow;
 
@@ -370,6 +371,9 @@ public class Controller {
 
     // Entry point
     public static void main(String[] args) { // No documentation
+        Command command = new Command();
+        SubWindow subWindow = new SubWindow(null);
+        command.execute(subWindow);
         new Controller(args.length > 0 && args[0].equalsIgnoreCase("-r"));
     }
 
