@@ -24,7 +24,7 @@ public class CommunicationView extends DiagramView {
 
     @Override
     public String toString() {
-        return "Communication View";
+        return super.toString() + " - Communication View";
     }
 
 }

@@ -364,6 +364,22 @@ public class SubWindow implements CommandHandler {
         paintBoard.fillRectangle(getFrame().getX(), getFrame().getY(), getFrame().getWidth()-1, TITLE_BAR_HEIGHT);
         paintBoard.setColour(Colour.GRAY);
         paintBoard.drawRectangle(getFrame().getX(), getFrame().getY(), getFrame().getWidth()-1, getFrame().getHeight()-1);
+        displayTitle(paintBoard);
+    }
+
+    /**
+     * Display the title of this subwindow on the given paintboard.
+     *
+     * @param paintBoard The paintboard to draw on.
+     */
+    private void displayTitle(PaintBoard paintBoard) {
+        int titleWidth = paintBoard.getWidthForString(getTitle()); // Fowler says no temporary variables :'(
+        int titleHeight = paintBoard.getHeightForString(getTitle());
+        paintBoard.setColour(Colour.BLACK);
+        if (titleWidth < getFrame().getWidth() - CLOSE_BUTTON_SIZE * 3)
+            paintBoard.drawString(getTitle(),
+                    getFrame().getX() + (getFrame().getWidth() - titleWidth) / 2,
+                    getFrame().getY() + TITLE_BAR_HEIGHT - (TITLE_BAR_HEIGHT - titleHeight) / 2);
     }
 
     /**
@@ -376,6 +392,15 @@ public class SubWindow implements CommandHandler {
         paintBoard.drawRectangle(closeButtonFrame.getX(), closeButtonFrame.getY(), closeButtonFrame.getWidth(), closeButtonFrame.getHeight());
         paintBoard.drawLine(closeButtonFrame.getX(), closeButtonFrame.getY(), closeButtonFrame.getX() + CLOSE_BUTTON_SIZE, closeButtonFrame.getY() + CLOSE_BUTTON_SIZE);
         paintBoard.drawLine(closeButtonFrame.getX(), closeButtonFrame.getY() + CLOSE_BUTTON_SIZE, closeButtonFrame.getX() + CLOSE_BUTTON_SIZE, closeButtonFrame.getY());
+    }
+
+    /**
+     * Returns the title of this subwindow.
+     *
+     * @return The title of this subwindow.
+     */
+    public String getTitle() {
+        return getActiveView().toString();
     }
 
     /**

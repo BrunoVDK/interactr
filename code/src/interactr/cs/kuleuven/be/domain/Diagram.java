@@ -31,7 +31,7 @@ public class Diagram implements Visitable {
     /**
      * Registers the sequence number for this diagram.
      */
-    private static int sequenceNumber;
+    private int sequenceNumber;
 
     /**
      * Returns the sequence number for this diagram.

@@ -197,7 +197,7 @@ public class SequenceView extends DiagramView {
 
     @Override
     public String toString() {
-        return "Sequence View";
+        return super.toString() + " - Sequence View";
     }
 
 }

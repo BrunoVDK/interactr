@@ -61,4 +61,8 @@ public class Point {
      */
     private int y;
 
+    @Override
+    public String toString() {
+        return "[" + getX() + " " + getY() + "]";
+    }
 }

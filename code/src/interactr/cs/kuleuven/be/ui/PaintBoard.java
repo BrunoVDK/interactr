@@ -86,6 +86,26 @@ public class PaintBoard {
     }
 
     /**
+     * Returns the width of the given string, when drawn.
+     *
+     * @param string The string whose drawing width is desired.
+     * @return The width of the string when it is drawn on this paintboard.
+     */
+    public int getWidthForString(String string) {
+        return string.length() * charWidth;
+    }
+
+    /**
+     * Returns the height of the given string, when drawn.
+     *
+     * @param string The string whose drawing height is desired.
+     * @return The height of the string when it is drawn on this paintboard.
+     */
+    public int getHeightForString(String string) {
+        return charHeight;
+    }
+
+    /**
      * Draw the given string at the given coordinate.
      *
      * @param string The string that is to be drawn.

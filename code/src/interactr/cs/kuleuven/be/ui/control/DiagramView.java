@@ -399,4 +399,8 @@ public abstract class DiagramView implements Cloneable, DiagramObserver, Command
         command.executeDiagramView(this);
     }
 
+    @Override
+    public String toString() {
+        return "Diagram " + getDiagram().getSequenceNumber();
+    }
 }
