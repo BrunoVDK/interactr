@@ -12,8 +12,6 @@ import interactr.cs.kuleuven.be.ui.design.*;
 import interactr.cs.kuleuven.be.ui.geometry.Point;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
-import java.util.Map;
-
 /**
  * An abstract interface for diagram views. Diagram views can display diagrams in
  *  a coordinate system. They allow for manipulation and selection of diagram components.
@@ -261,18 +259,6 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
         removeCoordinateForParty(oldParty);
     }
 
-    @Override
-    public DiagramView clone() {
-        final DiagramView clone;
-        try {
-            clone = getClass().getConstructor(Diagram.class).newInstance(diagram);
-            for (Party party : partyCoordinates.keySet())
-                clone.setCoordinateForParty(party, partyCoordinates.get(party));
-        }
-        catch (Exception e) {throw new RuntimeException("Failed to clone diagram view." + e.getClass().toString());}
-        return clone;
-    }
-
     /**
      * Returns a link for the given message, to be used as a flyweight when drawing.
      *
@@ -385,6 +371,19 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
     @Override
     public String toString() {
         return "Diagram " + getDiagram().getSequenceNumber();
+    }
+
+    @Override
+    public DiagramView clone() {
+        final DiagramView clone;
+        try {
+            clone = (DiagramView)super.clone();
+            clone.setDiagram(getDiagram());
+            for (Party party : partyCoordinates.keySet())
+                clone.setCoordinateForParty(party, partyCoordinates.get(party));
+        }
+        catch (Exception e) {throw new RuntimeException("Failed to clone diagram view." + e.getClass().toString());}
+        return clone;
     }
 
 }

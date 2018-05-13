@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import interactr.cs.kuleuven.be.exceptions.*;
+import interactr.cs.kuleuven.be.ui.command.FocusNextCommand;
 import interactr.cs.kuleuven.be.ui.geometry.Point;
 
 /**
@@ -267,7 +268,7 @@ public class EventHandler {
      */
     private void handleKeyTyped(char keyChar) {
         if (keyChar == KeyEvent.VK_TAB && !getController().isEditing())
-            getController().toggleActiveSubWindowView();
+            getController().processCommand(new FocusNextCommand());
         else if (Character.isLetter(keyChar)
                 || Character.isDigit(keyChar)
                 || ":();-_<>*&[]".contains(Character.toString(keyChar)))

@@ -525,6 +525,4 @@ public class SubWindow implements CommandHandler {
         command.executeSubWindow(this);
     }
 
-
-
 }

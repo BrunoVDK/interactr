@@ -1,8 +1,9 @@
 package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.exceptions.*;
+import interactr.cs.kuleuven.be.ui.command.Command;
+import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
 import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
-import interactr.cs.kuleuven.be.ui.control.Dialog;
 import interactr.cs.kuleuven.be.ui.control.SubWindow;
 
 import java.io.File;
@@ -43,31 +44,11 @@ public class Controller {
     }
 
     /**
-     * Toggle the diagram view in this controller's active subwindow
-     */
-    public void toggleActiveSubWindowView() {
-        if (getActiveSubwindow() != null) {
-            getActiveSubwindow().nextView();
-            getPaintBoard().refresh();
-        }
-    }
-
-    /**
      * Display all subwindows in this diagram controller.
      */
     public void displayAllSubWindows() {
         for (int i=this.getSubWindows().size()-1 ; i>=0 ; i--) // Last window first
             this.getSubWindows().get(i).displayView(getPaintBoard());
-    }
-
-    /**
-     * Display the currently active subwindow of this diagram controller.
-     *  This method can be used to improve performance if nothing but the contents of the active subwindow
-     *  was changed.
-     */
-    public void displayActiveSubWindow() {
-        if (getActiveSubwindow() != null)
-            getActiveSubwindow().displayView(getPaintBoard());
     }
 
     /**
@@ -346,6 +327,17 @@ public class Controller {
                 getPaintBoard().refresh();
             }
         }
+    }
+
+    /**
+     * Process the given command.
+     *
+     * @param command The command that is to be processed.
+     * @throws CommandNotProcessedException The command failed to be executed.
+     */
+    public void processCommand(Command command) throws CommandNotProcessedException {
+        command.execute(getActiveSubwindow());
+        getPaintBoard().refresh();
     }
 
     /**

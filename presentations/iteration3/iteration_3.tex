@@ -76,7 +76,7 @@
 	\vspace{0.5cm}
 	Synchronization is done with the \texttt{Observer} pattern. 
 	\\ Since \texttt{Diagram} knows when it changes, it keeps a list of \texttt{DiagramObserver}s and notifies them (\texttt{Information Expert}).
-	\\$\rightarrow$ disadvantage : coordinates aren't synchronised
+	\\$\rightarrow$ disadvantage : coordinates aren't synchronised (solved by `\textit{making room}')
 	\end{center}
 \end{frame}
 
@@ -98,7 +98,7 @@
 	\item[$\rightarrow$] Every \texttt{Command} can be handled by a \texttt{CommandHandler}.
 	\item[$\rightarrow$] \texttt{DiagramWindow}, \texttt{DiagramView} and \texttt{DialogBox} extend the\texttt{CommandHandler} class. 
 	\item[$\rightarrow$] The first \texttt{CommandHandler} is the active \texttt{SubWindow}.
-	\item[$\rightarrow$] Every \texttt{CommandHandler} either deals with the \texttt{Command} or - on failure - passes it to the next \texttt{CommandHandler} in its chain. 
+	\item[$\rightarrow$] Every \texttt{CommandHandler} either deals with the \texttt{Command} or (on failure) passes it to the next \texttt{CommandHandler} in its chain. 
 	\end{itemize}
 	Patterns used : \texttt{Command}, \texttt{Visitor} and \texttt{Chain of Responsibility}.
 	\end{center}
@@ -132,7 +132,7 @@
 
 \section{Extensibility}
 
-\begin{frame}[fragile]{Event Handling}
+\begin{frame}[fragile]{Commands}
 	\begin{center}
 	\texttt{Command} pattern eases undoing, allows delayed processing, use by menu items, ... When using new types of events (eg. speech recognition) only \texttt{EventHandler} has to change.
 	

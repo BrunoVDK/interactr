@@ -1,8 +1,8 @@
 package interactr.cs.kuleuven.be.ui.command;
 
-import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 import interactr.cs.kuleuven.be.ui.control.Dialog;
 import interactr.cs.kuleuven.be.ui.control.SubWindow;
+import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 
 /**
  * A class of commands, representing requests that can be executed or undone.
@@ -35,7 +35,9 @@ public class Command {
      * @param receiver The receiver for which the command should be executed.
      * @throws CommandNotProcessedException If the command could not be executed.
      */
-    final void execute(CommandHandler receiver) throws CommandNotProcessedException {
+    public final void execute(CommandHandler receiver) throws CommandNotProcessedException {
+        if (receiver == null)
+            throw new CommandNotProcessedException();
         try {
             receiver.executeCommand(this);
         }

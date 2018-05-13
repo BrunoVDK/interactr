@@ -145,7 +145,7 @@ public class Figure extends Model {
     }
 
     /**
-     * Returns the boudns of this figure.
+     * Returns the bounds of this figure.
      *
      * @return A rectangle representing the bounds of this figure.
      */
