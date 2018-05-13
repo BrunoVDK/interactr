@@ -116,6 +116,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
         if (oldParty != null) {
             Party newParty = oldParty.switchType();
             diagram.replaceParty(oldParty, newParty);
+            makeRoomForParty(newParty);
         }
     }
 

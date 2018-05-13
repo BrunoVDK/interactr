@@ -67,12 +67,7 @@ public class SubWindow implements CommandHandler {
      * @return The frame in which views of this subwindow are drawn.
      */
     private Rectangle getViewFrame() {
-        return new Rectangle(
-                frame.getX(),
-                frame.getY() + TITLE_BAR_HEIGHT,
-                frame.getWidth(),
-                frame.getHeight() - TITLE_BAR_HEIGHT
-        );
+        return new Rectangle(frame.getX(), frame.getY() + TITLE_BAR_HEIGHT, frame.getWidth(), frame.getHeight() - TITLE_BAR_HEIGHT);
     }
 
     /**
@@ -119,35 +114,26 @@ public class SubWindow implements CommandHandler {
      * @throws InvalidResizeWindowException The resize was not successful.
      */
     public void resize(int fromX, int fromY, int toX, int toY) throws InvalidResizeWindowException {
-
-        // Get the borders at the start coordinates
         int border = getBordersAt(fromX, fromY);
-        if (border == 0) // No resize can be done from the given start coordinates (no border)
+        if (border == 0) // No border
             throw new InvalidResizeWindowException();
-
-        // Calculate the new frame based on the end coordinates
-        Rectangle newFrame = new Rectangle(this.getFrame());
-        if ((border & SubWindowBorder.NORTH.code) != 0) {
-            newFrame.setY(newFrame.getY() + (toY - fromY));
-            newFrame.setHeight(newFrame.getHeight() - (toY - fromY));
-        }
-        if ((border & SubWindowBorder.EAST.code) != 0)
-            newFrame.setWidth(newFrame.getWidth() + (toX - fromX));
-        if ((border & SubWindowBorder.SOUTH.code) != 0)
-            newFrame.setHeight(newFrame.getHeight() + (toY - fromY));
-        if ((border & SubWindowBorder.WEST.code) != 0) {
-            newFrame.setX(newFrame.getX() + (toX - fromX));
-            newFrame.setWidth(newFrame.getWidth() - (toX - fromX));
-        }
-
-        // Try to set the frame or throw an exception if the new frame is invalid
         try {
+            Rectangle newFrame = new Rectangle(this.getFrame());
+            if ((border & SubWindowBorder.NORTH.code) != 0) {
+                newFrame.setY(newFrame.getY() + (toY - fromY));
+                newFrame.setHeight(newFrame.getHeight() - (toY - fromY));
+            }
+            if ((border & SubWindowBorder.EAST.code) != 0)
+                newFrame.setWidth(newFrame.getWidth() + (toX - fromX));
+            if ((border & SubWindowBorder.SOUTH.code) != 0)
+                newFrame.setHeight(newFrame.getHeight() + (toY - fromY));
+            if ((border & SubWindowBorder.WEST.code) != 0) {
+                newFrame.setX(newFrame.getX() + (toX - fromX));
+                newFrame.setWidth(newFrame.getWidth() - (toX - fromX));
+            }
             setFrame(newFrame);
         }
-        catch (IllegalWindowFrameException e) {
-            throw new InvalidResizeWindowException();
-        }
-
+        catch (IllegalWindowFrameException e) {throw new InvalidResizeWindowException();}
     }
 
     /**
