@@ -1,18 +1,13 @@
-package interactr.cs.kuleuven.be.ui.control;
+package interactr.cs.kuleuven.be.ui.control.diagram;
 
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.exceptions.InvalidMovePartyException;
-import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.design.*;
-import interactr.cs.kuleuven.be.ui.geometry.Point;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * A class of sequence diagram views. Sequence diagram views display diagrams
@@ -32,7 +27,7 @@ public class SequenceView extends DiagramView {
      * @param diagram The diagram to associate this diagram view with.
      * @throws IllegalArgumentException If the given diagram is null.
      */
-    SequenceView(Diagram diagram) {
+    public SequenceView(Diagram diagram) {
         super(diagram);
     }
 
@@ -107,7 +102,7 @@ public class SequenceView extends DiagramView {
      * @param endRow The row in which to end the bar.
      */
     private void drawActivationBar(PaintBoard paintBoard, int x, int startRow, int endRow) {
-        paintBoard.setColour(ACTIVATION_COLOR);
+        paintBoard.setColour(Colour.DARK_GRAY);
         Rectangle drawRectangle = new Rectangle(
                 x - ACTIVATION_BAR_WIDTH/2,
                 PARTY_ROW_HEIGHT + MESSAGE_ROW_HEIGHT/4 + MESSAGE_ROW_HEIGHT * startRow,
@@ -189,11 +184,6 @@ public class SequenceView extends DiagramView {
      * The width of activation bars.
      */
     private static final int ACTIVATION_BAR_WIDTH = 10;
-
-    /**
-     * The color used to draw activation bars.
-     */
-    private static final Colour ACTIVATION_COLOR = new Colour(216/360f, 35/360f, 0.66f);
 
     @Override
     public String toString() {

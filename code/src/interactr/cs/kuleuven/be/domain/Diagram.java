@@ -114,19 +114,6 @@ public class Diagram implements Visitable {
     }
 
     /**
-     * Sets the label of the given component to the given one.
-     *
-     * @param component The component whose label is to be changed.
-     * @param label The new label for the component.
-     * @throws InvalidLabelException If the given label is not a valid one for the given component.
-     */
-    public void setLabelOfComponent(DiagramComponent component, String label) throws InvalidLabelException {
-        component.setLabel(label);
-        for (DiagramObserver observer : observers)
-            observer.diagramDidEditLabel(this, component);
-    }
-
-    /**
      * Returns the parties associatd with this diagram.
      *  Parties are ordered from first added to last added.
      */
@@ -305,9 +292,7 @@ public class Diagram implements Visitable {
      */
     private int getMaximumIndex(Message message) {
         int messageIndex = getIndexOfMessage(message);
-        int associatedMessageIndex = associatedMessageIndices.get(messageIndex);
-        int max = Math.max(messageIndex, associatedMessageIndex);
-        return (messageIndex >= 0 ? max : -1);
+        return Math.max(messageIndex, associatedMessageIndices.get(messageIndex));
     }
 
     /**
@@ -319,9 +304,7 @@ public class Diagram implements Visitable {
      */
     private int getMinimumIndex(Message message) {
         int messageIndex = getIndexOfMessage(message);
-        int associatedMessageIndex = associatedMessageIndices.get(messageIndex);
-        int min = Math.min(messageIndex, associatedMessageIndex);
-        return (messageIndex >= 0 ? min : -1);
+        return Math.min(messageIndex, associatedMessageIndices.get(messageIndex));
     }
 
     /**
@@ -421,7 +404,7 @@ public class Diagram implements Visitable {
     /**
      * The messages held by this diagram.
      */
-    private PList<Message> messages = PList.<Message>empty();
+    private PList<Message> messages = PList.empty();
 
     /**
      * The indices of associated messages for the messages held by this diagram.
@@ -463,4 +446,5 @@ public class Diagram implements Visitable {
     public void acceptVisitor(DiagramVisitor visitor) {
         visitor.visit(this);
     }
+
 }

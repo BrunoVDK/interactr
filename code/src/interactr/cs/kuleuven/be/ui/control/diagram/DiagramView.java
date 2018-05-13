@@ -1,8 +1,7 @@
-package interactr.cs.kuleuven.be.ui.control;
+package interactr.cs.kuleuven.be.ui.control.diagram;
 
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.*;
-import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.purecollections.PMap;
 import interactr.cs.kuleuven.be.ui.DiagramObserver;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
@@ -22,7 +21,7 @@ import java.util.Map;
  * @author Team 25
  * @version 1.0
  */
-public abstract class DiagramView implements Cloneable, DiagramObserver, CommandHandler {
+public abstract class DiagramView implements Cloneable, CommandHandler, DiagramObserver {
 
     /**
      * Initialize this new diagram view with the given diagram.
@@ -275,21 +274,13 @@ public abstract class DiagramView implements Cloneable, DiagramObserver, Command
     }
 
     /**
-     * Registers flyweight links for messages to be used when drawing.
-     */
-    private static Map<Class<? extends Message>, Link> links = Map.of(
-            InvocationMessage.class, new Arrow(),
-            ResultMessage.class, new DashedArrow()
-    );
-
-    /**
      * Returns a link for the given message, to be used as a flyweight when drawing.
      *
      * @param message The message for which a link is desired. Cannot be null.
      * @return A link representing the given message.
      */
     Link getLinkForMessage(Message message) {
-        Link link = links.get(message.getClass());
+        Link link = MessageModeller.defaultCenter().generateLink(message);
         Figure figure = getFigureForParty(message.getSender());
         Point senderCoordinate = getCoordinateForParty(message.getSender());
         Point receiverCoordinate = getCoordinateForParty(message.getReceiver());
@@ -302,21 +293,13 @@ public abstract class DiagramView implements Cloneable, DiagramObserver, Command
     }
 
     /**
-     * Registers flyweight figures for parties to be used when drawing.
-     */
-    private static Map<Class<? extends Party>, Figure> figures = Map.of(
-            ActorParty.class, new StickFigure(),
-            ObjectParty.class, new Box()
-    );
-
-    /**
      * Returns a figure for the given party, to be used as a flyweight when drawing.
      *
      * @param party The party for which a figure is desired. Cannot be null.
      * @return A figure representing the given party.
      */
     Figure getFigureForParty(Party party) {
-        Figure figure = figures.get(party.getClass());
+        Figure figure = PartyModeller.defaultCenter().generateFigure(party);
         Point coordinate = getCoordinateForParty(party);
         figure.setX(coordinate.getX());
         figure.setY(coordinate.getY());
@@ -384,7 +367,7 @@ public abstract class DiagramView implements Cloneable, DiagramObserver, Command
     /**
      * A hashmap containing coordinates of all parties in this diagram view.
      */
-    PMap<Party, Point> partyCoordinates = PMap.empty();
+    private PMap<Party, Point> partyCoordinates = PMap.empty();
 
     /**
      * Close this view.
@@ -403,4 +386,5 @@ public abstract class DiagramView implements Cloneable, DiagramObserver, Command
     public String toString() {
         return "Diagram " + getDiagram().getSequenceNumber();
     }
+
 }

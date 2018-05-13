@@ -56,12 +56,4 @@ public interface DiagramObserver {
      */
     default void diagramDidDeleteMessage(Diagram diagram, Message message) {}
 
-    /**
-     * Notify observers that the label of the component belonging to the given diagram was edited.
-     *
-     * @param diagram The diagram to which the component belongs.
-     * @param component The component whose label was edited.
-     */
-    default void diagramDidEditLabel(Diagram diagram, DiagramComponent component) {}
-
 }

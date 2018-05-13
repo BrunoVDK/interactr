@@ -2,6 +2,7 @@ package interactr.cs.kuleuven.be.ui;
 
 import interactr.cs.kuleuven.be.exceptions.*;
 import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
+import interactr.cs.kuleuven.be.ui.control.Dialog;
 import interactr.cs.kuleuven.be.ui.control.SubWindow;
 
 import java.io.File;

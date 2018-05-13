@@ -1,4 +1,4 @@
-package interactr.cs.kuleuven.be.ui.visit;
+package interactr.cs.kuleuven.be.ui.control.dialog;
 
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.ui.control.Dialog;
@@ -38,7 +38,6 @@ public class DialogCreator implements DiagramVisitor {
     @Override
     public void visit(Diagram diagram) {
         System.out.println("diagram");
-        dialog = null;
     }
 
     @Override

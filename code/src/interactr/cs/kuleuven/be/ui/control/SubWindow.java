@@ -7,6 +7,7 @@ import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.command.Command;
 import interactr.cs.kuleuven.be.ui.command.CommandHandler;
 import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
+import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 import interactr.cs.kuleuven.be.ui.design.Colour;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
@@ -373,7 +374,7 @@ public class SubWindow implements CommandHandler {
      * @param paintBoard The paintboard to draw on.
      */
     private void displayTitle(PaintBoard paintBoard) {
-        int titleWidth = paintBoard.getWidthForString(getTitle()); // Fowler says no temporary variables :'(
+        int titleWidth = paintBoard.getWidthForString(getTitle()); // Fowler prefers no temporary variables :'(
         int titleHeight = paintBoard.getHeightForString(getTitle());
         paintBoard.setColour(Colour.BLACK);
         if (titleWidth < getFrame().getWidth() - CLOSE_BUTTON_SIZE * 3)
@@ -517,16 +518,13 @@ public class SubWindow implements CommandHandler {
     /**
      * Close this subwindow.
      */
-    public void close() {
-    }
+    public void close() {}
 
     @Override
     public void executeCommand(Command command) throws CommandNotProcessedException {
         command.executeSubWindow(this);
     }
 
-    @Override
-    public CommandHandler nextHandler() {
-        return new SequenceView(new Diagram());
-    }
+
+
 }

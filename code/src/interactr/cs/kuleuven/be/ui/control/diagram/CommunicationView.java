@@ -1,4 +1,4 @@
-package interactr.cs.kuleuven.be.ui.control;
+package interactr.cs.kuleuven.be.ui.control.diagram;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
 

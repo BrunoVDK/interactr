@@ -1,4 +1,4 @@
-package interactr.cs.kuleuven.be.ui.control;
+package interactr.cs.kuleuven.be.ui.control.control;
 
 /**
  * A class of controls for use in a dialog.

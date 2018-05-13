@@ -13,6 +13,7 @@ public class Colour {
     public static Colour BLUE = new Colour(0.67f, 1.0f, 1.0f);
     public static Colour GRAY = new Colour(0.0f, 0.0f, 0.2f);
     public static Colour LIGHT_GRAY = new Colour(0.0f, 0.0f, 0.8f);
+    public static Colour DARK_GRAY = new Colour(216/360f, 35/360f, 0.66f);
     public static Colour RED = new Colour(0.0f, 1.0f, 1.0f);
     public static Colour WHITE = new Colour(0.0f, 0.0f, 1.0f);
 

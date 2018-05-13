@@ -1,7 +1,7 @@
 package interactr.cs.kuleuven.be.ui.command;
 
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
-import interactr.cs.kuleuven.be.ui.control.DiagramView;
+import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 import interactr.cs.kuleuven.be.ui.geometry.Point;
 
 /**

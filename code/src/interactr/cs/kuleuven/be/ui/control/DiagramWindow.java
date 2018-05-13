@@ -1,7 +1,10 @@
 package interactr.cs.kuleuven.be.ui.control;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
-import interactr.cs.kuleuven.be.exceptions.InvalidAddMessageException;
+import interactr.cs.kuleuven.be.ui.command.CommandHandler;
+import interactr.cs.kuleuven.be.ui.control.diagram.CommunicationView;
+import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
+import interactr.cs.kuleuven.be.ui.control.diagram.SequenceView;
 
 /**
  * A class of diagram windows with a series of diagram views.
@@ -54,6 +57,11 @@ public class DiagramWindow extends SubWindow {
     public void close() {
         for (DiagramView view : views)
             view.close(); // Close all views too, but only after unregistering this subwindow as observer
+    }
+
+    @Override
+    public CommandHandler nextHandler() {
+        return getActiveView();
     }
 
 }
