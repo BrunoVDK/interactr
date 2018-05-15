@@ -9,8 +9,7 @@ import interactr.cs.kuleuven.be.ui.command.Command;
 import interactr.cs.kuleuven.be.ui.command.CommandHandler;
 import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
 import interactr.cs.kuleuven.be.ui.design.*;
-import interactr.cs.kuleuven.be.ui.geometry.Point;
-import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
+import interactr.cs.kuleuven.be.ui.geometry.*;
 
 /**
  * An abstract interface for diagram views. Diagram views can display diagrams in
@@ -101,7 +100,8 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
         if (getParty(x,y) != null)
             throw new InvalidAddPartyException();
         Party newParty = Party.createParty();
-        setCoordinateForParty(newParty, new Point(x,y));
+        Rectangle figureBounds = PartyModeller.defaultCenter().generateFigure(newParty).getBounds();
+        setCoordinateForParty(newParty, new Point(x - figureBounds.getWidth()/2, y - figureBounds.getHeight()/2));
         this.getDiagram().addParty(newParty);
     }
 
@@ -111,13 +111,15 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @param x The x coordinate of the party.
      * @param y The y coordinate of the party.
      */
-    public void switchTypeOfParty(int x, int y) {
+    public void switchTypeOfParty(int x, int y) throws NoSuchPartyException {
         Party oldParty = getParty(x,y);
         if (oldParty != null) {
             Party newParty = oldParty.switchType();
             diagram.replaceParty(oldParty, newParty);
             makeRoomForParty(newParty);
         }
+        else
+            throw new NoSuchPartyException(x,y);
     }
 
     /**
@@ -307,13 +309,9 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
                 Rectangle otherBounds = getFigureForParty(otherParty).getBounds();
                 if (otherBounds.overlaps(partyBounds)) {
                     if (partyBounds.getX() > otherBounds.getX())
-                        setCoordinateForParty(otherParty, new Point(
-                                partyBounds.getX() - otherBounds.getWidth() - 5,
-                                otherBounds.getY()));
+                        setCoordinateForParty(otherParty, new Point(partyBounds.getX() - otherBounds.getWidth() + 5, otherBounds.getY()));
                     else
-                        setCoordinateForParty(otherParty, new Point(
-                                partyBounds.getX() + partyBounds.getWidth() + 5,
-                                otherBounds.getY()));
+                        setCoordinateForParty(otherParty, new Point(partyBounds.getX() + partyBounds.getWidth() + 5, otherBounds.getY()));
                     makeRoomForParty(otherParty); // Recursive call (keep shifting)
                 }
             }
@@ -326,7 +324,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @param party The party whose coordinate is desired.
      * @return The coordinate for the given party.
      */
-    private Point getCoordinateForParty(Party party) {
+    Point getCoordinateForParty(Party party) {
         if (partyCoordinates.get(party) == null)
             setCoordinateForParty(party, new Point(5,5));
         return partyCoordinates.get(party);

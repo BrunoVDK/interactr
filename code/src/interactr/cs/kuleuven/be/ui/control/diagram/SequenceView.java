@@ -5,6 +5,7 @@ import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.exceptions.InvalidMovePartyException;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.design.*;
+import interactr.cs.kuleuven.be.ui.geometry.Point;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 import java.util.HashMap;
@@ -121,6 +122,11 @@ public class SequenceView extends DiagramView {
     }
 
     @Override
+    Point getCoordinateForParty(Party party) {
+        return new Point(super.getCoordinateForParty(party).getX(), 5);
+    }
+
+    @Override
     public void moveParty(int fromX, int fromY, int toX, int toY) {
         if (fromY >= PARTY_ROW_HEIGHT)
             throw new InvalidMovePartyException();
@@ -156,7 +162,7 @@ public class SequenceView extends DiagramView {
 
     @Override
     Link getLinkForMessage(Message message) {
-        Link link = super.getLinkForMessage(message);
+        Link link = MessageModeller.defaultCenter().generateLink(message);
         int rowY = PARTY_ROW_HEIGHT + MESSAGE_ROW_HEIGHT/2 + getDiagram().getIndexOfMessage(message) * MESSAGE_ROW_HEIGHT;
         link.setStartY(rowY);
         link.setEndY(rowY);

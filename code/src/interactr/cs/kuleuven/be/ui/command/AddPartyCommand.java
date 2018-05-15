@@ -17,7 +17,7 @@ public class AddPartyCommand extends Command {
      *
      * @param location The location where the party should be added.
      */
-    AddPartyCommand(Point location) {
+    public AddPartyCommand(Point location) {
         this.location = location;
     }
 
@@ -28,7 +28,9 @@ public class AddPartyCommand extends Command {
 
     @Override
     public void executeDiagramView(DiagramView view) {
-        try {view.addParty(location.getX(), location.getY());}
+        try {
+            view.addParty(location.getX(), location.getY());
+        }
         catch (InvalidAddPartyException e) {throw new CommandNotProcessedException();}
     }
 

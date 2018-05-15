@@ -197,14 +197,17 @@ public class SubWindow implements CommandHandler {
      *
      * @param x The x coordinate of the component that is to be selected.
      * @param y The y coordinate of the component that is to be selected.
+     * @throws  NoSuchComponentException No component lies at the given coordinates.
      */
-    public void selectComponent(int x, int y) {
+    public void selectComponent(int x, int y) throws NoSuchComponentException {
         DiagramComponent component = getActiveView().getSelectableComponent(x, y-TITLE_BAR_HEIGHT);
         if (component != null) {
             if (isSelected(component)) // Component already selected, activate it
                 setSelectedLabel("");
             setSelectedComponent(component);
         }
+        else
+            throw new NoSuchComponentException();
     }
 
     /**
@@ -377,8 +380,8 @@ public class SubWindow implements CommandHandler {
     private void displayCloseButton(PaintBoard paintBoard) {
         Rectangle closeButtonFrame = getCloseButtonFrame();
         paintBoard.drawRectangle(closeButtonFrame.getX(), closeButtonFrame.getY(), closeButtonFrame.getWidth(), closeButtonFrame.getHeight());
-        paintBoard.drawLine(closeButtonFrame.getX(), closeButtonFrame.getY(), closeButtonFrame.getX() + CLOSE_BUTTON_SIZE, closeButtonFrame.getY() + CLOSE_BUTTON_SIZE);
-        paintBoard.drawLine(closeButtonFrame.getX(), closeButtonFrame.getY() + CLOSE_BUTTON_SIZE, closeButtonFrame.getX() + CLOSE_BUTTON_SIZE, closeButtonFrame.getY());
+        paintBoard.drawLine(closeButtonFrame.getX() + 4, closeButtonFrame.getY() + 4, closeButtonFrame.getX() + CLOSE_BUTTON_SIZE - 4, closeButtonFrame.getY() + CLOSE_BUTTON_SIZE - 4);
+        paintBoard.drawLine(closeButtonFrame.getX() + 4, closeButtonFrame.getY() + CLOSE_BUTTON_SIZE - 4, closeButtonFrame.getX() + CLOSE_BUTTON_SIZE - 4, closeButtonFrame.getY() + 4);
     }
 
     /**
@@ -386,7 +389,7 @@ public class SubWindow implements CommandHandler {
      *
      * @return The title of this subwindow.
      */
-    public String getTitle() {
+    private String getTitle() {
         return getActiveView().toString();
     }
 

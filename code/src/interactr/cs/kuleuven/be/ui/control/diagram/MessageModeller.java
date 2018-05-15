@@ -59,7 +59,6 @@ public class MessageModeller implements DiagramVisitor {
     }
 
     @Override
-    public void visit(ResultMessage message) {
-        link = resultLink;
-    }
+    public void visit(ResultMessage message) { link = resultLink; }
+
 }

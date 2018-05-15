@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import interactr.cs.kuleuven.be.exceptions.*;
-import interactr.cs.kuleuven.be.ui.command.FocusNextCommand;
+import interactr.cs.kuleuven.be.ui.command.*;
 import interactr.cs.kuleuven.be.ui.geometry.Point;
 
 /**
@@ -37,22 +37,25 @@ public class EventHandler {
      * @param clickCount The amount of clicks for this mouse events.
      */
     public void handleMouseEvent(int id, int x, int y, int clickCount) throws IllegalArgumentException {
-        if (getController() != null) {
-            switch (id) {
-                case MouseEvent.MOUSE_CLICKED:
-                    handleMouseClick(x,y,clickCount);
-                    break;
-                case MouseEvent.MOUSE_PRESSED:
-                    handleMousePress(x,y);
-                    break;
-                case MouseEvent.MOUSE_DRAGGED:
-                    handleMouseDrag(x,y);
-                    break;
-                case MouseEvent.MOUSE_RELEASED:
-                    handleMouseReleased(x,y);
-                    break;
+        try {
+            if (getController() != null) {
+                switch (id) {
+                    case MouseEvent.MOUSE_CLICKED:
+                        handleMouseClick(x,y,clickCount);
+                        break;
+                    case MouseEvent.MOUSE_PRESSED:
+                        handleMousePress(x,y);
+                        break;
+                    case MouseEvent.MOUSE_DRAGGED:
+                        handleMouseDrag(x,y);
+                        break;
+                    case MouseEvent.MOUSE_RELEASED:
+                        handleMouseReleased(x,y);
+                        break;
+                }
             }
         }
+        catch (Exception ignored) {}
     }
 
     /**
@@ -63,28 +66,45 @@ public class EventHandler {
      * @param clickCount The click count.
      */
     private void handleMouseClick(int x, int y, int clickCount) {
-        try {
-            getController().activateSubWindow(x, y);
-            switch (clickCount) {
-                case 1: // Single click
-                    try {
-                        getController().closeSubWindow(x,y);
-                    }
-                    catch (InvalidCloseWindowException e) {
-                        getController().selectComponent(x,y);
-                    }
-                    break;
-                case 2: // Double click
-                    try {
-                        getController().addParty(x,y);
-                    }
-                    catch (InvalidAddPartyException exception) {
-                        getController().switchTypeOfParty(x, y);
-                    }
-                    break;
-            }
+        getController().activateSubWindow(x, y);
+        switch (clickCount) {
+            case 1: // Single click
+                handleSingleMouseClick(x,y);
+                break;
+            case 2: // Double click
+                handleDoubleMouseClick(x,y);
+                break;
         }
-        catch (NoSuchWindowException ignored) {}
+    }
+
+    /**
+     * Handle a single mouse click at the given coordinates.
+     *
+     * @param x The x coordinate of the mouse click.
+     * @param y The y coordinate of the mouse click.
+     */
+    private void handleSingleMouseClick(int x, int y) {
+        try {
+            getController().closeSubWindow(x,y);
+        }
+        catch (InvalidCloseWindowException e) {
+            getController().processCommand(new SelectCommand(new Point(x,y)));
+        }
+    }
+
+    /**
+     * Handle a double mouse click at the given coordinates.
+     *
+     * @param x The x coordinate of the mouse click.
+     * @param y The y coordinate of the mouse click.
+     */
+    private void handleDoubleMouseClick(int x, int y) {
+        try {
+            getController().processCommand(new AddPartyCommand(new Point(x,y)));
+        }
+        catch (CommandNotProcessedException exception) {
+            getController().processCommand(new SwitchPartyCommand(new Point(x,y)));
+        }
     }
 
     /**
@@ -95,11 +115,8 @@ public class EventHandler {
      */
     private void handleMousePress(int x, int y) {
         this.setLastDragCoordinate(x,y); // Keep track of drag coordinates
-        try {
-            getController().activateSubWindow(x,y);
-            this.setDragOperationType(DragOperationType.DRAG_VALID);
-        }
-        catch (NoSuchWindowException ignored) {}
+        getController().activateSubWindow(x,y);
+        this.setDragOperationType(DragOperationType.DRAG_VALID);
     }
 
     /**
@@ -146,17 +163,9 @@ public class EventHandler {
      * @param y The y coordinate to move the party to.
      */
     private void moveParty(int x, int y) {
-        try {
-
-            // Move party
-            getController().moveParty(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
-
-            // Move party was successful, keep track of the changes
-            this.setDragOperationType(DragOperationType.DRAG_DIAGRAM);
-            this.setLastDragCoordinate(x,y);
-
-        }
-        catch (Exception ignored) {}
+        getController().moveParty(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
+        this.setDragOperationType(DragOperationType.DRAG_DIAGRAM);
+        this.setLastDragCoordinate(x,y);
     }
 
     /**
@@ -167,10 +176,7 @@ public class EventHandler {
      */
     private void handleMouseReleased(int x, int y) {
         if (this.getDragOperationType() == DragOperationType.DRAG_VALID)
-            try {
-                getController().addMessage(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
-            }
-            catch (InvalidAddMessageException ignored) {}
+            getController().addMessage(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
         this.setDragOperationType(DragOperationType.DRAG_NONE);
     }
 
@@ -202,17 +208,23 @@ public class EventHandler {
     private DragOperationType dragOperationType = DragOperationType.DRAG_NONE;
 
     /**
-     * The coordinates for the last successful drag operation.
+     * Returns the coordinate of the last successful drag operation.
      */
-    private Point lastDragCoordinate;
-
-    // Getter/Setter
-    private void setLastDragCoordinate(int x, int y){
-        lastDragCoordinate = new Point(x, y);
-    }
     private Point getLastDragCoordinate(){
         return lastDragCoordinate;
     }
+
+    /**
+     * Sets the coordinate of the last successful drag operation.
+     */
+    private void setLastDragCoordinate(int x, int y){
+        lastDragCoordinate = new Point(x, y);
+    }
+
+    /**
+     * Registers the coordinates for the last successful drag operation.
+     */
+    private Point lastDragCoordinate;
 
     /**
      * Handle the key event of given type, having the given key code and key char.
@@ -223,17 +235,20 @@ public class EventHandler {
      * @param keyModifiers The key modifiers for the key event.
      */
     void handleKeyEvent(int id, int keyCode, char keyChar, int keyModifiers) {
-        if (getController() != null) {
-            boolean controlIsPressed = (keyModifiers & KeyEvent.CTRL_DOWN_MASK) != 0;
-            switch (id) {
-                case KeyEvent.KEY_PRESSED:
-                    handleKeyPress(keyCode, controlIsPressed);
-                    break;
-                case KeyEvent.KEY_TYPED:
-                    handleKeyTyped(keyChar);
-                    break;
+        try {
+            if (getController() != null) {
+                boolean controlIsPressed = (keyModifiers & KeyEvent.CTRL_DOWN_MASK) != 0;
+                switch (id) {
+                    case KeyEvent.KEY_PRESSED:
+                        handleKeyPress(keyCode, controlIsPressed);
+                        break;
+                    case KeyEvent.KEY_TYPED:
+                        handleKeyTyped(keyChar);
+                        break;
+                }
             }
         }
+        catch (Exception ignored) {}
     }
 
     /**
@@ -243,12 +258,8 @@ public class EventHandler {
      * @param controlIsPressed True if and only if the key was pressed while the control key was pressed.
      */
     private void handleKeyPress(int keyCode, boolean controlIsPressed) {
-        if (keyCode == KeyEvent.VK_ENTER) {
-            try {
-                getController().abortEditing();
-            }
-            catch (InvalidLabelException ignored) {}
-        }
+        if (keyCode == KeyEvent.VK_ENTER)
+            getController().abortEditing();
         else if (keyCode == KeyEvent.VK_BACK_SPACE || keyCode == KeyEvent.VK_DELETE) {
             if (getController().isEditing())
                 getController().removeLastChar();
