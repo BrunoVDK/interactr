@@ -9,14 +9,14 @@ import interactr.cs.kuleuven.be.ui.PaintBoard;
  * @author Team 25
  * @version 1.0
  */
-public class Dialog extends SubWindow {
+public class DialogWindow extends SubWindow {
 
     /**
      * Initialize this new dialog with given diagram.
      *
      * @param diagram The diagram to initialize this new dialog with.
      */
-    public Dialog(Diagram diagram) {
+    public DialogWindow(Diagram diagram) {
         if (diagram == null)
             throw new IllegalArgumentException("Diagram cannot be null.");
         this.diagram = diagram;
@@ -43,4 +43,5 @@ public class Dialog extends SubWindow {
     public String getTitle() {
         return ""; // TODO
     }
+
 }
