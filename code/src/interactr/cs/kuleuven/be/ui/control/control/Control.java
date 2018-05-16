@@ -1,5 +1,8 @@
 package interactr.cs.kuleuven.be.ui.control.control;
 
+import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
+
 /**
  * A class of controls for use in a dialog.
  *
@@ -7,6 +10,8 @@ package interactr.cs.kuleuven.be.ui.control.control;
  * @version 1.0:
  */
 public abstract class Control {
+
+    public abstract void displayControl(PaintBoard paintBoard, int x, int y, boolean active);
 
 
 

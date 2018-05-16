@@ -6,7 +6,7 @@ package interactr.cs.kuleuven.be.ui.control.control;
  * @author Team 25
  * @version 1.0
  */
-public class TexField {
+public class TextField {
 
 
 

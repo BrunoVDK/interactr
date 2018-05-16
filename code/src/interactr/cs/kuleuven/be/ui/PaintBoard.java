@@ -131,6 +131,19 @@ public class PaintBoard {
     }
 
     /**
+     * Fill an Oval of given width and height at the given coordinates on this paint board.
+     *
+     * @param x The start x coordinate for the line.
+     * @param y The start y coordinate for the line.
+     * @param width The end x coordinate for the line.
+     * @param height The end y coordinate for the line.
+     */
+    public void fillOval(int x, int y, int width, int height) {
+        if (currentContext != null)
+            currentContext.fillOval(x, y, width, height);
+    }
+
+    /**
      * Translate the origin of this paintboard to the given coordinate.
      *  All drawing in subsequent calls will be relative to this new origin.
      *
