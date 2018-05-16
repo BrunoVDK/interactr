@@ -21,7 +21,7 @@ public class MessageModeller implements DiagramVisitor {
      * Get the default modeller for diagrams.
      *  This is a singleton.
      */
-    public static MessageModeller defaultCenter() {
+    public static MessageModeller defaultModeller() {
         return defaultModeller;
     }
 

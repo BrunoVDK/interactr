@@ -26,10 +26,11 @@ public class SequenceView extends DiagramView {
      * Initialize this new diagram view with the given diagram.
      *
      * @param diagram The diagram to associate this diagram view with.
+     * @param frame The frame for this new view.
      * @throws IllegalArgumentException If the given diagram is null.
      */
-    public SequenceView(Diagram diagram) {
-        super(diagram);
+    public SequenceView(Diagram diagram, Rectangle frame) {
+        super(diagram, frame);
     }
 
     @Override
@@ -41,7 +42,7 @@ public class SequenceView extends DiagramView {
             paintBoard.drawLine(partyFigure.getX() + partyFigure.getWidth() / 2,
                     PARTY_ROW_HEIGHT - 15,
                     partyFigure.getX() + partyFigure.getWidth() / 2,
-                    paintBoard.getHeight());
+                    getFrame().getHeight());
         }
         paintBoard.setColour(Colour.BLACK);
         paintBoard.drawLine(0, PARTY_ROW_HEIGHT - 15, paintBoard.getWidth(), PARTY_ROW_HEIGHT - 15);
@@ -162,7 +163,7 @@ public class SequenceView extends DiagramView {
 
     @Override
     Link getLinkForMessage(Message message) {
-        Link link = MessageModeller.defaultCenter().generateLink(message);
+        Link link = MessageModeller.defaultModeller().generateLink(message);
         int rowY = PARTY_ROW_HEIGHT + MESSAGE_ROW_HEIGHT/2 + getDiagram().getIndexOfMessage(message) * MESSAGE_ROW_HEIGHT;
         link.setStartY(rowY);
         link.setEndY(rowY);

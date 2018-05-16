@@ -32,8 +32,8 @@ public class DiagramWindow extends SubWindow {
          super(diagramWindow);
          if (diagramWindow == null || diagramWindow.getDiagram() == null) {
             Diagram adoptedDiagram = new Diagram();
-            views = views.plus(new SequenceView(adoptedDiagram));
-            views = views.plus(new CommunicationView(adoptedDiagram));
+            views = views.plus(new SequenceView(adoptedDiagram, getViewFrame()));
+            views = views.plus(new CommunicationView(adoptedDiagram, getViewFrame()));
             activateViewAtIndex(0);
         }
         else {
@@ -55,6 +55,7 @@ public class DiagramWindow extends SubWindow {
      *  This unregisters it as an observer.
      */
     public void close() {
+        super.close();
         for (DiagramView view : views)
             view.close(); // Close all views too, but only after unregistering this subwindow as observer
     }

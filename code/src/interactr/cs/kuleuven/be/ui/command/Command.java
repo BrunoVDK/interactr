@@ -1,6 +1,7 @@
 package interactr.cs.kuleuven.be.ui.command;
 
 import interactr.cs.kuleuven.be.ui.control.dialog.Dialog;
+import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
 import interactr.cs.kuleuven.be.ui.control.SubWindow;
 import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 
@@ -13,7 +14,7 @@ import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
  * @author Team 25
  * @version 1.0
  */
-public class Command {
+public abstract class Command {
 
     /**
      * Sets the receiver for this command.
@@ -52,10 +53,10 @@ public class Command {
     /**
      * Execute this command in the given subwindow.
      *
-     * @param window The subwindow in which the command should be executed.
+     * @param window The diagram window in which the command should be executed.
      * @throws CommandNotProcessedException the command could not be executed by the given receiver.
      */
-    public void executeSubWindow(SubWindow window) {throw new CommandNotProcessedException();}
+    public void executeDiagramWindow(DiagramWindow window) {throw new CommandNotProcessedException();}
 
     /**
      * Execute this command in the given diagram view.
@@ -83,29 +84,5 @@ public class Command {
             throw new CommandNotProcessedException();
         receiver.undoCommand(this);
     }
-
-    /**
-     * Undo this command in the given subwindow.
-     *
-     * @param window The subwindow in which the command should be undone.
-     * @throws CommandNotProcessedException the command could not be executed by the given receiver.
-     */
-    public void undoSubWindow(SubWindow window) {throw new CommandNotProcessedException();}
-
-    /**
-     * Undo this command in the given diagram view.
-     *
-     * @param view The view in which the command should be undone.
-     * @throws CommandNotProcessedException the command could not be executed by the given receiver.
-     */
-    public void undoDiagramView(DiagramView view) {throw new CommandNotProcessedException();}
-
-    /**
-     * Undo this command in the given dialog.
-     *
-     * @param dialog The dialog in which the command should be undone.
-     * @throws CommandNotProcessedException the command could not be executed by the given receiver.
-     */
-    public void undoDialog(Dialog dialog) {throw new CommandNotProcessedException();}
 
 }

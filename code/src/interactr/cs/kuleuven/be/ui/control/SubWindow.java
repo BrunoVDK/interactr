@@ -66,7 +66,7 @@ public class SubWindow implements CommandHandler {
      *
      * @return The frame in which views of this subwindow are drawn.
      */
-    private Rectangle getViewFrame() {
+    protected Rectangle getViewFrame() {
         return new Rectangle(frame.getX(), frame.getY() + TITLE_BAR_HEIGHT, frame.getWidth(), frame.getHeight() - TITLE_BAR_HEIGHT);
     }
 
@@ -102,6 +102,8 @@ public class SubWindow implements CommandHandler {
         if (!canHaveAsFrame(frame))
             throw new IllegalWindowFrameException();
         this.frame = frame;
+        for (DiagramView view : getViews())
+            view.setFrame(getViewFrame());
     }
 
     /**
@@ -505,14 +507,21 @@ public class SubWindow implements CommandHandler {
     }
 
     /**
+     * Returns whether or not this subwindow is closed.
+     */
+    public boolean isClosed() {
+        return isClosed;
+    }
+
+    /**
      * Close this subwindow.
      */
-    public void close() {}
+    public void close() {isClosed = false;}
 
-    @Override
-    public void executeCommand(Command command) throws CommandNotProcessedException {
-        command.executeSubWindow(this);
-    }
+    /**
+     * Registers whether or not this subwindow is closed.
+     */
+    private boolean isClosed = false;
 
     /**
      * A method that selects the comopnent at the given coordinates

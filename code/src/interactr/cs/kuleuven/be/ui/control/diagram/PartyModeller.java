@@ -21,7 +21,7 @@ public class PartyModeller implements DiagramVisitor {
      * Get the default modeller for parties.
      *  This is a singleton.
      */
-    public static PartyModeller defaultCenter() {
+    public static PartyModeller defaultModeller() {
         return defaultModeller;
     }
 
