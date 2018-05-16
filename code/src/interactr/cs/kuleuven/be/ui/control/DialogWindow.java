@@ -23,7 +23,7 @@ public class DialogWindow extends SubWindow {
     }
 
     @Override
-    void displayView(PaintBoard paintBoard) {
+    protected void displayView(PaintBoard paintBoard) {
         // TODO
     }
 

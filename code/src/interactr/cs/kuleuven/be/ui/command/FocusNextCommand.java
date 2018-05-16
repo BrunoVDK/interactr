@@ -1,7 +1,7 @@
 package interactr.cs.kuleuven.be.ui.command;
 
 import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
-import interactr.cs.kuleuven.be.ui.control.Dialog;
+import interactr.cs.kuleuven.be.ui.control.DialogWindow;
 
 /**
  * A class of commands for adding parties.
@@ -17,7 +17,7 @@ public class FocusNextCommand extends Command {
     }
 
     @Override
-    public void executeDialog(Dialog dialog) {
+    public void executeDialogWindow(DialogWindow dialog) {
         // dialog.focusNext();
     }
 
