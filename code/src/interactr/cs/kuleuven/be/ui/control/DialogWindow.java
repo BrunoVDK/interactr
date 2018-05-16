@@ -41,7 +41,7 @@ public class DialogWindow extends SubWindow {
 
     @Override
     public String getTitle() {
-        return ""; // TODO
+        return "Diagram " + getDiagram().getSequenceNumber();
     }
 
 }
