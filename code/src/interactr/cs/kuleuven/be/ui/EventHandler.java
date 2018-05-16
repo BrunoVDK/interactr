@@ -248,7 +248,7 @@ public class EventHandler {
                 }
             }
         }
-        catch (InvalidAddPartyException ignored) {}
+        catch (Exception ignored) {}
     }
 
     /**
