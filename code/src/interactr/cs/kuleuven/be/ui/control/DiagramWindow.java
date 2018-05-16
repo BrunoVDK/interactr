@@ -4,6 +4,7 @@ import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.exceptions.IllegalWindowFrameException;
 import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.command.Command;
 import interactr.cs.kuleuven.be.ui.command.CommandHandler;
 import interactr.cs.kuleuven.be.ui.control.diagram.CommunicationView;
 import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
@@ -57,8 +58,9 @@ public class DiagramWindow extends SubWindow {
     @Override
     void setFrame(Rectangle frame) throws IllegalWindowFrameException {
         super.setFrame(frame);
-        for (DiagramView view : getViews())
-            view.setFrame(getViewFrame());
+        if (getViews() != null)
+            for (DiagramView view : getViews())
+                view.setFrame(getViewFrame());
     }
 
     /**
@@ -113,7 +115,7 @@ public class DiagramWindow extends SubWindow {
     /**
      * A list of diagram views held by this subwindow.
      */
-    PList<DiagramView> views = PList.<DiagramView>empty();
+    PList<DiagramView> views = PList.empty();
 
     @Override
     public void displayView(PaintBoard paintBoard) {
@@ -135,7 +137,9 @@ public class DiagramWindow extends SubWindow {
         return getActiveView();
     }
 
-    public void executeDiagramWindow(Command command){
-
+    @Override
+    public void executeCommand(Command command){
+        command.executeDiagramWindow(this);
     }
+
 }

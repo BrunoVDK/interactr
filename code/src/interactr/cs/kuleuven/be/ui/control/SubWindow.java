@@ -24,7 +24,7 @@ public abstract class SubWindow implements CommandHandler {
     /**
      * Create a new subwindow with a default frame of size 400x400.
      */
-    public SubWindow() {
+    SubWindow() {
         this(null);
     }
 
@@ -147,8 +147,7 @@ public abstract class SubWindow implements CommandHandler {
     public void move(int fromX, int fromY, int toX, int toY) throws InvalidMoveWindowException {
         if (!titleBarEncloses(fromX, fromY))
             throw new InvalidMoveWindowException();
-        getFrame().setX(getFrame().getX() + (toX - fromX));
-        getFrame().setY(getFrame().getY() + (toY - fromY));
+        setFrame(new Rectangle(getFrame().getX() + (toX - fromX), getFrame().getY() + (toY - fromY), getFrame().getWidth(), getFrame().getHeight()));
     }
 
     /**

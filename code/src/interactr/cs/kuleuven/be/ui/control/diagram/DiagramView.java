@@ -35,7 +35,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
     /**
      * Returns the frame for this view.
      */
-    public Rectangle getFrame() {
+    Rectangle getFrame() {
         return this.frame;
     }
 
@@ -122,7 +122,6 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
     public void addParty(int x, int y) throws InvalidAddPartyException {
         x -= getFrame().getX();
         y -= getFrame().getY();
-        System.out.println("Add PARTY " + x + " - " + y);
         if (getParty(x,y) != null)
             throw new InvalidAddPartyException();
         Party newParty = Party.createParty();
@@ -316,7 +315,6 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
     Figure getFigureForParty(Party party) {
         Figure figure = PartyModeller.defaultModeller().generateFigure(party);
         Point coordinate = getCoordinateForParty(party);
-        System.out.println(coordinate);
         figure.setX(coordinate.getX());
         figure.setY(coordinate.getY());
         figure.setLabel(party.getLabel());

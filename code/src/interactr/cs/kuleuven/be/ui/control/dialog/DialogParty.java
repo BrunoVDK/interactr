@@ -8,6 +8,7 @@ import interactr.cs.kuleuven.be.ui.control.control.RadioButton;
 import interactr.cs.kuleuven.be.ui.control.control.TextField;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
+
 public class DialogParty extends DialogWindow {
 
     private static  final int width = 300, height = 50;
