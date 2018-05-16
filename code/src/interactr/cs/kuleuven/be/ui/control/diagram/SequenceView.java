@@ -4,6 +4,7 @@ import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddMessageException;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.exceptions.InvalidMovePartyException;
+import interactr.cs.kuleuven.be.exceptions.NoSuchPartyException;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.design.*;
 import interactr.cs.kuleuven.be.ui.geometry.Point;
@@ -121,6 +122,13 @@ public class SequenceView extends DiagramView {
         if (y <= 5 || y >= PARTY_ROW_HEIGHT - 5)
             throw new InvalidAddPartyException();
         super.addParty(x, y);
+    }
+
+    @Override
+    public void moveParty(Party movedParty, int toX, int toY) throws NoSuchPartyException, InvalidMovePartyException {
+        if (toY <= 5 || toY >= PARTY_ROW_HEIGHT - 5)
+            throw new InvalidMovePartyException();
+        super.moveParty(movedParty, toX, toY);
     }
 
     @Override
