@@ -437,6 +437,5 @@ public abstract class SubWindow implements CommandHandler {
 
     }
 
-    //execute method
 
 }
