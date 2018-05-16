@@ -1,6 +1,7 @@
 package interactr.cs.kuleuven.be.ui.control;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
+import interactr.cs.kuleuven.be.ui.command.Command;
 import interactr.cs.kuleuven.be.ui.command.CommandHandler;
 import interactr.cs.kuleuven.be.ui.control.diagram.CommunicationView;
 import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
@@ -65,4 +66,7 @@ public class DiagramWindow extends SubWindow {
         return getActiveView();
     }
 
+    public void executeDiagramWindow(Command command){
+
+    }
 }

@@ -1,6 +1,7 @@
 package interactr.cs.kuleuven.be.ui.control.dialog;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
+import interactr.cs.kuleuven.be.ui.command.Command;
 import interactr.cs.kuleuven.be.ui.control.SubWindow;
 
 /**
@@ -50,10 +51,7 @@ public abstract class Dialog extends SubWindow {
 
     //TODO
     //execute method
+    public void executeDialog(Command command){
 
-
-
-
-
-
+    }
 }

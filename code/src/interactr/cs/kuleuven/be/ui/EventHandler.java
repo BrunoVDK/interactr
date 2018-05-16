@@ -258,8 +258,13 @@ public class EventHandler {
      * @param controlIsPressed True if and only if the key was pressed while the control key was pressed.
      */
     private void handleKeyPress(int keyCode, boolean controlIsPressed) {
-        if (keyCode == KeyEvent.VK_ENTER)
-            getController().abortEditing();
+        if (keyCode == KeyEvent.VK_ENTER){
+            if(controlIsPressed){
+                getController().processCommand(new CreateDialogCommand());
+            }
+            else
+                getController().abortEditing();
+        }
         else if (keyCode == KeyEvent.VK_BACK_SPACE || keyCode == KeyEvent.VK_DELETE) {
             if (getController().isEditing())
                 getController().removeLastChar();
