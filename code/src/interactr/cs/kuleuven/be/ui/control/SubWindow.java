@@ -72,7 +72,7 @@ public abstract class SubWindow implements CommandHandler {
      * @param frame The frame to check with.
      * @return True if and only if the given frame's width and height are large enough.
      */
-    private boolean canHaveAsFrame(Rectangle frame) {
+    protected boolean canHaveAsFrame(Rectangle frame) {
         return (frame.getWidth() > CLOSE_BUTTON_SIZE + 10 && frame.getHeight() > TITLE_BAR_HEIGHT + 80);
     }
 

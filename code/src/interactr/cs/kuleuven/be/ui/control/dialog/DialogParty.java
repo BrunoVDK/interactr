@@ -27,13 +27,12 @@ public class DialogParty extends DialogWindow {
         super(diagram);
         this.party = party;
         this.isActor = isActor;
-        this.setFrame(new Rectangle(0,0, width, height));
     }
 
-    /**
-     * Registers the default width and height of this dialog window.
-     */
-    private static final int width = 250, height = 200;
+    @Override
+    protected Rectangle getDefaultFrame() {
+        return new Rectangle(0, 0, 250, 200);
+    }
 
     /**
      * Registers whether or not this dialog window refers to an actor.

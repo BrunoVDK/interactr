@@ -3,6 +3,7 @@ package interactr.cs.kuleuven.be.ui.control;
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.ui.command.Command;
 import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
+import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
  * A class of dialog windows.
@@ -10,7 +11,7 @@ import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
  * @author Team 25
  * @version 1.0
  */
-public class DialogWindow extends SubWindow {
+public abstract class DialogWindow extends SubWindow {
 
     /**
      * Initialize this new dialog with given diagram.
@@ -21,7 +22,22 @@ public class DialogWindow extends SubWindow {
         if (diagram == null)
             throw new IllegalArgumentException("Diagram cannot be null.");
         this.diagram = diagram;
+        this.setFrame(getDefaultFrame());
     }
+
+    @Override
+    protected boolean canHaveAsFrame(Rectangle frame) {
+        if (!super.canHaveAsFrame(frame))
+            return false;
+        return (frame.getHeight() >= getDefaultFrame().getHeight() && frame.getWidth() >= getDefaultFrame().getWidth());
+    }
+
+    /**
+     * Returns the default frame for this dialog window.
+     *
+     * @return The default frame for this dialog window.
+     */
+    protected abstract Rectangle getDefaultFrame();
 
     /**
      * Returns the diagram associated with this dialog.
