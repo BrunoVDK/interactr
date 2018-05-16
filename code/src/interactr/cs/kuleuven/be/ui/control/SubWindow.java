@@ -44,7 +44,7 @@ public abstract class SubWindow implements CommandHandler {
     /**
      * Returns the frame of this subwindow.
      */
-    Rectangle getFrame() {
+    protected Rectangle getFrame() {
         return frame;
     }
 

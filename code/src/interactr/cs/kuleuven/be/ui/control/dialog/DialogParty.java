@@ -41,27 +41,25 @@ public class DialogParty extends DialogWindow {
 
     @Override
     protected void displayView(PaintBoard paintBoard) {
-        /*
-        if (isActor) {
-            actorButton.displayControl(paintBoard, width * 9/12, height/2, true);
-            objectButton.displayControl(paintBoard, width * 11/12, height/2, false);
-        }
-        else {
-            actorButton.displayControl(paintBoard, width * 9/12, height/2, false);
-            objectButton.displayControl(paintBoard, width * 11/12, height/2, true);
-        }
-        */
+        // TODO Set state of control inside control? Eg. state of radio button == Enum.ON | Enum.OFF?
+        displayControl(paintBoard, actorButton, getFrame().getWidth() * 9/12, getFrame().getHeight()/2);
+        displayControl(paintBoard, objectButton,getFrame().getWidth() * 11/12, getFrame().getHeight()/2);
     }
 
-    private RadioButton actorButton, objectButton;
+    /**
+     * Registers the radio buttons for this party dialog.
+     */
+    private RadioButton actorButton = new RadioButton(), objectButton = new RadioButton();
 
-    private TextField instanceName, className;
+    /**
+     * Registers the text fields for this party dialog
+     */
+    private TextField instanceName = new TextField(), className = new TextField();
 
     /**
      * The party of this dialog
      */
     private Party party;
-
 
     /**
      * Initialize this new dialog with given diagram.

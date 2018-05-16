@@ -33,7 +33,7 @@ public class DiagramWindow extends SubWindow {
      *
      * @param diagramWindow The subwindow that is to be duplicated by this subwindow.
      */
-     private DiagramWindow(DiagramWindow diagramWindow) {
+    public DiagramWindow(DiagramWindow diagramWindow) {
          super(diagramWindow);
          if (diagramWindow == null || diagramWindow.getDiagram() == null) {
             Diagram adoptedDiagram = new Diagram();

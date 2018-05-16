@@ -4,6 +4,7 @@ import interactr.cs.kuleuven.be.exceptions.*;
 import interactr.cs.kuleuven.be.ui.command.Command;
 import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
 import interactr.cs.kuleuven.be.ui.command.CreateDialogCommand;
+import interactr.cs.kuleuven.be.ui.command.DuplicateDiagramCommand;
 import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
 import interactr.cs.kuleuven.be.ui.control.SubWindow;
 
@@ -84,7 +85,9 @@ public class Controller {
      */
     public void duplicateSubWindow() {
         if (getActiveSubwindow() != null) {
-            // this.addSubWindow(0, new SubWindow(getActiveSubwindow()));
+            DuplicateDiagramCommand command = new DuplicateDiagramCommand();
+            processCommand(command);
+            addSubWindow(0, command.getDiagramWindow());
             getPaintBoard().refresh();
         }
     }

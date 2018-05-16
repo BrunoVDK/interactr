@@ -11,7 +11,14 @@ import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
  */
 public abstract class Control {
 
-    public abstract void displayControl(PaintBoard paintBoard, int x, int y, boolean active);
+    /**
+     * Display this control in the given paintboard, at the given coordinates.
+     *
+     * @param paintBoard The paintboard to draw on.
+     * @param x The x coordinate for the control
+     * @param y The y coordinate for the control
+     */
+    public abstract void display(PaintBoard paintBoard, int x, int y);
 
 
 

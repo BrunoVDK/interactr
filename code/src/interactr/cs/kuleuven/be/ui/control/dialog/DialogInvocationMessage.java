@@ -4,6 +4,7 @@ import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.InvocationMessage;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.control.DialogWindow;
+import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
  * A class of dialog windows associated with invocation messages.
@@ -34,6 +35,11 @@ public class DialogInvocationMessage extends DialogWindow {
      * Registers the invocation message associated with this dialog window.
      */
     private InvocationMessage message;
+
+    @Override
+    protected Rectangle getDefaultFrame() {
+        return null;
+    }
 
     @Override
     public String getTitle() {

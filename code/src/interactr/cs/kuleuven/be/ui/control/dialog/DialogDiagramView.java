@@ -3,6 +3,7 @@ package interactr.cs.kuleuven.be.ui.control.dialog;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.control.DialogWindow;
 import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
+import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
  * A class of dialog windows associated with diagram views.
@@ -30,6 +31,11 @@ public class DialogDiagramView extends DialogWindow {
     @Override
     protected void displayView(PaintBoard paintBoard) {
 
+    }
+
+    @Override
+    protected Rectangle getDefaultFrame() {
+        return null;
     }
 
     @Override
