@@ -75,7 +75,7 @@ public class DialogParty extends DialogWindow {
 
     @Override
     public String getTitle() {
-        return "Party Dialog - Diagram " + getDiagram().getSequenceNumber();
+        return "Party Dialog - " + super.getTitle();
     }
 
 }

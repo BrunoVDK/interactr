@@ -11,7 +11,7 @@ import java.util.*;
  * @author Team 25
  * @version 1.0
  */
-public class Diagram implements Visitable {
+public class Diagram {
 
     /**
      * The number of diagrams that have been generated so far.
@@ -439,10 +439,5 @@ public class Diagram implements Visitable {
      * The list of observers of this diagram.
      */
     private PList<DiagramObserver> observers = PList.empty();
-
-    @Override
-    public void acceptVisitor(DiagramVisitor visitor) {
-        visitor.visit(this);
-    }
 
 }

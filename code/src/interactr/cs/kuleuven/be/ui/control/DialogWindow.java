@@ -1,7 +1,6 @@
 package interactr.cs.kuleuven.be.ui.control;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
-import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.command.Command;
 import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
 
@@ -24,11 +23,6 @@ public class DialogWindow extends SubWindow {
         this.diagram = diagram;
     }
 
-    @Override
-    protected void displayView(PaintBoard paintBoard) {
-        // TODO
-    }
-
     /**
      * Returns the diagram associated with this dialog.
      */
@@ -42,13 +36,13 @@ public class DialogWindow extends SubWindow {
     private Diagram diagram;
 
     @Override
-    public String getTitle() {
-        return "Diagram " + getDiagram().getSequenceNumber();
+    public void executeCommand(Command command) throws CommandNotProcessedException {
+        command.executeDialogWindow(this);
     }
 
     @Override
-    public void executeCommand(Command command) throws CommandNotProcessedException {
-        command.executeDialogWindow(this);
+    public String getTitle() {
+        return "Diagram " + getDiagram().getSequenceNumber();
     }
 
 }

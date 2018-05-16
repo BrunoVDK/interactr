@@ -160,7 +160,7 @@ public abstract class SubWindow implements CommandHandler {
      *
      * @param paintBoard The paintboard to draw on.
      */
-    abstract protected void displayView(PaintBoard paintBoard);
+    protected void displayView(PaintBoard paintBoard) {}
 
     /**
      * Displays the background for this subwindow.
