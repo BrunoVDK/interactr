@@ -176,7 +176,7 @@ public class EventHandler {
      */
     private void handleMouseReleased(int x, int y) {
         if (this.getDragOperationType() == DragOperationType.DRAG_VALID)
-            getController().addMessage(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
+            ; // Add message
         this.setDragOperationType(DragOperationType.DRAG_NONE);
     }
 

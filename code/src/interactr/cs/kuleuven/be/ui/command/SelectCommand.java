@@ -1,8 +1,7 @@
 package interactr.cs.kuleuven.be.ui.command;
 
 import interactr.cs.kuleuven.be.exceptions.NoSuchComponentException;
-import interactr.cs.kuleuven.be.ui.control.SubWindow;
-import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
+import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
 import interactr.cs.kuleuven.be.ui.geometry.Point;
 
 /**
@@ -28,7 +27,7 @@ public class SelectCommand extends Command {
     private final Point location;
 
     @Override
-    public void executeSubWindow(SubWindow window) {
+    public void executeDiagramWindow(DiagramWindow window) {
         try {
             window.selectComponent(location.getX(), location.getY());
         }

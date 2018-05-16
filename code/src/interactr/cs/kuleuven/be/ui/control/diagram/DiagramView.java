@@ -21,14 +21,37 @@ import interactr.cs.kuleuven.be.ui.geometry.*;
 public abstract class DiagramView implements Cloneable, CommandHandler, DiagramObserver {
 
     /**
-     * Initialize this new diagram view with the given diagram.
+     * Initialize this new diagram view with the given diagram and given frame.
      *
      * @param diagram The diagram to associate this diagram view with.
+     * @param frame The frame for this new view.
      * @throws IllegalArgumentException If the given diagram is null.
      */
-    DiagramView(Diagram diagram) {
+    DiagramView(Diagram diagram, Rectangle frame) {
         setDiagram(diagram);
+        this.frame = frame;
     }
+
+    /**
+     * Returns the frame for this view.
+     */
+    public Rectangle getFrame() {
+        return this.frame;
+    }
+
+    /**
+     * Sets the frame of this view to the given one.
+     *
+     * @param frame The new frame for this view.
+     */
+    public void setFrame(Rectangle frame) {
+        this.frame = frame;
+    }
+
+    /**
+     * Registers the frame of this view.
+     */
+    private Rectangle frame;
 
     /**
      * Returns the diagram associated with this diagram view.
@@ -97,10 +120,13 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @throws InvalidAddPartyException The given party cannot be added to this diagram view at the given coordinate.
      */
     public void addParty(int x, int y) throws InvalidAddPartyException {
+        x -= getFrame().getX();
+        y -= getFrame().getY();
+        System.out.println();
         if (getParty(x,y) != null)
             throw new InvalidAddPartyException();
         Party newParty = Party.createParty();
-        Rectangle figureBounds = PartyModeller.defaultCenter().generateFigure(newParty).getBounds();
+        Rectangle figureBounds = PartyModeller.defaultModeller().generateFigure(newParty).getBounds();
         setCoordinateForParty(newParty, new Point(x - figureBounds.getWidth()/2, y - figureBounds.getHeight()/2));
         this.getDiagram().addParty(newParty);
     }
@@ -269,7 +295,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @return A link representing the given message.
      */
     Link getLinkForMessage(Message message) {
-        Link link = MessageModeller.defaultCenter().generateLink(message);
+        Link link = MessageModeller.defaultModeller().generateLink(message);
         Figure figure = getFigureForParty(message.getSender());
         Point senderCoordinate = getCoordinateForParty(message.getSender());
         Point receiverCoordinate = getCoordinateForParty(message.getReceiver());
@@ -288,8 +314,9 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @return A figure representing the given party.
      */
     Figure getFigureForParty(Party party) {
-        Figure figure = PartyModeller.defaultCenter().generateFigure(party);
+        Figure figure = PartyModeller.defaultModeller().generateFigure(party);
         Point coordinate = getCoordinateForParty(party);
+        System.out.println(coordinate);
         figure.setX(coordinate.getX());
         figure.setY(coordinate.getY());
         figure.setLabel(party.getLabel());

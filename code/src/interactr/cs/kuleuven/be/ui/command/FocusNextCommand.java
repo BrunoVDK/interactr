@@ -1,6 +1,6 @@
 package interactr.cs.kuleuven.be.ui.command;
 
-import interactr.cs.kuleuven.be.ui.control.SubWindow;
+import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
 
 /**
  * A class of commands for adding parties.
@@ -11,7 +11,7 @@ import interactr.cs.kuleuven.be.ui.control.SubWindow;
 public class FocusNextCommand extends Command {
 
     @Override
-    public void executeSubWindow(SubWindow window) {
+    public void executeDiagramWindow(DiagramWindow window) {
         window.nextView();
     }
 
