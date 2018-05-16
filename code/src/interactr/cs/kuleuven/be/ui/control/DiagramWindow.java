@@ -135,4 +135,7 @@ public class DiagramWindow extends SubWindow {
         return getActiveView();
     }
 
+    public void executeDiagramWindow(Command command){
+
+    }
 }
