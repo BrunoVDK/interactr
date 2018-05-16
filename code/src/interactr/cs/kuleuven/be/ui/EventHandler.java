@@ -201,7 +201,7 @@ public class EventHandler {
     private void handleKeyPress(int keyCode, boolean controlIsPressed) {
         if (keyCode == KeyEvent.VK_ENTER){
             if (controlIsPressed)
-                getController().processCommand(new CreateDialogCommand());
+                getController().createDialog();
             else
                 getController().processCommand(new AbortEditingCommand());
         }
@@ -221,7 +221,7 @@ public class EventHandler {
      * @param keyChar The key char for the key that was typed.
      */
     private void handleKeyTyped(char keyChar) {
-        if (keyChar == KeyEvent.VK_TAB && !getController().isEditing())
+        if (keyChar == KeyEvent.VK_TAB)
             getController().processCommand(new FocusNextCommand());
         else
             getController().processCommand(new AppendCharCommand(keyChar));

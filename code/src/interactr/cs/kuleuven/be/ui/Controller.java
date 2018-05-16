@@ -3,6 +3,7 @@ package interactr.cs.kuleuven.be.ui;
 import interactr.cs.kuleuven.be.exceptions.*;
 import interactr.cs.kuleuven.be.ui.command.Command;
 import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
+import interactr.cs.kuleuven.be.ui.command.CreateDialogCommand;
 import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
 import interactr.cs.kuleuven.be.ui.control.SubWindow;
 
@@ -61,6 +62,16 @@ public class Controller {
     }
 
     /**
+     * Creates a new dialog for the currently active subwindow's selection and adds it to the subwindow
+     *  list.
+     */
+    public void createDialog() {
+        CreateDialogCommand command = new CreateDialogCommand();
+        processCommand(command);
+        addSubWindow(0, command.getDialogWindow());
+    }
+
+    /**
      * Creates a new diagram with default parameters.
      */
     public void createSubWindow() {
@@ -84,7 +95,9 @@ public class Controller {
      * @param index The index at which the subwindow should be inserted.
      * @param subwindow The subwindow that is to be added.
      */
-    private void addSubWindow(int index, SubWindow subwindow){
+    private void addSubWindow(int index, SubWindow subwindow) {
+        if (subwindow == null)
+            throw new IllegalArgumentException();
         this.getSubWindows().add(index, subwindow);
     }
 
@@ -115,7 +128,8 @@ public class Controller {
     public void activateSubWindow(int x, int y) throws NoSuchWindowException {
         if (getSubWindowAt(x, y) == null)
             throw new NoSuchWindowException();
-        this.addSubWindow(0, removeSubWindow(getSubWindowAt(x, y)));
+        this.addSubWindow(0, removeSubWindow(getSubWindowAt(x,y)));
+        getPaintBoard().refresh();
     }
 
     /**
@@ -128,7 +142,7 @@ public class Controller {
      */
     public void closeSubWindow(int x, int y) throws InvalidCloseWindowException {
         SubWindow subWindow = this.getSubWindows().stream().filter( s -> s.closeButtonEncloses(x,y)).findFirst().orElse(null);
-        if (subWindow != null && !(isEditing() && subWindow == getActiveSubwindow())) {
+        if (subWindow != null) {
             subWindow.close();
             this.removeSubWindow(subWindow);
             getPaintBoard().refresh();
@@ -184,63 +198,6 @@ public class Controller {
      * The list of all diagram views kept by this diagram handler.
      */
     private ArrayList<SubWindow> subWindows = new ArrayList<SubWindow>();
-
-    /**
-     * Removes all components in the current selection from this controller's diagram.
-     */
-    public void deleteSelection() {
-        if (getActiveSubwindow() != null) {
-            getActiveSubwindow().deleteSelection();
-            getPaintBoard().refresh();
-        }
-    }
-
-    /**
-     * Returns whether or not the active subwindow is currently editing a component.
-     *
-     * @return True if and only if the active subwindow exists and its selection is active.
-     */
-    public boolean isEditing() {
-        return (getActiveSubwindow() != null && getActiveSubwindow().selectionIsActive());
-    }
-
-    /**
-     * Terminate the current editing session, if any.
-     *
-     * @throws InvalidLabelException If the current label for the editing session is not a valid one
-     *  for the selected component.
-     */
-    public void abortEditing() throws InvalidLabelException {
-        if (isEditing()) {
-            getActiveSubwindow().deselectAll();
-            getPaintBoard().refresh();
-        }
-    }
-
-    /**
-     * Append the given char to the current edit session.
-     *
-     * @param c The char that is to be appended.
-     */
-    public void appendChar(char c) {
-        if (isEditing()) {
-            getActiveSubwindow().setSelectedLabel(getActiveSubwindow().getSelectedLabel() + c);
-            getPaintBoard().refresh();
-        }
-    }
-
-    /**
-     * Removes the last char from the label of the active component.
-     */
-    public void removeLastChar() {
-        if (isEditing()) {
-            String temp = getActiveSubwindow().getSelectedLabel();
-            if (temp.length() > 0) {
-                getActiveSubwindow().setSelectedLabel(temp.substring(0, temp.length()-1));
-                getPaintBoard().refresh();
-            }
-        }
-    }
 
     /**
      * Process the given command.

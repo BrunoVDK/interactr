@@ -8,34 +8,53 @@ import interactr.cs.kuleuven.be.ui.control.control.RadioButton;
 import interactr.cs.kuleuven.be.ui.control.control.TextField;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
-
+/**
+ * A class of dialogs for parties.
+ *
+ * @author Team 25
+ * @version 1.0
+ */
 public class DialogParty extends DialogWindow {
 
-    private static  final int width = 300, height = 50;
-
-    public DialogParty(Party party, Diagram diagram, boolean isActor){
+    /**
+     * Initialize this new party dialog with given party, diagram and party type.
+     *
+     * @param party The party to associate this dialog window with.
+     * @param diagram The diagram to associate this dialog window with.
+     * @param isActor True if this dialog window refers to an actor.
+     */
+    DialogParty(Party party, Diagram diagram, boolean isActor){
         super(diagram);
         this.party = party;
         this.isActor = isActor;
-        this.setFrame(new Rectangle(0,0,width,height));
+        this.setFrame(new Rectangle(0,0, width, height));
     }
 
+    /**
+     * Registers the default width and height of this dialog window.
+     */
+    private static final int width = 250, height = 200;
+
+    /**
+     * Registers whether or not this dialog window refers to an actor.
+     */
     private boolean isActor;
 
     @Override
     protected void displayView(PaintBoard paintBoard) {
-        if(isActor) {
-            actor.displayControl(paintBoard, width * 9/12, height/2, true);
-            object.displayControl(paintBoard, width * 11/12, height/2, false);
-        }else{
-            actor.displayControl(paintBoard, width * 9/12, height/2, false);
-            object.displayControl(paintBoard, width * 11/12, height/2, true);
+        /*
+        if (isActor) {
+            actorButton.displayControl(paintBoard, width * 9/12, height/2, true);
+            objectButton.displayControl(paintBoard, width * 11/12, height/2, false);
         }
-
-
+        else {
+            actorButton.displayControl(paintBoard, width * 9/12, height/2, false);
+            objectButton.displayControl(paintBoard, width * 11/12, height/2, true);
+        }
+        */
     }
 
-    private RadioButton actor,object;
+    private RadioButton actorButton, objectButton;
 
     private TextField instanceName, className;
 
@@ -54,8 +73,9 @@ public class DialogParty extends DialogWindow {
         super(diagram);
     }
 
-
-
-
+    @Override
+    public String getTitle() {
+        return "Party Dialog - Diagram " + getDiagram().getSequenceNumber();
+    }
 
 }

@@ -3,7 +3,7 @@ package interactr.cs.kuleuven.be.ui.control.diagram;
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.*;
 import interactr.cs.kuleuven.be.purecollections.PMap;
-import interactr.cs.kuleuven.be.ui.DiagramObserver;
+import interactr.cs.kuleuven.be.domain.DiagramObserver;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.command.Command;
 import interactr.cs.kuleuven.be.ui.command.CommandHandler;

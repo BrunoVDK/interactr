@@ -1,9 +1,7 @@
 package interactr.cs.kuleuven.be.domain;
 
 import interactr.cs.kuleuven.be.exceptions.InvalidAddMessageException;
-import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
 import interactr.cs.kuleuven.be.purecollections.PList;
-import interactr.cs.kuleuven.be.ui.DiagramObserver;
 
 import java.util.*;
 
