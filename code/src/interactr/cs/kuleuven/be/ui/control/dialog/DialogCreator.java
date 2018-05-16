@@ -1,7 +1,6 @@
 package interactr.cs.kuleuven.be.ui.control.dialog;
 
 import interactr.cs.kuleuven.be.domain.*;
-import interactr.cs.kuleuven.be.ui.control.Dialog;
 
 /**
  * A class of visitors for creating dialogs for diagram components.

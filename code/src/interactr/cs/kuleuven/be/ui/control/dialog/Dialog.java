@@ -1,6 +1,7 @@
-package interactr.cs.kuleuven.be.ui.control;
+package interactr.cs.kuleuven.be.ui.control.dialog;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
+import interactr.cs.kuleuven.be.ui.control.SubWindow;
 
 /**
  * A class of dialog windows.
@@ -8,7 +9,7 @@ import interactr.cs.kuleuven.be.domain.Diagram;
  * @author Team 25
  * @version 1.0
  */
-public class Dialog extends SubWindow {
+public abstract class Dialog extends SubWindow {
 
     /**
      * Initialize this new dialog with given diagram.
@@ -32,5 +33,27 @@ public class Dialog extends SubWindow {
      * Registers the diagram associated with this dialog.
      */
     private Diagram diagram;
+
+
+
+    public void goUp(){
+
+    }
+    public void goDown(){
+
+    }
+
+    public void focusNext(){
+
+    }
+
+
+    //TODO
+    //execute method
+
+
+
+
+
 
 }

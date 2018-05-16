@@ -24,7 +24,7 @@ public class SubWindow implements CommandHandler {
     /**
      * Create a new subwindow with a default frame of size 400x400.
      */
-    SubWindow() {
+    public SubWindow() {
         this(null);
     }
 
@@ -513,5 +513,32 @@ public class SubWindow implements CommandHandler {
     public void executeCommand(Command command) throws CommandNotProcessedException {
         command.executeSubWindow(this);
     }
+
+    /**
+     * A method that selects the comopnent at the given coordinates
+     * @param x
+     *  The x coordinate
+     * @param y
+     *  The y coordinate
+     */
+    public void selectComponentAt(int x, int y){
+
+    }
+
+    /**
+     * A method that appends a Char
+     */
+    public void appendChar(){
+
+    }
+
+    /**
+     * A method that removes  the last char
+     */
+    public void removeLastChar(){
+
+    }
+
+    //execute method
 
 }
