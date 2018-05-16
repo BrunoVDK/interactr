@@ -42,4 +42,5 @@ public class ObjectParty extends Party {
     public void acceptVisitor(DiagramVisitor visitor) {
         visitor.visit(this);
     }
+
 }

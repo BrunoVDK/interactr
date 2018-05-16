@@ -119,7 +119,7 @@ public class SequenceView extends DiagramView {
     public void addParty(int x, int y) throws InvalidAddPartyException {
         if (y - getFrame().getY() <= 5 || y - getFrame().getY() >= PARTY_ROW_HEIGHT - 5)
             throw new InvalidAddPartyException();
-        super.addParty(x, 5);
+        super.addParty(x, y);
     }
 
     @Override
