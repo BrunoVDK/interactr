@@ -181,7 +181,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @param y The y coordinate to look at.
      * @return The party at the given coordinate.
      */
-    private Party getParty(int x, int y) {
+    public Party getParty(int x, int y) {
         for (Party p : getDiagram().getParties()) {
             Figure figure = getFigureForParty(p);
             if (figure.isHit(x,y) && !figure.isLabelHit(x,y))
@@ -193,20 +193,17 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
     /**
      * A method that moves the given party to the given coordinates
      *
-     * @param fromX The start x coordinate for the add.
-     * @param fromY The start y coordinate for the add.
-     * @param toX The end x coordinate for the add.
-     * @param toY The end y coordinate for the add.
-     * @throws NoSuchPartyException If there is no party at the given start coordinates.
+     * @param movedParty The that is to be moved.
+     * @param toX The end x coordinate for the moving session.
+     * @param toY The end y coordinate for the moving session.
+     * @throws InvalidMovePartyException If the give party is null.
      * @throws InvalidMovePartyException If the party could not be moved to the given end coordinates.
      */
-    public void moveParty(int fromX, int fromY, int toX, int toY) throws  NoSuchPartyException, InvalidMovePartyException {
-        Party movedParty = getParty(fromX, fromY);
-        if (movedParty == null)
-            throw new NoSuchPartyException(fromX, fromY);
+    public void moveParty(Party movedParty, int toX, int toY) throws  NoSuchPartyException, InvalidMovePartyException {
+        if (movedParty == null) throw new InvalidMovePartyException();
         Rectangle movedBounds = getFigureForParty(movedParty).getBounds();
-        movedBounds.setX(movedBounds.getX() + (toX - fromX));
-        movedBounds.setY(movedBounds.getY() + (toY - fromY));
+        movedBounds.setX(toX - movedBounds.getWidth()/2);
+        movedBounds.setY(toY - movedBounds.getHeight()/2);
         for (Party party : getDiagram().getParties())
             if (party != movedParty && movedBounds.overlaps(getFigureForParty(party).getBounds()))
                 throw new InvalidMovePartyException();
@@ -252,14 +249,6 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @throws InvalidAddMessageException If a message could not be added.
      */
     public void addMessage(int fromX, int fromY, int toX, int toY) {
-        if (canAddMessageAt(fromX, fromY, toX, toY)) {
-            int index = getMessageInsertionIndex(fromX, fromY, toX, toY);
-            Party sender = getParty(fromX, 10), receiver = getParty(toX, 10);
-            if (sender != null && receiver != null && sender != receiver) {
-                diagram.insertInvocationMessageAtIndex(new InvocationMessage(sender, receiver), index);
-                return;
-            }
-        }
         throw new InvalidAddMessageException();
     }
 

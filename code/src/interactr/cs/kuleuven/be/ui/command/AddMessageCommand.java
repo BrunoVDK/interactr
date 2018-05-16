@@ -37,7 +37,7 @@ public class AddMessageCommand extends Command {
                     view.getRelativeCoordinates(toLocation).getX(),
                     view.getRelativeCoordinates(toLocation).getY());
         }
-        catch (InvalidAddMessageException e) {
+        catch (Exception e) {
             throw new CommandNotProcessedException();
         }
     }

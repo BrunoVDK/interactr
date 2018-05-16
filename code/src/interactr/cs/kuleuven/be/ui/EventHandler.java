@@ -123,10 +123,9 @@ public class EventHandler {
      * @param y The y coordinate of the mouse drag.
      */
     private void handleMouseDrag(int x, int y) {
-        if (lastDragCommand != null) {
-            lastDragCommand.setTargetLocation(new Point(x,y));
-            getController().processCommand(lastDragCommand);
-            return;
+        if (movePartyCommand != null) {
+            movePartyCommand.setTargetLocation(new Point(x,y));
+            getController().processCommand(movePartyCommand);
         }
         else {
             try {
@@ -137,8 +136,7 @@ public class EventHandler {
                     getController().resizeSubWindow(lastDragCoordinate.getX(), lastDragCoordinate.getY(), x, y);
                 }
                 catch (InvalidResizeWindowException e2) {
-                    lastDragCommand = new MovePartyCommand(new Point(x, y), new Point(x, y));
-                    return;
+                    movePartyCommand = new MovePartyCommand(new Point(x, y), new Point(x, y));
                 }
             }
             lastDragCoordinate = new Point(x,y);
@@ -152,9 +150,10 @@ public class EventHandler {
      * @param y The y coordinate of the mouse release.
      */
     private void handleMouseReleased(int x, int y) {
-        if (lastDragCommand == null)
-            getController().processCommand(new AddMessageCommand(lastDragCoordinate, new Point(x,y))); // TODO
-        lastDragCommand = null;
+        if (movePartyCommand == null || !movePartyCommand.movedParty())
+            try {getController().processCommand(new AddMessageCommand(lastDragCoordinate, new Point(x,y)));}
+            catch (Exception ignored) {}
+        movePartyCommand = null;
     }
 
     /**
@@ -163,9 +162,9 @@ public class EventHandler {
     private Point lastDragCoordinate;
 
     /**
-     * Registers the last successful dragging session.
+     * Registers the last move party command.
      */
-    private DragCommand lastDragCommand;
+    private MovePartyCommand movePartyCommand;
 
     /**
      * Handle the key event of given type, having the given key code and key char.
