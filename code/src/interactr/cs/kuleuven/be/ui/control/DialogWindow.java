@@ -2,6 +2,8 @@ package interactr.cs.kuleuven.be.ui.control;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.command.Command;
+import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
 
 /**
  * A class of dialog windows.
@@ -44,4 +46,9 @@ public class DialogWindow extends SubWindow {
         return "Diagram " + getDiagram().getSequenceNumber();
     }
 
+    @Override
+    public void executeCommand(Command command) throws CommandNotProcessedException {
+        command.executeDialogWindow(this);
+    }
+    
 }

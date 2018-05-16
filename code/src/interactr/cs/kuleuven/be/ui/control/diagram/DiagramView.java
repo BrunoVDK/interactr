@@ -120,13 +120,13 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @throws InvalidAddPartyException The given party cannot be added to this diagram view at the given coordinate.
      */
     public void addParty(int x, int y) throws InvalidAddPartyException {
-        x -= getFrame().getX();
-        y -= getFrame().getY();
-        if (getParty(x,y) != null)
-            throw new InvalidAddPartyException();
         Party newParty = Party.createParty();
         Rectangle figureBounds = PartyModeller.defaultModeller().generateFigure(newParty).getBounds();
-        setCoordinateForParty(newParty, new Point(x - figureBounds.getWidth()/2, y - figureBounds.getHeight()/2));
+        x = x - getFrame().getX() - figureBounds.getWidth()/2;
+        y = y - getFrame().getY() - figureBounds.getHeight()/2;
+        if (getParty(x,y) != null)
+            throw new InvalidAddPartyException();
+        setCoordinateForParty(newParty, new Point(x, y));
         this.getDiagram().addParty(newParty);
     }
 
