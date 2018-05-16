@@ -82,6 +82,7 @@ public class EventHandler {
      * @param y The y coordinate of the mouse click.
      */
     private void handleSingleMouseClick(int x, int y) {
+        getController().activateSubWindow(x, y);
         try {
             getController().closeSubWindow(x,y);
         }
@@ -199,18 +200,15 @@ public class EventHandler {
      */
     private void handleKeyPress(int keyCode, boolean controlIsPressed) {
         if (keyCode == KeyEvent.VK_ENTER){
-            if(controlIsPressed){
+            if (controlIsPressed)
                 getController().processCommand(new CreateDialogCommand());
-            }
             else
-                getController().abortEditing();
+                getController().processCommand(new AbortEditingCommand());
         }
-        else if (keyCode == KeyEvent.VK_BACK_SPACE || keyCode == KeyEvent.VK_DELETE) {
-            if (getController().isEditing())
-                getController().removeLastChar();
-            else
-                getController().deleteSelection();
-        }
+        else if (keyCode == KeyEvent.VK_BACK_SPACE)
+            getController().processCommand(new RemoveLastCharCommand());
+        else if (keyCode == KeyEvent.VK_DELETE)
+            getController().processCommand(new DeleteCommand());
         else if (keyCode == KeyEvent.VK_N && controlIsPressed)
             getController().createSubWindow();
         else if (keyCode == KeyEvent.VK_D && controlIsPressed)
@@ -225,10 +223,8 @@ public class EventHandler {
     private void handleKeyTyped(char keyChar) {
         if (keyChar == KeyEvent.VK_TAB && !getController().isEditing())
             getController().processCommand(new FocusNextCommand());
-        else if (Character.isLetter(keyChar)
-                || Character.isDigit(keyChar)
-                || ":();-_<>*&[]".contains(Character.toString(keyChar)))
-            getController().appendChar(keyChar);
+        else
+            getController().processCommand(new AppendCharCommand(keyChar));
     }
 
     /**

@@ -249,6 +249,8 @@ public class Controller {
      * @throws CommandNotProcessedException The command failed to be executed.
      */
     public void processCommand(Command command) throws CommandNotProcessedException {
+        if (command == null)
+            throw new CommandNotProcessedException();
         command.execute(getActiveSubwindow());
         getPaintBoard().refresh();
     }
