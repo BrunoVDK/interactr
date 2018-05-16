@@ -1,6 +1,7 @@
 package interactr.cs.kuleuven.be.ui.control;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
+import interactr.cs.kuleuven.be.ui.PaintBoard;
 
 /**
  * A class of dialog windows.
@@ -21,6 +22,11 @@ public class Dialog extends SubWindow {
         this.diagram = diagram;
     }
 
+    @Override
+    void displayView(PaintBoard paintBoard) {
+        // TODO
+    }
+
     /**
      * Returns the diagram associated with this dialog.
      */
@@ -33,4 +39,8 @@ public class Dialog extends SubWindow {
      */
     private Diagram diagram;
 
+    @Override
+    public String getTitle() {
+        return ""; // TODO
+    }
 }
