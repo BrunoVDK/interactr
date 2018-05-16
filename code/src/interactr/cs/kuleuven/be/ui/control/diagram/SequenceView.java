@@ -132,7 +132,7 @@ public class SequenceView extends DiagramView {
         if (fromY >= PARTY_ROW_HEIGHT)
             throw new InvalidMovePartyException();
         else
-            super.moveParty(fromX, 5, toX, 5);
+            super.moveParty(fromX, fromY, toX, toY);
     }
 
     @Override

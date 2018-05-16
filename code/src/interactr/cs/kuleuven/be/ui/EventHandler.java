@@ -163,7 +163,7 @@ public class EventHandler {
      * @param y The y coordinate to move the party to.
      */
     private void moveParty(int x, int y) {
-        // getController().moveParty(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
+        getController().processCommand(new MovePartyCommand(lastDragCoordinate, new Point(x,y)));
         this.setDragOperationType(DragOperationType.DRAG_DIAGRAM);
         this.setLastDragCoordinate(x,y);
     }
@@ -194,10 +194,18 @@ public class EventHandler {
         DRAG_DIAGRAM // When something is dragged within a diagram
     }
 
-    // Getter/Setter
+    /**
+     * Sets the drag operation type to the given one.
+     *
+     * @param type The new drag operation type.
+     */
     private void setDragOperationType(DragOperationType type){
         this.dragOperationType = type;
     }
+
+    /**
+     * Returns the drag operation type.
+     */
     private DragOperationType getDragOperationType(){
         return dragOperationType;
     }

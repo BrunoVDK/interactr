@@ -176,7 +176,6 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
     private Party getParty(int x, int y) {
         for (Party p : getDiagram().getParties()) {
             Figure figure = getFigureForParty(p);
-            System.out.println(figure.getBounds());
             if (figure.isHit(x,y) && !figure.isLabelHit(x,y))
                 return p;
         }
@@ -194,6 +193,10 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @throws InvalidMovePartyException If the party could not be moved to the given end coordinates.
      */
     public void moveParty(int fromX, int fromY, int toX, int toY) throws  NoSuchPartyException, InvalidMovePartyException {
+        fromX -= getFrame().getX();
+        fromY -= getFrame().getY();
+        toX -= getFrame().getX();
+        toY -= getFrame().getY();
         Party movedParty = getParty(fromX, fromY);
         if (movedParty == null)
             throw new NoSuchPartyException(fromX, fromY);
