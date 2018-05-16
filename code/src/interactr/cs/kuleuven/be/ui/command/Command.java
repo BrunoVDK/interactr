@@ -1,7 +1,7 @@
 package interactr.cs.kuleuven.be.ui.command;
 
+import interactr.cs.kuleuven.be.ui.control.dialog.Dialog;
 import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
-import interactr.cs.kuleuven.be.ui.control.Dialog;
 import interactr.cs.kuleuven.be.ui.control.SubWindow;
 import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 
