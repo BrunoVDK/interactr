@@ -11,6 +11,24 @@ import interactr.cs.kuleuven.be.ui.control.DialogWindow;
  */
 public class DialogCreator implements DiagramVisitor {
 
+
+    private DialogCreator() {
+        // Exists only to defeat instantiation.
+    }
+
+    /**
+     * Get the default modeller for parties.
+     *  This is a singleton.
+     */
+    public static DialogCreator defaultModeller() {
+        return defaultModeller;
+    }
+
+    /**
+     * The singleton instance.
+     */
+    private final static DialogCreator defaultModeller = new DialogCreator();
+
     /**
      * Create a dialog for the given component.
      *
@@ -18,7 +36,7 @@ public class DialogCreator implements DiagramVisitor {
      * @param component The component to create a dialog for.
      * @return A dialog for the given component, or null if none could be created.
      */
-    DialogWindow createDialog(Diagram diagram, Visitable component) {
+    public DialogWindow createDialog(Diagram diagram, Visitable component) {
         dialog = null;
         this.diagram = diagram;
         component.acceptVisitor(this);
