@@ -1,7 +1,7 @@
 package test.unit.ui;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
-import interactr.cs.kuleuven.be.ui.SequenceView;
+import interactr.cs.kuleuven.be.ui.control.SequenceView;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;

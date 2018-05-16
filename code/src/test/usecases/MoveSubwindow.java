@@ -1,6 +1,7 @@
 package test.usecases;
 
 import interactr.cs.kuleuven.be.ui.*;
+import interactr.cs.kuleuven.be.ui.control.SubWindow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,30 +10,30 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MoveSubwindow {
 
-    private DiagramWindow diagramWindow = new DiagramWindow();
+    private Window window = new Window();
 
     @BeforeEach
     void setUp(){
-        diagramWindow.setEventHandler(new EventHandler(new DiagramController()));
-        diagramWindow.setPaintBoard(new PaintBoard(diagramWindow, diagramWindow.getEventHandler().getDiagramController()));
+        window.setEventHandler(new EventHandler(new Controller()));
+        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getController()));
     }
 
     @Test
     void stepByStep(){
-        DiagramController controller = diagramWindow.getEventHandler().getDiagramController();
+        Controller controller = window.getEventHandler().getController();
         // Precondition
-        DiagramWindow.replayRecording("steps/createNewDiagram.txt",diagramWindow);
+        Window.replayRecording("steps/createNewDiagram.txt", window);
         SubWindow original = controller.getActiveSubwindow();
         assertNotNull(original);
-        DiagramWindow.replayRecording("steps/moveNewDiagram.txt",diagramWindow);
+        Window.replayRecording("steps/moveNewDiagram.txt", window);
         assertTrue(0 < controller.getActiveSubwindow().getFrame().getX());
         assertTrue(0 < controller.getActiveSubwindow().getFrame().getY());
     }
 
     @Test
     void moveSubwindow(){
-        DiagramWindow.replayRecording("moveSubwindow.txt",diagramWindow);
-        assertTrue(diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getFrame().getX() > 0);
-        assertTrue(diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow().getFrame().getY() > 0);
+        Window.replayRecording("moveSubwindow.txt", window);
+        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getX() > 0);
+        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getY() > 0);
     }
 }

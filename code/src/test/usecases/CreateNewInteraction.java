@@ -1,6 +1,7 @@
 package test.usecases;
 
 import interactr.cs.kuleuven.be.ui.*;
+import interactr.cs.kuleuven.be.ui.control.SubWindow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,29 +11,29 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CreateNewInteraction {
 
-    private DiagramWindow diagramWindow = new DiagramWindow();
+    private Window window = new Window();
 
     @BeforeEach
     void setUp(){
-        diagramWindow.setEventHandler(new EventHandler(new DiagramController()));
-        diagramWindow.setPaintBoard(new PaintBoard(diagramWindow, diagramWindow.getEventHandler().getDiagramController()));
+        window.setEventHandler(new EventHandler(new Controller()));
+        window.setPaintBoard(new PaintBoard(window, window.getEventHandler().getController()));
     }
     @Test
     void stepByStep(){
-        DiagramController controller = diagramWindow.getEventHandler().getDiagramController();
+        Controller controller = window.getEventHandler().getController();
         // Precondition
-        DiagramWindow.replayRecording("steps/createNewDiagram.txt",diagramWindow);
+        Window.replayRecording("steps/createNewDiagram.txt", window);
         assertNotNull(controller.getActiveSubwindow());
         SubWindow original = controller.getActiveSubwindow();
-        DiagramWindow.replayRecording("steps/moveNewDiagram.txt",diagramWindow);
-        DiagramWindow.replayRecording("steps/createCopyDiagram.txt",diagramWindow);
+        Window.replayRecording("steps/moveNewDiagram.txt", window);
+        Window.replayRecording("steps/createCopyDiagram.txt", window);
         assertEquals(original.getDiagram(), controller.getActiveSubwindow().getDiagram());
     }
 
     @Test
     void createNewSubWindow(){
-        DiagramWindow.replayRecording("createNewSubWindow.txt",diagramWindow);
-        assertNotEquals(null, diagramWindow.getEventHandler().getDiagramController().getActiveSubwindow());
+        Window.replayRecording("createNewSubWindow.txt", window);
+        assertNotEquals(null, window.getEventHandler().getController().getActiveSubwindow());
     }
 
 }

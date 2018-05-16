@@ -1,7 +1,6 @@
 package interactr.cs.kuleuven.be.ui;
 
-import interactr.cs.kuleuven.be.ui.geometry.Colour;
-import interactr.cs.kuleuven.be.ui.geometry.Model;
+import interactr.cs.kuleuven.be.ui.design.Colour;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 import java.awt.*;
@@ -18,22 +17,22 @@ public class PaintBoard {
     /**
      * Initialize this new paint board with given diagram window and diagram controller.
      *
-     * @param diagramWindow The diagram window to associate this paint board with.
-     * @param diagramController The diagram controller to associate this paint board with.
+     * @param window The diagram window to associate this paint board with.
+     * @param controller The diagram controller to associate this paint board with.
      * @throws IllegalArgumentException The given window is nil.
      */
-    public PaintBoard(DiagramWindow diagramWindow, DiagramController diagramController) throws IllegalArgumentException {
-        if (diagramWindow == null)
+    public PaintBoard(Window window, Controller controller) throws IllegalArgumentException {
+        if (window == null)
             throw new IllegalArgumentException("Null window.");
-        this.diagramWindow = diagramWindow;
-        setDiagramController(diagramController);
+        this.window = window;
+        setController(controller);
     }
 
     /**
      * Refresh this paint board by redrawing its contents.
      */
     public void refresh() {
-        this.getDiagramWindow().repaint();
+        this.getWindow().repaint();
     }
 
     /**
@@ -44,7 +43,7 @@ public class PaintBoard {
     public void paint(Graphics context) {
         currentContext = context;
         context.setFont(defaultFont);
-        getDiagramController().displayAllSubWindows();
+        getController().displayAllSubWindows();
     }
 
     /**
@@ -87,6 +86,26 @@ public class PaintBoard {
     }
 
     /**
+     * Returns the width of the given string, when drawn.
+     *
+     * @param string The string whose drawing width is desired.
+     * @return The width of the string when it is drawn on this paintboard.
+     */
+    public int getWidthForString(String string) {
+        return string.length() * charWidth;
+    }
+
+    /**
+     * Returns the height of the given string, when drawn.
+     *
+     * @param string The string whose drawing height is desired.
+     * @return The height of the string when it is drawn on this paintboard.
+     */
+    public int getHeightForString(String string) {
+        return charHeight;
+    }
+
+    /**
      * Draw the given string at the given coordinate.
      *
      * @param string The string that is to be drawn.
@@ -124,6 +143,19 @@ public class PaintBoard {
     }
 
     /**
+     * Get the current colour used when drawing.
+     *
+     * @return The colour currently used for drawing in this paintboard.
+     */
+    public Colour getColour() {
+        if (currentContext != null) {
+            float[] components = currentContext.getColor().getColorComponents(null);
+            return new Colour(components[0], components[1], components[2]);
+        }
+        return Colour.BLACK;
+    }
+
+    /**
      * Sets the colour for this paint board.
      *
      * @param colour The colour to use for this paint board.
@@ -134,24 +166,12 @@ public class PaintBoard {
     }
 
     /**
-     * Get the width of the given string when drawn in this paint board.
-     *
-     * @param string The string whose display width is desired.
-     * @return The width of the given string when drawn in this paint board.
-     */
-    public int getWidthForString(String string) {
-        if (currentContext != null)
-            return currentContext.getFontMetrics().stringWidth(string);
-        return 0;
-    }
-
-    /**
      * Returns the width for this board.
      *
      * @return The width of this paint board.
      */
     public int getWidth() {
-        return getDiagramWindow().getWidth();
+        return getWindow().getWidth();
     }
 
     /**
@@ -160,7 +180,7 @@ public class PaintBoard {
      * @return The height of this paint board.
      */
     public int getHeight() {
-        return getDiagramWindow().getHeight();
+        return getWindow().getHeight();
     }
 
     /**
@@ -180,35 +200,35 @@ public class PaintBoard {
     /**
      * Returns the diagram window associated with this paint board.
      */
-    public DiagramWindow getDiagramWindow() {
-        return diagramWindow;
+    public Window getWindow() {
+        return window;
     }
 
     /**
      * Variable registering the diagram window associated with this paint board.
      */
-    private DiagramWindow diagramWindow;
+    private Window window;
 
     /**
      * Associate the given diagram controller with this paint board.
      *
-     * @param diagramController The diagram controller associated with this paint board.
+     * @param controller The diagram controller associated with this paint board.
      */
-    public void setDiagramController(DiagramController diagramController) {
-        this.diagramController = diagramController;
+    private void setController(Controller controller) {
+        this.controller = controller;
     }
 
     /**
      * Returns the diagram controller associated with this paint board.
      */
-    public DiagramController getDiagramController() {
-        return this.diagramController;
+    private Controller getController() {
+        return this.controller;
     }
 
     /**
      * Variable registering the diagram controller associated with this paint board.
      */
-    private DiagramController diagramController;
+    private Controller controller;
 
     /**
      * The default font used by this paint board.
@@ -216,11 +236,18 @@ public class PaintBoard {
     private static Font defaultFont = new Font("Monospaced", Font.PLAIN, 12);
 
     /**
-     * Pre-process font metrics.
+     * Returns the char height used for labels.
      */
+    public static int charHeight = 12;
+
+    /**
+     * Returns the char width used for labels.
+     */
+    public static int charWidth = 6;
+
     static {
-        Model.charHeight = defaultFont.getSize();
-        Model.charWidth = java.awt.Toolkit.getDefaultToolkit().getFontMetrics(defaultFont).charWidth('a');
+        PaintBoard.charHeight = defaultFont.getSize();
+        PaintBoard.charWidth = java.awt.Toolkit.getDefaultToolkit().getFontMetrics(defaultFont).charWidth('a');
     }
 
 }

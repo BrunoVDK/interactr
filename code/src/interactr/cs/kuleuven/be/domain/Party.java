@@ -1,8 +1,5 @@
 package interactr.cs.kuleuven.be.domain;
 
-import interactr.cs.kuleuven.be.ui.geometry.Box;
-import interactr.cs.kuleuven.be.ui.geometry.Figure;
-
 /**
  * A class of parties.
  *
@@ -50,33 +47,56 @@ public class Party extends DiagramComponent {
      *
      * @return returns the switched party
      */
-    public Party switchType(){return null;}
-
-    /**
-     * Returns a proposal for how this component should be drawn, by returning a mock-up figure.
-     *
-     * @return A mock-up for how this component should be drawn.
-     */
-    public Figure proposedFigure() {
-        return new Box();
+    public Party switchType(){
+        return null;
     }
 
     @Override
     public boolean canHaveAsLabel(String label) {
         if (!super.canHaveAsLabel(label))
             return false;
-        boolean validCharacters = true;
         String[] parts = label.split(":");
-        if (parts.length == 2) {
-            // Instance doesn't start with lowercase letter
-            if (parts[0].length() != 0 && (!Character.isLowerCase(parts[0].charAt(0)) || !Character.isLetter(parts[0].charAt(0))))
-                validCharacters = false;
-            if (parts[1].length() == 0 || (!Character.isUpperCase(parts[1].charAt(0)) || !Character.isLetter(parts[1].charAt(0))))
-                validCharacters = false;
-        }
-        else
-            validCharacters = false;
-        return validCharacters;
+        if (parts.length == 2)
+            return (canHaveAsInstanceName(parts[0]) && canHaveAsClassName(parts[1]));
+        return false;
+    }
+
+    /**
+     * Checks whether or not the given instance name can be used as an instance name for this party.
+     *
+     * @param instanceName The instance name to check with.
+     * @return True if and only if the given instance name is valid.
+     */
+    public boolean canHaveAsInstanceName(String instanceName) {
+        if (instanceName.length() == 0)
+            return true;
+        return (Character.isLowerCase(instanceName.charAt(0)) && Character.isLetter(instanceName.charAt(0)));
+    }
+
+    /**
+     * Returns the class name for this party.
+     */
+    public String getClassName() {
+        return getLabel().split(":")[1];
+    }
+
+    /**
+     * Checks whether or not the given class name can be used as an class name for this party.
+     *
+     * @param className The instance name to check with.
+     * @return True if and only if the given instance name is valid.
+     */
+    public boolean canHaveAsClassName(String className) {
+        if (className.length() == 0)
+            return false;
+        return (Character.isUpperCase(className.charAt(0)) && Character.isLetter(className.charAt(0)));
+    }
+
+    /**
+     * Returns the instance name for this party.
+     */
+    public String getInstanceName() {
+        return getLabel().split(":")[0];
     }
 
     @Override

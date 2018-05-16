@@ -1,8 +1,5 @@
 package interactr.cs.kuleuven.be.domain;
 
-import interactr.cs.kuleuven.be.ui.geometry.Arrow;
-import interactr.cs.kuleuven.be.ui.geometry.Link;
-
 /**
  * A  class of messages. Each message has a receiving - and a sender party.
  *
@@ -14,11 +11,13 @@ public class Message extends DiagramComponent {
     /**
      * Initialize this new message with given sender and receiver party.
      *
+     * @param label The label for this new message.
      * @param sender The sender party for this new message.
      * @param receiver The receiver party for this new message.
      * @throws IllegalArgumentException If any of the given parties is null.
      */
-    public Message(Party sender, Party receiver) throws IllegalArgumentException {
+    Message(String label, Party sender, Party receiver) throws IllegalArgumentException {
+        super(label);
         setSender(sender);
         setReceiver(receiver);
     }
@@ -70,12 +69,13 @@ public class Message extends DiagramComponent {
     private Party receiver;
 
     /**
-     * Returns a proposal link type for drawing this message.
+     * Checks whether this message activates the given party.
      *
-     * @return A link type for drawing this message.
+     * @param party The party to check with.
+     * @return True if and only if this message activates the given party.
      */
-    public Link proposedLink() {
-        return new Arrow();
+    public boolean activates(Party party) {
+        return (party == getReceiver());
     }
 
     @Override
@@ -87,4 +87,5 @@ public class Message extends DiagramComponent {
     public String toString() {
         return getSender().toString() + " " + getLabel() + " " + getReceiver().toString();
     }
+
 }

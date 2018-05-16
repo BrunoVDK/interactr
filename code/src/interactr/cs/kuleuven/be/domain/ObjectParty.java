@@ -16,6 +16,15 @@ public class ObjectParty extends Party {
     }
 
     /**
+     * Initialize this new object party with the given party.
+     *
+     * @param party The party to initialize this object party with.
+     */
+    ObjectParty(Party party) {
+        super(party);
+    }
+
+    /**
      * Initialize this new object with the given label.
      *
      * @param label The label for this new object.
@@ -29,13 +38,8 @@ public class ObjectParty extends Party {
         return new ActorParty(this);
     }
 
-    /**
-     * Initialize this new object party with the given party.
-     *
-     * @param party The party to initialize this object party with.
-     */
-    public ObjectParty(Party party) {
-        super(party);
+    @Override
+    public void acceptVisitor(DiagramVisitor visitor) {
+        visitor.visit(this);
     }
-
 }

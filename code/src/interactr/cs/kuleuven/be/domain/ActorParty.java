@@ -1,8 +1,5 @@
 package interactr.cs.kuleuven.be.domain;
 
-import interactr.cs.kuleuven.be.ui.geometry.Figure;
-import interactr.cs.kuleuven.be.ui.geometry.StickFigure;
-
 /**
  * A class of actors.
  *
@@ -32,7 +29,7 @@ public class ActorParty extends Party {
      *
      * @param party The party to initialize this actor party with.
      */
-    public ActorParty(Party party) {
+    ActorParty(Party party) {
         super(party);
     }
 
@@ -41,11 +38,8 @@ public class ActorParty extends Party {
         return new ObjectParty(this);
     }
 
-    /**
-     * A proposed type of figures for drawing this actor.
-     */
-    public Figure proposedFigure() {
-        return new StickFigure();
+    @Override
+    public void acceptVisitor(DiagramVisitor visitor) {
+        visitor.visit(this);
     }
-
 }

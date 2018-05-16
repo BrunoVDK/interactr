@@ -28,64 +28,145 @@
 
 \section{Design}
 
-\begin{frame}[fragile]{Diagram Controller - Painting \& Events}
-\begin{center}
-\includegraphics[width=1\textwidth]{diagram1}
-\vspace{0.5cm}\\\texttt{Controller}
-\end{center}
-\end{frame}
-
-\begin{frame}[fragile]{Diagram Controller - Model \& Views}
-\begin{center}
-\includegraphics[width=0.8\textwidth]{diagram2}
-\vspace{0.5cm}\\\texttt{Controller}
-\end{center}
-\end{frame}
-
-\begin{frame}[fragile]{Paintboard}
-\begin{center}
-\includegraphics[width=1\textwidth]{diagram7}
-\vspace{0.5cm}\\\texttt{Protected Variations}
-\end{center}
+\begin{frame}[fragile]{Domain Model}
+	\begin{center}
+	\begin{itemize}
+	\item \texttt{Low representational gap}
+	\item Main classes : \texttt{Diagram}, \texttt{Message}, \texttt{Party}
+	\item Business logic completely separate from UI
+	\end{itemize}
+	\end{center}
 \end{frame}
 
 \begin{frame}[fragile]{Domain Model}
 	\begin{center}
-	\includegraphics[width=0.6\textwidth]{diagram3}
+	\textit{Put diagram of domain model here}
+	\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Entry Point - Controller}
+	\begin{center}
+	Everything starts in \underline{\texttt{Controller}} :
+	\vspace{0.5cm}
+	\\$\rightarrow$ creates a \texttt{Window} (extends \texttt{CanvasWindow})
+	\\$\rightarrow$ associates the window with \texttt{PaintBoard} (draw events)
+	\\$\rightarrow$ associates the window with \texttt{EventHandler} (key/mouse events)
+	
+	\vspace{0.5cm} Both support \texttt{Protected Variations}. Both encapsulate \textit{awt} package.
+	\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Controller - Underlying Structure}
+	\begin{center}
+	The \texttt{Controller} keeps track of a list of \texttt{SubWindow}s.
+	\\ A \texttt{SubWindow} can be a \texttt{DiagramWindow} or a \texttt{DialogBox}.
+	\\ Each \texttt{SubWindow} has a frame.
+	\\ Each \texttt{SubWindow} is `\textit{activated}' by putting it at the front of the window list.
+	\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{SubWindows - Diagram Windows \& Dialog Boxes}
+	\begin{center}
+	A \texttt{DiagramWindow} has two \texttt{DiagramView}s.
+	\\A \texttt{DialogBox} has a list of \texttt{Control}s.
+	
+	\vspace{0.5cm}
+	A \texttt{Diagram} is directly altered by these classes.
+	
+	\vspace{0.5cm}
+	Synchronization is done with the \texttt{Observer} pattern. 
+	\\ Since \texttt{Diagram} knows when it changes, it keeps a list of \texttt{DiagramObserver}s and notifies them (\texttt{Information Expert}).
+	\\$\rightarrow$ disadvantage : coordinates aren't synchronised (solved by `\textit{making room}')
+	\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Event Handling - How it all Starts}
+	\begin{center}
+	\begin{itemize}
+	\item[$\rightarrow$] Every mouse or key event goes from \texttt{Window} $\rightarrow$ \texttt{EventHandler}.
+	\item[$\rightarrow$] \texttt{EventHandler} interprets the events and transforms them into \texttt{Command} instances.
+	\item[$\rightarrow$] \texttt{Command} is forwarded to \texttt{Controller}.
+	\end{itemize}
+	Note : if event is a \textit{mouse press}, \texttt{EventHandler} asks the \texttt{Controller} to activate the \texttt{SubWindow} at that coordinate first. 
+	\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Event Handling - Executing Commands}
+	\begin{center}
+	\textit{Precondition} : \texttt{SubWindow} is active
+	\begin{itemize}
+	\item[$\rightarrow$] Every \texttt{Command} can be handled by a \texttt{CommandHandler}.
+	\item[$\rightarrow$] \texttt{DiagramWindow}, \texttt{DiagramView} and \texttt{DialogBox} extend the\texttt{CommandHandler} class. 
+	\item[$\rightarrow$] The first \texttt{CommandHandler} is the active \texttt{SubWindow}.
+	\item[$\rightarrow$] Every \texttt{CommandHandler} either deals with the \texttt{Command} or (on failure) passes it to the next \texttt{CommandHandler} in its chain. 
+	\end{itemize}
+	Patterns used : \texttt{Command}, \texttt{Visitor} and \texttt{Chain of Responsibility}.
+	\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Drawing - Paint Board}
+	\begin{center}
+	The \texttt{PaintBoard} encapsulates the \textit{awt} package. It is passed along to any class responsible for drawing. Drawing is done `\textit{on}' the paint board.
+	\begin{itemize}
+	\item[-] manages clip rect (to prevent overflowing)
+	\item[-] allows color changes
+	\item[-] ...
+	\end{itemize}
+	$\rightarrow$ it is a \texttt{Facade}
+	\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Drawing - Displaying Elements}
+	\begin{center}
+	Each class that displays something draws itself (\texttt{Information Expert}) :
+	\begin{itemize}
+	\item \texttt{SubWindow} draws title bar, close button, frame.
+	\item \texttt{DiagramView} draws diagram with messages, parties, ...
+	\\$\rightarrow$ use of \texttt{Visitor} pattern to generate figures (representations) for these diagram components.
+	\\$\rightarrow$ these figures are \texttt{Flyweight}s.
+	\\$\rightarrow$ separation of UI / domain logic without use of type checking (i.e. \texttt{instanceof}).
+	\item \texttt{Control} draws itself, eg. text for label.
+	\end{itemize}
 	\end{center}
 \end{frame}
 
 \section{Extensibility}
 
-\begin{frame}[fragile]{Views}
+\begin{frame}[fragile]{Commands}
 	\begin{center}
-	\includegraphics[width=0.6\textwidth]{diagram6}
-	\vspace{0.5cm}\\\texttt{Information Expert - Polymorphism}
+	\texttt{Command} pattern eases undoing, allows delayed processing, use by menu items, ... When using new types of events (eg. speech recognition) only \texttt{EventHandler} has to change.
+	
+	\vspace{0.5cm} Small disadvantages ; 
+	\begin{itemize}
+	\item many new types of \texttt{CommandHandler} 
+	\\ $\rightarrow$ bloated \texttt{Command} abstract class (\texttt{Visitor} pattern discussion)
+	\item if \texttt{Chain of Responsibility} is long
+	\\ $\rightarrow$ wasted processing
+	\end{itemize}
 	\end{center}
 \end{frame}
 
-\begin{frame}[fragile]{Selection / Diagram Components}
-\begin{center}
-\includegraphics[width=0.8\textwidth]{diagram4}
-\vspace{0.5cm}\\\texttt{Indirection - Pure Fabrication}
-\end{center}
+\begin{frame}[fragile]{}
+	\begin{center}
+
+	\end{center}
 \end{frame}
 
-\begin{frame}[fragile]{Geometry}
+\begin{frame}[fragile]{}
 	\begin{center}
-	\includegraphics[width=0.6\textwidth]{diagram5}
-	\vspace{0.5cm}\\\texttt{Polymorphism}
+	
 	\end{center}
 \end{frame}
 
 \section{Testing}
 
 \begin{frame}[fragile]{Testing}
-\includegraphics[width=1\textwidth]{coverage}
+	Coverage here!
+	%\includegraphics[width=1\textwidth]{coverage}
 \end{frame}
 
-%\section{Project Management}
-%
+\section{Project Management}
+
 %\begin{frame}[fragile]{Management}
 %\begin{itemize}
 %\item Testing Coordinator : Hannes De Smet
@@ -94,18 +175,31 @@
 %\end{itemize}
 %\end{frame}
 
-\begin{frame}[fragile]{Time management}
+\begin{frame}[fragile]{Refactoring}
 \begin{itemize}
-\item almost 30 hours working together
-\item +- 40 hours per person
-\item Late start
+\item No \textit{duplicated code}.
+\item \textit{Moved methods} here and there.
+\item Addressed \textit{long methods} with \textit{extract method} \\
+$\rightarrow$ not the best metric ... but all methods easily fit on a laptop screen
+\item If appropriate a \textit{temporary variable} was replaced with getters.
+\item Avoided \textit{message chains}.
+\item Virtually no \textit{switch statements} (only in \texttt{EventHandler}).
+\item \textit{Comments} virtually never necessary (maybe when drawing messages in \texttt{SequenceView}).
 \end{itemize}
 \end{frame}
 
-%{\setbeamercolor{palette primary}{fg=black, bg=yellow}
-%\begin{frame}[standout]
-%  Questions?
-%\end{frame}
-%}
+\begin{frame}[fragile]{Time management}
+\begin{itemize}
+\item weekly meeting with assistant
+\item +- 40 hours per person
+\item designed, refactored, tested, redesigned, ... in no particular order
+\end{itemize}
+\end{frame}
+
+{\setbeamercolor{palette primary}{fg=black, bg=lightgray}
+\begin{frame}[standout]
+  Demonstration
+\end{frame}
+}
 
 \end{document}

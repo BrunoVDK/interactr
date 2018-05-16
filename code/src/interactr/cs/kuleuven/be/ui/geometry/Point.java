@@ -9,7 +9,7 @@ package interactr.cs.kuleuven.be.ui.geometry;
 public class Point {
 
     /**
-     * Initialize this new point with given x & y coordinates.
+     * Initialize this new point with given x and y coordinates.
      *
      * @param x The x coordinate for this new point.
      * @param y The y coordinate for this new point.
@@ -61,4 +61,8 @@ public class Point {
      */
     private int y;
 
+    @Override
+    public String toString() {
+        return "[" + getX() + " " + getY() + "]";
+    }
 }

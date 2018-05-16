@@ -26,9 +26,28 @@ target/
 .mtj.tmp/
 
 # Package Files #
-*.jar
+# *.jar #
 *.war
 *.ear
 *.zip
 *.tar.gz
 *.rar
+*.aux
+*.nav
+*.out
+*.snm
+*.synctex
+*.toc
+*.vrb
+
+# LaTeX
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
+*.dvi
+*.fdb_latexmk
+*.fls

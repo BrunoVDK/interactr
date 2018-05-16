@@ -9,7 +9,7 @@ package interactr.cs.kuleuven.be.ui.geometry;
 public class Rectangle {
 
     /**
-     * Initialize this new rectangle with given x & y coordinates and given width & height..
+     * Initialize this new rectangle with given x and y coordinates and given width and height..
      *
      * @param x The x coordinate for this new rectangle.
      * @param y The y coordinate for this new rectangle.
@@ -119,6 +119,20 @@ public class Rectangle {
      * Registers the height of this rectangle.
      */
     private int height;
+
+    /**
+     * Checks whether the given rectangle overlaps with this rectangle.
+     *
+     * @param  	other
+     *         	The rectangle to check with.
+     * @return 	True if and only if the given rectangle overlaps this rectangle.
+     */
+    public boolean overlaps(Rectangle other) {
+        return (other.getX() + other.getWidth() >= this.getX()
+                && other.getX() <= this.getX() + this.getWidth()
+                && other.getY() + other.getHeight() >= this.getY()
+                && other.getY() <= this.getY() + this.getHeight());
+    }
 
     /**
      * Checks whether or not this rectangle encloses the given coordinate.
