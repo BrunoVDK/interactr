@@ -58,8 +58,9 @@ public class DiagramWindow extends SubWindow {
     @Override
     void setFrame(Rectangle frame) throws IllegalWindowFrameException {
         super.setFrame(frame);
-        for (DiagramView view : getViews())
-            view.setFrame(getViewFrame());
+        if (getViews() != null)
+            for (DiagramView view : getViews())
+                view.setFrame(getViewFrame());
     }
 
     /**
@@ -114,7 +115,7 @@ public class DiagramWindow extends SubWindow {
     /**
      * A list of diagram views held by this subwindow.
      */
-    PList<DiagramView> views = PList.<DiagramView>empty();
+    PList<DiagramView> views = PList.empty();
 
     @Override
     public void displayView(PaintBoard paintBoard) {
