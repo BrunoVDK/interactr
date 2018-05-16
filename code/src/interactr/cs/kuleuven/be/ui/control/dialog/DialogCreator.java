@@ -11,28 +11,28 @@ import interactr.cs.kuleuven.be.domain.*;
 public class DialogCreator implements DiagramVisitor {
 
     /**
-     * Create a dialog for the given component.
+     * Create a dialogWindow for the given component.
      *
      * @param diagram The diagram of the component is part of.
-     * @param component The component to create a dialog for.
-     * @return A dialog for the given component, or null if none could be created.
+     * @param component The component to create a dialogWindow for.
+     * @return A dialogWindow for the given component, or null if none could be created.
      */
-    Dialog createDialog(Diagram diagram, Visitable component) {
-        dialog = null;
+    DialogWindow createDialog(Diagram diagram, Visitable component) {
+        dialogWindow = null;
         this.diagram = diagram;
         component.acceptVisitor(this);
-        return dialog;
+        return dialogWindow;
     }
 
     /**
-     * Registers the diagram for which the dialog is created.
+     * Registers the diagram for which the dialogWindow is created.
      */
     private Diagram diagram;
 
     /**
-     * Registers the created dialog.
+     * Registers the created dialogWindow.
      */
-    private Dialog dialog;
+    private DialogWindow dialogWindow;
 
     @Override
     public void visit(Diagram diagram) {

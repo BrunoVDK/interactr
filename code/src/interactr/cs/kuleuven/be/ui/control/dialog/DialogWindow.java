@@ -1,6 +1,9 @@
 package interactr.cs.kuleuven.be.ui.control.dialog;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
+import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.command.Command;
+import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
 import interactr.cs.kuleuven.be.ui.control.SubWindow;
 
 /**
@@ -9,14 +12,14 @@ import interactr.cs.kuleuven.be.ui.control.SubWindow;
  * @author Team 25
  * @version 1.0
  */
-public abstract class Dialog extends SubWindow {
+public abstract class DialogWindow extends SubWindow {
 
     /**
      * Initialize this new dialog with given diagram.
      *
      * @param diagram The diagram to initialize this new dialog with.
      */
-    public Dialog(Diagram diagram) {
+    public DialogWindow(Diagram diagram) {
         if (diagram == null)
             throw new IllegalArgumentException("Diagram cannot be null.");
         this.diagram = diagram;
@@ -39,6 +42,7 @@ public abstract class Dialog extends SubWindow {
     public void goUp(){
 
     }
+
     public void goDown(){
 
     }
@@ -52,6 +56,11 @@ public abstract class Dialog extends SubWindow {
     //execute method
 
 
+
+    @Override
+    public void executeCommand(Command command) throws CommandNotProcessedException {
+        command.executeDialog(this);
+    }
 
 
 

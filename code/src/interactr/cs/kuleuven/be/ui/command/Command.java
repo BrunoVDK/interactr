@@ -1,8 +1,7 @@
 package interactr.cs.kuleuven.be.ui.command;
 
-import interactr.cs.kuleuven.be.ui.control.dialog.Dialog;
+import interactr.cs.kuleuven.be.ui.control.dialog.DialogWindow;
 import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
-import interactr.cs.kuleuven.be.ui.control.SubWindow;
 import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 
 /**
@@ -67,12 +66,12 @@ public abstract class Command {
     public void executeDiagramView(DiagramView view) {throw new CommandNotProcessedException();}
 
     /**
-     * Execute this command in the given dialog.
+     * Execute this command in the given dialogWindow.
      *
-     * @param dialog The dialog in which the command should be executed.
+     * @param dialogWindow The dialogWindow in which the command should be executed.
      * @throws CommandNotProcessedException the command could not be executed by the given receiver.
      */
-    public void executeDialog(Dialog dialog) {throw new CommandNotProcessedException();}
+    public void executeDialog(DialogWindow dialogWindow) {throw new CommandNotProcessedException();}
 
     /**
      * Undo this command.
