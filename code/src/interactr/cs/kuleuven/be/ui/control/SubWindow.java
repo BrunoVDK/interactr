@@ -19,7 +19,7 @@ import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
  * @author Team 25
  * @version 1.0
  */
-public class SubWindow implements CommandHandler {
+public abstract class SubWindow implements CommandHandler {
 
     /**
      * Create a new subwindow with a default frame of size 400x400.
@@ -34,7 +34,7 @@ public class SubWindow implements CommandHandler {
      *
      * @param subWindow The subwindow that is to be duplicated by this subwindow.
      */
-    public SubWindow(SubWindow subWindow) {
+    SubWindow(SubWindow subWindow) {
         if (subWindow == null)
             setFrame(new Rectangle(0, 0, 400, 400));
         else
@@ -44,7 +44,7 @@ public class SubWindow implements CommandHandler {
     /**
      * Returns the frame of this subwindow.
      */
-    public Rectangle getFrame() {
+    Rectangle getFrame() {
         return frame;
     }
 
@@ -66,7 +66,7 @@ public class SubWindow implements CommandHandler {
      *
      * @return The frame in which views of this subwindow are drawn.
      */
-    protected Rectangle getViewFrame() {
+    Rectangle getViewFrame() {
         return new Rectangle(frame.getX(), frame.getY() + TITLE_BAR_HEIGHT, frame.getWidth(), frame.getHeight() - TITLE_BAR_HEIGHT);
     }
 
@@ -98,12 +98,10 @@ public class SubWindow implements CommandHandler {
      * @param frame The new frame for this subwindow.
      * @throws IllegalWindowFrameException This subwindow cannot have the given frame as its own frame.
      */
-    private void setFrame(Rectangle frame) throws IllegalWindowFrameException {
+    void setFrame(Rectangle frame) throws IllegalWindowFrameException {
         if (!canHaveAsFrame(frame))
             throw new IllegalWindowFrameException();
         this.frame = frame;
-        for (DiagramView view : getViews())
-            view.setFrame(getViewFrame());
     }
 
     /**
@@ -157,60 +155,6 @@ public class SubWindow implements CommandHandler {
      * The frame of this subwindow.
      */
     private Rectangle frame;
-
-    /**
-     * Add a party at the given coordinates in the currently active diagram view.
-     *
-     * @param x The x coordinate to add the party at.
-     * @param y The y coordinate to add the party at.
-     * @throws InvalidAddPartyException If a party cannot be added at the given coordinates.
-     */
-    public void addParty(int x, int y) throws InvalidAddPartyException {
-        if (y < TITLE_BAR_HEIGHT) throw new InvalidAddPartyException();
-        else y -= TITLE_BAR_HEIGHT;
-        getActiveView().addParty(x,y);
-    }
-
-    /**
-     * Switch the type of the party at given coordinates.
-     *
-     * @param x The x coordinate of the party.
-     * @param y The y coordinate of the party.
-     */
-    public void switchTypeOfParty(int x, int y) {
-        getActiveView().switchTypeOfParty(x,y-TITLE_BAR_HEIGHT);
-    }
-
-    /**
-     * Add a message from the given coordinates to the given ones.
-     *
-     * @param fromX The starting x coordinate for the message.
-     * @param fromY The starting y coordinate for the message.
-     * @param toX The ending x coordinate for the message.
-     * @param toY The ending y coordinate for the message.
-     * @throws InvalidAddMessageException The operation was not successful.
-     */
-    public void addMessage(int fromX, int fromY, int toX, int toY) throws InvalidAddMessageException {
-        getActiveView().addMessage(fromX, fromY - TITLE_BAR_HEIGHT, toX, toY - TITLE_BAR_HEIGHT);
-    }
-
-    /**
-     * Select the component at the given coordinates in this subwindow.
-     *
-     * @param x The x coordinate of the component that is to be selected.
-     * @param y The y coordinate of the component that is to be selected.
-     * @throws  NoSuchComponentException No component lies at the given coordinates.
-     */
-    public void selectComponent(int x, int y) throws NoSuchComponentException {
-        DiagramComponent component = getActiveView().getSelectableComponent(x, y-TITLE_BAR_HEIGHT);
-        if (component != null) {
-            if (isSelected(component)) // Component already selected, activate it
-                setSelectedLabel("");
-            setSelectedComponent(component);
-        }
-        else
-            throw new NoSuchComponentException();
-    }
 
     /**
      * Returns whether or not the given diagram component is currently selected.
@@ -299,49 +243,34 @@ public class SubWindow implements CommandHandler {
     }
 
     /**
-     * Move the party at the given start coordinates to the given end coordinates.
-     *
-     * @param fromX The start x coordinate for the add.
-     * @param fromY The start y coordinate for the add.
-     * @param toX The end x coordinate for the add.
-     * @param toY The end y coordinate for the add.
-     * @throws NoSuchPartyException If there is no party at the given start coordinates.
-     * @throws InvalidMovePartyException If the party could not be moved to the given end coordinates.
-     */
-    public void moveParty(int fromX, int fromY, int toX, int toY) throws NoSuchPartyException, InvalidMovePartyException {
-        if (selectionIsActive())
-            return;
-        getActiveView().moveParty(fromX, fromY - TITLE_BAR_HEIGHT, toX, toY - TITLE_BAR_HEIGHT);
-    }
-
-    /**
-     * Switch to the next view.
-     */
-    public void nextView() {
-        activeViewIndex = (activeViewIndex + 1) % views.size();
-    }
-
-    /**
      * Display the currently active view in the given paintboard.
      *
      * @param paintBoard The paintboard on which should be drawn.
      */
-    public void displayView(PaintBoard paintBoard) {
+    public void display(PaintBoard paintBoard) {
         paintBoard.setClipRect(getFrame()); // Make sure no drawing is done outside the frame
         displayBackground(paintBoard);
         paintBoard.translateOrigin(getFrame().getX(), getFrame().getY() + TITLE_BAR_HEIGHT);
-        getActiveView().display(paintBoard); // Draw view contents
+        displayView(paintBoard);
         paintBoard.translateOrigin(-getFrame().getX(), -getFrame().getY() - TITLE_BAR_HEIGHT);
         displayTitleBar(paintBoard);
         displayCloseButton(paintBoard);
     }
 
     /**
+     * Display the view of this subwindow.
+     *  This method should be overriden by subclasses.
+     *
+     * @param paintBoard The paintboard to draw on.
+     */
+    abstract void displayView(PaintBoard paintBoard);
+
+    /**
      * Displays the background for this subwindow.
      *
      * @param paintBoard The paintboard on which should be drawn.
      */
-    private void displayBackground(PaintBoard paintBoard) {
+    void displayBackground(PaintBoard paintBoard) {
         paintBoard.setColour(Colour.WHITE);
         paintBoard.fillRectangle(getFrame().getX(), getFrame().getY(), getFrame().getWidth(), getFrame().getHeight());
     }
@@ -351,7 +280,7 @@ public class SubWindow implements CommandHandler {
      *
      * @param paintBoard The paintboard on which should be drawn.
      */
-    private void displayTitleBar(PaintBoard paintBoard) {
+    void displayTitleBar(PaintBoard paintBoard) {
         paintBoard.setColour(Colour.LIGHT_GRAY);
         paintBoard.fillRectangle(getFrame().getX(), getFrame().getY(), getFrame().getWidth()-1, TITLE_BAR_HEIGHT);
         paintBoard.setColour(Colour.GRAY);
@@ -364,7 +293,7 @@ public class SubWindow implements CommandHandler {
      *
      * @param paintBoard The paintboard to draw on.
      */
-    private void displayTitle(PaintBoard paintBoard) {
+    void displayTitle(PaintBoard paintBoard) {
         int titleWidth = paintBoard.getWidthForString(getTitle()); // Fowler prefers no temporary variables :'(
         int titleHeight = paintBoard.getHeightForString(getTitle());
         paintBoard.setColour(Colour.BLACK);
@@ -379,59 +308,12 @@ public class SubWindow implements CommandHandler {
      *
      * @param paintBoard The paintboard on which should be drawn.
      */
-    private void displayCloseButton(PaintBoard paintBoard) {
+    void displayCloseButton(PaintBoard paintBoard) {
         Rectangle closeButtonFrame = getCloseButtonFrame();
         paintBoard.drawRectangle(closeButtonFrame.getX(), closeButtonFrame.getY(), closeButtonFrame.getWidth(), closeButtonFrame.getHeight());
         paintBoard.drawLine(closeButtonFrame.getX() + 4, closeButtonFrame.getY() + 4, closeButtonFrame.getX() + CLOSE_BUTTON_SIZE - 4, closeButtonFrame.getY() + CLOSE_BUTTON_SIZE - 4);
         paintBoard.drawLine(closeButtonFrame.getX() + 4, closeButtonFrame.getY() + CLOSE_BUTTON_SIZE - 4, closeButtonFrame.getX() + CLOSE_BUTTON_SIZE - 4, closeButtonFrame.getY() + 4);
     }
-
-    /**
-     * Returns the title of this subwindow.
-     *
-     * @return The title of this subwindow.
-     */
-    private String getTitle() {
-        return getActiveView().toString();
-    }
-
-    /**
-     * Returns the currently active view in this subwindow.
-     *
-     * @return The active view for this subwindow.
-     */
-    public DiagramView getActiveView() {
-        return views.get(activeViewIndex);
-    }
-
-    /**
-     * Activate the view at the given index.
-     *
-     * @param index The index of the view that is to be activated.
-     */
-    void activateViewAtIndex(int index) {
-        if (index >= 0 && index < views.size())
-            activeViewIndex = index;
-    }
-
-    /**
-     * The index of the currently active view in this subwindow.
-     */
-    private int activeViewIndex = 0;
-
-    /**
-     * Returns the views in this subwindow.
-     *
-     * @return The diagram views held by this subwindow.
-     */
-    public PList<DiagramView> getViews() {
-        return views;
-    }
-
-    /**
-     * A list of diagram views held by this subwindow.
-     */
-    PList<DiagramView> views = PList.<DiagramView>empty();
 
     /**
      * Returns whether or not the given coordinates lie within this subwindow's title bar.
@@ -507,6 +389,13 @@ public class SubWindow implements CommandHandler {
     }
 
     /**
+     * Returns the title of this subwindow.
+     *
+     * @return The title of this subwindow.
+     */
+    public abstract String getTitle();
+
+    /**
      * Returns whether or not this subwindow is closed.
      */
     public boolean isClosed() {
@@ -548,6 +437,5 @@ public class SubWindow implements CommandHandler {
 
     }
 
-    //execute method
 
 }

@@ -122,7 +122,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
     public void addParty(int x, int y) throws InvalidAddPartyException {
         x -= getFrame().getX();
         y -= getFrame().getY();
-        System.out.println();
+        System.out.println("Add PARTY " + x + " - " + y);
         if (getParty(x,y) != null)
             throw new InvalidAddPartyException();
         Party newParty = Party.createParty();

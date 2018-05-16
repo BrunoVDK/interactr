@@ -163,7 +163,7 @@ public class EventHandler {
      * @param y The y coordinate to move the party to.
      */
     private void moveParty(int x, int y) {
-        getController().moveParty(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
+        // getController().moveParty(this.getLastDragCoordinate().getX(), this.getLastDragCoordinate().getY(), x, y);
         this.setDragOperationType(DragOperationType.DRAG_DIAGRAM);
         this.setLastDragCoordinate(x,y);
     }
@@ -248,7 +248,7 @@ public class EventHandler {
                 }
             }
         }
-        catch (Exception ignored) {}
+        catch (InvalidAddPartyException ignored) {}
     }
 
     /**
