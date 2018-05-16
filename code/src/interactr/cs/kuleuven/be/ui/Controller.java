@@ -48,7 +48,7 @@ public class Controller {
      */
     public void displayAllSubWindows() {
         for (int i=this.getSubWindows().size()-1 ; i>=0 ; i--) // Last window first
-            this.getSubWindows().get(i).displayView(getPaintBoard());
+            this.getSubWindows().get(i).display(getPaintBoard());
     }
 
     /**
@@ -63,7 +63,7 @@ public class Controller {
     /**
      * Creates a new diagram with default parameters.
      */
-    public void createSubWindow(){
+    public void createSubWindow() {
         this.addSubWindow(0, new DiagramWindow());
         getPaintBoard().refresh();
     }
@@ -73,7 +73,7 @@ public class Controller {
      */
     public void duplicateSubWindow() {
         if (getActiveSubwindow() != null) {
-            this.addSubWindow(0, new SubWindow(getActiveSubwindow()));
+            // this.addSubWindow(0, new SubWindow(getActiveSubwindow()));
             getPaintBoard().refresh();
         }
     }
@@ -184,27 +184,6 @@ public class Controller {
      * The list of all diagram views kept by this diagram handler.
      */
     private ArrayList<SubWindow> subWindows = new ArrayList<SubWindow>();
-
-    /**
-     * Moves the party at the given start coordinates to the given end coordinates.
-     *
-     * @param fromX The start x coordinate for the add.
-     * @param fromY The start y coordinate for the add.
-     * @param toX The end x coordinate for the add.
-     * @param toY The end y coordinate for the add.
-     * @throws NoSuchPartyException If there is no party at the given start coordinates.
-     * @throws InvalidMovePartyException If the party could not be moved to the given end coordinates.
-     */
-    public void moveParty(int fromX, int fromY, int toX, int toY) throws NoSuchPartyException, InvalidMovePartyException {
-        if (getActiveSubwindow() != null) {
-            getActiveSubwindow().moveParty(
-                    fromX - getActiveSubwindow().getFrame().getX(),
-                    fromY - getActiveSubwindow().getFrame().getY(),
-                    toX - getActiveSubwindow().getFrame().getX(),
-                    toY - getActiveSubwindow().getFrame().getY());
-            getPaintBoard().refresh();
-        }
-    }
 
     /**
      * Removes all components in the current selection from this controller's diagram.

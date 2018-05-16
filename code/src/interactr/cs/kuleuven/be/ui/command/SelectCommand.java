@@ -29,7 +29,7 @@ public class SelectCommand extends Command {
     @Override
     public void executeDiagramWindow(DiagramWindow window) {
         try {
-            window.selectComponent(location.getX(), location.getY());
+
         }
         catch (NoSuchComponentException exception) {
             throw new CommandNotProcessedException();
