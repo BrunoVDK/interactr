@@ -8,36 +8,38 @@ import interactr.cs.kuleuven.be.ui.geometry.Point;
  * @author Team 25
  * @version 1.0
  */
-abstract class DragCommand extends Command {
+public abstract class DragCommand extends Command {
 
     /**
      * Initialize this new command with given source and end location.
      *
-     * @param fromLocation The point to drag from.
+     * @param startLocation The point to drag from.
      * @param toLocation The point to drag to.
      */
-    DragCommand(Point fromLocation, Point toLocation) {
-        this.fromLocation = fromLocation;
+    DragCommand(Point startLocation, Point toLocation) {
+        this.startLocation = startLocation;
+        this.fromLocation = startLocation;
         this.toLocation = toLocation;
     }
 
-    /**
-     * Returns the start coordinate for this drag session.
-     */
-    Point getFromLocation() {
-        return fromLocation;
+    @Override
+    public void execute(CommandHandler receiver) throws CommandNotProcessedException {
+        super.execute(receiver);
+        this.fromLocation = this.toLocation;
     }
 
     /**
-     * Returns the end coordinate for this drag session.
+     * Set the new end location for this drag operation.
+     *
+     * @param toLocation The new end coordinate for this drag session.
      */
-    Point getToLocation() {
-        return toLocation;
+    public void setTargetLocation(Point toLocation) {
+        this.toLocation = toLocation;
     }
 
     /**
      * Registers the start and end coordinates for the drag session.
      */
-    private Point fromLocation, toLocation;
+    Point startLocation, fromLocation, toLocation;
 
 }

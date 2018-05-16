@@ -40,6 +40,16 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
     }
 
     /**
+     * Converts the given absolute coordinates to coordinates relative to this view's frame.
+     *
+     * @param absoluteCoordinates The coordinates to convert.
+     * @return The same coordinates relative to this view's frame.
+     */
+    public Point getRelativeCoordinates(Point absoluteCoordinates) {
+        return new Point(absoluteCoordinates.getX() - getFrame().getX(), absoluteCoordinates.getY() - getFrame().getY());
+    }
+
+    /**
      * Sets the frame of this view to the given one.
      *
      * @param frame The new frame for this view.
@@ -120,8 +130,6 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @throws InvalidAddPartyException The given party cannot be added to this diagram view at the given coordinate.
      */
     public void addParty(int x, int y) throws InvalidAddPartyException {
-        x = x - getFrame().getX();
-        y = y - getFrame().getY();
         if (getParty(x,y) != null)
             throw new InvalidAddPartyException();
         Party newParty = Party.createParty();
@@ -137,14 +145,14 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @param y The y coordinate of the party.
      */
     public void switchTypeOfParty(int x, int y) throws NoSuchPartyException {
-        Party oldParty = getParty(x - getFrame().getX(),y - getFrame().getY());
+        Party oldParty = getParty(x,y);
         if (oldParty != null) {
             Party newParty = oldParty.switchType();
             diagram.replaceParty(oldParty, newParty);
             makeRoomForParty(newParty);
         }
         else
-            throw new NoSuchPartyException(x - getFrame().getX(), y - getFrame().getY());
+            throw new NoSuchPartyException(x, y);
     }
 
     /**
@@ -193,10 +201,6 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @throws InvalidMovePartyException If the party could not be moved to the given end coordinates.
      */
     public void moveParty(int fromX, int fromY, int toX, int toY) throws  NoSuchPartyException, InvalidMovePartyException {
-        fromX -= getFrame().getX();
-        fromY -= getFrame().getY();
-        toX -= getFrame().getX();
-        toY -= getFrame().getY();
         Party movedParty = getParty(fromX, fromY);
         if (movedParty == null)
             throw new NoSuchPartyException(fromX, fromY);

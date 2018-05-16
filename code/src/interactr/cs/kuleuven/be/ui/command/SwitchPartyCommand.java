@@ -29,7 +29,7 @@ public class SwitchPartyCommand extends Command {
     @Override
     public void executeDiagramView(DiagramView view) {
         try {
-            view.switchTypeOfParty(location.getX(), location.getY());
+            view.switchTypeOfParty(view.getRelativeCoordinates(location).getX(), view.getRelativeCoordinates(location).getY());
         }
         catch (NoSuchPartyException e) {throw new CommandNotProcessedException();}
     }
