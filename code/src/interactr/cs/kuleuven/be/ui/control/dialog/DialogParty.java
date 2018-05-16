@@ -2,12 +2,13 @@ package interactr.cs.kuleuven.be.ui.control.dialog;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.Party;
+import interactr.cs.kuleuven.be.ui.control.DialogWindow;
 import interactr.cs.kuleuven.be.ui.control.control.Button;
 
 
 import java.util.ArrayList;
 
-public class DialogParty extends DialogWindow{
+public class DialogParty extends DialogWindow {
 
 
 

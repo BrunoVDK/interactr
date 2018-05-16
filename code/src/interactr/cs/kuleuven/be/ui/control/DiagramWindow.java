@@ -4,6 +4,7 @@ import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.exceptions.IllegalWindowFrameException;
 import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.command.Command;
 import interactr.cs.kuleuven.be.ui.command.CommandHandler;
 import interactr.cs.kuleuven.be.ui.control.diagram.CommunicationView;
 import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
@@ -135,7 +136,9 @@ public class DiagramWindow extends SubWindow {
         return getActiveView();
     }
 
-    public void executeDiagramWindow(Command command){
-
+    @Override
+    public void executeCommand(Command command){
+        command.executeDiagramWindow(this);
     }
+
 }

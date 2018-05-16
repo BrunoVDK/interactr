@@ -24,7 +24,7 @@ public abstract class SubWindow implements CommandHandler {
     /**
      * Create a new subwindow with a default frame of size 400x400.
      */
-    public SubWindow() {
+    SubWindow() {
         this(null);
     }
 
