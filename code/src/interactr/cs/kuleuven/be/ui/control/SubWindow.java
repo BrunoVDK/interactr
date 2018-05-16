@@ -98,7 +98,7 @@ public abstract class SubWindow implements CommandHandler {
      * @param frame The new frame for this subwindow.
      * @throws IllegalWindowFrameException This subwindow cannot have the given frame as its own frame.
      */
-    public void setFrame(Rectangle frame) throws IllegalWindowFrameException {
+    protected void setFrame(Rectangle frame) throws IllegalWindowFrameException {
         if (!canHaveAsFrame(frame))
             throw new IllegalWindowFrameException();
         this.frame = frame;

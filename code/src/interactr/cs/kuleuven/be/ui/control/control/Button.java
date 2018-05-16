@@ -10,8 +10,9 @@ import interactr.cs.kuleuven.be.ui.PaintBoard;
  */
 public class Button extends Control{
 
-
     @Override
-    public void displayControl(PaintBoard paintBoard) {
+    public void displayControl(PaintBoard paintBoard, int x, int y, boolean active) {
+
     }
+
 }

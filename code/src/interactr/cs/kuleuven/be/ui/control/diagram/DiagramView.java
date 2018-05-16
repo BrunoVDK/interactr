@@ -120,13 +120,13 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @throws InvalidAddPartyException The given party cannot be added to this diagram view at the given coordinate.
      */
     public void addParty(int x, int y) throws InvalidAddPartyException {
-        Party newParty = Party.createParty();
-        Rectangle figureBounds = PartyModeller.defaultModeller().generateFigure(newParty).getBounds();
-        x = x - getFrame().getX() - figureBounds.getWidth()/2;
-        y = y - getFrame().getY() - figureBounds.getHeight()/2;
+        x = x - getFrame().getX();
+        y = y - getFrame().getY();
         if (getParty(x,y) != null)
             throw new InvalidAddPartyException();
-        setCoordinateForParty(newParty, new Point(x, y));
+        Party newParty = Party.createParty();
+        Rectangle figureBounds = PartyModeller.defaultModeller().generateFigure(newParty).getBounds();
+        setCoordinateForParty(newParty, new Point(x - figureBounds.getWidth()/2, y - figureBounds.getHeight()/2));
         this.getDiagram().addParty(newParty);
     }
 
@@ -137,14 +137,14 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @param y The y coordinate of the party.
      */
     public void switchTypeOfParty(int x, int y) throws NoSuchPartyException {
-        Party oldParty = getParty(x,y);
+        Party oldParty = getParty(x - getFrame().getX(),y - getFrame().getY());
         if (oldParty != null) {
             Party newParty = oldParty.switchType();
             diagram.replaceParty(oldParty, newParty);
             makeRoomForParty(newParty);
         }
         else
-            throw new NoSuchPartyException(x,y);
+            throw new NoSuchPartyException(x - getFrame().getX(), y - getFrame().getY());
     }
 
     /**
@@ -176,6 +176,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
     private Party getParty(int x, int y) {
         for (Party p : getDiagram().getParties()) {
             Figure figure = getFigureForParty(p);
+            System.out.println(figure.getBounds());
             if (figure.isHit(x,y) && !figure.isLabelHit(x,y))
                 return p;
         }

@@ -56,7 +56,7 @@ public class DiagramWindow extends SubWindow {
     }
 
     @Override
-    void setFrame(Rectangle frame) throws IllegalWindowFrameException {
+    protected void setFrame(Rectangle frame) throws IllegalWindowFrameException {
         super.setFrame(frame);
         if (getViews() != null)
             for (DiagramView view : getViews())

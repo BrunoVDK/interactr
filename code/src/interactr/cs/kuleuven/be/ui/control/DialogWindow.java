@@ -50,5 +50,5 @@ public class DialogWindow extends SubWindow {
     public void executeCommand(Command command) throws CommandNotProcessedException {
         command.executeDialogWindow(this);
     }
-    
+
 }
