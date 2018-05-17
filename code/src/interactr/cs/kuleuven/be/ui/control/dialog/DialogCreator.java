@@ -36,7 +36,7 @@ public class DialogCreator implements DiagramVisitor {
      * @param component The component to create a dialog for.
      * @return A dialog for the given component, or null if none could be created.
      */
-    public DialogWindow createDialog(Diagram diagram, Visitable component) {
+    public DialogWindow createDialog(Diagram diagram, DiagramComponent component) {
         dialogWindow = null;
         this.diagram = diagram;
         component.acceptVisitor(this);
@@ -54,19 +54,12 @@ public class DialogCreator implements DiagramVisitor {
     private DialogWindow dialogWindow = null;
 
     @Override
-    public void visit(Diagram diagram) {
-        System.out.println("diagram");
-    }
-
-    @Override
     public void visit(ObjectParty party) {
         dialogWindow = new DialogParty(party, this.diagram, false);
     }
 
     @Override
-    public void visit(ActorParty party) {
-        dialogWindow = new DialogParty(party, this.diagram, true);
-    }
+    public void visit(ActorParty party) { dialogWindow = new DialogParty(party, this.diagram, true); }
 
     @Override
     public void visit(ResultMessage message) {
