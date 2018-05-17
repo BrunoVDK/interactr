@@ -46,6 +46,7 @@ public class DiagramWindow extends SubWindow {
                 views = views.plus(view.clone());
             activateViewAtIndex(diagramWindow.getViews().indexOf(diagramWindow.getActiveView()));
         }
+        setFrame(getFrame());
     }
 
     /**
@@ -108,14 +109,14 @@ public class DiagramWindow extends SubWindow {
      *
      * @return The diagram views held by this subwindow.
      */
-    PList<DiagramView> getViews() {
+    private PList<DiagramView> getViews() {
         return views;
     }
 
     /**
      * A list of diagram views held by this subwindow.
      */
-    PList<DiagramView> views = PList.empty();
+    private PList<DiagramView> views = PList.empty();
 
     @Override
     public void displayView(PaintBoard paintBoard) {
@@ -124,12 +125,11 @@ public class DiagramWindow extends SubWindow {
 
     /**
      * Close this subwindow.
-     *  This unregisters it as an observer.
      */
     public void close() {
         super.close();
         for (DiagramView view : views)
-            view.close(); // Close all views too, but only after unregistering this subwindow as observer
+            view.close();
     }
 
     @Override

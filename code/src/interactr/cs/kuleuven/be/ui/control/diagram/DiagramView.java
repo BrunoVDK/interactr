@@ -46,6 +46,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @return The same coordinates relative to this view's frame.
      */
     public Point getRelativeCoordinates(Point absoluteCoordinates) {
+        System.out.println(getFrame());
         return new Point(absoluteCoordinates.getX() - getFrame().getX(), absoluteCoordinates.getY() - getFrame().getY());
     }
 
@@ -411,7 +412,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
             clone = (DiagramView)super.clone();
             clone.setDiagram(getDiagram());
             for (Party party : partyCoordinates.keySet())
-                clone.setCoordinateForParty(party, partyCoordinates.get(party));
+                clone.setCoordinateForParty(party, getCoordinateForParty(party));
         }
         catch (Exception e) {throw new RuntimeException("Failed to clone diagram view." + e.getClass().toString());}
         return clone;

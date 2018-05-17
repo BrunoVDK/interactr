@@ -115,6 +115,7 @@ public class EventHandler {
     private void handleMousePress(int x, int y) {
         getController().activateSubWindow(x,y);
         lastDragCoordinate = new Point(x,y);
+        movePartyCommand = null;
     }
 
     /**
@@ -138,6 +139,7 @@ public class EventHandler {
                 }
                 catch (InvalidResizeWindowException e2) {
                     movePartyCommand = new MovePartyCommand(new Point(x, y), new Point(x, y));
+                    return;
                 }
             }
             lastDragCoordinate = new Point(x,y);
@@ -154,7 +156,6 @@ public class EventHandler {
         if (movePartyCommand == null || !movePartyCommand.movedParty())
             try {getController().processCommand(new AddMessageCommand(lastDragCoordinate, new Point(x,y)));}
             catch (Exception ignored) {}
-        movePartyCommand = null;
     }
 
     /**
