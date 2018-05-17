@@ -1,9 +1,6 @@
 package interactr.cs.kuleuven.be.ui.command;
 
-import interactr.cs.kuleuven.be.domain.ActorParty;
 import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
-import interactr.cs.kuleuven.be.ui.control.DialogWindow;
-import interactr.cs.kuleuven.be.ui.control.dialog.DialogCreator;
 
 /**
  * A class of commands for duplicating diagrams.

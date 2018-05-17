@@ -55,6 +55,15 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @param frame The new frame for this view.
      */
     public void setFrame(Rectangle frame) {
+        boolean widthChanged = this.frame.getWidth() != frame.getWidth(), heightChanged = this.frame.getHeight() != frame.getHeight();
+        if (widthChanged || heightChanged) {
+            for (Party party : getDiagram().getParties()) {
+                Point coordinate = getCoordinateForParty(party);
+                setCoordinateForParty(party, new Point(
+                        coordinate.getX() + (widthChanged ? this.frame.getX() - frame.getX() : 0),
+                        coordinate.getY() + (heightChanged ? this.frame.getY() - frame.getY() : 0)));
+            }
+        }
         this.frame = frame;
     }
 
