@@ -301,13 +301,14 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      */
     Link getLinkForMessage(Message message) {
         Link link = MessageModeller.defaultModeller().generateLink(message);
-        Figure figure = getFigureForParty(message.getSender());
+        Rectangle senderBounds = getFigureForParty(message.getSender()).getBounds();
+        Rectangle receiverBounds = getFigureForParty(message.getReceiver()).getBounds();
         Point senderCoordinate = getCoordinateForParty(message.getSender());
         Point receiverCoordinate = getCoordinateForParty(message.getReceiver());
-        link.setStartX(senderCoordinate.getX() + (senderCoordinate.getX() < receiverCoordinate.getX() ? figure.getWidth() : 0));
-        link.setStartY(senderCoordinate.getY() + figure.getHeight()/2);
-        link.setEndX(receiverCoordinate.getX() + (senderCoordinate.getX() < receiverCoordinate.getX() ? 0 : figure.getWidth()));
-        link.setEndY(receiverCoordinate.getY() + figure.getHeight()/2);
+        link.setStartX(senderCoordinate.getX() + (senderCoordinate.getX() < receiverCoordinate.getX() ? senderBounds.getWidth() : 0));
+        link.setStartY(senderCoordinate.getY() + senderBounds.getHeight()/2);
+        link.setEndX(receiverCoordinate.getX() + (senderCoordinate.getX() < receiverCoordinate.getX() ? 0 : receiverBounds.getWidth()));
+        link.setEndY(receiverCoordinate.getY() + receiverBounds.getHeight()/2);
         link.setLabel(getDiagram().getPrefix(message) + " " + message.getLabel());
         return link;
     }
