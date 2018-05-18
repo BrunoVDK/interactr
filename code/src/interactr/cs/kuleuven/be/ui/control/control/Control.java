@@ -13,6 +13,8 @@ public abstract class Control {
 
     public abstract void displayControl(PaintBoard paintBoard, int x, int y, boolean active);
 
+    public static final int margeOfLabelAndControl = 50;
+
 
 
 }

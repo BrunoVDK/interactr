@@ -11,12 +11,16 @@ import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 public class DialogParty extends DialogWindow {
 
-    private static  final int width = 300, height = 50;
+    private static  final int width = 150, height = 100;
 
     public DialogParty(Party party, Diagram diagram, boolean isActor){
         super(diagram);
         this.party = party;
         this.isActor = isActor;
+        this.actor = new RadioButton("Actor: ");
+        this.object = new RadioButton("Object: ");
+        this.instanceName = new TextField(party.getInstanceName(), "Instance name: ");
+        this.className = new TextField(party.getClassName(), "Class name: ");
         this.setFrame(new Rectangle(0,0,width,height));
     }
 
@@ -25,12 +29,13 @@ public class DialogParty extends DialogWindow {
     @Override
     protected void displayView(PaintBoard paintBoard) {
         if(isActor) {
-            actor.displayControl(paintBoard, width * 9/12, height/2, true);
-            object.displayControl(paintBoard, width * 11/12, height/2, false);
+            actor.displayControl(paintBoard, 10, height * 1/8, true);
+            object.displayControl(paintBoard, 10 * 11/12, height/2, false);
         }else{
-            actor.displayControl(paintBoard, width * 9/12, height/2, false);
-            object.displayControl(paintBoard, width * 11/12, height/2, true);
+            actor.displayControl(paintBoard, 10 * 9/12, height/2, false);
+            object.displayControl(paintBoard, 10 * 11/12, height/2, true);
         }
+
 
 
     }
