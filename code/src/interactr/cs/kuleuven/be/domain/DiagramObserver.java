@@ -1,4 +1,4 @@
-package interactr.cs.kuleuven.be.ui;
+package interactr.cs.kuleuven.be.domain;
 
 import interactr.cs.kuleuven.be.domain.*;
 

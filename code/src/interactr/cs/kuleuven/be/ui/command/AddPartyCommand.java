@@ -29,7 +29,7 @@ public class AddPartyCommand extends Command {
     @Override
     public void executeDiagramView(DiagramView view) {
         try {
-            view.addParty(location.getX(), location.getY());
+            view.addParty(view.getRelativeCoordinates(location).getX(), view.getRelativeCoordinates(location).getY());
         }
         catch (InvalidAddPartyException e) {throw new CommandNotProcessedException();}
     }

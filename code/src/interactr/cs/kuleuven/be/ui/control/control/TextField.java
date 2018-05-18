@@ -1,9 +1,8 @@
 package interactr.cs.kuleuven.be.ui.control.control;
 
 import interactr.cs.kuleuven.be.ui.PaintBoard;
-import interactr.cs.kuleuven.be.ui.design.Colour;
 
-import java.awt.*;
+import interactr.cs.kuleuven.be.ui.design.Colour;
 
 /**
  * A class of text fields.
@@ -20,8 +19,8 @@ public class TextField extends Control {
     }
 
     @Override
-    public void displayControl(PaintBoard paintBoard, int x, int y, boolean active) {
-        if (active)
+    public void displayControl(PaintBoard paintBoard, int x, int y) {
+        if (isActive())
             paintBoard.setColour(Colour.BLUE);
         paintBoard.drawRectangle(x + margeOfLabelAndControl,y,width,paintBoard.charHeight);
         paintBoard.setColour(Colour.BLACK);
@@ -32,7 +31,7 @@ public class TextField extends Control {
     private static final int width = 80;
 
     /**
-     * - labelComopentn is the label of the component that is changable
+     * - labelComponent is the label of the component that is changeable
      * - labelTextField is the label of the textfield (not changeable)
      */
     private String labelComponent, labelTextField;
@@ -45,4 +44,7 @@ public class TextField extends Control {
     public void setLabelComponent(String labelComponent){
         this.labelComponent = labelComponent;
     }
+
+
+
 }

@@ -1,8 +1,10 @@
 package interactr.cs.kuleuven.be.ui.control.diagram;
 
 import interactr.cs.kuleuven.be.domain.*;
+import interactr.cs.kuleuven.be.exceptions.InvalidAddMessageException;
 import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
 import interactr.cs.kuleuven.be.exceptions.InvalidMovePartyException;
+import interactr.cs.kuleuven.be.exceptions.NoSuchPartyException;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.design.*;
 import interactr.cs.kuleuven.be.ui.geometry.Point;
@@ -117,22 +119,21 @@ public class SequenceView extends DiagramView {
 
     @Override
     public void addParty(int x, int y) throws InvalidAddPartyException {
-        if (y - getFrame().getY() <= 5 || y - getFrame().getY() >= PARTY_ROW_HEIGHT - 5)
+        if (y <= 5 || y >= PARTY_ROW_HEIGHT - 5)
             throw new InvalidAddPartyException();
-        super.addParty(x, 5);
+        super.addParty(x, y);
+    }
+
+    @Override
+    public void moveParty(Party movedParty, int toX, int toY) throws NoSuchPartyException, InvalidMovePartyException {
+        if (toY <= 5 || toY >= PARTY_ROW_HEIGHT - 5)
+            throw new InvalidMovePartyException();
+        super.moveParty(movedParty, toX, toY);
     }
 
     @Override
     Point getCoordinateForParty(Party party) {
         return new Point(super.getCoordinateForParty(party).getX(), 5);
-    }
-
-    @Override
-    public void moveParty(int fromX, int fromY, int toX, int toY) {
-        if (fromY >= PARTY_ROW_HEIGHT)
-            throw new InvalidMovePartyException();
-        else
-            super.moveParty(fromX, 5, toX, 5);
     }
 
     @Override
@@ -149,6 +150,19 @@ public class SequenceView extends DiagramView {
             }
         }
         return true;
+    }
+
+    @Override
+    public void addMessage(int fromX, int fromY, int toX, int toY) {
+        if (canAddMessageAt(fromX, fromY, toX, toY)) {
+            int index = getMessageInsertionIndex(fromX, fromY, toX, toY);
+            Party sender = getParty(fromX, 10), receiver = getParty(toX, 10);
+            if (sender != null && receiver != null && sender != receiver) {
+                diagram.insertInvocationMessageAtIndex(new InvocationMessage(sender, receiver), index);
+                return;
+            }
+        }
+        throw new InvalidAddMessageException();
     }
 
     @Override

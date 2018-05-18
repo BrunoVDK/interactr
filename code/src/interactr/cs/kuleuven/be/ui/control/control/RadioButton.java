@@ -2,6 +2,12 @@ package interactr.cs.kuleuven.be.ui.control.control;
 
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 
+/**
+ * A class of radio buttons.
+ *
+ * @author Team 25
+ * @version 1.0
+ */
 public class RadioButton extends Control{
 
     public RadioButton(String label){
@@ -9,13 +15,15 @@ public class RadioButton extends Control{
     }
 
     @Override
-    public void displayControl(PaintBoard paintBoard, int x, int y, boolean active) {
+    public void displayControl(PaintBoard paintBoard, int x, int y) {
         paintBoard.drawString(label,x,paintBoard.charHeight + y);
         paintBoard.drawOval(x + margeOfLabelAndControl ,y,diameter,diameter);
-        if(active)
+        if(isActive())
             paintBoard.fillOval(x + margeOfLabelAndControl + 1 , y + 1, diameter -2, diameter -2);
     }
 
     private String label;
+
     private final int diameter = 10;
+
 }
