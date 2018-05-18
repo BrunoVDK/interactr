@@ -1,9 +1,7 @@
 package interactr.cs.kuleuven.be.domain;
 
 import interactr.cs.kuleuven.be.exceptions.InvalidAddMessageException;
-import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
 import interactr.cs.kuleuven.be.purecollections.PList;
-import interactr.cs.kuleuven.be.ui.DiagramObserver;
 
 import java.util.*;
 
@@ -13,7 +11,7 @@ import java.util.*;
  * @author Team 25
  * @version 1.0
  */
-public class Diagram implements Visitable {
+public class Diagram {
 
     /**
      * The number of diagrams that have been generated so far.
@@ -441,10 +439,5 @@ public class Diagram implements Visitable {
      * The list of observers of this diagram.
      */
     private PList<DiagramObserver> observers = PList.empty();
-
-    @Override
-    public void acceptVisitor(DiagramVisitor visitor) {
-        visitor.visit(this);
-    }
 
 }

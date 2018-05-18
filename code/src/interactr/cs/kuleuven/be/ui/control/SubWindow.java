@@ -44,7 +44,7 @@ public abstract class SubWindow implements CommandHandler {
     /**
      * Returns the frame of this subwindow.
      */
-    public Rectangle getFrame() {
+    protected Rectangle getFrame() {
         return frame;
     }
 
@@ -54,11 +54,7 @@ public abstract class SubWindow implements CommandHandler {
      * @return The frame of this subwindow with a margin of 5 for each resize border.
      */
     public Rectangle getBorderedFrame() {
-        return new Rectangle(
-                frame.getX() - 5,
-                frame.getY() - 5,
-                frame.getWidth() + 10,
-                frame.getHeight() + 10);
+        return new Rectangle(frame.getX() - 5, frame.getY() - 5, frame.getWidth() + 10, frame.getHeight() + 10);
     }
 
     /**
@@ -76,20 +72,8 @@ public abstract class SubWindow implements CommandHandler {
      * @param frame The frame to check with.
      * @return True if and only if the given frame's width and height are large enough.
      */
-    private boolean canHaveAsFrame(Rectangle frame) {
+    protected boolean canHaveAsFrame(Rectangle frame) {
         return (frame.getWidth() > CLOSE_BUTTON_SIZE + 10 && frame.getHeight() > TITLE_BAR_HEIGHT + 80);
-    }
-
-    /**
-     * Set the size of this subwindow to the new size.
-     *
-     * @param   width
-     *          The new width for this subwindow's frame.
-     * @param   height
-     *          The new height for this subwindow's frame.
-     */
-    public void setSize(int width, int height) {
-        setFrame(new Rectangle(frame.getX(), frame.getY(), width, height));
     }
 
     /**
@@ -115,7 +99,7 @@ public abstract class SubWindow implements CommandHandler {
      */
     public void resize(int fromX, int fromY, int toX, int toY) throws InvalidResizeWindowException {
         int border = getBordersAt(fromX, fromY);
-        if (border == 0) // No border
+        if (border == 0)
             throw new InvalidResizeWindowException();
         try {
             Rectangle newFrame = new Rectangle(this.getFrame());
@@ -262,14 +246,14 @@ public abstract class SubWindow implements CommandHandler {
      *
      * @param paintBoard The paintboard to draw on.
      */
-    abstract protected void displayView(PaintBoard paintBoard);
+    protected void displayView(PaintBoard paintBoard) {}
 
     /**
      * Displays the background for this subwindow.
      *
      * @param paintBoard The paintboard on which should be drawn.
      */
-    void displayBackground(PaintBoard paintBoard) {
+    private void displayBackground(PaintBoard paintBoard) {
         paintBoard.setColour(Colour.WHITE);
         paintBoard.fillRectangle(getFrame().getX(), getFrame().getY(), getFrame().getWidth(), getFrame().getHeight());
     }
@@ -279,7 +263,7 @@ public abstract class SubWindow implements CommandHandler {
      *
      * @param paintBoard The paintboard on which should be drawn.
      */
-    void displayTitleBar(PaintBoard paintBoard) {
+    private void displayTitleBar(PaintBoard paintBoard) {
         paintBoard.setColour(Colour.LIGHT_GRAY);
         paintBoard.fillRectangle(getFrame().getX(), getFrame().getY(), getFrame().getWidth()-1, TITLE_BAR_HEIGHT);
         paintBoard.setColour(Colour.GRAY);
@@ -292,7 +276,7 @@ public abstract class SubWindow implements CommandHandler {
      *
      * @param paintBoard The paintboard to draw on.
      */
-    void displayTitle(PaintBoard paintBoard) {
+    private void displayTitle(PaintBoard paintBoard) {
         int titleWidth = paintBoard.getWidthForString(getTitle()); // Fowler prefers no temporary variables :'(
         int titleHeight = paintBoard.getHeightForString(getTitle());
         paintBoard.setColour(Colour.BLACK);
@@ -307,7 +291,7 @@ public abstract class SubWindow implements CommandHandler {
      *
      * @param paintBoard The paintboard on which should be drawn.
      */
-    void displayCloseButton(PaintBoard paintBoard) {
+    private void displayCloseButton(PaintBoard paintBoard) {
         Rectangle closeButtonFrame = getCloseButtonFrame();
         paintBoard.drawRectangle(closeButtonFrame.getX(), closeButtonFrame.getY(), closeButtonFrame.getWidth(), closeButtonFrame.getHeight());
         paintBoard.drawLine(closeButtonFrame.getX() + 4, closeButtonFrame.getY() + 4, closeButtonFrame.getX() + CLOSE_BUTTON_SIZE - 4, closeButtonFrame.getY() + CLOSE_BUTTON_SIZE - 4);
@@ -377,17 +361,6 @@ public abstract class SubWindow implements CommandHandler {
     }
 
     /**
-     * Notify this subwindow that the given component in the given diagram changed.
-     *
-     * @param diagram The diagram to which the component belongs.
-     * @param component The component whose label was edited.
-     */
-    public void diagramDidEditLabel(Diagram diagram, DiagramComponent component) {
-        if (isSelected(component) && selectionIsActive())
-            this.selectedLabel = component.getLabel();
-    }
-
-    /**
      * Returns the title of this subwindow.
      *
      * @return The title of this subwindow.
@@ -410,31 +383,5 @@ public abstract class SubWindow implements CommandHandler {
      * Registers whether or not this subwindow is closed.
      */
     private boolean isClosed = false;
-
-    /**
-     * A method that selects the comopnent at the given coordinates
-     * @param x
-     *  The x coordinate
-     * @param y
-     *  The y coordinate
-     */
-    public void selectComponentAt(int x, int y){
-
-    }
-
-    /**
-     * A method that appends a Char
-     */
-    public void appendChar(){
-
-    }
-
-    /**
-     * A method that removes  the last char
-     */
-    public void removeLastChar(){
-
-    }
-
 
 }

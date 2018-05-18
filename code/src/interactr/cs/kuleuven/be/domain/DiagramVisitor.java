@@ -9,13 +9,6 @@ package interactr.cs.kuleuven.be.domain;
 public interface DiagramVisitor {
 
     /**
-     * Visit the given diagram.
-     *
-     * @param diagram The diagram that is to be visited.
-     */
-    default void visit(Diagram diagram) {}
-
-    /**
      * Visit the given object party.
      *
      * @param party The object party that is to be visited.

@@ -8,7 +8,7 @@ import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
  * @author Team 25
  * @version 1.0
  */
-public abstract class DiagramComponent implements Visitable {
+public abstract class DiagramComponent {
 
     /**
      * Initialize this new diagram component with an empty label.
@@ -72,5 +72,12 @@ public abstract class DiagramComponent implements Visitable {
     public String toString() {
         return this.getLabel();
     }
+
+    /**
+     * Accept the given diagram visitor.
+     *
+     * @param visitor The diagram visitor that is to be accepted.
+     */
+    public void acceptVisitor(DiagramVisitor visitor) {}
 
 }

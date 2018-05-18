@@ -8,42 +8,55 @@ import interactr.cs.kuleuven.be.ui.control.control.RadioButton;
 import interactr.cs.kuleuven.be.ui.control.control.TextField;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
-
+/**
+ * A class of dialogs for parties.
+ *
+ * @author Team 25
+ * @version 1.0
+ */
 public class DialogParty extends DialogWindow {
 
-    private static  final int width = 300, height = 50;
+    private static  final int width = 150, height = 100;
 
     public DialogParty(Party party, Diagram diagram, boolean isActor){
         super(diagram);
         this.party = party;
-        this.isActor = isActor;
+        if(isActor)
+            actorButton.setActive(true);
+        else
+            objectButton.setActive(true);
+        this.instanceName = new TextField(party.getInstanceName(), "Instance name: ");
+        this.className = new TextField(party.getClassName(), "Class name: ");
         this.setFrame(new Rectangle(0,0,width,height));
     }
 
-    private boolean isActor;
+    @Override
+    protected Rectangle getDefaultFrame() {
+        return new Rectangle(0, 0, 250, 200);
+    }
+
 
     @Override
     protected void displayView(PaintBoard paintBoard) {
-        if(isActor) {
-            actor.displayControl(paintBoard, width * 9/12, height/2, true);
-            object.displayControl(paintBoard, width * 11/12, height/2, false);
-        }else{
-            actor.displayControl(paintBoard, width * 9/12, height/2, false);
-            object.displayControl(paintBoard, width * 11/12, height/2, true);
-        }
-
+        actorButton.displayControl(paintBoard, 10 * 9/12, height/2);
+        objectButton.displayControl(paintBoard, 10 * 11/12, height/2);
 
     }
 
-    private RadioButton actor,object;
+    /**
+     * Registers the radio buttons for this party dialog.
+     */
+    private RadioButton actorButton = new RadioButton("Actor: "), objectButton = new RadioButton("Object: ");
 
-    private TextField instanceName, className;
+    /**
+     * Registers the text fields for this party dialog
+     */
+    private TextField instanceName , className;
 
     /**
      * The party of this dialog
      */
     private Party party;
-
 
     /**
      * Initialize this new dialog with given diagram.
@@ -54,8 +67,9 @@ public class DialogParty extends DialogWindow {
         super(diagram);
     }
 
-
-
-
+    @Override
+    public String getTitle() {
+        return "Party Dialog - " + super.getTitle();
+    }
 
 }

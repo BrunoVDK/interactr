@@ -8,6 +8,4 @@ package interactr.cs.kuleuven.be.exceptions;
  */
 public class InvalidCloseWindowException extends RuntimeException {
 
-
-
 }

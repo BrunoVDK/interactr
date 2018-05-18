@@ -35,7 +35,7 @@ public abstract class Command {
      * @param receiver The receiver for which the command should be executed.
      * @throws CommandNotProcessedException If the command could not be executed.
      */
-    public final void execute(CommandHandler receiver) throws CommandNotProcessedException {
+    public void execute(CommandHandler receiver) throws CommandNotProcessedException {
         if (receiver == null)
             throw new CommandNotProcessedException();
         try {

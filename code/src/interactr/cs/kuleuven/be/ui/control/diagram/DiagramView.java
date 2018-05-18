@@ -3,7 +3,7 @@ package interactr.cs.kuleuven.be.ui.control.diagram;
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.*;
 import interactr.cs.kuleuven.be.purecollections.PMap;
-import interactr.cs.kuleuven.be.ui.DiagramObserver;
+import interactr.cs.kuleuven.be.domain.DiagramObserver;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.command.Command;
 import interactr.cs.kuleuven.be.ui.command.CommandHandler;
@@ -40,11 +40,31 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
     }
 
     /**
+     * Converts the given absolute coordinates to coordinates relative to this view's frame.
+     *
+     * @param absoluteCoordinates The coordinates to convert.
+     * @return The same coordinates relative to this view's frame.
+     */
+    public Point getRelativeCoordinates(Point absoluteCoordinates) {
+        System.out.println(getFrame());
+        return new Point(absoluteCoordinates.getX() - getFrame().getX(), absoluteCoordinates.getY() - getFrame().getY());
+    }
+
+    /**
      * Sets the frame of this view to the given one.
      *
      * @param frame The new frame for this view.
      */
     public void setFrame(Rectangle frame) {
+        boolean widthChanged = this.frame.getWidth() != frame.getWidth(), heightChanged = this.frame.getHeight() != frame.getHeight();
+        if (widthChanged || heightChanged) {
+            for (Party party : getDiagram().getParties()) {
+                Point coordinate = getCoordinateForParty(party);
+                setCoordinateForParty(party, new Point(
+                        coordinate.getX() + (widthChanged ? this.frame.getX() - frame.getX() : 0),
+                        coordinate.getY() + (heightChanged ? this.frame.getY() - frame.getY() : 0)));
+            }
+        }
         this.frame = frame;
     }
 
@@ -120,8 +140,6 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @throws InvalidAddPartyException The given party cannot be added to this diagram view at the given coordinate.
      */
     public void addParty(int x, int y) throws InvalidAddPartyException {
-        x = x - getFrame().getX();
-        y = y - getFrame().getY();
         if (getParty(x,y) != null)
             throw new InvalidAddPartyException();
         Party newParty = Party.createParty();
@@ -137,14 +155,14 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @param y The y coordinate of the party.
      */
     public void switchTypeOfParty(int x, int y) throws NoSuchPartyException {
-        Party oldParty = getParty(x - getFrame().getX(),y - getFrame().getY());
+        Party oldParty = getParty(x,y);
         if (oldParty != null) {
             Party newParty = oldParty.switchType();
             diagram.replaceParty(oldParty, newParty);
             makeRoomForParty(newParty);
         }
         else
-            throw new NoSuchPartyException(x - getFrame().getX(), y - getFrame().getY());
+            throw new NoSuchPartyException(x, y);
     }
 
     /**
@@ -173,10 +191,9 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @param y The y coordinate to look at.
      * @return The party at the given coordinate.
      */
-    private Party getParty(int x, int y) {
+    public Party getParty(int x, int y) {
         for (Party p : getDiagram().getParties()) {
             Figure figure = getFigureForParty(p);
-            System.out.println(figure.getBounds());
             if (figure.isHit(x,y) && !figure.isLabelHit(x,y))
                 return p;
         }
@@ -186,20 +203,17 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
     /**
      * A method that moves the given party to the given coordinates
      *
-     * @param fromX The start x coordinate for the add.
-     * @param fromY The start y coordinate for the add.
-     * @param toX The end x coordinate for the add.
-     * @param toY The end y coordinate for the add.
-     * @throws NoSuchPartyException If there is no party at the given start coordinates.
+     * @param movedParty The that is to be moved.
+     * @param toX The end x coordinate for the moving session.
+     * @param toY The end y coordinate for the moving session.
+     * @throws InvalidMovePartyException If the give party is null.
      * @throws InvalidMovePartyException If the party could not be moved to the given end coordinates.
      */
-    public void moveParty(int fromX, int fromY, int toX, int toY) throws  NoSuchPartyException, InvalidMovePartyException {
-        Party movedParty = getParty(fromX, fromY);
-        if (movedParty == null)
-            throw new NoSuchPartyException(fromX, fromY);
+    public void moveParty(Party movedParty, int toX, int toY) throws  NoSuchPartyException, InvalidMovePartyException {
+        if (movedParty == null) throw new InvalidMovePartyException();
         Rectangle movedBounds = getFigureForParty(movedParty).getBounds();
-        movedBounds.setX(movedBounds.getX() + (toX - fromX));
-        movedBounds.setY(movedBounds.getY() + (toY - fromY));
+        movedBounds.setX(toX - movedBounds.getWidth()/2);
+        movedBounds.setY(toY - movedBounds.getHeight()/2);
         for (Party party : getDiagram().getParties())
             if (party != movedParty && movedBounds.overlaps(getFigureForParty(party).getBounds()))
                 throw new InvalidMovePartyException();
@@ -245,14 +259,6 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @throws InvalidAddMessageException If a message could not be added.
      */
     public void addMessage(int fromX, int fromY, int toX, int toY) {
-        if (canAddMessageAt(fromX, fromY, toX, toY)) {
-            int index = getMessageInsertionIndex(fromX, fromY, toX, toY);
-            Party sender = getParty(fromX, 10), receiver = getParty(toX, 10);
-            if (sender != null && receiver != null && sender != receiver) {
-                diagram.insertInvocationMessageAtIndex(new InvocationMessage(sender, receiver), index);
-                return;
-            }
-        }
         throw new InvalidAddMessageException();
     }
 
@@ -296,13 +302,14 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      */
     Link getLinkForMessage(Message message) {
         Link link = MessageModeller.defaultModeller().generateLink(message);
-        Figure figure = getFigureForParty(message.getSender());
+        Rectangle senderBounds = getFigureForParty(message.getSender()).getBounds();
+        Rectangle receiverBounds = getFigureForParty(message.getReceiver()).getBounds();
         Point senderCoordinate = getCoordinateForParty(message.getSender());
         Point receiverCoordinate = getCoordinateForParty(message.getReceiver());
-        link.setStartX(senderCoordinate.getX() + (senderCoordinate.getX() < receiverCoordinate.getX() ? figure.getWidth() : 0));
-        link.setStartY(senderCoordinate.getY() + figure.getHeight()/2);
-        link.setEndX(receiverCoordinate.getX() + (senderCoordinate.getX() < receiverCoordinate.getX() ? 0 : figure.getWidth()));
-        link.setEndY(receiverCoordinate.getY() + figure.getHeight()/2);
+        link.setStartX(senderCoordinate.getX() + (senderCoordinate.getX() < receiverCoordinate.getX() ? senderBounds.getWidth() : 0));
+        link.setStartY(senderCoordinate.getY() + senderBounds.getHeight()/2);
+        link.setEndX(receiverCoordinate.getX() + (senderCoordinate.getX() < receiverCoordinate.getX() ? 0 : receiverBounds.getWidth()));
+        link.setEndY(receiverCoordinate.getY() + receiverBounds.getHeight()/2);
         link.setLabel(getDiagram().getPrefix(message) + " " + message.getLabel());
         return link;
     }
@@ -405,7 +412,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
             clone = (DiagramView)super.clone();
             clone.setDiagram(getDiagram());
             for (Party party : partyCoordinates.keySet())
-                clone.setCoordinateForParty(party, partyCoordinates.get(party));
+                clone.setCoordinateForParty(party, getCoordinateForParty(party));
         }
         catch (Exception e) {throw new RuntimeException("Failed to clone diagram view." + e.getClass().toString());}
         return clone;
