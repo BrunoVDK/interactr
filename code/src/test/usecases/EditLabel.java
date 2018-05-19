@@ -45,44 +45,21 @@ class EditLabel {
         Window.replayRecording("steps/pressEnter.txt", window);
         assertNull(getActiveView().getSelectedComponent());
         assertEquals(newParty.getLabel(), "a:A");
-
+        // Start editing party at 100 x
         Window.replayRecording("steps/selectPartyAt100.txt", window);
         Window.replayRecording("steps/selectPartyAt100.txt", window);
-
+        assertTrue(getActiveView().isEditing());
+        // Remove the current name
+        Window.replayRecording("steps/pressBackSpace.txt", window);
+        Window.replayRecording("steps/pressBackSpace.txt", window);
+        Window.replayRecording("steps/pressBackSpace.txt", window);
+        assertEquals(getActiveView().getSelectedLabel(), "");
+        // Type b:B and check if component has that name
         Window.replayRecording("steps/typePartyLabelbB.txt", window);
         Window.replayRecording("steps/pressEnter.txt", window);
         Window.replayRecording("steps/selectPartyAt100.txt", window);
         assertEquals(getActiveView().getSelectedComponent().getLabel(), "b:B");
 
-    }
-
-    @Test
-    /**
-     * The partys label is changedfrom a:A to b:B
-     */
-    void editLabelParty(){
-        Window.replayRecording("editLabelParty.txt", window);
-        assertEquals("b:B", getActiveView().getSelectedComponent().getLabel());
-    }
-
-    /**
-     * Change a invocation message label from "c" to "d"
-     */
-    @Test
-    void editLabelInvocationMessage(){
-        Window.replayRecording("editLabelInvocationMessage.txt", window);
-        assertEquals("d", getDiagram().getMessages().getFirst().getLabel());
-    }
-
-
-
-    /**
-     * Change a result message label to "d"
-     */
-    @Test
-    void editLabelResultMessage(){
-        Window.replayRecording("editLabelResultMessage01.txt", window);
-        assertEquals("d", getDiagram().getMessages().get(1).getLabel());
     }
 
     // Returns the currently active view for the scene

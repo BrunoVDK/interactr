@@ -68,10 +68,4 @@ class AddMessage {
         assertEquals( 2, ((DiagramWindow)window.getEventHandler().getController().getActiveSubwindow()).getDiagram().getMessages().size());
     }
 
-    @Test
-    void addLegalMessageStack011221(){
-        Window.replayRecording("addLegalMessageStack011221.txt", window);
-        assertEquals( 6, ((DiagramWindow)window.getEventHandler().getController().getActiveSubwindow()).getDiagram().getMessages().size());
-    }
-
 }
