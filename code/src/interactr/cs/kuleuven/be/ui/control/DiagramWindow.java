@@ -99,14 +99,8 @@ public class DiagramWindow extends SubWindow {
      */
     private void activateViewAtIndex(int index) {
         if (index >= 0 && index < getViews().size()) {
-            for (DiagramView view : getViews()) {
-                try {
-                    view.setSelectedComponent(getActiveView().getSelectedComponent());
-                    view.setSelectedLabel(getActiveView().getSelectedLabel());
-                    view.setIsEditing(getActiveView().isEditing());
-                }
-                catch (Exception ignored) {}
-            }
+            for (DiagramView view : getViews())
+                view.synchronizeWith(getActiveView());
             activeViewIndex = index;
         }
     }

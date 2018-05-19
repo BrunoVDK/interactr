@@ -144,22 +144,27 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
         if (isEditing()) throw new IllegalOperationException();
         for (Message message : getDiagram().getMessages())
             if (getLinkForMessage(message).isLabelHit(x,y)) {
-                if (message == getSelectedComponent())
-                    editComponent(message);
-                else
-                    setSelectedComponent(message);
+                selectComponent(message);
                 return;
             }
         for (Party party : getDiagram().getParties())
             if (getFigureForParty(party).isLabelHit(x,y)) {
-                System.out.println(party);
-                if (party == getSelectedComponent())
-                    editComponent(party);
-                else
-                    setSelectedComponent(party);
+                selectComponent(party);
                 return;
             }
         throw new NoSuchComponentException();
+    }
+
+    /**
+     * Selects the given component.
+     *
+     * @param component The component to select.
+     */
+    private void selectComponent(DiagramComponent component) {
+        if (component == getSelectedComponent())
+            editComponent(component);
+        setSelectedComponent(component);
+        setSelectedLabel(component.getLabel());
     }
 
     /**
@@ -561,6 +566,19 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
         }
         catch (Exception e) {throw new RuntimeException("Failed to clone diagram view." + e.getClass().toString());}
         return clone;
+    }
+
+    /**
+     * Synchronize this view with the given one.
+     *
+     * @param other The view to synchronize with.
+     */
+    public void synchronizeWith(DiagramView other) {
+        if (other == this)
+            return;
+        selectedComponent = other.selectedComponent;
+        selectedLabel = other.selectedLabel;
+        isEditing = other.isEditing;
     }
 
 }
