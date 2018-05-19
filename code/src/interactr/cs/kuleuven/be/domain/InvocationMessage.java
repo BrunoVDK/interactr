@@ -14,7 +14,7 @@ public class InvocationMessage extends Message {
      * @param sender The sender of this invocation message.
      * @param receiver The receiver of this invocation message.
      */
-    public InvocationMessage(Party sender , Party receiver) {super("test()", sender, receiver);}
+    public InvocationMessage(Party sender , Party receiver) {super("message()", sender, receiver);}
 
     @Override
     public boolean canHaveAsLabel(String label) {
