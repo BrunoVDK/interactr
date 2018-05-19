@@ -1,18 +1,22 @@
 package usecases;
 
+import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.Party;
+import interactr.cs.kuleuven.be.exceptions.NoSuchComponentException;
 import interactr.cs.kuleuven.be.ui.Controller;
 import interactr.cs.kuleuven.be.ui.Window;
 import interactr.cs.kuleuven.be.ui.EventHandler;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
+import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MoveParty {
+class MoveParty {
 
-    private Window window = new Window();
+    private Window window = new Window("Test Window");
 
     @BeforeEach
     void setUp(){
@@ -22,47 +26,39 @@ public class MoveParty {
 
     @Test
     void stepByStep(){
-        Controller controller = window.getEventHandler().getController();
         // Precondition
         Window.replayRecording("steps/createNewDiagram.txt", window);
-        //At party at 100 x
+        // Add party at 100 x
         Window.replayRecording("steps/createPartyAt100.txt", window);
-        assertTrue(controller.getActiveSubwindow().getDiagram().getParties().size() > 0);
+        assertTrue(getDiagram().getParties().size() > 0);
         // Assert that it is selected
-        Party newParty = controller.getActiveSubwindow().getDiagram().getParties().get(0);
-        assertEquals(controller.getActiveSubwindow().getSelectedComponent(), newParty);
+        Party newParty = getDiagram().getParties().get(0);
+        assertEquals(getActiveView().getSelectedComponent(), newParty);
         // Type label
-        Window.replayRecording("steps/typePartyLabela:A.txt", window);
-        assertEquals(controller.getActiveSubwindow().getSelectedLabel(), "a:A");
+        Window.replayRecording("steps/typePartyLabelaA.txt", window);
+        assertEquals(getActiveView().getSelectedLabel(), "a:A");
         assertEquals(newParty.getLabel(), "a:A");
         // Press enter
         Window.replayRecording("steps/pressEnter.txt", window);
-        assertNull(controller.getActiveSubwindow().getSelectedComponent());
+        assertNull(getActiveView().getSelectedComponent());
         assertEquals(newParty.getLabel(), "a:A");
-
+        // Move party at 100 x to 200 x
         Window.replayRecording("steps/moveParty100to200.txt", window);
-        assertEquals(newParty, controller.getActiveSubwindow().getActiveView().getParty(200,30));
+        assertEquals(newParty, getActiveView().getParty(200,30));
     }
 
     @Test
     void movePartySequence(){
         Window.replayRecording("movePartySequence.txt", window);
         // Party added on  x = 6  y = 31 and moved to x = 135 y = 41
-        assertNotEquals(null, window.getEventHandler().getController().getActiveSubwindow().getActiveView().getSelectableComponent(135,41));
-    }
-
-    @Test
-    void movePartyCommunication(){
-        Window.replayRecording("movePartyCommunication.txt", window);
-        // Party added on  x = 8  y = 30 and moved to x = 234 y = 40
-        assertNotEquals(null, window.getEventHandler().getController().getActiveSubwindow().getActiveView().getSelectableComponent(234,40));
+        assertNotEquals(null, getActiveView().getSelectableComponent(135,41));
     }
 
     @Test
     void movePartyWhileEditingSequence(){
         Window.replayRecording("movePartyWhileEditingSequence.txt", window);
         // Party added on  x = 6  y = 29 and moved to x = 38 y = 289
-        assertEquals(null, window.getEventHandler().getController().getActiveSubwindow().getActiveView().getSelectableComponent(38,289));
+        assertThrows(NoSuchComponentException.class,()->{getActiveView().getSelectableComponent(38,289);});
 
     }
 
@@ -70,7 +66,19 @@ public class MoveParty {
     void movePartySequenceIllegalPosition(){
         Window.replayRecording("movePartyWhileEditingSequence.txt", window);
         // Party added on  x = 6  y = 29 and moved to x = 38 y = 289
-        assertEquals(null, window.getEventHandler().getController().getActiveSubwindow().getActiveView().getSelectableComponent(38,289));
+        assertThrows(NoSuchComponentException.class, ()->{getActiveView().getSelectableComponent(38,289);});
+    }
+
+    // Returns the currently active view for the scene
+    //  Convenience method
+    private DiagramView getActiveView() {
+        return ((DiagramWindow)window.getEventHandler().getController().getActiveSubwindow()).getActiveView();
+    }
+
+    // Returns the diagram for the currently active subwindow
+    //  Convenience method
+    private Diagram getDiagram() {
+        return ((DiagramWindow)window.getEventHandler().getController().getActiveSubwindow()).getDiagram();
     }
 
 }

@@ -1,17 +1,22 @@
 package usecases;
 
-import interactr.cs.kuleuven.be.ui.*;
-import interactr.cs.kuleuven.be.ui.control.CommunicationView;
-import interactr.cs.kuleuven.be.ui.control.DiagramView;
-import interactr.cs.kuleuven.be.ui.control.SequenceView;
+import interactr.cs.kuleuven.be.ui.Controller;
+import interactr.cs.kuleuven.be.ui.EventHandler;
+import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.Window;
+import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
+import interactr.cs.kuleuven.be.ui.control.diagram.CommunicationView;
+import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
+import interactr.cs.kuleuven.be.ui.control.diagram.SequenceView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class SwitchDiagramType {
+class SwitchDiagramType {
 
-    private Window window = new Window();
+    private Window window = new Window("Test Window");
 
     @BeforeEach
     void setUp(){
@@ -21,27 +26,36 @@ public class SwitchDiagramType {
 
     @Test
     void stepByStepTest() {
-        // Precondition
+        // Precondition (creates new diagram)
         Window.replayRecording("steps/createNewDiagram.txt", window);
         assertNotNull(window.getEventHandler().getController().getActiveSubwindow());
-        // Steps
-        DiagramView activeView = window.getEventHandler().getController().getActiveSubwindow().getActiveView();
+        // Get the currently active view
+        DiagramView activeView = getActiveView();
+        // Press tab key
         Window.replayRecording("steps/pressTabKey.txt", window);
-        DiagramView newView = window.getEventHandler().getController().getActiveSubwindow().getActiveView();
+        // Get the active view
+        DiagramView newView = getActiveView();
+        // Compare the newly active view with the previously active view
         assertNotEquals(activeView, newView);
     }
 
     @Test
     void switchSequenceToCommunication(){
         Window.replayRecording("switchSequenceToCommunication.txt", window);
-        assertEquals( true , window.getEventHandler().getController().getActiveSubwindow().getActiveView() instanceof CommunicationView);
+        assertEquals( true , getActiveView() instanceof CommunicationView);
     }
 
     @Test
     void switchCommunicationToSequence(){
         Window.replayRecording("switchCommunicationToSequence.txt", window);
-        assertEquals( true , window.getEventHandler().getController().getActiveSubwindow().getActiveView() instanceof SequenceView);
+        assertEquals( true , getActiveView() instanceof SequenceView);
 
+    }
+
+    // Returns the currently active view for the scene
+    //  Convenience method
+    private DiagramView getActiveView() {
+        return ((DiagramWindow)window.getEventHandler().getController().getActiveSubwindow()).getActiveView();
     }
 
 }

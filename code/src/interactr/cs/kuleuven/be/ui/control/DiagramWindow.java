@@ -88,7 +88,7 @@ public class DiagramWindow extends SubWindow {
      *
      * @return The active view for this subwindow.
      */
-    private DiagramView getActiveView() {
+    public DiagramView getActiveView() {
         return getViews().get(activeViewIndex);
     }
 

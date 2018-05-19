@@ -6,9 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-
-public class ResizeSubwindow {
-    private Window window = new Window();
+class ResizeSubwindow {
+    private Window window = new Window("Test Window");
 
     @BeforeEach
     void setUp(){
@@ -19,55 +18,14 @@ public class ResizeSubwindow {
     @Test
     void stepByStep(){
         Controller controller = window.getEventHandler().getController();
-        // Precondition
+        // Precondition - create new subwindow and ensure it is there
         Window.replayRecording("steps/createNewDiagram.txt", window);
         SubWindow original = controller.getActiveSubwindow();
         assertNotNull(original);
+        // Resize the new subwindow
         Window.replayRecording("steps/resizeSubWindow.txt", window);
         assertTrue(controller.getActiveSubwindow().getFrame().getWidth() > 400);
         assertTrue(controller.getActiveSubwindow().getFrame().getHeight() > 400);
-    }
-
-    @Test
-    void resizeNordLarger(){
-        Window.replayRecording("resizeNordLarger.txt", window);
-        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getHeight() > 400);
-        //In the txt file the subwindow is first moved down till y = 198
-        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getY() < 198);
-
-    }
-
-    @Test
-    void resizeNordSmaller(){
-        Window.replayRecording("resizeNordSmaller.txt", window);
-        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getHeight() < 400);
-        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getY() > 0);
-
-
-
-    }
-
-    @Test
-    void resizeNordEastLarger(){
-        Window.replayRecording("resizeNordEastLarger.txt", window);
-        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getHeight() > 400);
-        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getWidth() > 400);
-        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getY() < 164);
-    }
-
-    @Test
-    void resizeNordEastSmaller(){
-        Window.replayRecording("resizeNordEastSmaller.txt", window);
-        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getHeight() < 400);
-        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getWidth() < 400);
-        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getY() > 0);
-
-    }
-
-    @Test
-    void resizeEastLarger(){
-        Window.replayRecording("resizeEastLarger.txt", window);
-        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getWidth() > 400);
     }
 
     @Test
@@ -133,24 +91,5 @@ public class ResizeSubwindow {
         assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getX() > 3);
 
     }
-    @Test
-    void resizeNordWestLarger(){
-        Window.replayRecording("resizeNordWestLarger.txt", window);
-        //322 126
-        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getHeight() > 400);
-        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getWidth() > 400);
-        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getX() < 322);
-        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getY() < 126);
-    }
-
-    @Test
-    void resizeNordWestSmaller(){
-        Window.replayRecording("resizeNordWestSmaller.txt", window);
-        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getHeight() < 400);
-        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getWidth() < 400);
-        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getX() > 0);
-        assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getY() > 0);
-    }
-
 
 }

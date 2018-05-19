@@ -142,16 +142,23 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      */
     public void selectComponentAt(int x, int y) throws NoSuchComponentException {
         if (isEditing()) throw new IllegalOperationException();
+        selectComponent(getSelectableComponent(x,y));
+
+    }
+
+    /**
+     * Returns the selectable component at given coordinates, or null if there is none.
+     *
+     * @param x The x coordinate to search at.
+     * @param y The y coordinate to search at.
+     */
+    public DiagramComponent getSelectableComponent(int x, int y) {
         for (Message message : getDiagram().getMessages())
-            if (getLinkForMessage(message).isLabelHit(x,y)) {
-                selectComponent(message);
-                return;
-            }
+            if (getLinkForMessage(message).isLabelHit(x,y))
+                return message;
         for (Party party : getDiagram().getParties())
-            if (getFigureForParty(party).isLabelHit(x,y)) {
-                selectComponent(party);
-                return;
-            }
+            if (getFigureForParty(party).isLabelHit(x,y))
+                return party;
         throw new NoSuchComponentException();
     }
 

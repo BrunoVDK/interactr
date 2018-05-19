@@ -8,8 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CloseWindow {
-    private Window window = new Window();
+class CloseWindow {
+
+    private Window window = new Window("Test Window");
 
     @BeforeEach
     void setUp(){
@@ -18,18 +19,20 @@ public class CloseWindow {
     }
 
     @Test
-    void stepByStep(){
+    void stepByStep() {
         Controller controller = window.getEventHandler().getController();
-        // Precondition
+        // Precondition - create new diagram window
         Window.replayRecording("steps/createNewDiagram.txt", window);
         assertNotNull(controller.getActiveSubwindow());
+        // Click on the subwindow's close button
         Window.replayRecording("steps/pressCloseButton.txt", window);
-        assertNull(controller.getActiveSubwindow());
+        assertTrue(controller.getActiveSubwindow().isClosed());
     }
 
     @Test
-    void closeWindow(){
+    void closeWindow() {
         Window.replayRecording("closeWindow.txt", window);
-        assertEquals(null, window.getEventHandler().getController().getActiveSubwindow());
+        assertTrue(window.getEventHandler().getController().getActiveSubwindow().isClosed());
     }
+
 }

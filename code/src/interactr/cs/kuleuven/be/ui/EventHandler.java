@@ -23,7 +23,7 @@ public class EventHandler {
      *
      * @param controller The diagram controller to associate this event handler with.
      */
-    EventHandler(Controller controller) {
+    public EventHandler(Controller controller) {
         setController(controller);
     }
 
@@ -237,7 +237,7 @@ public class EventHandler {
     /**
      * Returns the diagram controller associated with this event handler.
      */
-    private Controller getController() {
+    public Controller getController() {
         return controller;
     }
 
