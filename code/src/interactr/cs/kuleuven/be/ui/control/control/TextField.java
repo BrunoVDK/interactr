@@ -19,7 +19,7 @@ public class TextField extends Control {
     }
 
     @Override
-    public void displayControl(PaintBoard paintBoard, int x, int y) {
+    public void display(PaintBoard paintBoard, int x, int y) {
         if (isActive())
             paintBoard.setColour(Colour.BLUE);
         paintBoard.drawRectangle(x + margeOfLabelAndControl,y,width,paintBoard.charHeight);

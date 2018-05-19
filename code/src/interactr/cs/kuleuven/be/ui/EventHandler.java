@@ -228,7 +228,7 @@ public class EventHandler {
     private void handleKeyTyped(char keyChar) {
         if (keyChar == KeyEvent.VK_TAB)
             getController().processCommand(new FocusNextCommand());
-        else
+        else if (keyChar != KeyEvent.VK_BACK_SPACE && keyChar != KeyEvent.VK_ENTER)
             getController().processCommand(new AppendCharCommand(keyChar));
     }
 

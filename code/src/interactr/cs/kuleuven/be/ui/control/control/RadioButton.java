@@ -15,7 +15,7 @@ public class RadioButton extends Control{
     }
 
     @Override
-    public void displayControl(PaintBoard paintBoard, int x, int y) {
+    public void display(PaintBoard paintBoard, int x, int y) {
         paintBoard.drawString(label,x,paintBoard.charHeight + y);
         paintBoard.drawOval(x + margeOfLabelAndControl ,y,diameter,diameter);
         if(isActive())

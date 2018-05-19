@@ -1,7 +1,5 @@
 package interactr.cs.kuleuven.be.domain;
 
-import interactr.cs.kuleuven.be.domain.*;
-
 /**
  * A class of diagram observers.
  *
@@ -55,5 +53,14 @@ public interface DiagramObserver {
      * @param message The message that was deleted.
      */
     default void diagramDidDeleteMessage(Diagram diagram, Message message) {}
+
+
+    /**
+     * Notify observers that the given component's label was edited.
+     *
+     * @param diagram The diagram to which the component belongs.
+     * @param component The component whose label was edited.
+     */
+    default void diagramDidEditLabel(Diagram diagram, DiagramComponent component) {}
 
 }

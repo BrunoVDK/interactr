@@ -1,10 +1,7 @@
 package interactr.cs.kuleuven.be.ui.control.diagram;
 
 import interactr.cs.kuleuven.be.domain.*;
-import interactr.cs.kuleuven.be.exceptions.InvalidAddMessageException;
-import interactr.cs.kuleuven.be.exceptions.InvalidAddPartyException;
-import interactr.cs.kuleuven.be.exceptions.InvalidMovePartyException;
-import interactr.cs.kuleuven.be.exceptions.NoSuchPartyException;
+import interactr.cs.kuleuven.be.exceptions.*;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.design.*;
 import interactr.cs.kuleuven.be.ui.geometry.Point;
@@ -154,11 +151,14 @@ public class SequenceView extends DiagramView {
 
     @Override
     public void addMessage(int fromX, int fromY, int toX, int toY) {
+        if (isEditing()) throw new IllegalOperationException();
         if (canAddMessageAt(fromX, fromY, toX, toY)) {
             int index = getMessageInsertionIndex(fromX, fromY, toX, toY);
             Party sender = getParty(fromX, 10), receiver = getParty(toX, 10);
             if (sender != null && receiver != null && sender != receiver) {
-                diagram.insertInvocationMessageAtIndex(new InvocationMessage(sender, receiver), index);
+                InvocationMessage message = new InvocationMessage(sender, receiver);
+                diagram.insertInvocationMessageAtIndex(message, index);
+                editComponent(message);
                 return;
             }
         }

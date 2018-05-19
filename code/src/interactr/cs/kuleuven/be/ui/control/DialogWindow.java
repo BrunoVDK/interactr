@@ -45,7 +45,7 @@ public abstract class DialogWindow extends SubWindow {
      * @param x The x coordinate to draw the control at.
      * @param y The y coordinate to draw the control at.
      */
-    protected final void displayControl(PaintBoard paintBoard, Control control, int x, int y) {
+    protected final void display(PaintBoard paintBoard, Control control, int x, int y) {
         if (focusedControl == control)
             paintBoard.setColour(Colour.BLUE);
         else

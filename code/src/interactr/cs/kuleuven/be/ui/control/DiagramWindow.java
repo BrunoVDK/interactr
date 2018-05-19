@@ -2,6 +2,8 @@ package interactr.cs.kuleuven.be.ui.control;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.exceptions.IllegalWindowFrameException;
+import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
+import interactr.cs.kuleuven.be.exceptions.NoSuchComponentException;
 import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.command.Command;
@@ -69,7 +71,7 @@ public class DiagramWindow extends SubWindow {
      * Switch to the next view.
      */
     public void nextView() {
-        activeViewIndex = (activeViewIndex + 1) % views.size();
+        activateViewAtIndex((activeViewIndex + 1) % getViews().size());
     }
 
     /**
@@ -87,7 +89,7 @@ public class DiagramWindow extends SubWindow {
      * @return The active view for this subwindow.
      */
     private DiagramView getActiveView() {
-        return views.get(activeViewIndex);
+        return getViews().get(activeViewIndex);
     }
 
     /**
@@ -96,8 +98,17 @@ public class DiagramWindow extends SubWindow {
      * @param index The index of the view that is to be activated.
      */
     private void activateViewAtIndex(int index) {
-        if (index >= 0 && index < views.size())
+        if (index >= 0 && index < getViews().size()) {
+            for (DiagramView view : getViews()) {
+                try {
+                    view.setSelectedComponent(getActiveView().getSelectedComponent());
+                    view.setSelectedLabel(getActiveView().getSelectedLabel());
+                    view.setIsEditing(getActiveView().isEditing());
+                }
+                catch (Exception ignored) {}
+            }
             activeViewIndex = index;
+        }
     }
 
     /**

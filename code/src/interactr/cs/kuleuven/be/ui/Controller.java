@@ -50,8 +50,7 @@ public class Controller {
      */
     public void displayAllSubWindows() {
         for (int i=getSubWindows().size()-1 ; i>=0 ; i--) // Last window first
-            if (!getSubWindows().get(i).isClosed())
-                getSubWindows().get(i).display(getPaintBoard());
+            getSubWindows().get(i).display(getPaintBoard());
     }
 
     /**

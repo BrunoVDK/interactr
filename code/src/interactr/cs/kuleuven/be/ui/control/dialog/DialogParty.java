@@ -18,7 +18,7 @@ public class DialogParty extends DialogWindow {
 
     private static  final int width = 150, height = 100;
 
-    public DialogParty(Party party, Diagram diagram, boolean isActor){
+    DialogParty(Party party, Diagram diagram, boolean isActor){
         super(diagram);
         this.party = party;
         if(isActor)
@@ -38,8 +38,8 @@ public class DialogParty extends DialogWindow {
 
     @Override
     protected void displayView(PaintBoard paintBoard) {
-        actorButton.displayControl(paintBoard, 10 * 9/12, height/2);
-        objectButton.displayControl(paintBoard, 10 * 11/12, height/2);
+        actorButton.display(paintBoard, 10 * 9/12, height/2);
+        objectButton.display(paintBoard, 10 * 11/12, height/2);
 
     }
 

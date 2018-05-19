@@ -2,6 +2,7 @@ package interactr.cs.kuleuven.be.ui.command;
 
 import interactr.cs.kuleuven.be.exceptions.NoSuchComponentException;
 import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
+import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 import interactr.cs.kuleuven.be.ui.geometry.Point;
 
 /**
@@ -27,11 +28,11 @@ public class SelectCommand extends Command {
     private final Point location;
 
     @Override
-    public void executeDiagramWindow(DiagramWindow window) {
+    public void executeDiagramView(DiagramView view) {
         try {
-
+            view.selectComponentAt(view.getRelativeCoordinates(location).getX(), view.getRelativeCoordinates(location).getY());
         }
-        catch (NoSuchComponentException exception) {
+        catch (Exception exception) {
             throw new CommandNotProcessedException();
         }
     }
