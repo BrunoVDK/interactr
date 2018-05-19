@@ -524,8 +524,21 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      *  This unregisters it as an observer.
      */
     public void close() {
-        diagram.unregisterObserver(this);
+        isClosed = true;
+        getDiagram().unregisterObserver(this);
     }
+
+    /**
+     * Returns whether or not this subwindow is closed.
+     */
+    public boolean isClosed() {
+        return isClosed;
+    }
+
+    /**
+     * Registers whether or not this subwindow is closed.
+     */
+    private boolean isClosed = false;
 
     @Override
     public void executeCommand(Command command) throws CommandNotProcessedException {
