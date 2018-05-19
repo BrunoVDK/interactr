@@ -279,6 +279,18 @@ public abstract class SubWindow implements CommandHandler {
     /**
      * Close this subwindow.
      */
-    public void close() {}
+    public void close() {isClosed = true;}
+
+    /**
+     * Returns whether or not this subwindow is closed.
+     */
+    public boolean isClosed() {
+        return isClosed;
+    }
+
+    /**
+     * Registers whether or not this subwindow is closed.
+     */
+    private boolean isClosed = false;
 
 }

@@ -50,7 +50,10 @@ public class Controller {
      */
     public void displayAllSubWindows() {
         for (int i=getSubWindows().size()-1 ; i>=0 ; i--) // Last window first
-            getSubWindows().get(i).display(getPaintBoard());
+            if (getSubWindows().get(i).isClosed())
+                removeSubWindow(getSubWindows().get(i));
+            else
+                getSubWindows().get(i).display(getPaintBoard());
     }
 
     /**
@@ -147,7 +150,6 @@ public class Controller {
         SubWindow subWindow = this.getSubWindows().stream().filter( s -> s.closeButtonEncloses(x,y)).findFirst().orElse(null);
         if (subWindow != null) {
             subWindow.close();
-            this.removeSubWindow(subWindow);
             getPaintBoard().refresh();
         }
         else
