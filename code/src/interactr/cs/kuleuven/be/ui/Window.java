@@ -15,7 +15,7 @@ public class Window extends CanvasWindow {
      *
      * @param title The title for the new window.
      */
-    Window(String title) {
+    public Window(String title) {
         super(title);
     }
 

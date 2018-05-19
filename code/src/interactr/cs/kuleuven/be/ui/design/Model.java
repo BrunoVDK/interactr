@@ -17,7 +17,7 @@ public class Model implements Cloneable {
      * @param label The label to initialize this model with.
      * @throws IllegalArgumentException If the given label is null.
      */
-    Model(String label) {
+    public Model(String label) {
         if (label == null)
             throw new IllegalArgumentException("Null label given for new model.");
         setLabel(label);

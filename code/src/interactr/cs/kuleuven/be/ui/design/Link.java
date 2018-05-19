@@ -13,7 +13,7 @@ public class Link extends Model {
     /**
      * Initialize this new figure with zero coordinates and a width and height of 20.
      */
-    Link() {
+    public Link() {
         this(50, 200, 100, 400);
     }
 
@@ -25,7 +25,7 @@ public class Link extends Model {
      * @param endX The end x coordinate for this new linke.
      * @param endY The end y coordinate for this new linke.
      */
-    private Link(int startX, int startY, int endX, int endY) {
+    public Link(int startX, int startY, int endX, int endY) {
         super("");
         setStartX(startX);
         setStartY(startY);

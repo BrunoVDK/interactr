@@ -14,7 +14,7 @@ public class Figure extends Model {
     /**
      * Initialize this new figure with zero coordinates and a width and height of 20.
      */
-    Figure() {
+    public Figure() {
         this(0, 0, 60, 65);
     }
 

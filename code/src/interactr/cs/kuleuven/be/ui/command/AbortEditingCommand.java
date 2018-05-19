@@ -16,7 +16,7 @@ public class AbortEditingCommand extends Command {
         try {
             view.setIsEditing(false);
         }
-        catch (InvalidLabelException ignored) {}
+        catch (InvalidLabelException e) {throw new CommandNotProcessedException();}
     }
 
 }

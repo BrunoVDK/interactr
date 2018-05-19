@@ -1,11 +1,13 @@
 package interactr.cs.kuleuven.be.ui;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-
-import interactr.cs.kuleuven.be.exceptions.*;
+import interactr.cs.kuleuven.be.exceptions.InvalidCloseWindowException;
+import interactr.cs.kuleuven.be.exceptions.InvalidMoveWindowException;
+import interactr.cs.kuleuven.be.exceptions.InvalidResizeWindowException;
 import interactr.cs.kuleuven.be.ui.command.*;
 import interactr.cs.kuleuven.be.ui.geometry.Point;
+
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 /**
  * A class of event handlers for interpreting incoming mouse/key events

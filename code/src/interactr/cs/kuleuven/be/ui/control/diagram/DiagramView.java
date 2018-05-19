@@ -199,7 +199,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @param label The new label for the selected diagram component.
      */
     public void setSelectedLabel(String label) {
-        if (getSelectedComponent() != null) {
+        if (getSelectedComponent() != null && isEditing()) {
             selectedLabel = label;
             try {getDiagram().setLabelOfComponent(getSelectedComponent(), label);}
             catch (InvalidLabelException ignored) {}
@@ -231,10 +231,11 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
     private String selectedLabel = "";
 
     /**
-     * Deselect all selected components in this diagram view.
+     * Delete the selected component from this diagram view's diagram.
      */
-    public void deselectAll() {
-        selectedComponent = null;
+    public void deleteSelectedComponent() {
+        if (getSelectedComponent() != null)
+            getSelectedComponent().deleteFrom(getDiagram());
     }
 
     /**
@@ -278,7 +279,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      */
     public void addParty(int x, int y) throws InvalidAddPartyException {
         if (isEditing()) throw new IllegalOperationException();
-        if (getParty(x,y) != null) throw new InvalidAddPartyException();
+        if (getParty(x,y,true) != null) throw new InvalidAddPartyException();
         Party newParty = Party.createParty();
         Rectangle bounds = PartyModeller.defaultModeller().generateFigure(newParty).getBounds();
         setCoordinateForParty(newParty, new Point(x - bounds.getWidth()/2, y - bounds.getHeight()/2));
@@ -294,7 +295,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      */
     public void switchTypeOfParty(int x, int y) throws NoSuchPartyException {
         if (isEditing()) throw new IllegalOperationException();
-        Party oldParty = getParty(x,y);
+        Party oldParty = getParty(x,y,false);
         if (oldParty != null) {
             Party newParty = oldParty.switchType();
             diagram.replaceParty(oldParty, newParty);
@@ -312,9 +313,21 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @return The party at the given coordinate.
      */
     public Party getParty(int x, int y) {
+        return getParty(x,y,false);
+    }
+
+    /**
+     * Returns the party at the given coordinate.
+     *
+     * @param x The x coordinate to look at.
+     * @param y The y coordinate to look at.
+     * @param labelIncluded Flag denoting whether or not the label is included in the search.
+     * @return The party at the given coordinate.
+     */
+    private Party getParty(int x, int y, boolean labelIncluded) {
         for (Party p : getDiagram().getParties()) {
             Figure figure = getFigureForParty(p);
-            if (figure.isHit(x,y) && !figure.isLabelHit(x,y))
+            if (figure.isHit(x,y) && !(!labelIncluded && figure.isLabelHit(x,y)))
                 return p;
         }
         return null;
@@ -449,7 +462,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @return The label of the component, or the selected label if the component is selected.
      */
     String getLabelOfComponent(DiagramComponent component) {
-        if (component == getSelectedComponent())
+        if (component == getSelectedComponent() && isEditing())
             return (selectedLabel + (isEditing() ? "|" : ""));
         return component.getLabel();
     }
@@ -462,7 +475,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      */
     Colour getColourOfComponent(DiagramComponent component) {
         if (component == getSelectedComponent())
-            return (isValidSelectedLabel() ? Colour.BLUE : Colour.RED);
+            return (isValidSelectedLabel() || !isEditing() ? Colour.BLUE : Colour.RED);
         return Colour.BLACK;
     }
 

@@ -130,8 +130,9 @@ public class Diagram {
                     associatedMessageIndices.add(j, formerIndex - count); // Shift count upwards because of removal
                 }
             }
+            int min = getMinimumIndex(message);
             for (int i=0 ; i<count ; i++)
-                deleteMessageAtIndex(getMinimumIndex(message));
+                deleteMessageAtIndex(min);
             calculateAllPrefixes();
         }
     }
@@ -338,7 +339,7 @@ public class Diagram {
      */
     private int getNbMessagesToRemove(Message message) {
         if (getIndexOfMessage(message) >= 0)
-            return getMaximumIndex(message) - getMaximumIndex(message) + 1;
+            return getMaximumIndex(message) - getMinimumIndex(message) + 1;
         return 0;
     }
 
