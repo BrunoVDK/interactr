@@ -443,7 +443,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @param component The component whose label is desired.
      * @return The label of the component, or the selected label if the component is selected.
      */
-    private String getLabelOfComponent(DiagramComponent component) {
+    String getLabelOfComponent(DiagramComponent component) {
         if (component == getSelectedComponent())
             return (selectedLabel + (isEditing() ? "|" : ""));
         return component.getLabel();
@@ -455,7 +455,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @param component The component whose drawing colour is desired.
      * @return The colour to be used for drawing the component.
      */
-    private Colour getColourOfComponent(DiagramComponent component) {
+    Colour getColourOfComponent(DiagramComponent component) {
         if (component == getSelectedComponent())
             return (isValidSelectedLabel() ? Colour.BLUE : Colour.RED);
         return Colour.BLACK;

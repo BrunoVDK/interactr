@@ -187,7 +187,8 @@ public class SequenceView extends DiagramView {
             link.setStartX(link.getStartX() - ACTIVATION_BAR_WIDTH);
         else
             link.setEndX(link.getEndX() - ACTIVATION_BAR_WIDTH);
-        link.setLabel(message.getLabel());
+        link.setLabel(getLabelOfComponent(message));
+        link.setColour(getColourOfComponent(message));
         return link;
     }
 
