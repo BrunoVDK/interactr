@@ -16,10 +16,6 @@ public class DialogCreator implements DiagramVisitor {
         // Exists only to defeat instantiation.
     }
 
-    /**
-     * Get the default creator of dialogs.
-     *  This is a singleton.
-     */
     public static DialogCreator defaultCreator() {
         return defaultCreator;
     }
@@ -27,6 +23,7 @@ public class DialogCreator implements DiagramVisitor {
     /**
      * The singleton instance.
      */
+
     private final static DialogCreator defaultCreator = new DialogCreator();
 
     /**

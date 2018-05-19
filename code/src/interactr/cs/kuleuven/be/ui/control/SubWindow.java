@@ -140,6 +140,92 @@ public abstract class SubWindow implements CommandHandler {
     private Rectangle frame;
 
     /**
+     * Returns whether or not the given diagram component is currently selected.
+     *
+     * @param component The component to check for.
+     * @return True if and only if the given diagram component is currently selected.
+     */
+    private boolean isSelected(DiagramComponent component) {
+        return getSelectedComponent() == component;
+    }
+
+    /**
+     * Returns the diagram component that is currently active in this diagram.
+     */
+    public DiagramComponent getSelectedComponent() {
+        return selectedComponent;
+    }
+
+    /**
+     * Sets a diagramcomponent in this diagram as active component.
+     *
+     * @param component the diagram component that needs to be set as active component.
+     */
+    private void setSelectedComponent(DiagramComponent component) {
+        this.selectedComponent = component;
+    }
+
+    /**
+     * Deselects the currently selected component.
+     *
+     * @throws InvalidLabelException If the selected component is active and its label is invalid.
+     */
+    public void deselectAll() throws InvalidLabelException {
+        if (selectionIsActive() && !getSelectedComponent().canHaveAsLabel(getSelectedLabel()))
+            throw new InvalidLabelException();
+        setSelectedLabel(null);
+        setSelectedComponent(null);
+    }
+
+    /**
+     * Returns whether or not the selection for this subwindow is active (that is, in edit mode).
+     *
+     * @return True if and only if the selected label is not null.
+     */
+    public boolean selectionIsActive() {
+        return selectedLabel != null;
+    }
+
+    /**
+     * Registers the active component in this diagram.
+     */
+    private DiagramComponent selectedComponent = null;
+
+    /**
+     * Sets the temporary label for the active component to the given one.
+     *
+     * @param selectedLabel The new temporary label for the active component.
+     */
+    public void setSelectedLabel(String selectedLabel){
+        this.selectedLabel = selectedLabel;
+        if (selectedComponent != null && selectedComponent.canHaveAsLabel(selectedLabel)) {
+            selectedComponent.setLabel(selectedLabel);
+        }
+    }
+
+    /**
+     * Returns the temporary label of the currently active component in this diagram.
+     */
+    public String getSelectedLabel(){
+        return selectedLabel;
+    }
+
+    /**
+     * The temporary label for the active component of this diagram.
+     */
+    private String selectedLabel = null;
+
+    /**
+     * Removes the currently selected component from this subwindow's diagram.
+     */
+    public void deleteSelection(){
+        if (selectedLabel == null && getSelectedComponent() != null) { // Only delete if not active
+            //getSelectedComponent().deleteFrom(getDiagram());
+            deselectAll(); // Now deselect everything
+        }
+    }
+
+    /**
      * Display the currently active view in the given paintboard.
      *
      * @param paintBoard The paintboard on which should be drawn.

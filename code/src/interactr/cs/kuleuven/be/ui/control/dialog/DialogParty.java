@@ -16,17 +16,18 @@ import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
  */
 public class DialogParty extends DialogWindow {
 
-    /**
-     * Initialize this new party dialog with given party, diagram and party type.
-     *
-     * @param party The party to associate this dialog window with.
-     * @param diagram The diagram to associate this dialog window with.
-     * @param isActor True if this dialog window refers to an actor.
-     */
-    DialogParty(Party party, Diagram diagram, boolean isActor){
+    private static  final int width = 150, height = 100;
+
+    public DialogParty(Party party, Diagram diagram, boolean isActor){
         super(diagram);
         this.party = party;
-        this.isActor = isActor;
+        if(isActor)
+            actorButton.setActive(true);
+        else
+            objectButton.setActive(true);
+        this.instanceName = new TextField(party.getInstanceName(), "Instance name: ");
+        this.className = new TextField(party.getClassName(), "Class name: ");
+        this.setFrame(new Rectangle(0,0,width,height));
     }
 
     @Override
@@ -34,27 +35,23 @@ public class DialogParty extends DialogWindow {
         return new Rectangle(0, 0, 250, 200);
     }
 
-    /**
-     * Registers whether or not this dialog window refers to an actor.
-     */
-    private boolean isActor;
 
     @Override
     protected void displayView(PaintBoard paintBoard) {
-        // TODO Set state of control inside control? Eg. state of radio button == Enum.ON | Enum.OFF?
-        displayControl(paintBoard, actorButton, getFrame().getWidth() * 9/12, getFrame().getHeight()/2);
-        displayControl(paintBoard, objectButton,getFrame().getWidth() * 11/12, getFrame().getHeight()/2);
+        actorButton.displayControl(paintBoard, 10 * 9/12, height/2);
+        objectButton.displayControl(paintBoard, 10 * 11/12, height/2);
+
     }
 
     /**
      * Registers the radio buttons for this party dialog.
      */
-    private RadioButton actorButton = new RadioButton(), objectButton = new RadioButton();
+    private RadioButton actorButton = new RadioButton("Actor: "), objectButton = new RadioButton("Object: ");
 
     /**
      * Registers the text fields for this party dialog
      */
-    private TextField instanceName = new TextField(), className = new TextField();
+    private TextField instanceName , className;
 
     /**
      * The party of this dialog

@@ -10,6 +10,7 @@ import interactr.cs.kuleuven.be.ui.control.diagram.CommunicationView;
 import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 import interactr.cs.kuleuven.be.ui.control.diagram.SequenceView;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
+import interactr.cs.kuleuven.be.domain.DiagramComponent;
 
 /**
  * A class of diagram windows with a series of diagram views.
@@ -56,7 +57,7 @@ public class DiagramWindow extends SubWindow {
         return (views.size() == 0 ? null : views.get(0).getDiagram());
     }
 
-    @Override
+
     protected void setFrame(Rectangle frame) throws IllegalWindowFrameException {
         super.setFrame(frame);
         if (getViews() != null)
@@ -131,6 +132,10 @@ public class DiagramWindow extends SubWindow {
         for (DiagramView view : views)
             view.close();
     }
+
+    /**
+     * Returns the diagram component that is currently active in this diagram.
+     */
 
     @Override
     public CommandHandler nextHandler() {
