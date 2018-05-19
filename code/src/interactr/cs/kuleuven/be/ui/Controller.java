@@ -49,8 +49,9 @@ public class Controller {
      * Display all subwindows in this diagram controller.
      */
     public void displayAllSubWindows() {
-        for (int i=this.getSubWindows().size()-1 ; i>=0 ; i--) // Last window first
-            this.getSubWindows().get(i).display(getPaintBoard());
+        for (int i=getSubWindows().size()-1 ; i>=0 ; i--) // Last window first
+            if (!getSubWindows().get(i).isClosed())
+                getSubWindows().get(i).display(getPaintBoard());
     }
 
     /**

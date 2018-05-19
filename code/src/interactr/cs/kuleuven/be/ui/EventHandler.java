@@ -206,6 +206,10 @@ public class EventHandler {
             else
                 getController().processCommand(new AbortEditingCommand());
         }
+        else if (keyCode == KeyEvent.VK_DOWN)
+            getController().processCommand(new GoDownCommand());
+        else if (keyCode == KeyEvent.VK_UP)
+            getController().processCommand(new GoUpCommand());
         else if (keyCode == KeyEvent.VK_BACK_SPACE)
             getController().processCommand(new RemoveLastCharCommand());
         else if (keyCode == KeyEvent.VK_DELETE)

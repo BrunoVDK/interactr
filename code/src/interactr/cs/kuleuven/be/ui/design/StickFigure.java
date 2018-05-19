@@ -21,6 +21,7 @@ public class StickFigure extends Figure {
 
     @Override
     public void draw(PaintBoard paintBoard) {
+        super.draw(paintBoard);
         int manWidth = getWidth(), manHeight = getHeight() - PaintBoard.charHeight - 4;
         int headWidth = Math.min(getWidth(), manHeight/2) - 5;
         paintBoard.drawOval(getX() + (getWidth() - headWidth)/2, getY(), headWidth, headWidth);
@@ -40,7 +41,6 @@ public class StickFigure extends Figure {
                 getY() + manHeight,
                 getX() + manWidth/2,
                 getY() + manHeight - manWidth/2);
-        super.draw(paintBoard);
     }
 
     @Override

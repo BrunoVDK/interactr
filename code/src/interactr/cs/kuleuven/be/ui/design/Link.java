@@ -25,7 +25,7 @@ public class Link extends Model {
      * @param endX The end x coordinate for this new linke.
      * @param endY The end y coordinate for this new linke.
      */
-    public Link(int startX, int startY, int endX, int endY) {
+    private Link(int startX, int startY, int endX, int endY) {
         super("");
         setStartX(startX);
         setStartY(startY);

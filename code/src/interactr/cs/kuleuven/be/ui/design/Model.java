@@ -81,11 +81,26 @@ public class Model implements Cloneable {
     private String label;
 
     /**
+     * Sets the colour for this model to the given colour.
+     *
+     * @param colour The new colour for this model.
+     */
+    public void setColour(Colour colour) {
+        this.colour = colour;
+    }
+
+    /**
+     * The colour for this model.
+     */
+    private Colour colour = Colour.BLACK;
+
+    /**
      * Draw this model in the given paintboard.
      *
      * @param paintBoard The paint board on which to draw.
      */
     public void draw(PaintBoard paintBoard) {
+        paintBoard.setColour(this.colour);
         if (label != null)
             drawLabel(paintBoard);
     }

@@ -46,7 +46,6 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @return The same coordinates relative to this view's frame.
      */
     public Point getRelativeCoordinates(Point absoluteCoordinates) {
-        System.out.println(getFrame());
         return new Point(absoluteCoordinates.getX() - getFrame().getX(), absoluteCoordinates.getY() - getFrame().getY());
     }
 
@@ -107,16 +106,16 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      */
     public void display(PaintBoard paintBoard) {
         paintBoard.setColour(Colour.BLACK);
-        displayFigures(paintBoard);
+        displayParties(paintBoard);
         displayMessages(paintBoard);
     }
 
     /**
-     * Display the figures of the given diagram diagram in this view using the given paint board.
+     * Display the parties of the given diagram in this view using the given paint board.
      *
-     * @param paintBoard The paintboard to use when displaying the view.
+     * @param paintBoard The paintboard to use when displaying the parties.
      */
-    void displayFigures(PaintBoard paintBoard) {
+    void displayParties(PaintBoard paintBoard) {
         for (Party party : getDiagram().getParties())
             getFigureForParty(party).draw(paintBoard);
     }
@@ -124,13 +123,120 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
     /**
      * Display the messages of the given diagram diagram in this view using the given paintboard.
      *
-     * @param paintBoard The paintboard to use when displaying the view.
+     * @param paintBoard The paintboard to use when displaying the messages.
      */
     void displayMessages(PaintBoard paintBoard) {
         for (Message message : getDiagram().getMessages())
             if (message.activates(message.getReceiver()))
                 getLinkForMessage(message).draw(paintBoard);
     }
+
+    /**
+     * Selects the diagram component at given location, or null
+     *  if no component is selectable at that coordinate.
+     *
+     * @param x The x coordinate for the component to select.
+     * @param y The y coordinate for the component to select.
+     */
+    public void selectComponentAt(int x, int y) throws NoSuchComponentException {
+        for (Message message : getDiagram().getMessages())
+            if (getLinkForMessage(message).isLabelHit(x,y))
+                setSelectedComponent(message);
+        for (Party party : getDiagram().getParties())
+            if (getFigureForParty(party).isLabelHit(x,y))
+                setSelectedComponent(party);
+        throw new NoSuchComponentException();
+    }
+
+    /**
+     * Return true if and only if the current selection of this diagram view is active.
+     */
+    public boolean isEditing() {
+        return isEditing;
+    }
+
+    /**
+     * Sets whether or not the current selection is in edit mode.
+     *
+     * @param isEditing A flag denoting whether or not edit mode should be activated.
+     * @throws InvalidLabelException If the current edit session could not be aborted because the label is invalid.
+     */
+    public void setSelectionIsActive(boolean isEditing) throws InvalidLabelException {
+        if (!isEditing && !isValidSelectedLabel())
+            throw new InvalidLabelException();
+        this.isEditing = isEditing;
+    }
+
+    /**
+     * Registers whether or not the current selection is active.
+     */
+    private boolean isEditing;
+
+    /**
+     * Sets the label of the diagram component currently selected by this view.
+     *
+     * @param label The new label for the selected diagram component.
+     * @throws InvalidLabelException When the given label is not a valid one for the selected component.
+     */
+    public void setSelectedLabel(String label) throws InvalidLabelException {
+        if (getSelectedComponent() != null) {
+            selectedLabel = label;
+            selectedComponent.setLabel(label);
+        }
+    }
+
+    /**
+     * Checks whether or not the selected label is valid.
+     *
+     * @return True if and only if no component is currently selected or the component can have the given label as
+     *  its label.
+     */
+    private boolean isValidSelectedLabel() {
+        return (getSelectedComponent() == null || getSelectedComponent().canHaveAsLabel(getSelectedLabel()));
+    }
+
+    /**
+     * Returns the label for the active selection.
+     *
+     * @return The label for the active selection or an empty string if nothing is selected.
+     */
+    public String getSelectedLabel() {
+        return (selectedComponent == null ? selectedLabel : "");
+    }
+
+    /**
+     * Registers the label of the selected component.
+     */
+    private String selectedLabel = null;
+
+    /**
+     * Deselect all selected components in this diagram view.
+     */
+    public void deselectAll() {
+        selectedComponent = null;
+    }
+
+    /**
+     * Returns the diagram component selected by this view.
+     */
+    private DiagramComponent getSelectedComponent() {
+        return selectedComponent;
+    }
+
+    /**
+     * Sets the selected component of this diagram view to the given one.
+     *
+     * @param selectedComponent The new selected component of this diagram view.
+     */
+    private void setSelectedComponent(DiagramComponent selectedComponent) {
+        this.selectedComponent = selectedComponent;
+        setSelectedLabel("");
+    }
+
+    /**
+     * Registers the selected component for this diagram view.
+     */
+    private DiagramComponent selectedComponent = null;
 
     /**
      * Creates a new party at the given coordinates in this view's diagram.
@@ -143,9 +249,10 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
         if (getParty(x,y) != null)
             throw new InvalidAddPartyException();
         Party newParty = Party.createParty();
-        Rectangle figureBounds = PartyModeller.defaultModeller().generateFigure(newParty).getBounds();
-        setCoordinateForParty(newParty, new Point(x - figureBounds.getWidth()/2, y - figureBounds.getHeight()/2));
+        Rectangle bounds = PartyModeller.defaultModeller().generateFigure(newParty).getBounds();
+        setCoordinateForParty(newParty, new Point(x - bounds.getWidth()/2, y - bounds.getHeight()/2));
         this.getDiagram().addParty(newParty);
+        setSelectedComponent(newParty);
     }
 
     /**
@@ -163,25 +270,6 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
         }
         else
             throw new NoSuchPartyException(x, y);
-    }
-
-    /**
-     * Returns a selectable diagram component at given location, or null
-     *  if no component is selectable at that coordinate.
-     *
-     * @param x The x coordinate to look at.
-     * @param y The y coordinate to look at.
-     * @return The selectable diagram's component at given location in this view,
-     *  or null if no such component is visible at the given coordinate.
-     */
-    public DiagramComponent getSelectableComponent(int x, int y) {
-        for (Message message : getDiagram().getMessages())
-            if (getLinkForMessage(message).isLabelHit(x,y))
-                return message;
-        for (Party party : getDiagram().getParties())
-            if (getFigureForParty(party).isLabelHit(x,y))
-                return party;
-        return null;
     }
 
     /**
@@ -302,6 +390,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      */
     Link getLinkForMessage(Message message) {
         Link link = MessageModeller.defaultModeller().generateLink(message);
+        link.setLabel(getDiagram().getPrefix(message) + " " + getLabelOfComponent(message));
         Rectangle senderBounds = getFigureForParty(message.getSender()).getBounds();
         Rectangle receiverBounds = getFigureForParty(message.getReceiver()).getBounds();
         Point senderCoordinate = getCoordinateForParty(message.getSender());
@@ -310,7 +399,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
         link.setStartY(senderCoordinate.getY() + senderBounds.getHeight()/2);
         link.setEndX(receiverCoordinate.getX() + (senderCoordinate.getX() < receiverCoordinate.getX() ? 0 : receiverBounds.getWidth()));
         link.setEndY(receiverCoordinate.getY() + receiverBounds.getHeight()/2);
-        link.setLabel(getDiagram().getPrefix(message) + " " + message.getLabel());
+        link.setColour(getColourOfComponent(message));
         return link;
     }
 
@@ -322,11 +411,36 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      */
     Figure getFigureForParty(Party party) {
         Figure figure = PartyModeller.defaultModeller().generateFigure(party);
+        figure.setLabel(getLabelOfComponent(party));
         Point coordinate = getCoordinateForParty(party);
         figure.setX(coordinate.getX());
         figure.setY(coordinate.getY());
-        figure.setLabel(party.getLabel());
+        figure.setColour(getColourOfComponent(party));
         return figure;
+    }
+
+    /**
+     * Returns the label of the given component.
+     *
+     * @param component The component whose label is desired.
+     * @return The label of the component, or the selected label if the component is selected.
+     */
+    private String getLabelOfComponent(DiagramComponent component) {
+        if (component == getSelectedComponent())
+            return (selectedLabel + (isEditing() ? "|" : ""));
+        return component.getLabel();
+    }
+
+    /**
+     * Returns the colour to use when drawing the given component.
+     *
+     * @param component The component whose drawing colour is desired.
+     * @return The colour to be used for drawing the component.
+     */
+    private Colour getColourOfComponent(DiagramComponent component) {
+        if (component == getSelectedComponent())
+            return (isValidSelectedLabel() ? Colour.BLUE : Colour.RED);
+        return Colour.BLACK;
     }
 
     /**

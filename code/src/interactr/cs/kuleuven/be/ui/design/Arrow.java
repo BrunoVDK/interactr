@@ -12,9 +12,9 @@ public class Arrow extends Link {
 
     @Override
     public void draw(PaintBoard paintBoard) {
+        super.draw(paintBoard);
         drawLink(paintBoard);
         drawArrowHead(paintBoard);
-        super.draw(paintBoard);
     }
 
     /**

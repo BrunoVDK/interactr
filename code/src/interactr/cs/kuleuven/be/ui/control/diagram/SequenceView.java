@@ -36,8 +36,8 @@ public class SequenceView extends DiagramView {
     }
 
     @Override
-    void displayFigures(PaintBoard paintBoard) {
-        super.displayFigures(paintBoard);
+    void displayParties(PaintBoard paintBoard) {
+        super.displayParties(paintBoard);
         paintBoard.setColour(Colour.GRAY);
         for (Party party : getDiagram().getParties()) {
             Figure partyFigure = getFigureForParty(party);
