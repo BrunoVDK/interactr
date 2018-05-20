@@ -2,7 +2,7 @@ package interactr.cs.kuleuven.be.ui.control.dialog;
 
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.ui.control.DialogWindow;
-import interactr.cs.kuleuven.be.ui.control.diagram.MessageModeller;
+import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 
 /**
  * A class of visitors for creating dialogs for diagram components.
@@ -25,6 +25,16 @@ public class DialogCreator implements DiagramVisitor {
      */
 
     private final static DialogCreator defaultCreator = new DialogCreator();
+
+    /**
+     * Create a dialog for the given diagram view.
+     *
+     * @param view The view to create a dialog for.
+     * @return A dialog for the given view.
+     */
+    public DialogWindow createDialog(DiagramView view) {
+        return new DialogDiagramView(view);
+    }
 
     /**
      * Create a dialog for the given component.
@@ -60,12 +70,12 @@ public class DialogCreator implements DiagramVisitor {
 
     @Override
     public void visit(ResultMessage message) {
-
+        dialogWindow = new DialogResultMessage(this.diagram, message);
     }
 
     @Override
     public void visit(InvocationMessage message) {
-
+        dialogWindow = new DialogInvocationMessage(this.diagram, message);
     }
 
 }

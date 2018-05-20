@@ -44,7 +44,7 @@ public class DialogResultMessage extends DialogWindow {
 
     @Override
     protected Rectangle getDefaultFrame() {
-        return new Rectangle(0, 0, 150, 30);
+        return new Rectangle(0, 0, 150, 150);
     }
 
     @Override

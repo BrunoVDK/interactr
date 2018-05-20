@@ -22,7 +22,6 @@ public class DialogDiagramView extends DialogWindow {
     DialogDiagramView(DiagramView diagramView) {
         super(diagramView.getDiagram());
         this.diagramView = diagramView;
-
     }
 
     /**
@@ -44,7 +43,7 @@ public class DialogDiagramView extends DialogWindow {
 
     @Override
     protected Rectangle getDefaultFrame() {
-        return new Rectangle(0, 0, 150, 50);
+        return new Rectangle(0, 0, 150, 150);
     }
 
     @Override
