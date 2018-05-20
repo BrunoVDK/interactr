@@ -44,7 +44,5 @@ public class TextField extends Control {
     public void setLabelComponent(String labelComponent){
         this.labelComponent = labelComponent;
     }
-
-
-
+    
 }
