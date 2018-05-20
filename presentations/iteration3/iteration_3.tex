@@ -49,9 +49,9 @@
 	Interface \texttt{DiagramVisitor} can be implemented by various visitors in other subsystems.\\
 	Every \texttt{DiagramComponent} can accept such a visitor.\\
 	\vspace{0.5cm}
-	$\rightarrow$ makes it easy to add functionality to the domain layer without having to add code to the classes themselves (like UI code)\\
+	$\rightarrow$ makes it easy to add functionality to the domain layer without having to add code to the classes themselves (like UI-related code)\\
 	\vspace{0.5cm}
-	\small Example of visitors used in our UI layer : \texttt{DialogCreator} (makes dialog for a given diagram component without resorting to the use of \textit{instanceof})
+	\footnotesize Example of visitors used in our UI layer : \texttt{DialogCreator} (makes dialog for a given diagram component without resorting to the use of \textit{instanceof})
 	\end{center}
 \end{frame}
 
@@ -61,7 +61,7 @@
 	\vspace{0.5cm}
 	A diagram has a list of such observers that it notifies when a party is added, a label is edited, ...\\
 	\vspace{0.5cm}
-	\small We currently implement this interface in our classes representing dialog windows and diagram views, for synchronisation of, say, labels.
+	\footnotesize We currently implement this interface in our classes representing dialog windows and diagram views, for synchronisation of, say, labels.
 	\end{center}
 \end{frame}
 
@@ -88,7 +88,7 @@
 	The \texttt{Controller} keeps track of a list of \texttt{SubWindow}s.
 	\\\vspace{0.5cm} A \texttt{SubWindow} can be a \texttt{DiagramWindow} or a \texttt{DialogBox}.
 	\\\vspace{0.5cm} Each \texttt{SubWindow} has a frame.
-	\\\vspace{0.5cm} Each \texttt{SubWindow} is `\textit{activated}' by putting it at the front of the window list.
+	\\\vspace{0.5cm} \footnotesize Each \texttt{SubWindow} is `\textit{activated}' by putting it at the front of the window list.
 	\end{center}
 \end{frame}
 

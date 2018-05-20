@@ -2,8 +2,6 @@ package interactr.cs.kuleuven.be.ui.control;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.exceptions.IllegalWindowFrameException;
-import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
-import interactr.cs.kuleuven.be.exceptions.NoSuchComponentException;
 import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.command.Command;
@@ -12,7 +10,6 @@ import interactr.cs.kuleuven.be.ui.control.diagram.CommunicationView;
 import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 import interactr.cs.kuleuven.be.ui.control.diagram.SequenceView;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
-import interactr.cs.kuleuven.be.domain.DiagramComponent;
 
 /**
  * A class of diagram windows with a series of diagram views.
