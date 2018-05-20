@@ -31,8 +31,8 @@ public class DialogDiagramView extends DialogWindow {
 
     @Override
     protected void displayView(PaintBoard paintBoard) {
-        sequenceButton.display(paintBoard, getFrame().getX() + 10, getFrame().getY() + (getFrame().getHeight() * 1/3));
-        communicationButton.display(paintBoard,getFrame().getX() + 10, getFrame().getY() + (getFrame().getHeight() * 2/3));
+        sequenceButton.display(paintBoard, 10, (getFrame().getHeight() * 1/3));
+        communicationButton.display(paintBoard,10, (getFrame().getHeight() * 2/3));
     }
 
     /**
@@ -43,7 +43,7 @@ public class DialogDiagramView extends DialogWindow {
 
     @Override
     protected Rectangle getDefaultFrame() {
-        return new Rectangle(0, 0, 150, 150);
+        return new Rectangle(0, 0, 270, 150);
     }
 
     @Override

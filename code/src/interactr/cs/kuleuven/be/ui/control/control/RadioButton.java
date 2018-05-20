@@ -8,16 +8,21 @@ import interactr.cs.kuleuven.be.ui.PaintBoard;
  * @author Team 25
  * @version 1.0
  */
-public class RadioButton extends Control{
+public class RadioButton extends Control {
 
-    public RadioButton(String label){
+    /**
+     * Initialize this new radio button with given label.
+     *
+     * @param label The label to initialize the radio button with.
+     */
+    public RadioButton(String label) {
         this.label = label;
     }
 
     @Override
     public void display(PaintBoard paintBoard, int x, int y) {
-        paintBoard.drawString(label,x,paintBoard.charHeight + y);
-        paintBoard.drawOval(x + margeOfLabelAndControl ,y,diameter,diameter);
+        paintBoard.drawString(label, x,PaintBoard.charHeight + y);
+        paintBoard.drawOval(x + margeOfLabelAndControl, y, diameter, diameter);
         if(isActive())
             paintBoard.fillOval(x + margeOfLabelAndControl + 1 , y + 1, diameter -2, diameter -2);
     }
@@ -28,7 +33,7 @@ public class RadioButton extends Control{
     private String label;
 
     /**
-     * The diamater of the radio button
+     * The diameter of the radio button
      */
     private final int diameter = 10;
 

@@ -30,7 +30,7 @@ public class DialogResultMessage extends DialogWindow {
 
     @Override
     protected void displayView(PaintBoard paintBoard) {
-        componentLabel.display(paintBoard, getFrame().getX() + 10 , getFrame().getY() +( getFrame().getHeight() * 1/2));
+        componentLabel.display(paintBoard, 10 , ( getFrame().getHeight() * 1/2));
     }
 
     /**
@@ -44,7 +44,7 @@ public class DialogResultMessage extends DialogWindow {
 
     @Override
     protected Rectangle getDefaultFrame() {
-        return new Rectangle(0, 0, 150, 150);
+        return new Rectangle(0, 0, 270, 150);
     }
 
     @Override

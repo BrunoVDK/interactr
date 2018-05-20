@@ -37,13 +37,12 @@ public class DialogParty extends DialogWindow {
         return new Rectangle(0, 0, 150, 200);
     }
 
-
     @Override
     protected void displayView(PaintBoard paintBoard) {
-        actorButton.display(paintBoard, getFrame().getX() + 10, getFrame().getY() + height * 1/5);
-        objectButton.display(paintBoard, getFrame().getX() + 10 , getFrame().getY() + height * 2/5);
-        instanceName.display(paintBoard,getFrame().getX() + 10   , getFrame().getY() + height * 3/5 );
-        className.display(paintBoard, getFrame().getX() + 10, getFrame().getY() + height * 4/5);
+        actorButton.display(paintBoard, 10, height * 1/5);
+        objectButton.display(paintBoard, 10 , height * 2/5);
+        instanceName.display(paintBoard,10   , height * 3/5 );
+        className.display(paintBoard, 10, height * 4/5);
 
     }
 

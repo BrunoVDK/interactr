@@ -31,13 +31,13 @@ public class DialogInvocationMessage extends DialogWindow {
 
     @Override
     protected void displayView(PaintBoard paintBoard) {
-        methodName.display(paintBoard, getFrame().getX() + 10, getFrame().getY() + (getFrame().getHeight() * 1/12 ));
-        listBox.display(paintBoard, getFrame().getX() + 10, getFrame().getY() + (getFrame().getHeight() * 2/12 ));
-        buttonUp.display(paintBoard,getFrame().getX() + (getFrame().getWidth() * 12/15), getFrame().getY() + (getFrame().getHeight() * 4/12 ));
-        buttonDown.display(paintBoard,getFrame().getX() + (getFrame().getWidth() * 12/15), getFrame().getY() + (getFrame().getHeight() * 8/12 ));
+        methodName.display(paintBoard, 10, (getFrame().getHeight() * 1/12 ));
+        listBox.display(paintBoard, 10, (getFrame().getHeight() * 2/12 ));
+        buttonUp.display(paintBoard,(getFrame().getWidth() * 12/15), (getFrame().getHeight() * 4/12 ));
+        buttonDown.display(paintBoard,(getFrame().getWidth() * 12/15), (getFrame().getHeight() * 8/12 ));
 
-        buttonPlus.display(paintBoard,getFrame().getX() +  (getFrame().getWidth() * 1/3), getFrame().getY() + (getFrame().getHeight() * 10/12 ));
-        buttonMinus.display(paintBoard,getFrame().getX() +  (getFrame().getWidth() * 2/3), getFrame().getY() + (getFrame().getHeight() * 10/12 ));
+        buttonPlus.display(paintBoard,(getFrame().getWidth() * 1/3), (getFrame().getHeight() * 10/12 ));
+        buttonMinus.display(paintBoard,(getFrame().getWidth() * 2/3), (getFrame().getHeight() * 10/12 ));
     }
 
     private TextField methodName;
@@ -71,7 +71,7 @@ public class DialogInvocationMessage extends DialogWindow {
 
     @Override
     protected Rectangle getDefaultFrame() {
-        return new Rectangle(0, 0, 150, 300);
+        return new Rectangle(0, 0, 270, 300);
     }
 
     @Override
