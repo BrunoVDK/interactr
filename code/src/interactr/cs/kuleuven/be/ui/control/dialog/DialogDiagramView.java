@@ -2,6 +2,7 @@ package interactr.cs.kuleuven.be.ui.control.dialog;
 
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.control.DialogWindow;
+import interactr.cs.kuleuven.be.ui.control.control.RadioButton;
 import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
@@ -21,6 +22,7 @@ public class DialogDiagramView extends DialogWindow {
     DialogDiagramView(DiagramView diagramView) {
         super(diagramView.getDiagram());
         this.diagramView = diagramView;
+
     }
 
     /**
@@ -30,12 +32,19 @@ public class DialogDiagramView extends DialogWindow {
 
     @Override
     protected void displayView(PaintBoard paintBoard) {
-
+        sequenceButton.display(paintBoard, getFrame().getX() + 10, getFrame().getY() + (getFrame().getHeight() * 1/3));
+        communicationButton.display(paintBoard,getFrame().getX() + 10, getFrame().getY() + (getFrame().getHeight() * 2/3));
     }
+
+    /**
+     * Registers the radio buttons for this party dialog.
+     */
+    private RadioButton sequenceButton = new RadioButton("Sequence View: "), communicationButton = new RadioButton("Communication View: ");
+
 
     @Override
     protected Rectangle getDefaultFrame() {
-        return null;
+        return new Rectangle(0, 0, 150, 50);
     }
 
     @Override

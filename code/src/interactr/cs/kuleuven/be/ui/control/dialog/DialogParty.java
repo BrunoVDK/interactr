@@ -16,15 +16,17 @@ import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
  */
 public class DialogParty extends DialogWindow {
 
-    private static  final int width = 150, height = 100;
+    private static  final int width = 150, height = 200;
 
     DialogParty(Party party, Diagram diagram, boolean isActor){
         super(diagram);
         this.party = party;
+
         if(isActor)
             actorButton.setActive(true);
         else
             objectButton.setActive(true);
+
         this.instanceName = new TextField(party.getInstanceName(), "Instance name: ");
         this.className = new TextField(party.getClassName(), "Class name: ");
         this.setFrame(new Rectangle(0,0,width,height));
@@ -32,14 +34,16 @@ public class DialogParty extends DialogWindow {
 
     @Override
     protected Rectangle getDefaultFrame() {
-        return new Rectangle(0, 0, 250, 200);
+        return new Rectangle(0, 0, 150, 200);
     }
 
 
     @Override
     protected void displayView(PaintBoard paintBoard) {
-        actorButton.display(paintBoard, 10 * 9/12, height/2);
-        objectButton.display(paintBoard, 10 * 11/12, height/2);
+        actorButton.display(paintBoard, getFrame().getX() + 10, getFrame().getY() + height * 1/5);
+        objectButton.display(paintBoard, getFrame().getX() + 10 , getFrame().getY() + height * 2/5);
+        instanceName.display(paintBoard,getFrame().getX() + 10   , getFrame().getY() + height * 3/5 );
+        className.display(paintBoard, getFrame().getX() + 10, getFrame().getY() + height * 4/5);
 
     }
 

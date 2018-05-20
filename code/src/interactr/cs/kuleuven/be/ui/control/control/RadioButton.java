@@ -22,8 +22,14 @@ public class RadioButton extends Control{
             paintBoard.fillOval(x + margeOfLabelAndControl + 1 , y + 1, diameter -2, diameter -2);
     }
 
+    /**
+     * The label of the button itself, the text it shows before the button
+     */
     private String label;
 
+    /**
+     * The diamater of the radio button
+     */
     private final int diameter = 10;
 
 }

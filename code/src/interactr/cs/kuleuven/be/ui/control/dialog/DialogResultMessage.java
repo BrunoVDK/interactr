@@ -4,6 +4,7 @@ import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.ResultMessage;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.control.DialogWindow;
+import interactr.cs.kuleuven.be.ui.control.control.TextField;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
@@ -24,13 +25,18 @@ public class DialogResultMessage extends DialogWindow {
     DialogResultMessage(Diagram diagram, ResultMessage message) {
         super(diagram);
         this.message = message;
+        this.componentLabel = new TextField(message.getLabel(), "Label: ");
     }
 
     @Override
     protected void displayView(PaintBoard paintBoard) {
-
+        componentLabel.display(paintBoard, getFrame().getX() + 10 , getFrame().getY() +( getFrame().getHeight() * 1/2));
     }
 
+    /**
+     * Registers the text fields for this party dialog
+     */
+    private TextField componentLabel;
     /**
      * Registers the invocation message associated with this dialog window.
      */
@@ -38,7 +44,7 @@ public class DialogResultMessage extends DialogWindow {
 
     @Override
     protected Rectangle getDefaultFrame() {
-        return null;
+        return new Rectangle(0, 0, 150, 30);
     }
 
     @Override
