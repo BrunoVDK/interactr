@@ -28,6 +28,8 @@ public class DialogDiagram extends DialogWindow {
         for (int i=0 ; i<diagramWindow.getNbViews() ; i++)
             buttons.add(new RadioButton(diagramWindow.getViewAt(i).toString()));
         setFrame(getDefaultFrame());
+        if (buttons.size() > 0)
+            setFocusedControl(buttons.get(0));
     }
 
     /**
@@ -49,7 +51,7 @@ public class DialogDiagram extends DialogWindow {
         int i = 0;
         for (RadioButton button : buttons) {
             button.setActive(diagramWindow.getActiveView() == diagramWindow.getViewAt(i));
-            button.display(paintBoard, 10, TITLE_BAR_HEIGHT - 3 + 30 * i++);
+            display(paintBoard, button, 10,TITLE_BAR_HEIGHT - 3 + 30 * i++);
         }
     }
 
@@ -57,6 +59,11 @@ public class DialogDiagram extends DialogWindow {
      * Registers the radio buttons for this party dialog.
      */
     private ArrayList<RadioButton> buttons = new ArrayList<>();
+
+    @Override
+    public void focusNext() {
+        setFocusedControl(buttons.get((buttons.indexOf(getFocusedControl()) + 1) % buttons.size()));
+    }
 
     @Override
     protected Rectangle getDefaultFrame() {

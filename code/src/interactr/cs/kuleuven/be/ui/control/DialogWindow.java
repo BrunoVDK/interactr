@@ -51,6 +51,13 @@ public abstract class DialogWindow extends SubWindow {
     }
 
     /**
+     * Returns the focused control for this dialog window.
+     */
+    protected Control getFocusedControl() {
+        return focusedControl;
+    }
+
+    /**
      * Sets the focused control to the given one.
      *
      * @param control The control to focus on.
@@ -58,6 +65,11 @@ public abstract class DialogWindow extends SubWindow {
     protected void setFocusedControl(Control control) {
         focusedControl = control;
     }
+
+    /**
+     * Focus on the next control.
+     */
+    public void focusNext() {}
 
     /**
      * Registers the control focused on by this dialog window.
