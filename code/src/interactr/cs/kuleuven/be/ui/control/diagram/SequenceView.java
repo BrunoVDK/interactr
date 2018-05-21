@@ -209,7 +209,7 @@ public class SequenceView extends DiagramView {
 
     @Override
     public String toString() {
-        return super.toString() + " - Sequence View";
+        return "Sequence View";
     }
 
 }

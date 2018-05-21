@@ -21,10 +21,10 @@ public class RadioButton extends Control {
 
     @Override
     public void display(PaintBoard paintBoard, int x, int y) {
-        paintBoard.drawString(label, x,PaintBoard.charHeight + y);
-        paintBoard.drawOval(x + margeOfLabelAndControl, y, diameter, diameter);
-        if(isActive())
-            paintBoard.fillOval(x + margeOfLabelAndControl + 1 , y + 1, diameter -2, diameter -2);
+        paintBoard.drawString(label, x + 50, y);
+        paintBoard.drawOval(x + 15, y + 2 - PaintBoard.charHeight, getDiameter(), getDiameter());
+        if (isActive())
+            paintBoard.fillOval(x + 16 , y + 3 - PaintBoard.charHeight, getDiameter() - 2, getDiameter() - 2);
     }
 
     /**
@@ -33,8 +33,10 @@ public class RadioButton extends Control {
     private String label;
 
     /**
-     * The diameter of the radio button
+     * Returns the diameter of the radio button
      */
-    private final int diameter = 10;
+    private int getDiameter() {
+        return 10;
+    }
 
 }

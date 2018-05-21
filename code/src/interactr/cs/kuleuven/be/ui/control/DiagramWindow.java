@@ -34,7 +34,7 @@ public class DiagramWindow extends SubWindow {
      * @param diagramWindow The subwindow that is to be duplicated by this subwindow.
      */
     public DiagramWindow(DiagramWindow diagramWindow) {
-         super(diagramWindow);
+         super(diagramWindow, null);
          if (diagramWindow == null || diagramWindow.getDiagram() == null) {
             Diagram adoptedDiagram = new Diagram();
             views = views.plus(new SequenceView(adoptedDiagram, getViewFrame()));
@@ -56,7 +56,6 @@ public class DiagramWindow extends SubWindow {
         return (views.size() == 0 ? null : views.get(0).getDiagram());
     }
 
-
     protected void setFrame(Rectangle frame) throws IllegalWindowFrameException {
         super.setFrame(frame);
         if (getViews() != null)
@@ -77,7 +76,7 @@ public class DiagramWindow extends SubWindow {
      * @return The title of this subwindow.
      */
     public String getTitle() {
-        return getActiveView().toString();
+        return getActiveView().toString() + " - Diagram " + getDiagram().getSequenceNumber();
     }
 
     /**
@@ -87,6 +86,25 @@ public class DiagramWindow extends SubWindow {
      */
     public DiagramView getActiveView() {
         return getViews().get(activeViewIndex);
+    }
+
+    /**
+     * Returns the number of diagram views for this diagram window.
+     *
+     * @return The number of diagram views this diagram window displays.
+     */
+    public int getNbViews() {
+        return getViews().size();
+    }
+
+    /**
+     * Returns the diagram view at the given index.
+     *
+     * @param index The index of the diagram view.
+     * @return The diagram view at the given index.
+     */
+    public DiagramView getViewAt(int index) {
+        return getViews().get(index);
     }
 
     /**

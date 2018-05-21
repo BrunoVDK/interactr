@@ -20,18 +20,18 @@ public abstract class SubWindow implements CommandHandler {
      * Create a new subwindow with a default frame of size 400x400.
      */
     SubWindow() {
-        this(null);
+        this(null, null);
     }
 
     /**
      * Create a new subwindow as a duplicate of the given subwindow.
-     *  If no subwindow is given, a default frame of size 400x400 is used.
      *
      * @param subWindow The subwindow that is to be duplicated by this subwindow.
+     * @param frame The frame to initialize this new subwindow with. If null, a default frame size of 400x400 is used.
      */
-    SubWindow(SubWindow subWindow) {
+    SubWindow(SubWindow subWindow, Rectangle frame) {
         if (subWindow == null)
-            setFrame(new Rectangle(0, 0, 400, 400));
+            setFrame(frame == null ? new Rectangle(0, 0, 400, 400) : frame);
         else
             setFrame(new Rectangle(0, 0, subWindow.getFrame().getWidth(), subWindow.getFrame().getHeight()));
     }
@@ -68,7 +68,7 @@ public abstract class SubWindow implements CommandHandler {
      * @return True if and only if the given frame's width and height are large enough.
      */
     protected boolean canHaveAsFrame(Rectangle frame) {
-        return (frame.getWidth() > CLOSE_BUTTON_SIZE + 10 && frame.getHeight() > TITLE_BAR_HEIGHT + 80);
+        return (frame.getWidth() > CLOSE_BUTTON_SIZE + 10 && frame.getHeight() > TITLE_BAR_HEIGHT + 50);
     }
 
     /**
@@ -132,7 +132,7 @@ public abstract class SubWindow implements CommandHandler {
     /**
      * The frame of this subwindow.
      */
-    private Rectangle frame;
+    protected Rectangle frame;
 
     /**
      * Display the currently active view in the given paintboard.
@@ -242,7 +242,7 @@ public abstract class SubWindow implements CommandHandler {
     /**
      * The height of a subwindow's title bar.
      */
-    private final static int TITLE_BAR_HEIGHT = 23;
+    protected final static int TITLE_BAR_HEIGHT = 23;
 
     /**
      * The size of a subwindow's close button. Should be smaller than the title bar height.

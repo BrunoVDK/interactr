@@ -25,7 +25,7 @@ public abstract class DialogWindow extends SubWindow {
         if (diagram == null)
             throw new IllegalArgumentException("Diagram cannot be null.");
         this.diagram = diagram;
-        this.setFrame(getDefaultFrame());
+        this.frame = getDefaultFrame();
     }
 
     @Override
@@ -65,13 +65,6 @@ public abstract class DialogWindow extends SubWindow {
     private Control focusedControl = null;
 
     /**
-     * Returns the default frame for this dialog window.
-     *
-     * @return The default frame for this dialog window.
-     */
-    protected abstract Rectangle getDefaultFrame();
-
-    /**
      * Returns the diagram associated with this dialog.
      */
     public Diagram getDiagram() {
@@ -82,6 +75,13 @@ public abstract class DialogWindow extends SubWindow {
      * Registers the diagram associated with this dialog.
      */
     private Diagram diagram;
+
+    /**
+     * Returns the default frame for this dialog window.
+     *
+     * @return The default frame for this dialog window.
+     */
+    protected abstract Rectangle getDefaultFrame();
 
     @Override
     public void executeCommand(Command command) throws CommandNotProcessedException {
