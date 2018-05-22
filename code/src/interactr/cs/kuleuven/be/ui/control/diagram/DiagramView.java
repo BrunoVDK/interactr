@@ -58,7 +58,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
         boolean widthChanged = this.frame.getWidth() != frame.getWidth(), heightChanged = this.frame.getHeight() != frame.getHeight();
         if (widthChanged || heightChanged) {
             for (Party party : getDiagram().getParties()) {
-                Point coordinate = getCoordinateForParty(party);
+                Point coordinate = getCoordinate(party);
                 setCoordinateForParty(party, new Point(
                         coordinate.getX() + (widthChanged ? this.frame.getX() - frame.getX() : 0),
                         coordinate.getY() + (heightChanged ? this.frame.getY() - frame.getY() : 0)));
@@ -117,8 +117,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      */
     void displayParties(PaintBoard paintBoard) {
         for (Party party : getDiagram().getParties()) {
-            Figure figure = getFigureForParty(party);
-            figure.draw(paintBoard);
+            getFigureForParty(party).draw(paintBoard);
         }
     }
 
@@ -243,6 +242,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
     public void deleteSelectedComponent() {
         if (getSelectedComponent() != null)
             getSelectedComponent().deleteFrom(getDiagram());
+        setSelectedComponent(null);
     }
 
     /**
@@ -257,7 +257,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      *
      * @param component The new selected component of this diagram view.
      */
-    public void setSelectedComponent(DiagramComponent component) {
+    void setSelectedComponent(DiagramComponent component) {
         this.selectedComponent = component;
     }
 
@@ -286,7 +286,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      */
     public void addParty(int x, int y) throws InvalidAddPartyException {
         if (isEditing()) throw new IllegalOperationException();
-        if (getParty(x,y,true) != null) throw new InvalidAddPartyException();
+        if (getParty(x, y,true) != null) throw new InvalidAddPartyException();
         Party newParty = Party.createParty();
         Rectangle bounds = PartyModeller.defaultModeller().generateFigure(newParty).getBounds();
         setCoordinateForParty(newParty, new Point(x - bounds.getWidth()/2, y - bounds.getHeight()/2));
@@ -431,16 +431,16 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @param message The message for which a link is desired. Cannot be null.
      * @return A link representing the given message.
      */
-    Link getLinkForMessage(Message message) {
-        Link link = MessageModeller.defaultModeller().generateLink(message);
+    Line getLinkForMessage(Message message) {
+        Line link = MessageModeller.defaultModeller().generateLink(message);
         Rectangle senderBounds = getFigureForParty(message.getSender()).getBounds();
         Rectangle receiverBounds = getFigureForParty(message.getReceiver()).getBounds();
-        Point senderCoordinate = getCoordinateForParty(message.getSender());
-        Point receiverCoordinate = getCoordinateForParty(message.getReceiver());
-        link.setStartX(senderCoordinate.getX() + (senderCoordinate.getX() < receiverCoordinate.getX() ? senderBounds.getWidth() : 0));
-        link.setStartY(senderCoordinate.getY() + senderBounds.getHeight()/2);
-        link.setEndX(receiverCoordinate.getX() + (senderCoordinate.getX() < receiverCoordinate.getX() ? 0 : receiverBounds.getWidth()));
-        link.setEndY(receiverCoordinate.getY() + receiverBounds.getHeight()/2);
+        Point senderCoordinate = getCoordinate(message.getSender());
+        Point receiverCoordinate = getCoordinate(message.getReceiver());
+        link.getCoordinates().setX(senderCoordinate.getX() + (senderCoordinate.getX() < receiverCoordinate.getX() ? senderBounds.getWidth() : 0));
+        link.getCoordinates().setY(senderCoordinate.getY() + senderBounds.getHeight()/2);
+        link.getEndCoordinates().setX(receiverCoordinate.getX() + (senderCoordinate.getX() < receiverCoordinate.getX() ? 0 : receiverBounds.getWidth()));
+        link.getEndCoordinates().setY(receiverCoordinate.getY() + receiverBounds.getHeight()/2);
         link.setColour(getColourOfComponent(message));
         link.setLabel(getDiagram().getPrefix(message) + " " + getLabelOfComponent(message));
         return link;
@@ -454,9 +454,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      */
     Figure getFigureForParty(Party party) {
         Figure figure = PartyModeller.defaultModeller().generateFigure(party);
-        Point coordinate = getCoordinateForParty(party);
-        figure.setX(coordinate.getX());
-        figure.setY(coordinate.getY());
+        figure.setCoordinates(getCoordinate(party));
         figure.setColour(getColourOfComponent(party));
         figure.setLabel(getLabelOfComponent(party));
         return figure;
@@ -468,7 +466,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @param component The component whose label is desired.
      * @return The label of the component, or the selected label if the component is selected.
      */
-    String getLabelOfComponent(DiagramComponent component) {
+    protected String getLabelOfComponent(DiagramComponent component) {
         if (component == getSelectedComponent() && isEditing())
             return (selectedLabel + (isEditing() ? "|" : ""));
         return component.getLabel();
@@ -480,7 +478,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @param component The component whose drawing colour is desired.
      * @return The colour to be used for drawing the component.
      */
-    Colour getColourOfComponent(DiagramComponent component) {
+    protected Colour getColourOfComponent(DiagramComponent component) {
         if (component == getSelectedComponent())
             return (isValidSelectedLabel() || !isEditing() ? Colour.BLUE : Colour.RED);
         return Colour.BLACK;
@@ -509,12 +507,22 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
     }
 
     /**
+     * Returns the start coordinate for the given message or a default coordinate if none was registered.
+     *
+     * @param message The message whose coordinate is desired.
+     * @return The coordinate for the given party.
+     */
+    Point getCoordinate(Message message) {
+        return null;
+    }
+
+    /**
      * Returns the coordinate for the given party or a default coordinate if none was registered.
      *
      * @param party The party whose coordinate is desired.
      * @return The coordinate for the given party.
      */
-    Point getCoordinateForParty(Party party) {
+    Point getCoordinate(Party party) {
         if (partyCoordinates.get(party) == null)
             setCoordinateForParty(party, new Point(5,5));
         return partyCoordinates.get(party);
@@ -582,7 +590,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
             clone = (DiagramView)super.clone();
             clone.setDiagram(getDiagram());
             for (Party party : partyCoordinates.keySet())
-                clone.setCoordinateForParty(party, getCoordinateForParty(party));
+                clone.setCoordinateForParty(party, getCoordinate(party));
         }
         catch (Exception e) {throw new RuntimeException("Failed to clone diagram view." + e.getClass().toString());}
         return clone;

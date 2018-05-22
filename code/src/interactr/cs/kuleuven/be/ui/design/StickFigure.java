@@ -12,35 +12,22 @@ import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 public class StickFigure extends Figure {
 
     /**
-     * Initialize this new stick figure with zero coordinates, a width of 30,
+     * Registers default values for the width/height of stick figures.
+     */
+    private static int defaultWidth = 46, defaultHeight = 65;
+
+    /**
+     * Initialize this new stick figure with a width of 30,
      *  a height of 65 and an empty label.
      */
     public StickFigure() {
-        super(0, 0, 45, 65);
-    }
-
-    @Override
-    public void draw(PaintBoard paintBoard) {
-        super.draw(paintBoard);
-        int manWidth = getWidth(), manHeight = getHeight() - PaintBoard.charHeight - 4;
-        int headWidth = Math.min(getWidth(), manHeight/2) - 5;
-        paintBoard.drawOval(getX() + (getWidth() - headWidth)/2, getY(), headWidth, headWidth);
-        paintBoard.drawLine(getX(),
-                getY() + manHeight/2,
-                getX() + manWidth,
-                getY() + manHeight/2);
-        paintBoard.drawLine(getX() + manWidth/2,
-                getY() + manHeight/2,
-                getX() + manWidth/2,
-                getY() + manHeight - manWidth/2);
-        paintBoard.drawLine(getX(),
-                getY() + manHeight,
-                getX() + manWidth/2,
-                getY() + manHeight - manWidth/2);
-        paintBoard.drawLine(getX() + manWidth,
-                getY() + manHeight,
-                getX() + manWidth/2,
-                getY() + manHeight - manWidth/2);
+        super(defaultWidth, defaultHeight);
+        int manHeight = 61 - PaintBoard.charHeight, headWidth = Math.min(defaultWidth, manHeight/2) - 5;
+        add(new Circle((defaultWidth - headWidth)/2, 0, Math.min(45, manHeight/2) - 5));
+        add(new Line(0, manHeight/2, defaultWidth, manHeight/2));
+        add(new Line(defaultWidth/2, manHeight/2, defaultWidth/2, manHeight - defaultWidth/2));
+        add(new Line(0, manHeight, defaultWidth/2, manHeight - defaultWidth/2));
+        add(new Line(defaultWidth, manHeight, defaultWidth/2, manHeight - defaultWidth/2));
     }
 
     @Override

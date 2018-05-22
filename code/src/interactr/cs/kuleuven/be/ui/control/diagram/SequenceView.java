@@ -38,9 +38,10 @@ public class SequenceView extends DiagramView {
         paintBoard.setColour(Colour.GRAY);
         for (Party party : getDiagram().getParties()) {
             Figure partyFigure = getFigureForParty(party);
-            paintBoard.drawLine(partyFigure.getX() + partyFigure.getWidth() / 2,
+            Point partyCoordinates = getCoordinate(party);
+            paintBoard.drawLine(partyCoordinates.getX() + partyFigure.getWidth() / 2,
                     PARTY_ROW_HEIGHT - 15,
-                    partyFigure.getX() + partyFigure.getWidth() / 2,
+                    partyCoordinates.getX() + partyFigure.getWidth() / 2,
                     getFrame().getHeight());
         }
         paintBoard.setColour(Colour.BLACK);
@@ -52,7 +53,6 @@ public class SequenceView extends DiagramView {
         HashMap<Party, Integer> activations = new HashMap<>();
         for (int i=0 ; i<getDiagram().getNbMessages() ; i++) {
             Message message = getDiagram().getMessageAtIndex(i);
-            Link link = getLinkForMessage(message);
             Integer associatedIndex = getDiagram().getIndexOfAssociatedMessage(i);
             Integer senderActivations = (activations.get(message.getSender()) == null ? 0 : activations.get(message.getSender()));
             Integer receiverActivations = (activations.get(message.getReceiver()) == null ? 0 : activations.get(message.getReceiver()));
@@ -65,18 +65,13 @@ public class SequenceView extends DiagramView {
                 receiverActivations++;
             }
             else {
-                if (message.getReceiver() == getDiagram().getInitiator() && receiverActivations == 1) {
+                if (message.getReceiver() == getDiagram().getInitiator() && receiverActivations == 1)
                     receiverActivations = 0;
-                    link.setEndX(link.getEndX() + ACTIVATION_BAR_WIDTH/2);
-                }
-                else link.setStartX(link.getStartX() + ACTIVATION_BAR_WIDTH/2);
                 senderActivations--;
             }
             activations.put(message.getSender(), senderActivations);
             activations.put(message.getReceiver(), receiverActivations);
-            link.setStartX(link.getStartX() + senderActivations * ACTIVATION_BAR_WIDTH/2);
-            link.setEndX(link.getEndX() + receiverActivations * ACTIVATION_BAR_WIDTH/2);
-            link.draw(paintBoard);
+            getLinkForMessage(message, senderActivations, receiverActivations).draw(paintBoard);
         }
     }
 
@@ -91,7 +86,7 @@ public class SequenceView extends DiagramView {
      */
     private void drawActivationBar(PaintBoard paintBoard, Party party, int indentation, int start, int end) {
         Figure figure = getFigureForParty(party);
-        drawActivationBar(paintBoard, figure.getX() + figure.getWidth()/2 + indentation * ACTIVATION_BAR_WIDTH/2, start, end);
+        drawActivationBar(paintBoard, getCoordinate(party).getX() + figure.getWidth()/2 + indentation * ACTIVATION_BAR_WIDTH/2, start, end);
     }
 
     /**
@@ -129,8 +124,8 @@ public class SequenceView extends DiagramView {
     }
 
     @Override
-    Point getCoordinateForParty(Party party) {
-        return new Point(super.getCoordinateForParty(party).getX(), 5);
+    Point getCoordinate(Party party) {
+        return new Point(super.getCoordinate(party).getX(), 5);
     }
 
     @Override
@@ -141,8 +136,8 @@ public class SequenceView extends DiagramView {
             return false;
         if (Math.min(fromY, toY) < PARTY_ROW_HEIGHT + diagram.getNbMessages() * MESSAGE_ROW_HEIGHT) {
             for (Message message : diagram.getMessages()) {
-                Link messageLink = getLinkForMessage(message);
-                if (Math.abs(messageLink.getStartY() - fromY) < 4 || Math.abs(messageLink.getEndY() - fromY) < 4)
+                int messageY = getYForMessage(message);
+                if (Math.abs(messageY - fromY) < 4 || Math.abs(messageY - fromY) < 4)
                     return false;
             }
         }
@@ -168,25 +163,48 @@ public class SequenceView extends DiagramView {
     @Override
     int getMessageInsertionIndex(int fromX, int fromY, int toX, int toY) {
         for (int i=0 ; i<getDiagram().getNbMessages() ; i++) {
-            Link link = getLinkForMessage(getDiagram().getMessageAtIndex(i));
-            if (link.getStartY() > fromY || link.getEndY() > fromY)
+            int messageY = getYForMessage(getDiagram().getMessageAtIndex(i));
+            if (messageY > fromY || messageY > fromY)
                 return i;
         }
         return getDiagram().getNbMessages();
     }
 
+    /**
+     * Returns the y coordinate where the given message is drawn at.
+     *
+     * @param message The message whose y coordinate is desired.
+     * @return The y coordinate where the given message is drawn at in this sequence view.
+     */
+    private int getYForMessage(Message message) {
+        return PARTY_ROW_HEIGHT + MESSAGE_ROW_HEIGHT/2 + MESSAGE_ROW_HEIGHT * getDiagram().getIndexOfMessage(message);
+    }
+
     @Override
-    Link getLinkForMessage(Message message) {
-        Link link = MessageModeller.defaultModeller().generateLink(message);
+    Line getLinkForMessage(Message message) {
+        return getLinkForMessage(message, 0, 0);
+    }
+
+    /**
+     * Generate a link for the given message with given activation data.
+     *
+     * @param message The message to generate a link for.
+     * @param receiverActivations The current # of activations for the message's receiver.
+     * @param senderActivations The current # of activations for the message's sender.
+     * @return A link with correct coordinates for drawing the given message in this sequence view.
+     */
+    private Line getLinkForMessage(Message message, int receiverActivations, int senderActivations) {
+        Line link = MessageModeller.defaultModeller().generateLink(message);
         int rowY = PARTY_ROW_HEIGHT + MESSAGE_ROW_HEIGHT/2 + getDiagram().getIndexOfMessage(message) * MESSAGE_ROW_HEIGHT;
-        link.setStartY(rowY);
-        link.setEndY(rowY);
-        link.setStartX(getFigureForParty(message.getSender()).getCenter().getX());
-        link.setEndX(getFigureForParty(message.getReceiver()).getCenter().getX());
-        if (link.getStartX() > link.getEndX())
-            link.setStartX(link.getStartX() - ACTIVATION_BAR_WIDTH);
-        else
-            link.setEndX(link.getEndX() - ACTIVATION_BAR_WIDTH);
+        int figureWidth = getFigureForParty(message.getReceiver()).getWidth();
+        link.getCoordinates().setY(rowY);
+        link.getEndCoordinates().setY(rowY);
+        link.getCoordinates().setX(getCoordinate(message.getSender()).getX() + figureWidth/2);
+        link.getEndCoordinates().setX(getCoordinate(message.getReceiver()).getX() + figureWidth/2);
+        boolean right = link.getCoordinates().getX() < link.getEndCoordinates().getX();
+        int senderShift = senderActivations * ACTIVATION_BAR_WIDTH/2, receiverShift = receiverActivations * ACTIVATION_BAR_WIDTH/2;
+        link.getCoordinates().setX(link.getCoordinates().getX() + (right ? senderShift : -senderShift));
+        link.getEndCoordinates().setX(link.getEndCoordinates().getX() + (right ? -receiverShift : receiverShift));
         link.setLabel(getLabelOfComponent(message));
         link.setColour(getColourOfComponent(message));
         return link;

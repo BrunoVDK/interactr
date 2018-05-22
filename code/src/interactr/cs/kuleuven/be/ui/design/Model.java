@@ -1,6 +1,8 @@
 package interactr.cs.kuleuven.be.ui.design;
 
+import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.geometry.Point;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
@@ -9,19 +11,55 @@ import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
  * @author Team 25
  * @version 1.0
  */
-public class Model implements Cloneable {
+public abstract class Model {
 
     /**
      * Initialize this new model with given label.
      *
      * @param label The label to initialize this model with.
-     * @throws IllegalArgumentException If the given label is null.
      */
-    public Model(String label) {
-        if (label == null)
-            throw new IllegalArgumentException("Null label given for new model.");
+    Model(String label) {
         setLabel(label);
     }
+
+    /**
+     * Returns the x coordinate of this model.
+     */
+    public int getX() {
+        return coordinates.getX();
+    }
+
+    /**
+     * Returns the y coordinate of this model.
+     */
+    public int getY() {
+        return coordinates.getY();
+    }
+
+    /**
+     * Returns the (start) coordinates of this line.
+     */
+    public Point getCoordinates() {
+        return coordinates;
+    }
+
+    /**
+     * Sets the coordinates for this model to the given one.
+     *
+     * @param coordinates The new coordinates for this model.
+     */
+    public void setCoordinates(Point coordinates) {
+        for (Model child : children)
+            child.setCoordinates(new Point(
+                    child.coordinates.getX() - this.coordinates.getX() + coordinates.getX(),
+                    child.coordinates.getY() - this.coordinates.getY() + coordinates.getY()));
+        this.coordinates = coordinates;
+    }
+
+    /**
+     * Registers the coordinates at which this model should be drawn.
+     */
+    protected Point coordinates = new Point(0, 0);
 
     /**
      * Checks whether or not the given coordinate 'hits' this model.
@@ -32,8 +70,15 @@ public class Model implements Cloneable {
      *  model's bounds.
      */
     public boolean isHit(int x, int y) {
-        return isLabelHit(x, y);
+        return getBounds().encloses(x,y);
     }
+
+    /**
+     * Returns the bounds of this model.
+     *
+     * @return A rectangle, the bounding box of this model (not considering its label).
+     */
+    public abstract Rectangle getBounds();
 
     /**
      * Checks whether the given coordinate 'hits' this model's label.
@@ -56,7 +101,7 @@ public class Model implements Cloneable {
         if (getLabel() != null)
             length = getLabel().length();
         if (length < 3) length = 3;
-        return new Rectangle(0, 0, length * PaintBoard.charWidth, PaintBoard.charHeight);
+        return new Rectangle(getX(), getY(), length * PaintBoard.charWidth, PaintBoard.charHeight);
     }
 
     /**
@@ -87,6 +132,8 @@ public class Model implements Cloneable {
      */
     public void setColour(Colour colour) {
         this.colour = colour;
+        for (Model child : children)
+            child.setColour(colour);
     }
 
     /**
@@ -95,7 +142,7 @@ public class Model implements Cloneable {
     private Colour colour = Colour.BLACK;
 
     /**
-     * Draw this model in the given paintboard.
+     * Draw this model in the given paintboard at the given coordinates.
      *
      * @param paintBoard The paint board on which to draw.
      */
@@ -103,6 +150,8 @@ public class Model implements Cloneable {
         paintBoard.setColour(this.colour);
         if (label != null)
             drawLabel(paintBoard);
+        for (Model child : children)
+            child.draw(paintBoard);
     }
 
     /**
@@ -110,19 +159,24 @@ public class Model implements Cloneable {
      *
      * @param paintBoard The board in which to draw the label.
      */
-    void drawLabel(PaintBoard paintBoard) {
-        Rectangle labelBounds = getLabelBounds();
-        paintBoard.drawString(getLabel(), labelBounds.getX(), labelBounds.getY());
+    private void drawLabel(PaintBoard paintBoard) {
+        paintBoard.drawString(getLabel(), getLabelBounds().getX(), getLabelBounds().getY());
     }
 
-    @Override
-    public Model clone() {
-        final Model clone;
-        try {
-            clone = (Model)super.clone();
-        }
-        catch (Exception e) {throw new RuntimeException("Failed to clone model.");}
-        return clone;
+    /**
+     * Add the given model to this model's list of models.
+     *  The coordinates of the model are interpreted as local coordinates (in reference to this model's coordinate system).
+     *
+     * @param model The model to be added.
+     */
+    public void add(Model model) {
+        children = children.plus(model);
+        model.setCoordinates(new Point(model.coordinates.getX() + getX(), model.coordinates.getY() + getY()));
     }
+
+    /**
+     * Registers the children of this model.
+     */
+    private PList<Model> children = PList.empty();
 
 }

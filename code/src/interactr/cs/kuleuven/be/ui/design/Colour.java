@@ -18,7 +18,7 @@ public class Colour {
     public static Colour WHITE = new Colour(0.0f, 0.0f, 1.0f);
 
     /**
-     * Initiliaze this new colour with given hue, saturation and brightness value.
+     * Initialize this new colour with given hue, saturation and brightness value.
      *
      * @param hue The hue for this new colour.
      * @param saturation The saturation for this new colour.
