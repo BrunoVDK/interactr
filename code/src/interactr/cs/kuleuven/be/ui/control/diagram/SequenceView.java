@@ -189,11 +189,11 @@ public class SequenceView extends DiagramView {
      * Generate a link for the given message with given activation data.
      *
      * @param message The message to generate a link for.
-     * @param receiverActivations The current # of activations for the message's receiver.
      * @param senderActivations The current # of activations for the message's sender.
+     * @param receiverActivations The current # of activations for the message's receiver.
      * @return A link with correct coordinates for drawing the given message in this sequence view.
      */
-    private Line getLinkForMessage(Message message, int receiverActivations, int senderActivations) {
+    private Line getLinkForMessage(Message message, int senderActivations, int receiverActivations) {
         Line link = MessageModeller.defaultModeller().generateLink(message);
         int rowY = PARTY_ROW_HEIGHT + MESSAGE_ROW_HEIGHT/2 + getDiagram().getIndexOfMessage(message) * MESSAGE_ROW_HEIGHT;
         int figureWidth = getFigureForParty(message.getReceiver()).getWidth();
@@ -201,10 +201,14 @@ public class SequenceView extends DiagramView {
         link.getEndCoordinates().setY(rowY);
         link.getCoordinates().setX(getCoordinate(message.getSender()).getX() + figureWidth/2);
         link.getEndCoordinates().setX(getCoordinate(message.getReceiver()).getX() + figureWidth/2);
-        boolean right = link.getCoordinates().getX() < link.getEndCoordinates().getX();
-        int senderShift = senderActivations * ACTIVATION_BAR_WIDTH/2, receiverShift = receiverActivations * ACTIVATION_BAR_WIDTH/2;
-        link.getCoordinates().setX(link.getCoordinates().getX() + (right ? senderShift : -senderShift));
-        link.getEndCoordinates().setX(link.getEndCoordinates().getX() + (right ? -receiverShift : receiverShift));
+        System.out.println(senderActivations + " - " + receiverActivations);
+        boolean left = link.getCoordinates().getX() > link.getEndCoordinates().getX();
+        int senderShift = senderActivations * ACTIVATION_BAR_WIDTH/2;
+        int receiverShift = receiverActivations * ACTIVATION_BAR_WIDTH/2;
+        if (left) senderShift -= ACTIVATION_BAR_WIDTH;
+        else receiverShift -= ACTIVATION_BAR_WIDTH;
+        link.getCoordinates().setX(link.getCoordinates().getX() + senderShift);
+        link.getEndCoordinates().setX(link.getEndCoordinates().getX() + receiverShift);
         link.setLabel(getLabelOfComponent(message));
         link.setColour(getColourOfComponent(message));
         return link;

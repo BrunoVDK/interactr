@@ -90,7 +90,7 @@ public class Line extends Model {
         super.draw(paintBoard);
         if (dashed) {
             int xNew, xOld, xLast;
-            if (getY() > getEndCoordinates().getX()) {
+            if (getX() > getEndCoordinates().getX()) {
                 xOld= getEndCoordinates().getX();
                 xLast = getX();
             }
