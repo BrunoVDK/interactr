@@ -37,7 +37,7 @@ public class DialogDiagram extends DialogWindow {
         models = models.minusAll(models);
         for (int i=0 ; i<diagramWindow.getNbViews() ; i++)
             models = models.plus(getRadioButton(i));
-        setFocus(models.get(diagramWindow.getActiveViewIndex()));
+        models.get(getFocusIndex()).setColour(Colour.BLUE);
     }
 
     /**
@@ -58,8 +58,7 @@ public class DialogDiagram extends DialogWindow {
 
     @Override
     public void activateFocus() throws InvalidActivateException {
-        if (getFocus() != null)
-            diagramWindow.activateViewAtIndex(models.indexOf(getFocus()));
+        diagramWindow.activateViewAtIndex(getFocusIndex());
     }
 
     /**
@@ -77,15 +76,9 @@ public class DialogDiagram extends DialogWindow {
 
     @Override
     protected void displayView(PaintBoard paintBoard) {
-        paintBoard.setColour(Colour.BLACK);
         generateModels();
         for (Model model : models)
             model.draw(paintBoard);
-    }
-
-    @Override
-    public void focusNext() {
-        setFocus(models.get((models.indexOf(getFocus()) + 1) % models.size()));
     }
 
     @Override

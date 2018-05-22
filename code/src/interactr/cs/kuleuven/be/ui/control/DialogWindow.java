@@ -5,7 +5,6 @@ import interactr.cs.kuleuven.be.exceptions.InvalidActivateException;
 import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.ui.command.Command;
 import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
-import interactr.cs.kuleuven.be.ui.design.Colour;
 import interactr.cs.kuleuven.be.ui.design.Model;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
@@ -38,10 +37,10 @@ public abstract class DialogWindow extends SubWindow {
     }
 
     /**
-     * Returns the focused element for this dialog window.
+     * Returns the index of the element for this dialog window.
      */
-    protected Model getFocus() {
-        return this.focus;
+    protected int getFocusIndex() {
+        return focusIndex;
     }
 
     /**
@@ -62,9 +61,9 @@ public abstract class DialogWindow extends SubWindow {
     public void focus(int x, int y) {
         x -= getFrame().getX();
         y -= getFrame().getY() + TITLE_BAR_HEIGHT;
-        for (Model model : models) {
-            if (model.isHit(x, y)) {
-                setFocus(model);
+        for (int i=0 ; i<models.size() ; i++) {
+            if (models.get(i).isHit(x, y)) {
+                setFocusIndex(i);
                 activateFocus();
                 return;
             }
@@ -75,25 +74,21 @@ public abstract class DialogWindow extends SubWindow {
     /**
      * Sets the focused element to the given one.
      *
-     * @param focus The element to focus on.
+     * @param focusIndex The index of the element to focus on.
      */
-    protected void setFocus(Model focus) {
-        if (this.focus != null)
-            this.focus.setColour(Colour.BLACK);
-        this.focus = focus;
-        this.focus.setColour(Colour.BLUE);
-        System.out.println(focus);
+    protected void setFocusIndex(int focusIndex) {
+        this.focusIndex = focusIndex;
     }
 
     /**
      * Focus on the next control.
      */
-    public void focusNext() {}
+    public void focusNext() {setFocusIndex((getFocusIndex() + 1) % models.size());}
 
     /**
-     * Registers the element focused on by this dialog window.
+     * Registers the index of the element focused on by this dialog window.
      */
-    private Model focus = null;
+    private int focusIndex = 0;
 
     /**
      * Generate the models held by this dialog window.

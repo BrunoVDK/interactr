@@ -220,6 +220,8 @@ public class EventHandler {
             getController().createSubWindow();
         else if (keyCode == KeyEvent.VK_D && controlIsPressed)
             getController().duplicateSubWindow();
+        else if (keyCode == KeyEvent.VK_SPACE)
+            getController().processCommand(new ActivateFocusCommand());
     }
 
     /**
@@ -230,7 +232,7 @@ public class EventHandler {
     private void handleKeyTyped(char keyChar) {
         if (keyChar == KeyEvent.VK_TAB)
             getController().processCommand(new FocusNextCommand());
-        else if (keyChar != KeyEvent.VK_BACK_SPACE && keyChar != KeyEvent.VK_ENTER)
+        else if (keyChar != KeyEvent.VK_BACK_SPACE && keyChar != KeyEvent.VK_ENTER && keyChar != KeyEvent.VK_SPACE)
             getController().processCommand(new AppendCharCommand(keyChar));
     }
 
