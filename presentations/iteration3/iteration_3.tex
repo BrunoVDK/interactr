@@ -164,7 +164,7 @@
 	\\$\rightarrow$ use of \texttt{Visitor} pattern to generate figures (representations) for these diagram components.
 	\\$\rightarrow$ these figures are \texttt{Flyweight}s.
 	\\$\rightarrow$ separation of UI / domain logic without use of type checking (i.e. \texttt{instanceof}).
-	\item \texttt{Control} draws itself, eg. text for label.
+	\item Class hierarchy for \texttt{Model} (\texttt{Composite} pattern) used for representation/drawing of a variety of elements in the system (parties, messages, controls, ...).
 	\end{itemize}
 	\end{center}
 \end{frame}
@@ -191,17 +191,17 @@
 	\end{center}
 \end{frame}
 
-\begin{frame}[fragile]{}
+\begin{frame}[fragile]{Extensibility - Model}
 	\begin{center}
-	
+	Representation of various elements in the system can be done with the \texttt{Model} class.\\
+	$\rightarrow $ new elements in domain model and elsewhere is a matter of creating subclasses of \texttt{Model}, whenever necessary.
 	\end{center}
 \end{frame}
 
 \section{Testing}
 
-\begin{frame}[fragile]{Testing}
-	Coverage here!
-	%\includegraphics[width=1\textwidth]{coverage}
+\begin{frame}[fragile]{Testing - Coverage}
+	\includegraphics[width=1\textwidth]{coverage}
 \end{frame}
 
 \section{Project Management}
@@ -225,6 +225,10 @@ $\rightarrow$ not the best metric ... but all methods `fit on the screen' (max. 
 \item Virtually no \textit{switch statements} (only in \texttt{EventHandler}).
 \item \textit{Comments} virtually never necessary (maybe when drawing messages in \texttt{SequenceView}).
 \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Refactoring - Tools}
+	\includegraphics[width=1\textwidth]{refactoring}
 \end{frame}
 
 \begin{frame}[fragile]{Time management}

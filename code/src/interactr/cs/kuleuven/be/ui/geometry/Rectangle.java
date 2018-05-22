@@ -121,6 +121,20 @@ public class Rectangle {
     private int height;
 
     /**
+     * Aggregate this rectangle with the given one.
+     *
+     * @param other The rectangle to aggregate this one with.
+     */
+    public void aggregate(Rectangle other) {
+        int minX = Math.min(getX(), other.getX()), minY = Math.min(getY(), other.getY());
+        int maxX = Math.max(getX() + getWidth(), other.getX() + other.getWidth()), maxY = Math.min(getY() + getWidth(), other.getY() + other.getWidth());
+        setX(minX);
+        setY(minY);
+        setWidth(maxX - minX);
+        setHeight(maxY - minY);
+    }
+
+    /**
      * Checks whether the given rectangle overlaps with this rectangle.
      *
      * @param  	other

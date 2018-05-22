@@ -20,7 +20,7 @@ public abstract class Control {
      */
     public abstract void display(PaintBoard paintBoard, int x, int y);
 
-    public static final int margeOfLabelAndControl = 50;
+    public static final int margeOfLabelAndControl = 100;
 
     /**
      * A getter for the variable isActive

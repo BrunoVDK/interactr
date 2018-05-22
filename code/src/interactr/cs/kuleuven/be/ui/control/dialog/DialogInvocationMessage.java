@@ -3,6 +3,7 @@ package interactr.cs.kuleuven.be.ui.control.dialog;
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.InvocationMessage;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
 import interactr.cs.kuleuven.be.ui.control.DialogWindow;
 import interactr.cs.kuleuven.be.ui.control.control.*;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
@@ -68,6 +69,16 @@ public class DialogInvocationMessage extends DialogWindow {
      * Registers the invocation message associated with this dialog window.
      */
     private InvocationMessage message;
+
+    @Override
+    public void goUp() {
+        listBox.goUp();
+    }
+
+    @Override
+    public void goDown() {
+        listBox.goDown();
+    }
 
     @Override
     protected Rectangle getDefaultFrame() {

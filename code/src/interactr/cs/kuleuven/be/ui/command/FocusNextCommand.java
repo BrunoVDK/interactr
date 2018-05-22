@@ -18,7 +18,7 @@ public class FocusNextCommand extends Command {
 
     @Override
     public void executeDialogWindow(DialogWindow dialog) {
-        // dialog.focusNext();
+        dialog.focusNext();
     }
 
 }

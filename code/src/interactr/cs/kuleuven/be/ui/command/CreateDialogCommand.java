@@ -27,7 +27,7 @@ public class CreateDialogCommand extends Command {
     @Override
     public void executeDiagramWindow(DiagramWindow window) {
         if (window.getActiveView().getSelectedComponent() == null)
-            dialogWindow = DialogCreator.defaultCreator().createDialog(window.getActiveView());
+            dialogWindow = DialogCreator.defaultCreator().createDialog(window);
         else
             dialogWindow = DialogCreator.defaultCreator().createDialog(
                     window.getDiagram(),

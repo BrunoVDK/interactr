@@ -8,8 +8,6 @@ import interactr.cs.kuleuven.be.ui.control.control.Control;
 import interactr.cs.kuleuven.be.ui.design.Colour;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
-import java.awt.*;
-
 /**
  * A class of dialog windows.
  *
@@ -27,14 +25,13 @@ public abstract class DialogWindow extends SubWindow {
         if (diagram == null)
             throw new IllegalArgumentException("Diagram cannot be null.");
         this.diagram = diagram;
-        this.setFrame(getDefaultFrame());
+        this.frame = getDefaultFrame();
     }
 
     @Override
     protected boolean canHaveAsFrame(Rectangle frame) {
-        if (!super.canHaveAsFrame(frame))
-            return false;
-        return (frame.getHeight() >= getDefaultFrame().getHeight() && frame.getWidth() >= getDefaultFrame().getWidth());
+        return  super.canHaveAsFrame(frame)
+                && (frame.getHeight() >= getDefaultFrame().getHeight() && frame.getWidth() >= getDefaultFrame().getWidth());
     }
 
     /**
@@ -54,13 +51,25 @@ public abstract class DialogWindow extends SubWindow {
     }
 
     /**
+     * Returns the focused control for this dialog window.
+     */
+    protected Control getFocusedControl() {
+        return focusedControl;
+    }
+
+    /**
      * Sets the focused control to the given one.
      *
      * @param control The control to focus on.
      */
-    void setFocusedControl(Control control) {
+    protected void setFocusedControl(Control control) {
         focusedControl = control;
     }
+
+    /**
+     * Focus on the next control.
+     */
+    public void focusNext() {}
 
     /**
      * Registers the control focused on by this dialog window.
@@ -68,16 +77,15 @@ public abstract class DialogWindow extends SubWindow {
     private Control focusedControl = null;
 
     /**
-     * Returns the default frame for this dialog window.
-     *
-     * @return The default frame for this dialog window.
+     * A method that is used by the Dialog Diagram
      */
-    protected abstract Rectangle getDefaultFrame();
+    public abstract void goUp();
 
     /**
      * A method that is used by the Dialog Diagram
      */
-    public abstract void goUp();
+    public abstract void goDown();
+
 
     /**
      * Returns the diagram associated with this dialog.
@@ -90,6 +98,13 @@ public abstract class DialogWindow extends SubWindow {
      * Registers the diagram associated with this dialog.
      */
     private Diagram diagram;
+
+    /**
+     * Returns the default frame for this dialog window.
+     *
+     * @return The default frame for this dialog window.
+     */
+    protected abstract Rectangle getDefaultFrame();
 
     @Override
     public void executeCommand(Command command) throws CommandNotProcessedException {

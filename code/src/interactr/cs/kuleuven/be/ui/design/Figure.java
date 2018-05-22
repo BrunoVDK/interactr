@@ -1,6 +1,5 @@
 package interactr.cs.kuleuven.be.ui.design;
 
-import interactr.cs.kuleuven.be.ui.geometry.Point;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
@@ -14,80 +13,21 @@ public class Figure extends Model {
     /**
      * Initialize this new figure with zero coordinates and a width and height of 20.
      */
-    public Figure() {
-        this(0, 0, 60, 65);
+    Figure() {
+        this(60, 65);
     }
 
     /**
      * Initialize this new figure with given coordinates and size, and an empty label.
      *
-     * @param x The x coordinate for this new figure.
-     * @param y The y coordinate for this new figure.
      * @param width The width for this new figure.
      * @param height The height for this new figure.
      */
-    Figure(int x, int y, int width, int height) {
+    Figure(int width, int height) {
         super("");
-        setX(x);
-        setY(y);
         setWidth(width);
         setHeight(height);
     }
-
-    @Override
-    public boolean isHit(int x, int y) {
-        boolean encloses = (getX() <= x
-                && getY() <= y
-                && x <= getX() + getWidth()
-                && y <= getY() + getHeight());
-        return encloses || isLabelHit(x, y);
-    }
-
-    /**
-     * Get the x coordinate of this figure.
-     *
-     * @return The x coordinate of this figure.
-     */
-    public int getX() {
-        return this.x;
-    }
-
-    /**
-     * Set the x coordinate for this figure to the given one.
-     *
-     * @param x The new x coordinate for this figure.
-     */
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    /**
-     * The x coordinate of this figure.
-     */
-    protected int x;
-
-    /**
-     * Get the y coordinate of this figure.
-     *
-     * @return The y coordinate of this figure.
-     */
-    public int getY() {
-        return this.y;
-    }
-
-    /**
-     * Set the y coordinate for this figure to the given one.
-     *
-     * @param y The new y coordinate for this figure.
-     */
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    /**
-     * The x coordinate of this figure.
-     */
-    protected int y;
 
     /**
      * Get the width of this figure.
@@ -136,31 +76,12 @@ public class Figure extends Model {
     private int height;
 
     /**
-     * Returns the center point for this figure.
-     *
-     * @return The center point for this figure.
-     */
-    public Point getCenter() {
-        return new Point(getX() + getWidth()/2, getY() + getY()/2);
-    }
-
-    /**
      * Returns the bounds of this figure.
      *
      * @return A rectangle representing the bounds of this figure.
      */
     public Rectangle getBounds() {
-        return new Rectangle(getX(), getY(), getWidth(), getHeight());
-    }
-
-    @Override
-    public Figure clone() {
-        final Figure clone;
-        try {
-            clone = (Figure)super.clone();
-        }
-        catch (Exception e) {throw new RuntimeException("Failed to clone figure.");}
-        return clone;
+        return new Rectangle(coordinates.getX(), coordinates.getY(), getWidth(), getHeight());
     }
 
 }

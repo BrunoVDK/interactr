@@ -46,6 +46,4 @@ public class TextField extends Control {
         this.labelComponent = labelComponent;
     }
 
-
-
 }

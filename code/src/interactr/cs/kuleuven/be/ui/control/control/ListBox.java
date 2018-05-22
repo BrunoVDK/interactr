@@ -51,7 +51,7 @@ public class ListBox extends Control {
     /**
      * A method that increases the selected argument index
      */
-    public void nextArgument(){
+    public void goUp(){
         if(selectedArgumentIndex + 1 < arguments.length)
             selectedArgumentIndex += 1;
     }
@@ -59,7 +59,7 @@ public class ListBox extends Control {
     /**
      * A method that decreses the selescted argument index
      */
-    public void previousArgument(){
+    public void goDown(){
         if(selectedArgumentIndex - 1 >= 0)
             selectedArgumentIndex -= 1;
     }

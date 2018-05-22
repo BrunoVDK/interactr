@@ -12,7 +12,10 @@ public class GoDownCommand extends Command {
 
     @Override
     public void executeDialogWindow(DialogWindow dialog) {
-
-
+        try{
+            dialog.goDown();
+        }catch (CommandNotProcessedException e){
+            //TODO
+        }
     }
 }
