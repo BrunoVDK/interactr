@@ -1,7 +1,6 @@
 package interactr.cs.kuleuven.be.ui.command;
 
-import interactr.cs.kuleuven.be.exceptions.NoSuchComponentException;
-import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
+import interactr.cs.kuleuven.be.ui.control.DialogWindow;
 import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 import interactr.cs.kuleuven.be.ui.geometry.Point;
 
@@ -35,6 +34,11 @@ public class SelectCommand extends Command {
         catch (Exception exception) {
             throw new CommandNotProcessedException();
         }
+    }
+
+    @Override
+    public void executeDialogWindow(DialogWindow dialog) {
+        dialog.focus(location.getX(), location.getY());
     }
 
 }

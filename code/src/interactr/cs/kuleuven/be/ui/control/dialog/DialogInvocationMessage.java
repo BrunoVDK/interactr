@@ -30,6 +30,10 @@ public class DialogInvocationMessage extends DialogWindow {
         this.methodName = new TextField(message.getMethodName() , "Method Name: ");
     }
 
+    protected void generateModels() {
+
+    }
+
     @Override
     protected void displayView(PaintBoard paintBoard) {
         methodName.display(paintBoard, 10, (getFrame().getHeight() * 1/12 ));

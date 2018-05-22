@@ -56,6 +56,12 @@ public class DiagramWindow extends SubWindow {
         return (views.size() == 0 ? null : views.get(0).getDiagram());
     }
 
+    /**
+     * Sets the frame of this diagram window.
+     *
+     * @param frame The new frame for this diagram window.
+     * @throws IllegalWindowFrameException The given frame is invalid.
+     */
     protected void setFrame(Rectangle frame) throws IllegalWindowFrameException {
         super.setFrame(frame);
         if (getViews() != null)
@@ -112,12 +118,19 @@ public class DiagramWindow extends SubWindow {
      *
      * @param index The index of the view that is to be activated.
      */
-    private void activateViewAtIndex(int index) {
+    public void activateViewAtIndex(int index) {
         if (index >= 0 && index < getViews().size()) {
             for (DiagramView view : getViews())
                 view.synchronizeWith(getActiveView());
             activeViewIndex = index;
         }
+    }
+
+    /**
+     * Returns the index of the active view.
+     */
+    public int getActiveViewIndex() {
+        return activeViewIndex;
     }
 
     /**

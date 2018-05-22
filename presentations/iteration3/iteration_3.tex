@@ -181,12 +181,14 @@
 	\begin{center}
 	\texttt{Command} pattern eases undoing, allows delayed processing, use by menu items, ... When using new types of events (eg. speech recognition) only \texttt{EventHandler} has to change.
 	
-	\vspace{0.5cm} Small disadvantages ; 
+	\vspace{0.5cm} Disadvantages ; 
 	\begin{itemize}
 	\item many new types of \texttt{CommandHandler} 
 	\\ $\rightarrow$ bloated \texttt{Command} abstract class (\texttt{Visitor} pattern discussion)
 	\item if \texttt{Chain of Responsibility} is long
 	\\ $\rightarrow$ wasted processing (command goes down the whole chain before realising that it can't be handled)
+	\item if many new system operations for many different types of windows 
+	\\ $\rightarrow$ redesign necessary (example redesign : use of commands mapped to key/mouse events, translation of these commands at the last moment, use of singleton undo manager).
 	\end{itemize}
 	\end{center}
 \end{frame}

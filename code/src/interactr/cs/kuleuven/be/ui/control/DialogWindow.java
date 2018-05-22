@@ -1,12 +1,15 @@
 package interactr.cs.kuleuven.be.ui.control;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
-import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.exceptions.InvalidActivateException;
+import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.ui.command.Command;
 import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
-import interactr.cs.kuleuven.be.ui.control.control.Control;
 import interactr.cs.kuleuven.be.ui.design.Colour;
+import interactr.cs.kuleuven.be.ui.design.Model;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
+
+import java.util.NoSuchElementException;
 
 /**
  * A class of dialog windows.
@@ -35,35 +38,51 @@ public abstract class DialogWindow extends SubWindow {
     }
 
     /**
-     * Displays the given control in the given paintboard.
-     *
-     * @param paintBoard The paintboard to draw on.
-     * @param control The control that is to be drawn.
-     * @param x The x coordinate to draw the control at.
-     * @param y The y coordinate to draw the control at.
+     * Returns the focused element for this dialog window.
      */
-    protected final void display(PaintBoard paintBoard, Control control, int x, int y) {
-        if (focusedControl == control)
-            paintBoard.setColour(Colour.BLUE);
-        else
-            paintBoard.setColour(Colour.BLACK);
-        control.display(paintBoard, x, y);
+    protected Model getFocus() {
+        return this.focus;
     }
 
     /**
-     * Returns the focused control for this dialog window.
+     * Activate the focused element.
+     *
+     * @throws InvalidActivateException If the focused element can't be activated.
      */
-    protected Control getFocusedControl() {
-        return focusedControl;
+    public void activateFocus() throws InvalidActivateException {
+        throw new InvalidActivateException();
     }
 
     /**
-     * Sets the focused control to the given one.
+     * Focus on the element at the given coordinates.
      *
-     * @param control The control to focus on.
+     * @param x The x coordinate where the element lies.
+     * @param y The y coordinate where the element lies.
      */
-    protected void setFocusedControl(Control control) {
-        focusedControl = control;
+    public void focus(int x, int y) {
+        x -= getFrame().getX();
+        y -= getFrame().getY() + TITLE_BAR_HEIGHT;
+        for (Model model : models) {
+            if (model.isHit(x, y)) {
+                setFocus(model);
+                activateFocus();
+                return;
+            }
+        }
+        throw new NoSuchElementException();
+    }
+
+    /**
+     * Sets the focused element to the given one.
+     *
+     * @param focus The element to focus on.
+     */
+    protected void setFocus(Model focus) {
+        if (this.focus != null)
+            this.focus.setColour(Colour.BLACK);
+        this.focus = focus;
+        this.focus.setColour(Colour.BLUE);
+        System.out.println(focus);
     }
 
     /**
@@ -72,9 +91,19 @@ public abstract class DialogWindow extends SubWindow {
     public void focusNext() {}
 
     /**
-     * Registers the control focused on by this dialog window.
+     * Registers the element focused on by this dialog window.
      */
-    private Control focusedControl = null;
+    private Model focus = null;
+
+    /**
+     * Generate the models held by this dialog window.
+     */
+    protected abstract void generateModels();
+
+    /**
+     * The list of models held by this dialog.
+     */
+    protected PList<Model> models = PList.empty();
 
     /**
      * A method that is used by the Dialog Diagram
@@ -85,7 +114,6 @@ public abstract class DialogWindow extends SubWindow {
      * A method that is used by the Dialog Diagram
      */
     public abstract void goDown();
-
 
     /**
      * Returns the diagram associated with this dialog.

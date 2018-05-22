@@ -30,6 +30,11 @@ public class DialogResultMessage extends DialogWindow {
     }
 
     @Override
+    protected void generateModels() {
+
+    }
+
+    @Override
     protected void displayView(PaintBoard paintBoard) {
         componentLabel.display(paintBoard, 10 , ( getFrame().getHeight() * 1/2));
     }

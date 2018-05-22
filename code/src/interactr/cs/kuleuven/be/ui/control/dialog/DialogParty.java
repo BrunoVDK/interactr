@@ -41,6 +41,11 @@ public class DialogParty extends DialogWindow {
         controls.add(actorButton);
         controls.add(objectButton);
     }
+
+    protected void generateModels() {
+
+    }
+
     @Override
     protected Rectangle getDefaultFrame() {
         return new Rectangle(0, 0, 270, 150);
@@ -63,7 +68,7 @@ public class DialogParty extends DialogWindow {
 
         int i = 0;
         for (Control c : controls) {
-            display(paintBoard, c, 10,TITLE_BAR_HEIGHT - 3 + 30 * i++);
+
         }
         //actorButton.display(paintBoard, getFrame().getX() + 10,  getFrame().getY() + (getFrame().getHeight() * 1/5));
         //objectButton.display(paintBoard, getFrame().getX() + 10 , getFrame().getY() + (getFrame().getHeight() * 2/5));

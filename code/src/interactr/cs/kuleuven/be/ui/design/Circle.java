@@ -15,7 +15,7 @@ public class Circle extends Oval {
      * @param y The y coordinate for this new circle.
      * @param diameter The diameter for this new circle.
      */
-    Circle(int x, int y, int diameter) {
+    public Circle(int x, int y, int diameter) {
         super(x, y, diameter, diameter);
     }
 

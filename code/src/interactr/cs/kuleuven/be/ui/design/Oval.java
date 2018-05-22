@@ -24,10 +24,34 @@ public class Oval extends Figure {
         setCoordinates(new Point(x,y));
     }
 
+    /**
+     * Returns whether or not this oval is filled.
+     */
+    public boolean isFilled() {
+        return this.filled;
+    }
+
+    /**
+     * Sets this oval to filled or not.
+     *
+     * @param filled The new flag denoting whether or not this oval is filled.
+     */
+    public void setFilled(boolean filled) {
+        this.filled = filled;
+    }
+
+    /**
+     * Registers whether or not this oval is filled.
+     */
+    private boolean filled = false;
+
     @Override
     public void draw(PaintBoard paintBoard) {
         super.draw(paintBoard);
-        paintBoard.drawOval(getX(), getY(), getWidth(), getHeight());
+        if (filled)
+            paintBoard.fillOval(getX(), getY(), getWidth(), getHeight());
+        else
+            paintBoard.drawOval(getX(), getY(), getWidth(), getHeight());
     }
 
 }

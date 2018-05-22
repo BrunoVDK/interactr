@@ -201,7 +201,6 @@ public class SequenceView extends DiagramView {
         link.getEndCoordinates().setY(rowY);
         link.getCoordinates().setX(getCoordinate(message.getSender()).getX() + figureWidth/2);
         link.getEndCoordinates().setX(getCoordinate(message.getReceiver()).getX() + figureWidth/2);
-        System.out.println(senderActivations + " - " + receiverActivations);
         boolean left = link.getCoordinates().getX() > link.getEndCoordinates().getX();
         int senderShift = senderActivations * ACTIVATION_BAR_WIDTH/2;
         int receiverShift = receiverActivations * ACTIVATION_BAR_WIDTH/2;

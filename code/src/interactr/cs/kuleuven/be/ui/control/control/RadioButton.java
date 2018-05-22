@@ -19,25 +19,14 @@ public class RadioButton extends Control {
         this.label = label;
     }
 
-    @Override
-    public void display(PaintBoard paintBoard, int x, int y) {
-        paintBoard.drawString(label, x + 50, y);
-        paintBoard.drawOval(x + 15, y + 2 - PaintBoard.charHeight, getDiameter(), getDiameter());
-        if (isActive())
-            paintBoard.fillOval(x + 16 , y + 3 - PaintBoard.charHeight, getDiameter() - 2, getDiameter() - 2);
-    }
-
     /**
      * The label of the button itself, the text it shows before the button
      */
     private String label;
 
-    /**
-     * Returns the diameter of the radio button
-     */
-    private int getDiameter() {
-        return 10;
-    }
+    @Override
+    public void display(PaintBoard paintBoard, int x, int y) {
 
+    }
 
 }
