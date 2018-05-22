@@ -13,6 +13,7 @@ public class GoUpCommand extends Command {
     @Override
     public void executeDialogWindow(DialogWindow dialog) {
 
+
     }
 
 }

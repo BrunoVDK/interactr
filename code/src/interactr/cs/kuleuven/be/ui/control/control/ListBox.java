@@ -1,6 +1,7 @@
 package interactr.cs.kuleuven.be.ui.control.control;
 
 import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.design.Colour;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +30,38 @@ public class ListBox extends Control {
         int offset = 0;
 
         for (int i = 0; i < arguments.length; i ++){
+            if( i == selectedArgumentIndex)
+                paintBoard.setColour(Colour.BLUE);
+
             paintBoard.drawRectangle(x,y,width,height);
             paintBoard.drawString(arguments[i],x + 5, y + offset - PaintBoard.charHeight);
             offset += argumentHeight;
 
+            paintBoard.setColour(Colour.BLACK);
+
         }
+    }
+
+
+    /**
+     * The index of the currently selected arcument
+     */
+    private int selectedArgumentIndex = 0;
+
+    /**
+     * A method that increases the selected argument index
+     */
+    public void nextArgument(){
+        if(selectedArgumentIndex + 1 < arguments.length)
+            selectedArgumentIndex += 1;
+    }
+
+    /**
+     * A method that decreses the selescted argument index
+     */
+    public void previousArgument(){
+        if(selectedArgumentIndex - 1 >= 0)
+            selectedArgumentIndex -= 1;
     }
 
     /**

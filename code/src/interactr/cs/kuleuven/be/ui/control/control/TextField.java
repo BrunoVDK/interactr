@@ -22,10 +22,11 @@ public class TextField extends Control {
     public void display(PaintBoard paintBoard, int x, int y) {
         if (isActive())
             paintBoard.setColour(Colour.BLUE);
-        paintBoard.drawRectangle(x + margeOfLabelAndControl,y,width,paintBoard.charHeight);
+
+        paintBoard.drawRectangle(x + margeOfLabelAndControl,y,width,PaintBoard.charHeight);
+        paintBoard.drawString(labelComponent,x + margeOfLabelAndControl,PaintBoard.charHeight + y);
+        paintBoard.drawString(labelTextField,x,y + PaintBoard.charHeight);
         paintBoard.setColour(Colour.BLACK);
-        paintBoard.drawString(labelComponent,x + margeOfLabelAndControl,paintBoard.charHeight + y);
-        paintBoard.drawString(labelTextField,x,y + paintBoard.charHeight);
     }
 
     private static final int width = 80;

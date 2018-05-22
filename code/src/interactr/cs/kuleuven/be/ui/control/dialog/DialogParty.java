@@ -31,18 +31,22 @@ public class DialogParty extends DialogWindow {
         this.className = new TextField(party.getClassName(), "Class name: ");
         this.setFrame(new Rectangle(0,0,width,height));
     }
-
     @Override
     protected Rectangle getDefaultFrame() {
         return new Rectangle(0, 0, 150, 200);
     }
 
     @Override
+    public void goUp() {
+
+    }
+
+    @Override
     protected void displayView(PaintBoard paintBoard) {
-        actorButton.display(paintBoard, 10, height * 1/5);
-        objectButton.display(paintBoard, 10 , height * 2/5);
-        instanceName.display(paintBoard,10   , height * 3/5 );
-        className.display(paintBoard, 10, height * 4/5);
+        actorButton.display(paintBoard, getFrame().getX() + 10,  getFrame().getY() + (getFrame().getHeight() * 1/5));
+        objectButton.display(paintBoard, getFrame().getX() + 10 , getFrame().getY() + (getFrame().getHeight() * 2/5));
+        instanceName.display(paintBoard,getFrame().getX() + 10   , getFrame().getY() + (getFrame().getHeight() * 3/5));
+        className.display(paintBoard, getFrame().getX() + 10, getFrame().getY() +( getFrame().getHeight() * 4/5));
 
     }
 

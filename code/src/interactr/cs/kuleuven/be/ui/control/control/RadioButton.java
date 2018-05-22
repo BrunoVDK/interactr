@@ -35,6 +35,6 @@ public class RadioButton extends Control {
     /**
      * The diameter of the radio button
      */
-    private final int diameter = 10;
+    private final int diameter = 20;
 
 }

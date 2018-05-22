@@ -13,5 +13,6 @@ public class GoDownCommand extends Command {
     @Override
     public void executeDialogWindow(DialogWindow dialog) {
 
+
     }
 }

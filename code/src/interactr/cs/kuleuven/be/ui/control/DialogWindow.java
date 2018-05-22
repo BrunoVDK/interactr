@@ -75,6 +75,11 @@ public abstract class DialogWindow extends SubWindow {
     protected abstract Rectangle getDefaultFrame();
 
     /**
+     * A method that is used by the Dialog Diagram
+     */
+    public abstract void goUp();
+
+    /**
      * Returns the diagram associated with this dialog.
      */
     public Diagram getDiagram() {
