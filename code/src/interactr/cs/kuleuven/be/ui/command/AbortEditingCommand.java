@@ -1,5 +1,8 @@
 package interactr.cs.kuleuven.be.ui.command;
 
+import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
+import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
+
 /**
  * A class of commands for aborting an edit session.
  *
@@ -8,6 +11,12 @@ package interactr.cs.kuleuven.be.ui.command;
  */
 public class AbortEditingCommand extends Command {
 
-
+    @Override
+    public void executeDiagramView(DiagramView view) {
+        try {
+            view.setIsEditing(false);
+        }
+        catch (InvalidLabelException e) {throw new CommandNotProcessedException();}
+    }
 
 }

@@ -39,6 +39,31 @@ public class Diagram {
     }
 
     /**
+     * Sets the label of the given component in this diagram.
+     *
+     * @param component The component whose label needs to be changed.
+     * @param label The label of the component.
+     */
+    public void setLabelOfComponent(DiagramComponent component, String label) {
+        if (hasComponent(component)) {
+            component.setLabel(label);
+            for (DiagramObserver observer : observers)
+                observer.diagramDidEditLabel(this, component);
+        }
+    }
+
+    /**
+     * Checks whether or not the given component is part of this diagram.
+     *
+     * @param component The component to check with.
+     * @return True if and only if this diagram has the given component as one of its
+     *  parties or messages.
+     */
+    public boolean hasComponent(DiagramComponent component) {
+        return (parties.contains(component) || messages.contains(component));
+    }
+
+    /**
      * Add the given party to this diagram.
      *
      * @param party The party that is to be added to this diagram.
@@ -105,8 +130,9 @@ public class Diagram {
                     associatedMessageIndices.add(j, formerIndex - count); // Shift count upwards because of removal
                 }
             }
+            int min = getMinimumIndex(message);
             for (int i=0 ; i<count ; i++)
-                deleteMessageAtIndex(getMinimumIndex(message));
+                deleteMessageAtIndex(min);
             calculateAllPrefixes();
         }
     }
@@ -313,7 +339,7 @@ public class Diagram {
      */
     private int getNbMessagesToRemove(Message message) {
         if (getIndexOfMessage(message) >= 0)
-            return getMaximumIndex(message) - getMaximumIndex(message) + 1;
+            return getMaximumIndex(message) - getMinimumIndex(message) + 1;
         return 0;
     }
 

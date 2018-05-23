@@ -1,11 +1,13 @@
 package interactr.cs.kuleuven.be.ui;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-
-import interactr.cs.kuleuven.be.exceptions.*;
+import interactr.cs.kuleuven.be.exceptions.InvalidCloseWindowException;
+import interactr.cs.kuleuven.be.exceptions.InvalidMoveWindowException;
+import interactr.cs.kuleuven.be.exceptions.InvalidResizeWindowException;
 import interactr.cs.kuleuven.be.ui.command.*;
 import interactr.cs.kuleuven.be.ui.geometry.Point;
+
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 /**
  * A class of event handlers for interpreting incoming mouse/key events
@@ -21,7 +23,7 @@ public class EventHandler {
      *
      * @param controller The diagram controller to associate this event handler with.
      */
-    EventHandler(Controller controller) {
+    public EventHandler(Controller controller) {
         setController(controller);
     }
 
@@ -206,6 +208,10 @@ public class EventHandler {
             else
                 getController().processCommand(new AbortEditingCommand());
         }
+        else if (keyCode == KeyEvent.VK_DOWN)
+            getController().processCommand(new GoDownCommand());
+        else if (keyCode == KeyEvent.VK_UP)
+            getController().processCommand(new GoUpCommand());
         else if (keyCode == KeyEvent.VK_BACK_SPACE)
             getController().processCommand(new RemoveLastCharCommand());
         else if (keyCode == KeyEvent.VK_DELETE)
@@ -214,6 +220,8 @@ public class EventHandler {
             getController().createSubWindow();
         else if (keyCode == KeyEvent.VK_D && controlIsPressed)
             getController().duplicateSubWindow();
+        else if (keyCode == KeyEvent.VK_SPACE)
+            getController().processCommand(new ActivateFocusCommand());
     }
 
     /**
@@ -224,14 +232,14 @@ public class EventHandler {
     private void handleKeyTyped(char keyChar) {
         if (keyChar == KeyEvent.VK_TAB)
             getController().processCommand(new FocusNextCommand());
-        else
+        else if (keyChar != KeyEvent.VK_BACK_SPACE && keyChar != KeyEvent.VK_ENTER && keyChar != KeyEvent.VK_SPACE)
             getController().processCommand(new AppendCharCommand(keyChar));
     }
 
     /**
      * Returns the diagram controller associated with this event handler.
      */
-    private Controller getController() {
+    public Controller getController() {
         return controller;
     }
 

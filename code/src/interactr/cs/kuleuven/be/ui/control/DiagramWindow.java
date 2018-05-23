@@ -10,7 +10,6 @@ import interactr.cs.kuleuven.be.ui.control.diagram.CommunicationView;
 import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 import interactr.cs.kuleuven.be.ui.control.diagram.SequenceView;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
-import interactr.cs.kuleuven.be.domain.DiagramComponent;
 
 /**
  * A class of diagram windows with a series of diagram views.
@@ -35,7 +34,7 @@ public class DiagramWindow extends SubWindow {
      * @param diagramWindow The subwindow that is to be duplicated by this subwindow.
      */
     public DiagramWindow(DiagramWindow diagramWindow) {
-         super(diagramWindow);
+         super(diagramWindow, null);
          if (diagramWindow == null || diagramWindow.getDiagram() == null) {
             Diagram adoptedDiagram = new Diagram();
             views = views.plus(new SequenceView(adoptedDiagram, getViewFrame()));
@@ -57,7 +56,12 @@ public class DiagramWindow extends SubWindow {
         return (views.size() == 0 ? null : views.get(0).getDiagram());
     }
 
-
+    /**
+     * Sets the frame of this diagram window.
+     *
+     * @param frame The new frame for this diagram window.
+     * @throws IllegalWindowFrameException The given frame is invalid.
+     */
     protected void setFrame(Rectangle frame) throws IllegalWindowFrameException {
         super.setFrame(frame);
         if (getViews() != null)
@@ -69,7 +73,7 @@ public class DiagramWindow extends SubWindow {
      * Switch to the next view.
      */
     public void nextView() {
-        activeViewIndex = (activeViewIndex + 1) % views.size();
+        activateViewAtIndex((activeViewIndex + 1) % getViews().size());
     }
 
     /**
@@ -78,7 +82,7 @@ public class DiagramWindow extends SubWindow {
      * @return The title of this subwindow.
      */
     public String getTitle() {
-        return getActiveView().toString();
+        return getActiveView().toString() + " - Diagram " + getDiagram().getSequenceNumber();
     }
 
     /**
@@ -86,8 +90,27 @@ public class DiagramWindow extends SubWindow {
      *
      * @return The active view for this subwindow.
      */
-    private DiagramView getActiveView() {
-        return views.get(activeViewIndex);
+    public DiagramView getActiveView() {
+        return getViews().get(activeViewIndex);
+    }
+
+    /**
+     * Returns the number of diagram views for this diagram window.
+     *
+     * @return The number of diagram views this diagram window displays.
+     */
+    public int getNbViews() {
+        return getViews().size();
+    }
+
+    /**
+     * Returns the diagram view at the given index.
+     *
+     * @param index The index of the diagram view.
+     * @return The diagram view at the given index.
+     */
+    public DiagramView getViewAt(int index) {
+        return getViews().get(index);
     }
 
     /**
@@ -95,9 +118,19 @@ public class DiagramWindow extends SubWindow {
      *
      * @param index The index of the view that is to be activated.
      */
-    private void activateViewAtIndex(int index) {
-        if (index >= 0 && index < views.size())
+    public void activateViewAtIndex(int index) {
+        if (index >= 0 && index < getViews().size()) {
+            for (DiagramView view : getViews())
+                view.synchronizeWith(getActiveView());
             activeViewIndex = index;
+        }
+    }
+
+    /**
+     * Returns the index of the active view.
+     */
+    public int getActiveViewIndex() {
+        return activeViewIndex;
     }
 
     /**

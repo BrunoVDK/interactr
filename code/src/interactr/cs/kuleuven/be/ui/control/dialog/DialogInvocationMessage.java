@@ -3,7 +3,9 @@ package interactr.cs.kuleuven.be.ui.control.dialog;
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.InvocationMessage;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
 import interactr.cs.kuleuven.be.ui.control.DialogWindow;
+import interactr.cs.kuleuven.be.ui.control.control.*;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
@@ -24,12 +26,48 @@ public class DialogInvocationMessage extends DialogWindow {
     DialogInvocationMessage(Diagram diagram, InvocationMessage message) {
         super(diagram);
         this.message = message;
+        this.listBox = new ListBox(message.getArguments());
+        this.methodName = new TextField(message.getMethodName() , "Method Name: ");
+    }
+
+    protected void generateModels() {
+
     }
 
     @Override
     protected void displayView(PaintBoard paintBoard) {
+        methodName.display(paintBoard, 10, (getFrame().getHeight() * 1/12 ));
+        listBox.display(paintBoard, 10, (getFrame().getHeight() * 2/12 ));
+        buttonUp.display(paintBoard,(getFrame().getWidth() * 12/15), (getFrame().getHeight() * 4/12 ));
+        buttonDown.display(paintBoard,(getFrame().getWidth() * 12/15), (getFrame().getHeight() * 8/12 ));
 
+        buttonPlus.display(paintBoard,(getFrame().getWidth() * 1/3), (getFrame().getHeight() * 10/12 ));
+        buttonMinus.display(paintBoard,(getFrame().getWidth() * 2/3), (getFrame().getHeight() * 10/12 ));
     }
+
+    private TextField methodName;
+
+    /**
+     * The listbox of this dialog window
+     */
+    private ListBox listBox;
+
+    /**
+     * The down button of this dialog window
+     */
+    private ButtonDown buttonDown = new ButtonDown();
+    /**
+     * The up button of this dialog window
+     */
+    private ButtonUp buttonUp = new ButtonUp();
+    /**
+     * The minus button of this dialog window
+     */
+    private ButtonMinus buttonMinus = new ButtonMinus();
+    /**
+     * The plus button of this dialog window
+     */
+    private ButtonPlus buttonPlus = new ButtonPlus();
 
     /**
      * Registers the invocation message associated with this dialog window.
@@ -37,8 +75,18 @@ public class DialogInvocationMessage extends DialogWindow {
     private InvocationMessage message;
 
     @Override
+    public void goUp() {
+        listBox.goUp();
+    }
+
+    @Override
+    public void goDown() {
+        listBox.goDown();
+    }
+
+    @Override
     protected Rectangle getDefaultFrame() {
-        return null;
+        return new Rectangle(0, 0, 270, 300);
     }
 
     @Override

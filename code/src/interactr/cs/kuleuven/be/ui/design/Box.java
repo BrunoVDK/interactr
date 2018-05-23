@@ -13,8 +13,8 @@ public class Box extends Figure {
 
     @Override
     public void draw(PaintBoard paintBoard) {
+        super.draw(paintBoard);
         paintBoard.drawRectangle(getX(), getY(), getWidth(), getHeight());
-        super.drawLabel(paintBoard);
     }
 
     @Override

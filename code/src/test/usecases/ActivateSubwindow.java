@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ActivateSubwindow {
 
-    private Window window = new Window();
+    private Window window = new Window("Test Window");
 
     @BeforeEach
     void setUp(){
@@ -23,11 +23,14 @@ class ActivateSubwindow {
         Window.replayRecording("steps/createNewDiagram.txt", window);
         SubWindow original = controller.getActiveSubwindow();
         assertNotNull(original);
+        // Move the new diagram
         Window.replayRecording("steps/moveNewDiagram.txt", window);
         assertTrue(0 < controller.getActiveSubwindow().getFrame().getX());
         assertTrue(0 < controller.getActiveSubwindow().getFrame().getY());
+        // Create a duplicate diagram
         Window.replayRecording("steps/createCopyDiagram.txt", window);
         assertNotEquals(original, controller.getActiveSubwindow());
+        // Select the moved diagram and check if it is indeed activated
         Window.replayRecording("steps/selectMovedDiagram.txt", window);
         assertEquals(original, controller.getActiveSubwindow());
 

@@ -1,14 +1,14 @@
 package interactr.cs.kuleuven.be.ui.control;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
-import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.exceptions.InvalidActivateException;
+import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.ui.command.Command;
 import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
-import interactr.cs.kuleuven.be.ui.control.control.Control;
-import interactr.cs.kuleuven.be.ui.design.Colour;
+import interactr.cs.kuleuven.be.ui.design.Model;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
-import java.awt.*;
+import java.util.NoSuchElementException;
 
 /**
  * A class of dialog windows.
@@ -27,52 +27,88 @@ public abstract class DialogWindow extends SubWindow {
         if (diagram == null)
             throw new IllegalArgumentException("Diagram cannot be null.");
         this.diagram = diagram;
-        this.setFrame(getDefaultFrame());
+        this.frame = getDefaultFrame();
     }
 
     @Override
     protected boolean canHaveAsFrame(Rectangle frame) {
-        if (!super.canHaveAsFrame(frame))
-            return false;
-        return (frame.getHeight() >= getDefaultFrame().getHeight() && frame.getWidth() >= getDefaultFrame().getWidth());
+        return  super.canHaveAsFrame(frame)
+                && (frame.getHeight() >= getDefaultFrame().getHeight() && frame.getWidth() >= getDefaultFrame().getWidth());
     }
 
     /**
-     * Displays the given control in the given paintboard.
-     *
-     * @param paintBoard The paintboard to draw on.
-     * @param control The control that is to be drawn.
-     * @param x The x coordinate to draw the control at.
-     * @param y The y coordinate to draw the control at.
+     * Returns the index of the element for this dialog window.
      */
-    protected final void displayControl(PaintBoard paintBoard, Control control, int x, int y) {
-        if (focusedControl == control)
-            paintBoard.setColour(Colour.BLUE);
-        else
-            paintBoard.setColour(Colour.BLACK);
-        control.display(paintBoard, x, y);
+    protected int getFocusIndex() {
+        return focusIndex;
     }
 
     /**
-     * Sets the focused control to the given one.
+     * Activate the focused element.
      *
-     * @param control The control to focus on.
+     * @throws InvalidActivateException If the focused element can't be activated.
      */
-    void setFocusedControl(Control control) {
-        focusedControl = control;
+    public void activateFocus() throws InvalidActivateException {
+        throw new InvalidActivateException();
     }
 
     /**
-     * Registers the control focused on by this dialog window.
+     * Focus on the element at the given coordinates.
+     *
+     * @param x The x coordinate where the element lies.
+     * @param y The y coordinate where the element lies.
      */
-    private Control focusedControl = null;
+    public void focus(int x, int y) {
+        x -= getFrame().getX();
+        y -= getFrame().getY() + TITLE_BAR_HEIGHT;
+        for (int i=0 ; i<models.size() ; i++) {
+            if (models.get(i).isHit(x, y)) {
+                setFocusIndex(i);
+                activateFocus();
+                return;
+            }
+        }
+        throw new NoSuchElementException();
+    }
 
     /**
-     * Returns the default frame for this dialog window.
+     * Sets the focused element to the given one.
      *
-     * @return The default frame for this dialog window.
+     * @param focusIndex The index of the element to focus on.
      */
-    protected abstract Rectangle getDefaultFrame();
+    private void setFocusIndex(int focusIndex) {
+        this.focusIndex = focusIndex;
+    }
+
+    /**
+     * Focus on the next control.
+     */
+    public void focusNext() {setFocusIndex((getFocusIndex() + 1) % models.size());}
+
+    /**
+     * Registers the index of the element focused on by this dialog window.
+     */
+    private int focusIndex = 0;
+
+    /**
+     * Generate the models held by this dialog window.
+     */
+    protected abstract void generateModels();
+
+    /**
+     * The list of models held by this dialog.
+     */
+    protected PList<Model> models = PList.empty();
+
+    /**
+     * A method that is used by the Dialog Diagram
+     */
+    public void goUp() {throw new CommandNotProcessedException();};
+
+    /**
+     * A method that is used by the Dialog Diagram
+     */
+    public void goDown() {throw new CommandNotProcessedException();};
 
     /**
      * Returns the diagram associated with this dialog.
@@ -85,6 +121,13 @@ public abstract class DialogWindow extends SubWindow {
      * Registers the diagram associated with this dialog.
      */
     private Diagram diagram;
+
+    /**
+     * Returns the default frame for this dialog window.
+     *
+     * @return The default frame for this dialog window.
+     */
+    protected abstract Rectangle getDefaultFrame();
 
     @Override
     public void executeCommand(Command command) throws CommandNotProcessedException {

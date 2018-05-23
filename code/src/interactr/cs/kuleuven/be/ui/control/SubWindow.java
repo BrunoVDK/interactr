@@ -1,13 +1,8 @@
 package interactr.cs.kuleuven.be.ui.control;
 
-import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.exceptions.*;
-import interactr.cs.kuleuven.be.purecollections.PList;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
-import interactr.cs.kuleuven.be.ui.command.Command;
 import interactr.cs.kuleuven.be.ui.command.CommandHandler;
-import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
-import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 import interactr.cs.kuleuven.be.ui.design.Colour;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
@@ -25,18 +20,18 @@ public abstract class SubWindow implements CommandHandler {
      * Create a new subwindow with a default frame of size 400x400.
      */
     SubWindow() {
-        this(null);
+        this(null, null);
     }
 
     /**
      * Create a new subwindow as a duplicate of the given subwindow.
-     *  If no subwindow is given, a default frame of size 400x400 is used.
      *
      * @param subWindow The subwindow that is to be duplicated by this subwindow.
+     * @param frame The frame to initialize this new subwindow with. If null, a default frame size of 400x400 is used.
      */
-    SubWindow(SubWindow subWindow) {
+    SubWindow(SubWindow subWindow, Rectangle frame) {
         if (subWindow == null)
-            setFrame(new Rectangle(0, 0, 400, 400));
+            setFrame(frame == null ? new Rectangle(0, 0, 400, 400) : frame);
         else
             setFrame(new Rectangle(0, 0, subWindow.getFrame().getWidth(), subWindow.getFrame().getHeight()));
     }
@@ -44,7 +39,7 @@ public abstract class SubWindow implements CommandHandler {
     /**
      * Returns the frame of this subwindow.
      */
-    protected Rectangle getFrame() {
+    public Rectangle getFrame() {
         return frame;
     }
 
@@ -73,7 +68,7 @@ public abstract class SubWindow implements CommandHandler {
      * @return True if and only if the given frame's width and height are large enough.
      */
     protected boolean canHaveAsFrame(Rectangle frame) {
-        return (frame.getWidth() > CLOSE_BUTTON_SIZE + 10 && frame.getHeight() > TITLE_BAR_HEIGHT + 80);
+        return (frame.getWidth() > CLOSE_BUTTON_SIZE + 10 && frame.getHeight() > TITLE_BAR_HEIGHT + 50);
     }
 
     /**
@@ -137,93 +132,7 @@ public abstract class SubWindow implements CommandHandler {
     /**
      * The frame of this subwindow.
      */
-    private Rectangle frame;
-
-    /**
-     * Returns whether or not the given diagram component is currently selected.
-     *
-     * @param component The component to check for.
-     * @return True if and only if the given diagram component is currently selected.
-     */
-    private boolean isSelected(DiagramComponent component) {
-        return getSelectedComponent() == component;
-    }
-
-    /**
-     * Returns the diagram component that is currently active in this diagram.
-     */
-    public DiagramComponent getSelectedComponent() {
-        return selectedComponent;
-    }
-
-    /**
-     * Sets a diagramcomponent in this diagram as active component.
-     *
-     * @param component the diagram component that needs to be set as active component.
-     */
-    private void setSelectedComponent(DiagramComponent component) {
-        this.selectedComponent = component;
-    }
-
-    /**
-     * Deselects the currently selected component.
-     *
-     * @throws InvalidLabelException If the selected component is active and its label is invalid.
-     */
-    public void deselectAll() throws InvalidLabelException {
-        if (selectionIsActive() && !getSelectedComponent().canHaveAsLabel(getSelectedLabel()))
-            throw new InvalidLabelException();
-        setSelectedLabel(null);
-        setSelectedComponent(null);
-    }
-
-    /**
-     * Returns whether or not the selection for this subwindow is active (that is, in edit mode).
-     *
-     * @return True if and only if the selected label is not null.
-     */
-    public boolean selectionIsActive() {
-        return selectedLabel != null;
-    }
-
-    /**
-     * Registers the active component in this diagram.
-     */
-    private DiagramComponent selectedComponent = null;
-
-    /**
-     * Sets the temporary label for the active component to the given one.
-     *
-     * @param selectedLabel The new temporary label for the active component.
-     */
-    public void setSelectedLabel(String selectedLabel){
-        this.selectedLabel = selectedLabel;
-        if (selectedComponent != null && selectedComponent.canHaveAsLabel(selectedLabel)) {
-            selectedComponent.setLabel(selectedLabel);
-        }
-    }
-
-    /**
-     * Returns the temporary label of the currently active component in this diagram.
-     */
-    public String getSelectedLabel(){
-        return selectedLabel;
-    }
-
-    /**
-     * The temporary label for the active component of this diagram.
-     */
-    private String selectedLabel = null;
-
-    /**
-     * Removes the currently selected component from this subwindow's diagram.
-     */
-    public void deleteSelection(){
-        if (selectedLabel == null && getSelectedComponent() != null) { // Only delete if not active
-            //getSelectedComponent().deleteFrom(getDiagram());
-            deselectAll(); // Now deselect everything
-        }
-    }
+    protected Rectangle frame;
 
     /**
      * Display the currently active view in the given paintboard.
@@ -333,7 +242,7 @@ public abstract class SubWindow implements CommandHandler {
     /**
      * The height of a subwindow's title bar.
      */
-    private final static int TITLE_BAR_HEIGHT = 23;
+    protected final static int TITLE_BAR_HEIGHT = 23;
 
     /**
      * The size of a subwindow's close button. Should be smaller than the title bar height.
@@ -368,16 +277,16 @@ public abstract class SubWindow implements CommandHandler {
     public abstract String getTitle();
 
     /**
+     * Close this subwindow.
+     */
+    public void close() {isClosed = true;}
+
+    /**
      * Returns whether or not this subwindow is closed.
      */
     public boolean isClosed() {
         return isClosed;
     }
-
-    /**
-     * Close this subwindow.
-     */
-    public void close() {isClosed = false;}
 
     /**
      * Registers whether or not this subwindow is closed.

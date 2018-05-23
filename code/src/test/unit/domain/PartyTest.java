@@ -38,20 +38,6 @@ class PartyTest {
     }
 
     @Test
-    void setValidLabelTest() {
-        Party party = Party.createParty();
-        party.setLabel("valid:Label");
-        assertEquals(party.getLabel(), "valid:Label");
-    }
-
-    @Test
-    void setInvalidLabelTest() {
-        Party party = Party.createParty();
-        assertThrows(InvalidLabelException.class,
-                ()->{party.setLabel("Invalid:Label");});
-    }
-
-    @Test
     void canHaveAsLabelTest() {
         Party party = Party.createParty();
         assertTrue(party.canHaveAsLabel("valid:Label"));

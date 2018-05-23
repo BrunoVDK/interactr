@@ -2,8 +2,7 @@ package interactr.cs.kuleuven.be.ui.control.diagram;
 
 import interactr.cs.kuleuven.be.domain.*;
 import interactr.cs.kuleuven.be.ui.design.Arrow;
-import interactr.cs.kuleuven.be.ui.design.DashedArrow;
-import interactr.cs.kuleuven.be.ui.design.Link;
+import interactr.cs.kuleuven.be.ui.design.Line;
 
 /**
  * A class of visitors for creating links for ùessages.
@@ -37,7 +36,7 @@ public class MessageModeller implements DiagramVisitor {
      * @param message The message to create a link for.
      * @return A link representing the given message, or null if none could be created.
      */
-    Link generateLink(Message message) {
+    Line generateLink(Message message) {
         link = null;
         message.acceptVisitor(this);
         return link;
@@ -46,12 +45,12 @@ public class MessageModeller implements DiagramVisitor {
     /**
      * Registers the created link.
      */
-    private Link link;
+    private Line link;
 
     /**
      * Registers the flyweights.
      */
-    private static Link invocationLink = new Arrow(), resultLink = new DashedArrow();
+    private static Line invocationLink = new Arrow(false), resultLink = new Arrow(true);
 
     @Override
     public void visit(InvocationMessage message) {

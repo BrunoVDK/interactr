@@ -28,7 +28,7 @@
 
 \section{Design}
 
-\begin{frame}[fragile]{Domain Model}
+\begin{frame}[fragile]{Domain Model - Overview}
 	\begin{center}
 	\begin{itemize}
 	\item \texttt{Low representational gap}
@@ -38,9 +38,30 @@
 	\end{center}
 \end{frame}
 
-\begin{frame}[fragile]{Domain Model}
+\begin{frame}[fragile]{Domain Model - UML}
 	\begin{center}
 	\textit{Put diagram of domain model here}
+	\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Domain Model - Diagram Visitors}
+	\begin{center}
+	Interface \texttt{DiagramVisitor} can be implemented by various visitors in other subsystems.\\
+	Every \texttt{DiagramComponent} can accept such a visitor.\\
+	\vspace{0.5cm}
+	$\rightarrow$ makes it easy to add functionality to the domain layer without having to add code to the classes themselves (like UI-related code)\\
+	\vspace{0.5cm}
+	\footnotesize Example of visitors used in our UI layer : \texttt{DialogCreator} (makes dialog for a given diagram component without resorting to the use of \textit{instanceof})
+	\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Domain Model - Diagram Observers}
+	\begin{center}
+	Interface \texttt{DiagramObserver} represents an observer of a diagram. \\
+	\vspace{0.5cm}
+	A diagram has a list of such observers that it notifies when a party is added, a label is edited, ...\\
+	\vspace{0.5cm}
+	\footnotesize We currently implement this interface in our classes representing dialog windows and diagram views, for synchronisation of, say, labels.
 	\end{center}
 \end{frame}
 
@@ -56,27 +77,33 @@
 	\end{center}
 \end{frame}
 
-\begin{frame}[fragile]{Controller - Underlying Structure}
+\begin{frame}[fragile]{Entry Point - Controller}
 	\begin{center}
-	The \texttt{Controller} keeps track of a list of \texttt{SubWindow}s.
-	\\ A \texttt{SubWindow} can be a \texttt{DiagramWindow} or a \texttt{DialogBox}.
-	\\ Each \texttt{SubWindow} has a frame.
-	\\ Each \texttt{SubWindow} is `\textit{activated}' by putting it at the front of the window list.
+	\textit{Put diagram of Controller, PaintBoard and EventHandler and Window + CanvasWindow here}
 	\end{center}
 \end{frame}
 
-\begin{frame}[fragile]{SubWindows - Diagram Windows \& Dialog Boxes}
+\begin{frame}[fragile]{Controller - Underlying Structure}
+	\begin{center}
+	The \texttt{Controller} keeps track of a list of \texttt{SubWindow}s.
+	\\\vspace{0.5cm} A \texttt{SubWindow} can be a \texttt{DiagramWindow} or a \texttt{DialogBox}.
+	\\\vspace{0.5cm} Each \texttt{SubWindow} has a frame.
+	\\\vspace{0.5cm} \footnotesize Each \texttt{SubWindow} is `\textit{activated}' by putting it at the front of the window list.
+	\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{SubWindows - Diagram Windows \& Dialog Boxes/Windows}
 	\begin{center}
 	A \texttt{DiagramWindow} has two \texttt{DiagramView}s.
-	\\A \texttt{DialogBox} has a list of \texttt{Control}s.
+	\\A \texttt{DialogWindow} is composed of \texttt{Control}s.
 	
 	\vspace{0.5cm}
-	A \texttt{Diagram} is directly altered by these classes.
+	A \texttt{Diagram} is directly altered by \texttt{DiagramView}s and \texttt{DialogWindow}.
 	
 	\vspace{0.5cm}
 	Synchronization is done with the \texttt{Observer} pattern. 
 	\\ Since \texttt{Diagram} knows when it changes, it keeps a list of \texttt{DiagramObserver}s and notifies them (\texttt{Information Expert}).
-	\\$\rightarrow$ disadvantage : coordinates aren't synchronised (solved by `\textit{making room}')
+	\\$\rightarrow$ disadvantage : coordinates aren't synchronised (solved by `\textit{making room}' upon addition of a diagram component to a `DiagramView')
 	\end{center}
 \end{frame}
 
@@ -87,7 +114,13 @@
 	\item[$\rightarrow$] \texttt{EventHandler} interprets the events and transforms them into \texttt{Command} instances.
 	\item[$\rightarrow$] \texttt{Command} is forwarded to \texttt{Controller}.
 	\end{itemize}
-	Note : if event is a \textit{mouse press}, \texttt{EventHandler} asks the \texttt{Controller} to activate the \texttt{SubWindow} at that coordinate first. 
+	Note : if event is a \textit{mouse press}, \texttt{EventHandler} asks the \texttt{Controller} to activate the \texttt{SubWindow} at that coordinate first. This very window will be the first receiver for the command. 
+	\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Event Handling - Commands}
+	\begin{center}
+	\textit{Put diagram of \texttt{Command} etc. here}
 	\end{center}
 \end{frame}
 
@@ -96,11 +129,17 @@
 	\textit{Precondition} : \texttt{SubWindow} is active
 	\begin{itemize}
 	\item[$\rightarrow$] Every \texttt{Command} can be handled by a \texttt{CommandHandler}.
-	\item[$\rightarrow$] \texttt{DiagramWindow}, \texttt{DiagramView} and \texttt{DialogBox} extend the\texttt{CommandHandler} class. 
+	\item[$\rightarrow$] \texttt{DiagramWindow}, \texttt{DiagramView} and \texttt{DialogBox} extend the \texttt{CommandHandler} class. 
 	\item[$\rightarrow$] The first \texttt{CommandHandler} is the active \texttt{SubWindow}.
 	\item[$\rightarrow$] Every \texttt{CommandHandler} either deals with the \texttt{Command} or (on failure) passes it to the next \texttt{CommandHandler} in its chain. 
 	\end{itemize}
-	Patterns used : \texttt{Command}, \texttt{Visitor} and \texttt{Chain of Responsibility}.
+	Patterns used : \texttt{Command}, \texttt{Visitor} and (some sort of) \texttt{Chain of Responsibility}.
+	\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Event Handling - Example}
+	\begin{center}
+	Vid. Sequence diagram for \textit{Add Party}.
 	\end{center}
 \end{frame}
 
@@ -125,44 +164,46 @@
 	\\$\rightarrow$ use of \texttt{Visitor} pattern to generate figures (representations) for these diagram components.
 	\\$\rightarrow$ these figures are \texttt{Flyweight}s.
 	\\$\rightarrow$ separation of UI / domain logic without use of type checking (i.e. \texttt{instanceof}).
-	\item \texttt{Control} draws itself, eg. text for label.
+	\item Class hierarchy for \texttt{Model} (\texttt{Composite} pattern) used for representation/drawing of a variety of elements in the system (parties, messages, controls, ...).
 	\end{itemize}
 	\end{center}
 \end{frame}
 
 \section{Extensibility}
 
-\begin{frame}[fragile]{Commands}
+\begin{frame}[fragile]{Extensibility - Diagram Visitors}
+	\begin{center}
+		As stated before, \texttt{DiagramVisitor} interface makes it easy to add functionality to the domain model without `polluting' it with, say, UI logic.
+	\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Extensibility - Commands}
 	\begin{center}
 	\texttt{Command} pattern eases undoing, allows delayed processing, use by menu items, ... When using new types of events (eg. speech recognition) only \texttt{EventHandler} has to change.
 	
-	\vspace{0.5cm} Small disadvantages ; 
+	\vspace{0.5cm} Disadvantages ; 
 	\begin{itemize}
 	\item many new types of \texttt{CommandHandler} 
 	\\ $\rightarrow$ bloated \texttt{Command} abstract class (\texttt{Visitor} pattern discussion)
 	\item if \texttt{Chain of Responsibility} is long
-	\\ $\rightarrow$ wasted processing
+	\\ $\rightarrow$ wasted processing (command goes down the whole chain before realising that it can't be handled)
+	\item if many new system operations for many different types of windows 
+	\\ $\rightarrow$ redesign necessary (example redesign : use of commands mapped to key/mouse events, translation of these commands at the last moment, use of singleton undo manager).
 	\end{itemize}
 	\end{center}
 \end{frame}
 
-\begin{frame}[fragile]{}
+\begin{frame}[fragile]{Extensibility - Model}
 	\begin{center}
-
-	\end{center}
-\end{frame}
-
-\begin{frame}[fragile]{}
-	\begin{center}
-	
+	Representation of various elements in the system can be done with the \texttt{Model} class.\\
+	$\rightarrow $ new elements in domain model and elsewhere is a matter of creating subclasses of \texttt{Model}, whenever necessary.
 	\end{center}
 \end{frame}
 
 \section{Testing}
 
-\begin{frame}[fragile]{Testing}
-	Coverage here!
-	%\includegraphics[width=1\textwidth]{coverage}
+\begin{frame}[fragile]{Testing - Coverage}
+	\includegraphics[width=1\textwidth]{coverage}
 \end{frame}
 
 \section{Project Management}
@@ -180,12 +221,16 @@
 \item No \textit{duplicated code}.
 \item \textit{Moved methods} here and there.
 \item Addressed \textit{long methods} with \textit{extract method} \\
-$\rightarrow$ not the best metric ... but all methods easily fit on a laptop screen
+$\rightarrow$ not the best metric ... but all methods `fit on the screen' (max. 30 lines).
 \item If appropriate a \textit{temporary variable} was replaced with getters.
 \item Avoided \textit{message chains}.
 \item Virtually no \textit{switch statements} (only in \texttt{EventHandler}).
 \item \textit{Comments} virtually never necessary (maybe when drawing messages in \texttt{SequenceView}).
 \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Refactoring - Tools}
+	\includegraphics[width=1\textwidth]{refactoring}
 \end{frame}
 
 \begin{frame}[fragile]{Time management}

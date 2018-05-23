@@ -1,10 +1,13 @@
 package usecases;
 
+import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.Party;
 import interactr.cs.kuleuven.be.ui.Controller;
 import interactr.cs.kuleuven.be.ui.Window;
 import interactr.cs.kuleuven.be.ui.EventHandler;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
+import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,8 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class EditLabel {
-    private Window window = new Window();
+class EditLabel {
+
+    private Window window = new Window("Test Window");
 
     @BeforeEach
     void setUp(){
@@ -26,68 +30,48 @@ public class EditLabel {
         Controller controller = window.getEventHandler().getController();
         // Precondition
         Window.replayRecording("steps/createNewDiagram.txt", window);
-        //At party at 100 x
+        // Add party at 100 x
         Window.replayRecording("steps/createPartyAt100.txt", window);
-        assertTrue(controller.getActiveSubwindow().getDiagram().getParties().size() > 0);
-        // Assert that it is selected
-        Party newParty = controller.getActiveSubwindow().getDiagram().getParties().get(0);
-        assertEquals(controller.getActiveSubwindow().getSelectedComponent(), newParty);
+        assertTrue(getDiagram().getParties().size() > 0);
+        // Assert that it is selected and editing
+        Party newParty = getDiagram().getParties().get(0);
+        assertEquals(getActiveView().getSelectedComponent(), newParty);
+        assertTrue(getActiveView().isEditing());
         // Type label
-        Window.replayRecording("steps/typePartyLabela:A.txt", window);
-        assertEquals(controller.getActiveSubwindow().getSelectedLabel(), "a:A");
+        Window.replayRecording("steps/typePartyLabelaA.txt", window);
+        assertEquals(getActiveView().getSelectedLabel(), "a:A");
         assertEquals(newParty.getLabel(), "a:A");
         // Press enter
         Window.replayRecording("steps/pressEnter.txt", window);
-        assertNull(controller.getActiveSubwindow().getSelectedComponent());
+        assertNull(getActiveView().getSelectedComponent());
         assertEquals(newParty.getLabel(), "a:A");
-
+        // Start editing party at 100 x
         Window.replayRecording("steps/selectPartyAt100.txt", window);
         Window.replayRecording("steps/selectPartyAt100.txt", window);
-
-        Window.replayRecording("steps/typePartyLabelb:B.txt", window);
+        assertTrue(getActiveView().isEditing());
+        // Remove the current name
+        Window.replayRecording("steps/pressBackSpace.txt", window);
+        Window.replayRecording("steps/pressBackSpace.txt", window);
+        Window.replayRecording("steps/pressBackSpace.txt", window);
+        assertEquals(getActiveView().getSelectedLabel(), "");
+        // Type b:B and check if component has that name
+        Window.replayRecording("steps/typePartyLabelbB.txt", window);
         Window.replayRecording("steps/pressEnter.txt", window);
         Window.replayRecording("steps/selectPartyAt100.txt", window);
-        assertEquals(controller.getActiveSubwindow().getSelectedComponent().getLabel(), "b:B");
+        assertEquals(getActiveView().getSelectedComponent().getLabel(), "b:B");
 
     }
 
-    @Test
-    /**
-     * The partys label is changedfrom a:A to b:B
-     */
-    void editLabelParty(){
-        Window.replayRecording("editLabelParty.txt", window);
-        assertEquals("b:B", window.getEventHandler().getController().getActiveSubwindow().getSelectedComponent().getLabel());
+    // Returns the currently active view for the scene
+    //  Convenience method
+    private DiagramView getActiveView() {
+        return ((DiagramWindow)window.getEventHandler().getController().getActiveSubwindow()).getActiveView();
     }
 
-    @Test
-    /**
-     * The partys label is changedfrom a:A to b
-     */
-    void editLabelPartyIllegalLabel(){
-        Window.replayRecording("editLabelPartyIllegalLabel.txt", window);
-        assertEquals("a:A", window.getEventHandler().getController().getActiveSubwindow().getSelectedComponent().getLabel());
+    // Returns the diagram for the currently active subwindow
+    //  Convenience method
+    private Diagram getDiagram() {
+        return ((DiagramWindow)window.getEventHandler().getController().getActiveSubwindow()).getDiagram();
     }
-
-    /**
-     * Change a invocation message label from "c" to "d"
-     */
-    @Test
-    void editLabelInvocationMessage(){
-        Window.replayRecording("editLabelInvocationMessage.txt", window);
-        assertEquals("d", window.getEventHandler().getController().getActiveSubwindow().getDiagram().getMessages().getFirst().getLabel());
-    }
-
-
-
-    /**
-     * Change a result message label to "d"
-     */
-    @Test
-    void editLabelResultMessage(){
-        Window.replayRecording("editLabelResultMessage01.txt", window);
-        assertEquals("d", window.getEventHandler().getController().getActiveSubwindow().getDiagram().getMessages().get(1).getLabel());
-    }
-
 
 }

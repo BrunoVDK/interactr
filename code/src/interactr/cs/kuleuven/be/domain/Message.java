@@ -16,7 +16,7 @@ public class Message extends DiagramComponent {
      * @param receiver The receiver party for this new message.
      * @throws IllegalArgumentException If any of the given parties is null.
      */
-    Message(String label, Party sender, Party receiver) throws IllegalArgumentException {
+    public Message(String label, Party sender, Party receiver) throws IllegalArgumentException {
         super(label);
         setSender(sender);
         setReceiver(receiver);

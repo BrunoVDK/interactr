@@ -1,6 +1,9 @@
 package interactr.cs.kuleuven.be.ui.command;
 
+import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
+import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
 import interactr.cs.kuleuven.be.ui.control.DialogWindow;
+import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 
 /**
  * A class of commands for appending a char to an active component's label.
@@ -36,5 +39,13 @@ public class AppendCharCommand extends Command {
      * Registers the char that is to be appended.
      */
     private char c;
+
+    @Override
+    public void executeDiagramView(DiagramView view) {
+        try {
+            view.setSelectedLabel(view.getSelectedLabel() + this.c);
+        }
+        catch (InvalidLabelException ignored) {}
+    }
 
 }

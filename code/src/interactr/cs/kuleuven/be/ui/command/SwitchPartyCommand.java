@@ -31,7 +31,7 @@ public class SwitchPartyCommand extends Command {
         try {
             view.switchTypeOfParty(view.getRelativeCoordinates(location).getX(), view.getRelativeCoordinates(location).getY());
         }
-        catch (NoSuchPartyException e) {throw new CommandNotProcessedException();}
+        catch (Exception e) {throw new CommandNotProcessedException();}
     }
 
 }

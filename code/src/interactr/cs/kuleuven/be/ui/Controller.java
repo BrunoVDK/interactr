@@ -49,8 +49,11 @@ public class Controller {
      * Display all subwindows in this diagram controller.
      */
     public void displayAllSubWindows() {
-        for (int i=this.getSubWindows().size()-1 ; i>=0 ; i--) // Last window first
-            this.getSubWindows().get(i).display(getPaintBoard());
+        for (int i=getSubWindows().size()-1 ; i>=0 ; i--) // Last window first
+            if (getSubWindows().get(i).isClosed())
+                removeSubWindow(getSubWindows().get(i));
+            else
+                getSubWindows().get(i).display(getPaintBoard());
     }
 
     /**
@@ -58,7 +61,7 @@ public class Controller {
      *
      * @return The diagram view of this controller that's currently active.
      */
-    private SubWindow getActiveSubwindow() {
+    public SubWindow getActiveSubwindow() {
         return (this.getSubWindows().isEmpty() ? null : this.getSubWindows().get(0));
     }
 
@@ -147,7 +150,6 @@ public class Controller {
         SubWindow subWindow = this.getSubWindows().stream().filter( s -> s.closeButtonEncloses(x,y)).findFirst().orElse(null);
         if (subWindow != null) {
             subWindow.close();
-            this.removeSubWindow(subWindow);
             getPaintBoard().refresh();
         }
         else

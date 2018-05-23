@@ -4,9 +4,12 @@ import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.Party;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.control.DialogWindow;
+import interactr.cs.kuleuven.be.ui.control.control.Control;
 import interactr.cs.kuleuven.be.ui.control.control.RadioButton;
 import interactr.cs.kuleuven.be.ui.control.control.TextField;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
+
+import java.util.ArrayList;
 
 /**
  * A class of dialogs for parties.
@@ -16,9 +19,14 @@ import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
  */
 public class DialogParty extends DialogWindow {
 
-    private static  final int width = 150, height = 100;
-
-    public DialogParty(Party party, Diagram diagram, boolean isActor){
+    /**
+     * Intialize this new party dialog with given party, diagram and actor flag.
+     *
+     * @param party The party to associate this new dialog with.
+     * @param diagram The diagram to associate this new dialog with.
+     * @param isActor A flag denoting whether or not the given party is an actor.
+     */
+    DialogParty(Party party, Diagram diagram, boolean isActor){
         super(diagram);
         this.party = party;
         if(isActor)
@@ -27,31 +35,46 @@ public class DialogParty extends DialogWindow {
             objectButton.setActive(true);
         this.instanceName = new TextField(party.getInstanceName(), "Instance name: ");
         this.className = new TextField(party.getClassName(), "Class name: ");
-        this.setFrame(new Rectangle(0,0,width,height));
+        controls.add(instanceName);
+        controls.add(className);
+        controls.add(actorButton);
+        controls.add(objectButton);
+    }
+
+    protected void generateModels() {
+
     }
 
     @Override
     protected Rectangle getDefaultFrame() {
-        return new Rectangle(0, 0, 250, 200);
+        return new Rectangle(0, 0, 270, 150);
     }
-
 
     @Override
     protected void displayView(PaintBoard paintBoard) {
-        actorButton.display(paintBoard, 10 * 9/12, height/2);
-        objectButton.display(paintBoard, 10 * 11/12, height/2);
+
+        int i = 0;
+        for (Control c : controls) {
+
+        }
+        //actorButton.display(paintBoard, getFrame().getX() + 10,  getFrame().getY() + (getFrame().getHeight() * 1/5));
+        //objectButton.display(paintBoard, getFrame().getX() + 10 , getFrame().getY() + (getFrame().getHeight() * 2/5));
+        //instanceName.display(paintBoard,getFrame().getX() + 10   , getFrame().getY() + (getFrame().getHeight() * 3/5));
+        //className.display(paintBoard, getFrame().getX() + 10, getFrame().getY() +( getFrame().getHeight() * 4/5));
 
     }
+
+    ArrayList<Control> controls = new ArrayList<>();
 
     /**
      * Registers the radio buttons for this party dialog.
      */
-    private RadioButton actorButton = new RadioButton("Actor: "), objectButton = new RadioButton("Object: ");
+    private RadioButton actorButton = new RadioButton("Actor"), objectButton = new RadioButton("Object");
 
     /**
      * Registers the text fields for this party dialog
      */
-    private TextField instanceName , className;
+    private TextField instanceName, className;
 
     /**
      * The party of this dialog

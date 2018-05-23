@@ -15,7 +15,7 @@ public class Window extends CanvasWindow {
      *
      * @param title The title for the new window.
      */
-    Window(String title) {
+    public Window(String title) {
         super(title);
     }
 
@@ -89,7 +89,7 @@ public class Window extends CanvasWindow {
     /**
      * Returns the event handler associated with this diagram window.
      */
-    private EventHandler getEventHandler() {
+    public EventHandler getEventHandler() {
         return eventHandler;
     }
 

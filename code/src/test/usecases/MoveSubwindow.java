@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class MoveSubwindow {
+class MoveSubwindow {
 
-    private Window window = new Window();
+    private Window window = new Window("Test Window");
 
     @BeforeEach
     void setUp(){
@@ -21,10 +21,12 @@ public class MoveSubwindow {
     @Test
     void stepByStep(){
         Controller controller = window.getEventHandler().getController();
-        // Precondition
+        // Precondition - create new diagram
         Window.replayRecording("steps/createNewDiagram.txt", window);
+        // Make sure diagram window exists
         SubWindow original = controller.getActiveSubwindow();
         assertNotNull(original);
+        // Move the new diagram and ensure that it is moved
         Window.replayRecording("steps/moveNewDiagram.txt", window);
         assertTrue(0 < controller.getActiveSubwindow().getFrame().getX());
         assertTrue(0 < controller.getActiveSubwindow().getFrame().getY());
@@ -36,4 +38,5 @@ public class MoveSubwindow {
         assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getX() > 0);
         assertTrue(window.getEventHandler().getController().getActiveSubwindow().getFrame().getY() > 0);
     }
+
 }

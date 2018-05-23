@@ -2,17 +2,20 @@ package usecases;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.DiagramComponent;
-import interactr.cs.kuleuven.be.ui.*;
-import interactr.cs.kuleuven.be.ui.control.SubWindow;
+import interactr.cs.kuleuven.be.ui.Controller;
+import interactr.cs.kuleuven.be.ui.EventHandler;
+import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.Window;
+import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
+import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class CreateNewDiagram {
+import static org.junit.jupiter.api.Assertions.*;
 
-    private Window window = new Window();
+class CreateNewDiagram {
+
+    private Window window = new Window("Test Window");
 
     @BeforeEach
     void setUp(){
@@ -35,9 +38,9 @@ public class CreateNewDiagram {
     @Test
     void createNewEmptyDiagram(){
         Window.replayRecording("createNewEmptyDiagram1.txt", window);
-        Diagram diagram = window.getEventHandler().getController().getActiveSubwindow().getDiagram();
+        Diagram diagram = getDiagram();
         Window.replayRecording("createNewEmptyDiagram2.txt", window);
-        assertEquals(diagram, window.getEventHandler().getController().getActiveSubwindow().getDiagram() );
+        assertEquals(diagram, getDiagram() );
     }
 
     /**
@@ -47,7 +50,7 @@ public class CreateNewDiagram {
     @Test
     void createNewDiagramWithParty(){
         Window.replayRecording("createNewDiagramWithParty01.txt", window);
-        assertEquals(1, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getParties().size());
+        assertEquals(1, getDiagram().getParties().size());
     }
 
     /**
@@ -57,24 +60,31 @@ public class CreateNewDiagram {
     @Test
     void copyDiagramWithParty() {
         Window.replayRecording("copyDiagramWithParty.txt", window);
-        SubWindow win1 = window.getEventHandler().getController().getActiveSubwindow();
+        DiagramWindow win1 = getActiveDiagramWindow();
         window.getEventHandler().getController().activateSubWindow(10,10);
-        SubWindow win2 = window.getEventHandler().getController().getActiveSubwindow();
+        DiagramWindow win2 = getActiveDiagramWindow();
         assertNotEquals(win1, win2, "Recording is broken: Selected the same subwindow twice");
-        DiagramComponent comp1 = win1.getActiveView().getComponent(166,66);
-        DiagramComponent comp2 = win2.getActiveView().getComponent(166,66);
+        DiagramComponent comp1 = win1.getActiveView().getParty(166,66);
+        DiagramComponent comp2 = win2.getActiveView().getParty(166,66);
         assertEquals(comp1, comp2);
     }
 
-    /**
-     * Adds a new subwindow with a party with the labal "a:A" then creates a copy
-     * Change the label of the party to "iets" and check if the copy has still
-     * the old label.
-     */
-    @Test
-    void createNewDiagramEditInvalidLabel(){
-        Window.replayRecording("createNewDiagramEditInvalidLabel01.txt", window);
-        assertEquals("a:A", window.getEventHandler().getController().getActiveSubwindow().getSelectedComponent().getLabel());
+    // Returns the currently active diagram window for the scene
+    //  Convenience method
+    private DiagramWindow getActiveDiagramWindow() {
+        return ((DiagramWindow)window.getEventHandler().getController().getActiveSubwindow());
+    }
+
+    // Returns the currently active view for the scene
+    //  Convenience method
+    private DiagramView getActiveView() {
+        return ((DiagramWindow)window.getEventHandler().getController().getActiveSubwindow()).getActiveView();
+    }
+
+    // Returns the diagram for the currently active subwindow
+    //  Convenience method
+    private Diagram getDiagram() {
+        return ((DiagramWindow)window.getEventHandler().getController().getActiveSubwindow()).getDiagram();
     }
 
 }

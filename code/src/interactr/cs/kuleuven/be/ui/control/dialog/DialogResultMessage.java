@@ -3,7 +3,9 @@ package interactr.cs.kuleuven.be.ui.control.dialog;
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.ResultMessage;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
 import interactr.cs.kuleuven.be.ui.control.DialogWindow;
+import interactr.cs.kuleuven.be.ui.control.control.TextField;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
@@ -24,21 +26,41 @@ public class DialogResultMessage extends DialogWindow {
     DialogResultMessage(Diagram diagram, ResultMessage message) {
         super(diagram);
         this.message = message;
+        this.componentLabel = new TextField(message.getLabel(), "Label: ");
+    }
+
+    @Override
+    protected void generateModels() {
+
     }
 
     @Override
     protected void displayView(PaintBoard paintBoard) {
-
+        componentLabel.display(paintBoard, 10 , ( getFrame().getHeight() * 1/2));
     }
 
+    /**
+     * Registers the text fields for this party dialog
+     */
+    private TextField componentLabel;
     /**
      * Registers the invocation message associated with this dialog window.
      */
     private ResultMessage message;
 
     @Override
+    public void goUp() {
+        throw new CommandNotProcessedException();
+    }
+
+    @Override
+    public void goDown() {
+        throw new CommandNotProcessedException();
+    }
+
+    @Override
     protected Rectangle getDefaultFrame() {
-        return null;
+        return new Rectangle(0, 0, 270, 150);
     }
 
     @Override

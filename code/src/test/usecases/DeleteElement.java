@@ -1,10 +1,13 @@
 package usecases;
 
+import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.Party;
 import interactr.cs.kuleuven.be.ui.Controller;
 import interactr.cs.kuleuven.be.ui.Window;
 import interactr.cs.kuleuven.be.ui.EventHandler;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
+import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,9 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DeleteElement {
+class DeleteElement {
 
-    private Window window = new Window();
+    private Window window = new Window("Test Window");
 
     @BeforeEach
     void setUp(){
@@ -24,29 +27,27 @@ public class DeleteElement {
 
     @Test
     void stepByStep(){
-        Controller controller = window.getEventHandler().getController();
         // Precondition
         Window.replayRecording("steps/createNewDiagram.txt", window);
-        //At party at 100 x
+        // Add party at 100 x
         Window.replayRecording("steps/createPartyAt100.txt", window);
-        assertTrue(controller.getActiveSubwindow().getDiagram().getParties().size() > 0);
+        assertTrue(getDiagram().getParties().size() > 0);
         // Assert that it is selected
-        Party newParty = controller.getActiveSubwindow().getDiagram().getParties().get(0);
-        assertEquals(controller.getActiveSubwindow().getSelectedComponent(), newParty);
+        Party newParty = getDiagram().getParties().get(0);
+        assertEquals(getActiveView().getSelectedComponent(), newParty);
         // Type label
-        Window.replayRecording("steps/typePartyLabela:A.txt", window);
-        assertEquals(controller.getActiveSubwindow().getSelectedLabel(), "a:A");
+        Window.replayRecording("steps/typePartyLabelaA.txt", window);
+        assertEquals(getActiveView().getSelectedLabel(), "a:A");
         assertEquals(newParty.getLabel(), "a:A");
         // Press enter
         Window.replayRecording("steps/pressEnter.txt", window);
-        assertNull(controller.getActiveSubwindow().getSelectedComponent());
+        assertNull(getActiveView().getSelectedComponent());
         assertEquals(newParty.getLabel(), "a:A");
-
+        // Select the party at 100 x
         Window.replayRecording("steps/selectPartyAt100.txt", window);
-        Window.replayRecording("steps/pressBackSpace.txt", window);
-
-        assertEquals(0, controller.getActiveSubwindow().getDiagram().getParties().size());
-
+        // Delete the party at 100 x
+        Window.replayRecording("steps/pressDelete.txt", window);
+        assertEquals(0, getDiagram().getParties().size());
     }
 
     /**
@@ -55,7 +56,7 @@ public class DeleteElement {
     @Test
     void deletePartySequence(){
         Window.replayRecording("deletePartySequence.txt", window);
-        assertEquals(0, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getParties().size());
+        assertEquals(0, getDiagram().getParties().size());
     }
 
     /**
@@ -64,7 +65,7 @@ public class DeleteElement {
     @Test
     void deletePartyCommunication(){
         Window.replayRecording("deletePartyCommunication.txt", window);
-        assertEquals(0, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getParties().size());
+        assertEquals(0, getDiagram().getParties().size());
     }
 
     /**
@@ -73,26 +74,7 @@ public class DeleteElement {
     @Test
     void deleteMessageSequence(){
         Window.replayRecording("deleteMessageSequence.txt", window);
-        assertEquals(0, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getMessages().size());
-    }
-
-    /**
-     * Adds two parties and a message between them, after that the view is switched to delete the message
-     */
-    @Test
-    void deleteMessageCommunication(){
-        Window.replayRecording("deleteMessageCommunication.txt", window);
-        assertEquals(0, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getMessages().size());
-    }
-
-    /**
-     * Adds 3 messages between 3 parties (011220) and deletes the middle party
-     */
-    @Test
-    void deletePartyAvalanche(){
-        Window.replayRecording("deletePartyMessageAvalanche.txt", window);
-        assertEquals(0, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getMessages().size());
-        assertEquals(2, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getParties().size());
+        assertEquals(0, getDiagram().getMessages().size());
     }
 
     /**
@@ -101,8 +83,20 @@ public class DeleteElement {
     @Test
     void deleteMessageAvalanche(){
         Window.replayRecording("deleteMessageAvalanche.txt", window);
-        assertEquals(2, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getMessages().size());
-        assertEquals(3, window.getEventHandler().getController().getActiveSubwindow().getDiagram().getParties().size());
+        assertEquals(2, getDiagram().getMessages().size());
+        assertEquals(3, getDiagram().getParties().size());
+    }
+
+    // Returns the currently active view for the scene
+    //  Convenience method
+    private DiagramView getActiveView() {
+        return ((DiagramWindow)window.getEventHandler().getController().getActiveSubwindow()).getActiveView();
+    }
+
+    // Returns the diagram for the currently active subwindow
+    //  Convenience method
+    private Diagram getDiagram() {
+        return ((DiagramWindow)window.getEventHandler().getController().getActiveSubwindow()).getDiagram();
     }
 
 }

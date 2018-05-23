@@ -50,7 +50,7 @@ public abstract class DiagramComponent {
      * @param label The new label value for this figure.
      * @throws InvalidLabelException If the given label is not a valid label for this component.
      */
-    public void setLabel(String label) throws InvalidLabelException {
+    void setLabel(String label) throws InvalidLabelException {
         if (!canHaveAsLabel(label))
             throw new InvalidLabelException();
         this.label = label;

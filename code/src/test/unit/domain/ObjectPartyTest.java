@@ -40,10 +40,4 @@ class ObjectPartyTest {
         assertEquals(party.toString(), party.getLabel());
     }
 
-    @Test
-    void proposedFigureTest() {
-        ObjectParty party = new ObjectParty();
-        assertNotNull(party.proposedFigure());
-    }
-
 }

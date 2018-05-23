@@ -31,7 +31,7 @@ public class AddPartyCommand extends Command {
         try {
             view.addParty(view.getRelativeCoordinates(location).getX(), view.getRelativeCoordinates(location).getY());
         }
-        catch (InvalidAddPartyException e) {throw new CommandNotProcessedException();}
+        catch (Exception e) {throw new CommandNotProcessedException();}
     }
 
 }
