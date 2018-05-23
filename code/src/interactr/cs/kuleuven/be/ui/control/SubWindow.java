@@ -49,7 +49,7 @@ public abstract class SubWindow implements CommandHandler {
      * @return The frame of this subwindow with a margin of 5 for each resize border.
      */
     public Rectangle getBorderedFrame() {
-        return new Rectangle(frame.getX() - 5, frame.getY() - 5, frame.getWidth() + 10, frame.getHeight() + 10);
+        return new Rectangle(getFrame().getX() - 5, getFrame().getY() - 5, getFrame().getWidth() + 10, getFrame().getHeight() + 10);
     }
 
     /**
@@ -58,7 +58,7 @@ public abstract class SubWindow implements CommandHandler {
      * @return The frame in which views of this subwindow are drawn.
      */
     Rectangle getViewFrame() {
-        return new Rectangle(frame.getX(), frame.getY() + TITLE_BAR_HEIGHT, frame.getWidth(), frame.getHeight() - TITLE_BAR_HEIGHT);
+        return new Rectangle(getFrame().getX(), getFrame().getY() + TITLE_BAR_HEIGHT, getFrame().getWidth(), getFrame().getHeight() - TITLE_BAR_HEIGHT);
     }
 
     /**
