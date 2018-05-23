@@ -45,6 +45,7 @@ public class Label extends Model {
 
     @Override
     public void draw(PaintBoard paintBoard) {
+        super.draw(paintBoard);
         paintBoard.drawString(getLabel(), getX(), getY() + paintBoard.getHeightForString(getLabel()) - 1);
     }
 
