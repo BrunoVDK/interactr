@@ -57,7 +57,6 @@ public class DialogInvocationMessage extends DialogWindow implements DiagramObse
 
     @Override
     protected void generateModels() {
-<<<<<<< HEAD
         super.generateModels();
         Box listBox = new Box(10,40,100,200);
         models.add(listBox);
@@ -67,16 +66,6 @@ public class DialogInvocationMessage extends DialogWindow implements DiagramObse
         models.add(generateStringButton(60,260,"-"));
         models.add(generateStringButton(120,110, "\u2191"));
         models.add(generateStringButton(120,130, "\u2193"));
-=======
-        models.clear();
-        models.add(this.getAddButton());
-        models.add(this.getDeleteButton());
-        models.add(this.getUpButton());
-        models.add(this.getDownButton());
-        models.add(this.getMethodNameField());
-        models.add(this.getArgumentTextField());
-        models.add(this.getListBox());
->>>>>>> 8291cd9bb2ce76fa51f2f9a5c33a2dfada2b0005
     }
 
     /**
@@ -89,76 +78,19 @@ public class DialogInvocationMessage extends DialogWindow implements DiagramObse
         String[] arguments = message.getArguments();
         int offset = 200 / PaintBoard.charHeight;
         int layer = 40;
+        ArrayList<Label> argumentFields = new ArrayList<Label>();
         for(int i = 0; i < arguments.length; i++){
-            Label nextArgument = new Label(10, layer, arguments[i]);
-            listBox.add(nextArgument);
+            Label nextArgument = this.generateTextField(10,layer,100,arguments[i]);
+            argumentFields.add(nextArgument);
             layer += offset;
         }
         return listBox;
     }
 
-<<<<<<< HEAD
     @Override
     public void activateFocus() throws InvalidActivateException {
         if (this.getFocusIndex() == 0) {
             // Add
-=======
-    /**
-     * Returns a textfield that contains the method name of the invocationMessage
-     *
-     * @return  textfield that contains the method name of the invocationMessage
-     */
-    private Model getMethodNameField(){
-        Label method = this.generateTextField(10,10, 100, this.getInvocationMessage().getMethodName());
-        return method;
-    }
-
-    /**
-     * Returns an empty textfield that can be used to add arguments to the invocationMessage
-     *
-     * @return an empty textfield
-     */
-    private Model getArgumentTextField(){
-        Label argument = this .generateTextField(150, 120,100, "");
-        return argument;
-    }
-
-    /**
-     * Returns an add button that can be used to add the argument typed in the argument textfield to the end of the list box
-     *
-     * @return an add button
-     */
-    private Model getAddButton(){
-        Box addButton = this.generateStringButton(190,150,"+");
-        return addButton;
-    }
-
-    private Model getDeleteButton(){
-        Box deleteButton = this.generateStringButton(60,260,"-");
-        return deleteButton;
-    }
-
-    private Model getUpButton(){
-        Box upButton = this.generateStringButton(120,110, "\u2191");
-        return upButton;
-    }
-
-    private Model getDownButton(){
-        Box downButton = this.generateStringButton(120,130, "\u2193");
-        return downButton;
-    }
-
-    @Override
-    public void activateFocus() throws InvalidActivateException {
-        if(this.getFocusIndex() == 0){
-            //addButton
-        }
-        else if(this.getFocusIndex() == 1){
-            //deleteButton
-        }
-        else if(this.getFocusIndex() == 2){
-            //upButton
->>>>>>> 8291cd9bb2ce76fa51f2f9a5c33a2dfada2b0005
         }
         else if (this.getFocusIndex() == 1) {
             // Delete
@@ -169,7 +101,6 @@ public class DialogInvocationMessage extends DialogWindow implements DiagramObse
             goDown();
     }
 
-<<<<<<< HEAD
     @Override
     public void focus(int x, int y){
         super.focus(x,y);
@@ -181,8 +112,6 @@ public class DialogInvocationMessage extends DialogWindow implements DiagramObse
         if (selectedIndex < 0)
             selectedIndex = message.getArguments().length-1;
     }
-=======
->>>>>>> 8291cd9bb2ce76fa51f2f9a5c33a2dfada2b0005
 
     @Override
     public void goDown() {
