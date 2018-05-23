@@ -1,6 +1,7 @@
 package usecases;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
+import interactr.cs.kuleuven.be.domain.DiagramComponent;
 import interactr.cs.kuleuven.be.domain.Party;
 import interactr.cs.kuleuven.be.ui.Controller;
 import interactr.cs.kuleuven.be.ui.Window;
@@ -62,6 +63,48 @@ class EditLabel {
 
     }
 
+
+    @Test
+    void instancenameThroughDialog(){
+        Controller controller = window.getEventHandler().getController();
+        // create diagram with party named a:A
+        spawnDiagramWithParty();
+        // Select party at 100 x
+        Window.replayRecording("steps/selectPartyAt100.txt", window);
+        Party party = (Party) ((DiagramWindow) window.getEventHandler().getController().getActiveSubwindow()).getActiveView().getSelectedComponent();
+        // Create Dialog
+        Window.replayRecording("steps/createDialog.txt", window);
+        // delete current instanceName
+        Window.replayRecording("steps/pressBackSpace.txt", window);
+        // type 'b'
+        Window.replayRecording("steps/typeb.txt", window);
+        // hit enter
+        Window.replayRecording("steps/pressEnter.txt", window);
+         assertEquals("b:A", party.getLabel());
+    }
+
+    @Test
+    void classnameThroughDialog(){
+        Controller controller = window.getEventHandler().getController();
+        // create diagram with party named a:A
+        spawnDiagramWithParty();
+        // Select party at 100 x
+        Window.replayRecording("steps/selectPartyAt100.txt", window);
+        Party party = (Party) ((DiagramWindow) window.getEventHandler().getController().getActiveSubwindow()).getActiveView().getSelectedComponent();
+        // Create Dialog
+        Window.replayRecording("steps/createDialog.txt", window);
+        // select dialog for classname
+        Window.replayRecording("steps/pressTabKey.txt", window);
+        Window.replayRecording("steps/pressSpace.txt", window);
+        // delete current className
+        Window.replayRecording("steps/pressBackSpace.txt", window);
+        // type 'b'
+        Window.replayRecording("steps/typeB.txt", window);
+        // hit enter
+        Window.replayRecording("steps/pressEnter.txt", window);
+        assertEquals( "a:B", party.getLabel());
+    }
+
     // Returns the currently active view for the scene
     //  Convenience method
     private DiagramView getActiveView() {
@@ -72,6 +115,26 @@ class EditLabel {
     //  Convenience method
     private Diagram getDiagram() {
         return ((DiagramWindow)window.getEventHandler().getController().getActiveSubwindow()).getDiagram();
+    }
+
+    private void spawnDiagramWithParty() {
+        // Precondition
+        Window.replayRecording("steps/createNewDiagram.txt", window);
+        // Add party at 100 x
+        Window.replayRecording("steps/createPartyAt100.txt", window);
+        assertTrue(getDiagram().getParties().size() > 0);
+        // Assert that it is selected and editing
+        Party newParty = getDiagram().getParties().get(0);
+        assertEquals(getActiveView().getSelectedComponent(), newParty);
+        assertTrue(getActiveView().isEditing());
+        // Type label
+        Window.replayRecording("steps/typePartyLabelaA.txt", window);
+        assertEquals(getActiveView().getSelectedLabel(), "a:A");
+        assertEquals(newParty.getLabel(), "a:A");
+        // Press enter
+        Window.replayRecording("steps/pressEnter.txt", window);
+        assertNull(getActiveView().getSelectedComponent());
+        assertEquals(newParty.getLabel(), "a:A");
     }
 
 }
