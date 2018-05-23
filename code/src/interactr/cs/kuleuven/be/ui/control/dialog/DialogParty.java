@@ -38,8 +38,8 @@ public class DialogParty extends DialogWindow {
 
     @Override
     protected void displayView(PaintBoard paintBoard) {
-        actorButton.displayControl(paintBoard, 10 * 9/12, height/2);
-        objectButton.displayControl(paintBoard, 10 * 11/12, height/2);
+        actorButton.display(paintBoard, 10 * 9/12, height/2);
+        objectButton.display(paintBoard, 10 * 11/12, height/2);
 
     }
 

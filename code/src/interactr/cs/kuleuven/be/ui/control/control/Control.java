@@ -18,7 +18,7 @@ public abstract class Control {
      * @param x The x coordinate for the control
      * @param y The y coordinate for the control
      */
-    public abstract void displayControl(PaintBoard paintBoard, int x, int y);
+    public abstract void display(PaintBoard paintBoard, int x, int y);
 
     public static final int margeOfLabelAndControl = 50;
 
