@@ -125,7 +125,7 @@ public abstract class DialogWindow extends SubWindow {
      * @return A text field at given coordinates, having the given label.
      */
     protected Label generateTextField(int x, int y, int width,  String label) {
-        Label labelModel = new Label(x, y, label);
+        Label labelModel = new Label(x, y + 40, label);
         labelModel.setMaxWidth(width - 5);
         labelModel.add(new Box(0, 0, width, PaintBoard.charHeight * 2));
         return labelModel;
