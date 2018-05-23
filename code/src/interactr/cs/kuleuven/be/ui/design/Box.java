@@ -1,6 +1,7 @@
 package interactr.cs.kuleuven.be.ui.design;
 
 import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.geometry.Point;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
@@ -10,6 +11,11 @@ import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
  * @version 1.0
  */
 public class Box extends Figure {
+
+    public Box(int x, int y, int width , int height){
+        super(width, height);
+        this.setCoordinates(new Point(x,y));
+    }
 
     @Override
     public void draw(PaintBoard paintBoard) {

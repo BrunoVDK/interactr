@@ -3,9 +3,11 @@ package interactr.cs.kuleuven.be.ui.control.dialog;
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.InvocationMessage;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
-import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
 import interactr.cs.kuleuven.be.ui.control.DialogWindow;
 import interactr.cs.kuleuven.be.ui.control.control.*;
+import interactr.cs.kuleuven.be.ui.design.Box;
+import interactr.cs.kuleuven.be.ui.design.Figure;
+import interactr.cs.kuleuven.be.ui.design.Model;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
@@ -32,6 +34,16 @@ public class DialogInvocationMessage extends DialogWindow {
 
     protected void generateModels() {
 
+    }
+
+    /**
+     * Returns a list box for the parameters of the invocation message at the given index.
+     *
+     * @param index The index for the list box
+     * @return A list box that contains the parameters at the given index
+     */
+    private Model getListBox(int index){
+        return null;
     }
 
     @Override

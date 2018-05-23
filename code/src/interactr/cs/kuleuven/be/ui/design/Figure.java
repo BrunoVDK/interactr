@@ -43,7 +43,7 @@ public class Figure extends Model {
      *
      * @param width The new width for this figure.
      */
-    private void setWidth(int width) {
+    protected void setWidth(int width) {
         this.width = width;
     }
 
@@ -66,7 +66,7 @@ public class Figure extends Model {
      *
      * @param height The new height for this figure.
      */
-    private void setHeight(int height) {
+    protected void setHeight(int height) {
         this.height = height;
     }
 
