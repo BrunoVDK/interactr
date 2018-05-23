@@ -78,10 +78,26 @@ class EditLabel {
         Window.replayRecording("steps/pressBackSpace.txt", window);
         // type 'b'
         Window.replayRecording("steps/typeb.txt", window);
-        // hit enter
-        Window.replayRecording("steps/pressEnter.txt", window);
-         assertEquals("b:A", party.getLabel());
+        assertEquals("b:A", party.getLabel());
     }
+
+    @Test
+    void invalidInstancenameThroughDialog(){
+        Controller controller = window.getEventHandler().getController();
+        // create diagram with party named a:A
+        spawnDiagramWithParty();
+        // Select party at 100 x
+        Window.replayRecording("steps/selectPartyAt100.txt", window);
+        Party party = (Party) ((DiagramWindow) window.getEventHandler().getController().getActiveSubwindow()).getActiveView().getSelectedComponent();
+        // Create Dialog
+        Window.replayRecording("steps/createDialog.txt", window);
+        // delete current instanceName
+        Window.replayRecording("steps/pressBackSpace.txt", window);
+        // type 'b'
+        Window.replayRecording("steps/typeB.txt", window);
+        assertEquals(":A", party.getLabel());
+    }
+
 
     @Test
     void classnameThroughDialog(){
@@ -98,11 +114,29 @@ class EditLabel {
         Window.replayRecording("steps/pressSpace.txt", window);
         // delete current className
         Window.replayRecording("steps/pressBackSpace.txt", window);
-        // type 'b'
+        // type 'B'
         Window.replayRecording("steps/typeB.txt", window);
-        // hit enter
-        Window.replayRecording("steps/pressEnter.txt", window);
         assertEquals( "a:B", party.getLabel());
+    }
+
+    @Test
+    void invalidClassnameThroughDialog(){
+        Controller controller = window.getEventHandler().getController();
+        // create diagram with party named a:A
+        spawnDiagramWithParty();
+        // Select party at 100 x
+        Window.replayRecording("steps/selectPartyAt100.txt", window);
+        Party party = (Party) ((DiagramWindow) window.getEventHandler().getController().getActiveSubwindow()).getActiveView().getSelectedComponent();
+        // Create Dialog
+        Window.replayRecording("steps/createDialog.txt", window);
+        // select dialog for classname
+        Window.replayRecording("steps/pressTabKey.txt", window);
+        Window.replayRecording("steps/pressSpace.txt", window);
+        // delete current className
+        Window.replayRecording("steps/pressBackSpace.txt", window);
+        // type 'b'
+        Window.replayRecording("steps/typeb.txt", window);
+        assertEquals( "a:A", party.getLabel());
     }
 
     // Returns the currently active view for the scene
