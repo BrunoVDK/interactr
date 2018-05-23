@@ -124,7 +124,7 @@ public abstract class DialogWindow extends SubWindow {
     protected Label generateTextField(int x, int y, int width,  String label) {
         Label labelModel = new Label(x, y, label);
         labelModel.setMaxWidth(width - 5);
-        labelModel.add(new Box(0, 0, width, PaintBoard.charHeight * 2));
+        labelModel.add(new Box(0, 0, width, PaintBoard.charHeight + 2));
         return labelModel;
     }
 
@@ -184,5 +184,11 @@ public abstract class DialogWindow extends SubWindow {
     public String getTitle() {
         return "Diagram " + getDiagram().getSequenceNumber();
     }
+
+    public void appendChar(char c){ throw new CommandNotProcessedException();}
+
+    public void removeLastChar(){ throw new CommandNotProcessedException();}
+
+
 
 }

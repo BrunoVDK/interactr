@@ -1,7 +1,7 @@
 package interactr.cs.kuleuven.be.ui.command;
 
+import interactr.cs.kuleuven.be.exceptions.InvalidAddCharException;
 import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
-import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
 import interactr.cs.kuleuven.be.ui.control.DialogWindow;
 import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 
@@ -48,4 +48,13 @@ public class AppendCharCommand extends Command {
         catch (InvalidLabelException ignored) {}
     }
 
+    @Override
+    public void executeDialogWindow(DialogWindow dialog) {
+        try {
+            dialog.appendChar(this.c);
+        }
+        catch (InvalidAddCharException e) {
+            throw new CommandNotProcessedException();
+        }
+    }
 }
