@@ -29,7 +29,7 @@ public class AppendCharCommand extends Command {
      * @return True if and only if the char is a letter, a digit or part of a valid set of chars.
      *          This valid set includes underscores, brackets, ampersands, ...
      */
-    boolean canHaveAsChar(char c) {
+    public static boolean canHaveAsChar(char c) {
         return (Character.isLetter(c)
                 || Character.isDigit(c)
                 || ":();-_<>*&[]".contains(Character.toString(c)));

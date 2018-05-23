@@ -5,7 +5,6 @@ import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
 import interactr.cs.kuleuven.be.ui.control.DialogWindow;
 import interactr.cs.kuleuven.be.ui.design.Circle;
-import interactr.cs.kuleuven.be.ui.design.Colour;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
@@ -38,7 +37,6 @@ public class DialogDiagram extends DialogWindow {
                 radioButton.setFilled(true);
             models.add(radioButton);
         }
-        models.get(getFocusIndex()).setColour(Colour.BLUE);
     }
 
     @Override
