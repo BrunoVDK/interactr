@@ -29,6 +29,7 @@ public abstract class DialogWindow extends SubWindow {
             throw new IllegalArgumentException("Diagram cannot be null.");
         this.diagram = diagram;
         this.frame = getDefaultFrame();
+        setFocusIndex(0);
     }
 
     @Override
@@ -77,7 +78,7 @@ public abstract class DialogWindow extends SubWindow {
      *
      * @param focusIndex The index of the element to focus on.
      */
-    private void setFocusIndex(int focusIndex) {
+    protected void setFocusIndex(int focusIndex) {
         this.focusIndex = focusIndex;
     }
 
@@ -137,8 +138,8 @@ public abstract class DialogWindow extends SubWindow {
      * @return A button at the given coordinate having the given label.
      */
     protected Box generateStringButton(int x, int y, String c){
-        Box button = new Box(x,y,PaintBoard.charHeight, PaintBoard.charHeight);
-        button.add(new Label(0,0, c));
+        Box button = new Box(x, y,17, 17);
+        button.add(new Label(5,2, c));
         return button;
     }
 

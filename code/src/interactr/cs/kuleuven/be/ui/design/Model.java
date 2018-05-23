@@ -126,6 +126,13 @@ public abstract class Model {
     private String label;
 
     /**
+     * Returns the colour for this model.
+     */
+    public Colour getColour() {
+        return this.colour;
+    }
+
+    /**
      * Sets the colour for this model to the given colour.
      *
      * @param colour The new colour for this model.
@@ -172,6 +179,13 @@ public abstract class Model {
     public void add(Model model) {
         children = children.plus(model);
         model.setCoordinates(new Point(model.coordinates.getX() + getX(), model.coordinates.getY() + getY()));
+    }
+
+    /**
+     * Returns the children of this model.
+     */
+    public PList<Model> getChildren() {
+        return children;
     }
 
     /**

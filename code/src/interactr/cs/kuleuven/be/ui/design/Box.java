@@ -22,10 +22,10 @@ public class Box extends Figure {
     /**
      * Initialize this new box with given coordinates and size.
      *
-     * @param x
-     * @param y
-     * @param width
-     * @param height
+     * @param x The x coordinate for this new box.
+     * @param y The y coordinate for this new box.
+     * @param width The width for this new box.
+     * @param height The height for this new box.
      */
     public Box(int x, int y, int width , int height){
         super(width, height);
@@ -35,6 +35,7 @@ public class Box extends Figure {
     @Override
     public void draw(PaintBoard paintBoard) {
         super.draw(paintBoard);
+        paintBoard.setColour(getColour());
         paintBoard.drawRectangle(getX(), getY(), getWidth(), getHeight());
     }
 
