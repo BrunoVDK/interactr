@@ -24,6 +24,8 @@ public class Label extends Model {
         setCoordinates(new Point(x,y));
     }
 
+    public void drawLabel(PaintBoard paintBoard) {
+    }
     /**
      * Sets the maximum width for this label.
      *

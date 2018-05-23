@@ -50,6 +50,9 @@ public class DialogInvocationMessage extends DialogWindow {
         models.clear();
         models.add(this.getListBox());
         models.add(this.getMethodNameField());
+        models.add(this.getArgumentTextField());
+        models.add(this.getAddButton());
+        models.add(this.getDeleteButton());
     }
 
     /**
@@ -58,18 +61,44 @@ public class DialogInvocationMessage extends DialogWindow {
      * @return A list box that contains the parameters at the given index
      */
     private Model getListBox(){
-        Figure listBox = new Box(10,50,100,200);
+        Figure listBox = new Box(10,40,100,200);
         String[] arguments = message.getArguments();
         return listBox;
     }
 
+    /**
+     * Returns a textfield that contains the method name of the invocationMessage
+     *
+     * @return  textfield that contains the method name of the invocationMessage
+     */
     private Model getMethodNameField(){
-        Label method = this.generateTextField(10,10, 100, "");
+        Label method = this.generateTextField(10,10, 100, this.getInvocationMessage().getMethodName());
         return method;
     }
 
+    /**
+     * Returns an empty textfield that can be used to add arguments to the invocationMessage
+     *
+     * @return an empty textfield
+     */
     private Model getArgumentTextField(){
-        return null;
+        Label argument = this .generateTextField(150, 120,100, "");
+        return argument;
+    }
+
+    /**
+     * Returns an add button that can be used to add the argument typed in the argument textfield to the end of the list box
+     *
+     * @return an add button
+     */
+    private Model getAddButton(){
+        Box addButton = this.generateStringButton(200,150,"+");
+        return addButton;
+    }
+
+    private Model getDeleteButton(){
+        Box deleteButton = this.generateStringButton(60,260,"-");
+        return deleteButton;
     }
 
     protected void displayView(PaintBoard paintBoard){
