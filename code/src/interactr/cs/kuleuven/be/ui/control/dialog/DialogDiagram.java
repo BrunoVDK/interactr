@@ -2,14 +2,10 @@ package interactr.cs.kuleuven.be.ui.control.dialog;
 
 import interactr.cs.kuleuven.be.exceptions.InvalidActivateException;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
-import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
 import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
 import interactr.cs.kuleuven.be.ui.control.DialogWindow;
 import interactr.cs.kuleuven.be.ui.design.Circle;
 import interactr.cs.kuleuven.be.ui.design.Colour;
-import interactr.cs.kuleuven.be.ui.design.Label;
-import interactr.cs.kuleuven.be.ui.design.Model;
-import interactr.cs.kuleuven.be.ui.geometry.Point;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
@@ -34,26 +30,15 @@ public class DialogDiagram extends DialogWindow {
 
     @Override
     protected void generateModels() {
-        models = models.minusAll(models);
-        for (int i=0 ; i<diagramWindow.getNbViews() ; i++)
-            models = models.plus(getRadioButton(i));
+        super.generateModels();
+        for (int i=0 ; i<diagramWindow.getNbViews() ; i++) {
+            String label = diagramWindow.getViewAt(i).toString();
+            Circle radioButton = generateRadioButton(30, 15 + 20*i, label);
+            if (diagramWindow.getActiveViewIndex() == i)
+                radioButton.setFilled(true);
+            models.add(radioButton);
+        }
         models.get(getFocusIndex()).setColour(Colour.BLUE);
-    }
-
-    /**
-     * Returns a radio button for the diagram view at the given index.
-     *
-     * @param viewIndex The index for the diagram view.
-     * @return A radio button for selecting that diagram view.
-     */
-    private Model getRadioButton(int viewIndex) {
-        Circle radioButton = new Circle(30, 30*viewIndex, PaintBoard.charHeight);
-        String label = diagramWindow.getViewAt(viewIndex).toString();
-        radioButton.add(new Label((getFrame().getWidth() - 50 - PaintBoard.charWidth * label.length())/2, 0, label));
-        radioButton.setCoordinates(new Point(30, 15 + 20*viewIndex));
-        if (diagramWindow.getActiveViewIndex() == viewIndex)
-            radioButton.setFilled(true);
-        return radioButton;
     }
 
     @Override
@@ -72,23 +57,6 @@ public class DialogDiagram extends DialogWindow {
             close();
         else
             super.display(paintBoard);
-    }
-
-    @Override
-    protected void displayView(PaintBoard paintBoard) {
-        generateModels();
-        for (Model model : models)
-            model.draw(paintBoard);
-    }
-
-    @Override
-    public void goUp() {
-        throw new CommandNotProcessedException();
-    }
-
-    @Override
-    public void goDown() {
-        throw new CommandNotProcessedException();
     }
 
     @Override

@@ -116,4 +116,5 @@ public class InvocationMessage extends Message {
     public void acceptVisitor(DiagramVisitor visitor) {
         visitor.visit(this);
     }
+
 }

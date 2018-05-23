@@ -11,13 +11,6 @@ import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 public class Figure extends Model {
 
     /**
-     * Initialize this new figure with zero coordinates and a width and height of 20.
-     */
-    Figure() {
-        this(60, 65);
-    }
-
-    /**
      * Initialize this new figure with given coordinates and size, and an empty label.
      *
      * @param width The width for this new figure.

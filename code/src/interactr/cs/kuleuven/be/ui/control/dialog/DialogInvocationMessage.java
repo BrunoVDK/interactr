@@ -6,7 +6,6 @@ import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.control.DialogWindow;
 import interactr.cs.kuleuven.be.ui.control.control.*;
 import interactr.cs.kuleuven.be.ui.design.Box;
-import interactr.cs.kuleuven.be.ui.design.Colour;
 import interactr.cs.kuleuven.be.ui.design.Figure;
 import interactr.cs.kuleuven.be.ui.design.Model;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
@@ -47,8 +46,8 @@ public class DialogInvocationMessage extends DialogWindow {
     }
 
     protected void generateModels() {
-        models = models.minusAll(models);
-        models = models.plus(this.getListBox());
+        models.clear();
+        models.add(this.getListBox());
     }
 
     /**

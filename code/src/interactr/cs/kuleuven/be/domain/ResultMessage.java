@@ -34,4 +34,5 @@ public class ResultMessage extends Message {
     public void acceptVisitor(DiagramVisitor visitor) {
         visitor.visit(this);
     }
+
 }

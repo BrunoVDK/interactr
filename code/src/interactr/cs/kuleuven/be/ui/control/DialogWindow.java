@@ -2,12 +2,16 @@ package interactr.cs.kuleuven.be.ui.control;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.exceptions.InvalidActivateException;
-import interactr.cs.kuleuven.be.purecollections.PList;
+import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.command.Command;
 import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
+import interactr.cs.kuleuven.be.ui.design.Box;
+import interactr.cs.kuleuven.be.ui.design.Circle;
+import interactr.cs.kuleuven.be.ui.design.Label;
 import interactr.cs.kuleuven.be.ui.design.Model;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
 /**
@@ -93,12 +97,51 @@ public abstract class DialogWindow extends SubWindow {
     /**
      * Generate the models held by this dialog window.
      */
-    protected abstract void generateModels();
+    protected void generateModels() {
+        models.clear();
+    }
+
+    /**
+     * Generates a radio button at the given coordinates, having the given label.
+     *
+     * @param x The x coordinate for the button.
+     * @param y The y coordinate for the button.
+     * @param label The label for the new radio button.
+     * @return A radio button at given coordinates, having the given label.
+     */
+    protected Circle generateRadioButton(int x, int y, String label) {
+        Circle radioButton = new Circle(x, y, PaintBoard.charHeight);
+        radioButton.add(new Label((getFrame().getWidth() - 50 - PaintBoard.charWidth * label.length())/2, 0, label));
+        return radioButton;
+    }
+
+    /**
+     * Generates a text field at the given coordinates, having the given label.
+     *
+     * @param x The x coordinate for the text field.
+     * @param y The y coordinate for the text field.
+     * @param width The width of the text field.
+     * @param label The label for the new text field.
+     * @return A text field at given coordinates, having the given label.
+     */
+    protected Label generateTextField(int x, int y, int width,  String label) {
+        Label labelModel = new Label(x, y, label);
+        labelModel.setMaxWidth(width - 5);
+        labelModel.add(new Box(0, 0, width, PaintBoard.charHeight * 2));
+        return labelModel;
+    }
 
     /**
      * The list of models held by this dialog.
      */
-    protected PList<Model> models = PList.empty();
+    protected ArrayList<Model> models = new ArrayList<>();
+
+    @Override
+    protected void displayView(PaintBoard paintBoard) {
+        generateModels();
+        for (Model model : models)
+            model.draw(paintBoard);
+    }
 
     /**
      * A method that is used by the Dialog Diagram

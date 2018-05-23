@@ -1,15 +1,10 @@
 package interactr.cs.kuleuven.be.ui.control.dialog;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
+import interactr.cs.kuleuven.be.domain.DiagramObserver;
 import interactr.cs.kuleuven.be.domain.Party;
-import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.control.DialogWindow;
-import interactr.cs.kuleuven.be.ui.control.control.Control;
-import interactr.cs.kuleuven.be.ui.control.control.RadioButton;
-import interactr.cs.kuleuven.be.ui.control.control.TextField;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
-
-import java.util.ArrayList;
 
 /**
  * A class of dialogs for parties.
@@ -17,7 +12,7 @@ import java.util.ArrayList;
  * @author Team 25
  * @version 1.0
  */
-public class DialogParty extends DialogWindow {
+public class DialogParty extends DialogWindow implements DiagramObserver {
 
     /**
      * Intialize this new party dialog with given party, diagram and actor flag.
@@ -29,20 +24,13 @@ public class DialogParty extends DialogWindow {
     DialogParty(Party party, Diagram diagram, boolean isActor){
         super(diagram);
         this.party = party;
-        if(isActor)
-            actorButton.setActive(true);
-        else
-            objectButton.setActive(true);
-        this.instanceName = new TextField(party.getInstanceName(), "Instance name: ");
-        this.className = new TextField(party.getClassName(), "Class name: ");
-        controls.add(instanceName);
-        controls.add(className);
-        controls.add(actorButton);
-        controls.add(objectButton);
     }
 
+    @Override
     protected void generateModels() {
-
+        super.generateModels();
+        models.add(generateTextField(0, 0, 100, "test"));
+        models.add(generateTextField(0, 0, 100, "test"));
     }
 
     @Override
@@ -50,44 +38,23 @@ public class DialogParty extends DialogWindow {
         return new Rectangle(0, 0, 270, 150);
     }
 
-    @Override
-    protected void displayView(PaintBoard paintBoard) {
-
-        int i = 0;
-        for (Control c : controls) {
-
-        }
-        //actorButton.display(paintBoard, getFrame().getX() + 10,  getFrame().getY() + (getFrame().getHeight() * 1/5));
-        //objectButton.display(paintBoard, getFrame().getX() + 10 , getFrame().getY() + (getFrame().getHeight() * 2/5));
-        //instanceName.display(paintBoard,getFrame().getX() + 10   , getFrame().getY() + (getFrame().getHeight() * 3/5));
-        //className.display(paintBoard, getFrame().getX() + 10, getFrame().getY() +( getFrame().getHeight() * 4/5));
-
-    }
-
-    ArrayList<Control> controls = new ArrayList<>();
-
     /**
-     * Registers the radio buttons for this party dialog.
-     */
-    private RadioButton actorButton = new RadioButton("Actor"), objectButton = new RadioButton("Object");
-
-    /**
-     * Registers the text fields for this party dialog
-     */
-    private TextField instanceName, className;
-
-    /**
-     * The party of this dialog
+     * Registers the party for this dialog.
      */
     private Party party;
 
-    /**
-     * Initialize this new dialog with given diagram.
-     *
-     * @param diagram The diagram to initialize this new dialog with.
-     */
-    public DialogParty(Diagram diagram) {
-        super(diagram);
+    @Override
+    public void diagramDidDeleteParty(Diagram diagram, Party party) {
+        if (this.party == party)
+            close();
+    }
+
+    @Override
+    public void diagramDidReplaceParty(Diagram diagram, Party party, Party newParty) {
+        if (this.party == party) {
+            this.party = newParty;
+
+        }
     }
 
     @Override

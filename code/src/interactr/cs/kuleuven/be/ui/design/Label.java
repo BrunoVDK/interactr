@@ -24,6 +24,20 @@ public class Label extends Model {
         setCoordinates(new Point(x,y));
     }
 
+    /**
+     * Sets the maximum width for this label.
+     *
+     * @param maxWidth The maximum width for this label.
+     */
+    public void setMaxWidth(int maxWidth) {
+        this.maxWidth = maxWidth;
+    }
+
+    /**
+     * Registers the maximum width for this label.
+     */
+    private int maxWidth = 100;
+
     @Override
     public Rectangle getBounds() {
         return getLabelBounds();

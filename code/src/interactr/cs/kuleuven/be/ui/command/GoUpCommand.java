@@ -14,8 +14,8 @@ public class GoUpCommand extends Command {
     public void executeDialogWindow(DialogWindow dialog) {
         try {
             dialog.goUp();
-        }catch (CommandNotProcessedException e){
-            //TODO
+        } catch (Exception e) {
+            throw new CommandNotProcessedException();
         }
     }
 

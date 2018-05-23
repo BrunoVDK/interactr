@@ -12,10 +12,21 @@ import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
  */
 public class Box extends Figure {
 
-    public Box(){
-
+    /**
+     * Initialize
+     */
+    public Box() {
+        super(60, 65);
     }
 
+    /**
+     * Initialize this new box with given coordinates and size.
+     *
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     */
     public Box(int x, int y, int width , int height){
         super(width, height);
         this.setCoordinates(new Point(x,y));
