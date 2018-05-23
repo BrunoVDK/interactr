@@ -76,7 +76,7 @@ public abstract class DialogWindow extends SubWindow {
      *
      * @param focusIndex The index of the element to focus on.
      */
-    protected void setFocusIndex(int focusIndex) {
+    private void setFocusIndex(int focusIndex) {
         this.focusIndex = focusIndex;
     }
 
@@ -103,12 +103,12 @@ public abstract class DialogWindow extends SubWindow {
     /**
      * A method that is used by the Dialog Diagram
      */
-    public abstract void goUp();
+    public void goUp() {throw new CommandNotProcessedException();};
 
     /**
      * A method that is used by the Dialog Diagram
      */
-    public abstract void goDown();
+    public void goDown() {throw new CommandNotProcessedException();};
 
     /**
      * Returns the diagram associated with this dialog.

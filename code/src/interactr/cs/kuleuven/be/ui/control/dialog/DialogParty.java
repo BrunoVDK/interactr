@@ -3,7 +3,6 @@ package interactr.cs.kuleuven.be.ui.control.dialog;
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.Party;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
-import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
 import interactr.cs.kuleuven.be.ui.control.DialogWindow;
 import interactr.cs.kuleuven.be.ui.control.control.Control;
 import interactr.cs.kuleuven.be.ui.control.control.RadioButton;
@@ -49,17 +48,6 @@ public class DialogParty extends DialogWindow {
     @Override
     protected Rectangle getDefaultFrame() {
         return new Rectangle(0, 0, 270, 150);
-    }
-
-    @Override
-    public void goUp() {
-        throw new CommandNotProcessedException();
-    }
-
-    @Override
-    public void goDown() {
-        throw new CommandNotProcessedException();
-
     }
 
     @Override
