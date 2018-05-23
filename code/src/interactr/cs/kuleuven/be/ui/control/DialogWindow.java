@@ -140,14 +140,18 @@ public abstract class DialogWindow extends SubWindow {
 
     /**
      * Generates a button at the given coordinate , having the given string as its label.
+     *
      * @param x The x coordinate of the button.
      * @param y The y coordinate of the button.
      * @param c The label for the new button.
+     * @param disabled Flag denoting whether or not the new button should be disabled.
      * @return A button at the given coordinate having the given label.
      */
-    protected Box generateStringButton(int x, int y, String c){
+    protected Box generateStringButton(int x, int y, String c, boolean disabled){
         Box button = new Box(x, y,17, 17);
         button.add(new Label(5,2, c));
+        if (disabled)
+            button.setColour(Colour.LIGHT_GRAY);
         return button;
     }
 
