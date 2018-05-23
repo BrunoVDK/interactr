@@ -1,2 +1,0 @@
-KeyEvent KEY_PRESSED 127 127 0
-KeyEvent KEY_TYPED 0 127 0

@@ -30,6 +30,7 @@ public class DialogParty extends DialogWindow implements DiagramObserver {
         setParty(party);
         this.isActor = isActor;
         getDiagram().registerObserver(this);
+        generateModels();
     }
 
     @Override

@@ -2,6 +2,7 @@ package usecases;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.DiagramComponent;
+import interactr.cs.kuleuven.be.domain.Message;
 import interactr.cs.kuleuven.be.domain.Party;
 import interactr.cs.kuleuven.be.ui.Controller;
 import interactr.cs.kuleuven.be.ui.Window;
@@ -78,10 +79,26 @@ class EditLabel {
         Window.replayRecording("steps/pressBackSpace.txt", window);
         // type 'b'
         Window.replayRecording("steps/typeb.txt", window);
-        // hit enter
-        Window.replayRecording("steps/pressEnter.txt", window);
-         assertEquals("b:A", party.getLabel());
+        assertEquals("b:A", party.getLabel());
     }
+
+    @Test
+    void invalidInstancenameThroughDialog(){
+        Controller controller = window.getEventHandler().getController();
+        // create diagram with party named a:A
+        spawnDiagramWithParty();
+        // Select party at 100 x
+        Window.replayRecording("steps/selectPartyAt100.txt", window);
+        Party party = (Party) ((DiagramWindow) window.getEventHandler().getController().getActiveSubwindow()).getActiveView().getSelectedComponent();
+        // Create Dialog
+        Window.replayRecording("steps/createDialog.txt", window);
+        // delete current instanceName
+        Window.replayRecording("steps/pressBackSpace.txt", window);
+        // type 'b'
+        Window.replayRecording("steps/typeB.txt", window);
+        assertEquals(":A", party.getLabel());
+    }
+
 
     @Test
     void classnameThroughDialog(){
@@ -98,11 +115,46 @@ class EditLabel {
         Window.replayRecording("steps/pressSpace.txt", window);
         // delete current className
         Window.replayRecording("steps/pressBackSpace.txt", window);
-        // type 'b'
+        // type 'B'
         Window.replayRecording("steps/typeB.txt", window);
-        // hit enter
-        Window.replayRecording("steps/pressEnter.txt", window);
         assertEquals( "a:B", party.getLabel());
+    }
+
+
+    @Test
+    void invalidClassnameThroughDialog(){
+        Controller controller = window.getEventHandler().getController();
+        // create diagram with party named a:A
+        spawnDiagramWithParty();
+        // Select party at 100 x
+        Window.replayRecording("steps/selectPartyAt100.txt", window);
+        Party party = (Party) ((DiagramWindow) window.getEventHandler().getController().getActiveSubwindow()).getActiveView().getSelectedComponent();
+        // Create Dialog
+        Window.replayRecording("steps/createDialog.txt", window);
+        // select dialog for classname
+        Window.replayRecording("steps/pressTabKey.txt", window);
+        Window.replayRecording("steps/pressSpace.txt", window);
+        // delete current className
+        Window.replayRecording("steps/pressBackSpace.txt", window);
+        // type 'b'
+        Window.replayRecording("steps/typeb.txt", window);
+        assertEquals( "a:A", party.getLabel());
+    }
+
+    @Test
+    void resultMessageThroughDialog() {
+        // set up parties and message
+        spawnTwoPartiesAndMessage();
+        // select resultMessage
+        Window.replayRecording("steps/selectResultMessage.txt", window);
+        // grab message for later
+        Message message = (Message) ((DiagramWindow) window.getEventHandler().getController().getActiveSubwindow()).getActiveView().getSelectedComponent();
+        // spawn dialog
+        Window.replayRecording("steps/createDialog.txt", window);
+        // type new label
+        Window.replayRecording("steps/typeb.txt", window);
+
+        assertEquals("b", message.getLabel());
     }
 
     // Returns the currently active view for the scene
@@ -135,6 +187,20 @@ class EditLabel {
         Window.replayRecording("steps/pressEnter.txt", window);
         assertNull(getActiveView().getSelectedComponent());
         assertEquals(newParty.getLabel(), "a:A");
+    }
+
+    private void spawnTwoPartiesAndMessage() {
+        Window.replayRecording("steps/createNewDiagram.txt", window);
+        Window.replayRecording("steps/createPartyAt100.txt", window);
+        Window.replayRecording("steps/typePartyLabelaA.txt", window);
+        Window.replayRecording("steps/pressEnter.txt", window);
+        Window.replayRecording("steps/createPartyAt200.txt", window);
+        Window.replayRecording("steps/typePartyLabelbB.txt", window);
+        Window.replayRecording("steps/pressEnter.txt", window);
+        Window.replayRecording("steps/createMessageBetween100and200.txt", window);
+        Window.replayRecording("steps/typeb.txt", window);
+        Window.replayRecording("steps/typeParentheses.txt", window);
+        Window.replayRecording("steps/pressEnter.txt", window);
     }
 
 }
