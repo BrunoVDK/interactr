@@ -1,6 +1,8 @@
 package interactr.cs.kuleuven.be.ui.command;
 
+import interactr.cs.kuleuven.be.exceptions.InvalidAddCharException;
 import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
+import interactr.cs.kuleuven.be.ui.control.DialogWindow;
 import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 
 /**
@@ -17,6 +19,16 @@ public class RemoveLastCharCommand extends Command {
             view.setSelectedLabel(view.getSelectedLabel().substring(0, view.getSelectedLabel().length()-1));
         }
         catch (InvalidLabelException ignored) {}
+    }
+
+    @Override
+    public void executeDialogWindow(DialogWindow dialog) {
+        try {
+            dialog.removeLastChar();
+        }
+        catch (InvalidAddCharException e) {
+            throw new CommandNotProcessedException();
+        }
     }
 
 }

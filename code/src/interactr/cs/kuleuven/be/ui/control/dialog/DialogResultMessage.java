@@ -65,4 +65,5 @@ public class DialogResultMessage extends DialogWindow {
         getDiagram().setLabelOfComponent(message, message.getLabel().
                 substring(0, message.getLabel().length() -1) );
     }
+
 }
