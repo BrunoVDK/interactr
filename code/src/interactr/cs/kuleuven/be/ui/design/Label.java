@@ -20,7 +20,7 @@ public class Label extends Model {
      * @param text The text to initialize this label with.
      */
     public Label(int x, int y, String text) {
-        super("");
+        super(text);
         setCoordinates(new Point(x,y));
     }
 
@@ -47,6 +47,11 @@ public class Label extends Model {
     public void draw(PaintBoard paintBoard) {
         super.draw(paintBoard);
         paintBoard.drawString(getLabel(), getX(), getY() + paintBoard.getHeightForString(getLabel()) - 1);
+    }
+
+    @Override
+    protected void drawLabel(PaintBoard paintBoard) {
+        // Do nothing
     }
 
 }

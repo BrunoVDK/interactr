@@ -5,10 +5,8 @@ import interactr.cs.kuleuven.be.exceptions.InvalidActivateException;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.command.Command;
 import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
-import interactr.cs.kuleuven.be.ui.design.Box;
-import interactr.cs.kuleuven.be.ui.design.Circle;
-import interactr.cs.kuleuven.be.ui.design.Label;
-import interactr.cs.kuleuven.be.ui.design.Model;
+import interactr.cs.kuleuven.be.ui.design.*;
+import interactr.cs.kuleuven.be.ui.geometry.Point;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 import java.util.ArrayList;
@@ -43,7 +41,7 @@ public abstract class DialogWindow extends SubWindow {
     /**
      * Returns the index of the element for this dialog window.
      */
-    protected int getFocusIndex() {
+    public int getFocusIndex() {
         return focusIndex;
     }
 
@@ -94,6 +92,7 @@ public abstract class DialogWindow extends SubWindow {
      */
     private int focusIndex = 0;
 
+
     /**
      * Generate the models held by this dialog window.
      */
@@ -129,6 +128,19 @@ public abstract class DialogWindow extends SubWindow {
         labelModel.setMaxWidth(width - 5);
         labelModel.add(new Box(0, 0, width, PaintBoard.charHeight + 2));
         return labelModel;
+    }
+
+    /**
+     * Generates a button at the given coordinate , having the given string as its label.
+     * @param x The x coordinate of the button.
+     * @param y The y coordinate of the button.
+     * @param c The label for the new button.
+     * @return A button at the given coordinate having the given label.
+     */
+    protected Box generateStringButton(int x, int y, String c){
+        Box button = new Box(x,y,PaintBoard.charWidth, PaintBoard.charHeight);
+        button.add(new Label(0,0, c));
+        return button;
     }
 
     /**
@@ -181,5 +193,11 @@ public abstract class DialogWindow extends SubWindow {
     public String getTitle() {
         return "Diagram " + getDiagram().getSequenceNumber();
     }
+
+    public void appendChar(char c){ throw new CommandNotProcessedException();}
+
+    public void removeLastChar(){ throw new CommandNotProcessedException();}
+
+
 
 }
