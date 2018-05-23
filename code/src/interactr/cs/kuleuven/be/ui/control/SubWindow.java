@@ -235,7 +235,7 @@ public abstract class SubWindow implements CommandHandler {
      * @return A rectangle - the frame of the close button of this subwindow.
      */
     private Rectangle getCloseButtonFrame() {
-        int closeX = frame.getX() + frame.getWidth() - 4 - CLOSE_BUTTON_SIZE, closeY = frame.getY() + 3;
+        int closeX = getFrame().getX() + getFrame().getWidth() - 4 - CLOSE_BUTTON_SIZE, closeY = getFrame().getY() + 3;
         return new Rectangle(closeX, closeY, CLOSE_BUTTON_SIZE, CLOSE_BUTTON_SIZE);
     }
 

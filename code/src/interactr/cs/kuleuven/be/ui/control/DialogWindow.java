@@ -125,7 +125,7 @@ public abstract class DialogWindow extends SubWindow {
     protected Label generateTextField(int x, int y, int width,  String label) {
         Label labelModel = new Label(x, y, label);
         labelModel.setMaxWidth(width - 5);
-        labelModel.add(new Box(0, 0, width, PaintBoard.charHeight + 2));
+        labelModel.add(new Box(-2, -1, width, PaintBoard.charHeight + 4));
         return labelModel;
     }
 
@@ -137,7 +137,7 @@ public abstract class DialogWindow extends SubWindow {
      * @return A button at the given coordinate having the given label.
      */
     protected Box generateStringButton(int x, int y, String c){
-        Box button = new Box(x,y,PaintBoard.charWidth, PaintBoard.charHeight);
+        Box button = new Box(x,y,PaintBoard.charHeight, PaintBoard.charHeight);
         button.add(new Label(0,0, c));
         return button;
     }

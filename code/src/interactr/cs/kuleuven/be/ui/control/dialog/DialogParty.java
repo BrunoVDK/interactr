@@ -35,8 +35,8 @@ public class DialogParty extends DialogWindow implements DiagramObserver {
     @Override
     protected void generateModels() {
         super.generateModels();
-        models.add(generateTextField(30, 10, 210, instanceName + (getFocusIndex() == 0 ? "|" : "")));
-        models.add(generateTextField(30, 40, 210, className+ (getFocusIndex() == 1 ? "|" : "")));
+        models.add(generateTextField(30, 10, getFrame().getWidth() - 60, instanceName + (getFocusIndex() == 0 ? "|" : "")));
+        models.add(generateTextField(30, 40, getFrame().getWidth() - 60, className+ (getFocusIndex() == 1 ? "|" : "")));
         Circle actor = generateRadioButton(35,70,"Actor");
         Circle object = generateRadioButton(35,100,"Object");
         actor.setFilled(isActor);
@@ -58,6 +58,11 @@ public class DialogParty extends DialogWindow implements DiagramObserver {
     @Override
     protected Rectangle getDefaultFrame() {
         return new Rectangle(0, 0, 270, 150);
+    }
+
+    @Override
+    protected boolean canHaveAsFrame(Rectangle frame) {
+        return (party == null || (frame.getWidth() >= 200 && frame.getHeight() == 150));
     }
 
     /**
@@ -134,4 +139,5 @@ public class DialogParty extends DialogWindow implements DiagramObserver {
         super.close();
         getDiagram().unregisterObserver(this);
     }
+
 }
