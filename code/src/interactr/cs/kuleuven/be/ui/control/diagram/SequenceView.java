@@ -194,13 +194,14 @@ public class SequenceView extends DiagramView {
     private Line getLinkForMessage(Message message, int senderActivations, int receiverActivations) {
         Line link = MessageModeller.defaultModeller().generateLink(message);
         int rowY = PARTY_ROW_HEIGHT + MESSAGE_ROW_HEIGHT/2 + getDiagram().getIndexOfMessage(message) * MESSAGE_ROW_HEIGHT;
-        int figureWidth = getFigureForParty(message.getReceiver()).getWidth();
+        int senderWidth = getFigureForParty(message.getSender()).getWidth();
+        int receiverWidth = getFigureForParty(message.getReceiver()).getWidth();
         boolean left = getCoordinate(message.getSender()).getX() > getCoordinate(message.getReceiver()).getX();
         link.getCoordinates().setY(rowY);
         link.getEndCoordinates().setY(rowY);
-        link.getCoordinates().setX(getCoordinate(message.getSender()).getX() + figureWidth/2
+        link.getCoordinates().setX(getCoordinate(message.getSender()).getX() + senderWidth/2
             + senderActivations * ACTIVATION_BAR_WIDTH/2 - (left ? ACTIVATION_BAR_WIDTH : 0));
-        link.getEndCoordinates().setX(getCoordinate(message.getReceiver()).getX() + figureWidth/2
+        link.getEndCoordinates().setX(getCoordinate(message.getReceiver()).getX() + receiverWidth/2
             + receiverActivations * ACTIVATION_BAR_WIDTH/2 - (left ? 0 : ACTIVATION_BAR_WIDTH));
         link.setLabel(getLabelOfComponent(message));
         link.setColour(getColourOfComponent(message));
