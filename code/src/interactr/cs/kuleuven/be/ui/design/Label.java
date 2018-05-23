@@ -20,7 +20,7 @@ public class Label extends Model {
      * @param text The text to initialize this label with.
      */
     public Label(int x, int y, String text) {
-        super(text);
+        super("");
         setCoordinates(new Point(x,y));
     }
 
