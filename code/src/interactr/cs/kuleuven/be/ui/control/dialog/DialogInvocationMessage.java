@@ -7,6 +7,7 @@ import interactr.cs.kuleuven.be.ui.control.DialogWindow;
 import interactr.cs.kuleuven.be.ui.control.control.*;
 import interactr.cs.kuleuven.be.ui.design.Box;
 import interactr.cs.kuleuven.be.ui.design.Figure;
+import interactr.cs.kuleuven.be.ui.design.Label;
 import interactr.cs.kuleuven.be.ui.design.Model;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
@@ -48,6 +49,7 @@ public class DialogInvocationMessage extends DialogWindow {
     protected void generateModels() {
         models.clear();
         models.add(this.getListBox());
+        models.add(this.getMethodNameField());
     }
 
     /**
@@ -58,12 +60,12 @@ public class DialogInvocationMessage extends DialogWindow {
     private Model getListBox(){
         Figure listBox = new Box(10,50,100,200);
         String[] arguments = message.getArguments();
-
         return listBox;
     }
 
     private Model getMethodNameField(){
-        return null;
+        Label method = this.generateTextField(10,10, 100, "");
+        return method;
     }
 
     private Model getArgumentTextField(){

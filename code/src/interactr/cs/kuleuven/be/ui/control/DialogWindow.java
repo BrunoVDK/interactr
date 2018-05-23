@@ -5,10 +5,7 @@ import interactr.cs.kuleuven.be.exceptions.InvalidActivateException;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.command.Command;
 import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
-import interactr.cs.kuleuven.be.ui.design.Box;
-import interactr.cs.kuleuven.be.ui.design.Circle;
-import interactr.cs.kuleuven.be.ui.design.Label;
-import interactr.cs.kuleuven.be.ui.design.Model;
+import interactr.cs.kuleuven.be.ui.design.*;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 import java.util.ArrayList;
