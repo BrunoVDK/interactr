@@ -24,8 +24,6 @@ public class Label extends Model {
         setCoordinates(new Point(x,y));
     }
 
-    public void drawLabel(PaintBoard paintBoard) {
-    }
     /**
      * Sets the maximum width for this label.
      *
@@ -49,6 +47,11 @@ public class Label extends Model {
     public void draw(PaintBoard paintBoard) {
         super.draw(paintBoard);
         paintBoard.drawString(getLabel(), getX(), getY() + paintBoard.getHeightForString(getLabel()) - 1);
+    }
+
+    @Override
+    protected void drawLabel(PaintBoard paintBoard) {
+        // Do nothing
     }
 
 }
