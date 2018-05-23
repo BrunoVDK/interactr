@@ -59,10 +59,6 @@ public class DialogInvocationMessage extends DialogWindow {
         models.add(this.getMethodNameField());
         models.add(this.getArgumentTextField());
         models.add(this.getListBox());
-        ArrayList<Label> argumentFields = this.getArgumentFields();
-        for(Model model : argumentFields){
-            models.add(model);
-        }
     }
 
     /**
@@ -72,20 +68,15 @@ public class DialogInvocationMessage extends DialogWindow {
      */
     private Model getListBox(){
         Figure listBox = new Box(10,40,100,200);
-        return listBox;
-    }
-
-    private ArrayList<Label> getArgumentFields(){
         String[] arguments = message.getArguments();
         int offset = 200 / PaintBoard.charHeight;
         int layer = 40;
-        ArrayList<Label> argumentFields = new ArrayList<Label>();
         for(int i = 0; i < arguments.length; i++){
-            Label nextArgument = this.generateTextField(10,layer,100,arguments[i]);
-            argumentFields.add(nextArgument);
+            Label nextArgument = new Label(10, layer, arguments[i]);
+            listBox.add(nextArgument);
             layer += offset;
         }
-        return argumentFields;
+        return listBox;
     }
 
     /**
@@ -133,12 +124,6 @@ public class DialogInvocationMessage extends DialogWindow {
         return downButton;
     }
 
-    protected void displayView(PaintBoard paintBoard){
-        this.generateModels();
-        for (Model model : models)
-            model.draw(paintBoard);
-    }
-
     @Override
     public void activateFocus() throws InvalidActivateException {
         if(this.getFocusIndex() == 0){
@@ -149,23 +134,12 @@ public class DialogInvocationMessage extends DialogWindow {
         }
         else if(this.getFocusIndex() == 2){
             //upButton
-
         }
         else if(this.getFocusIndex() == 3){
             //downButton
         }
     }
 
-    @Override
-    public void focus(int x, int y){
-
-    }
-
-
-    @Override
-    public void display(PaintBoard paintBoard) {
-        super.display(paintBoard);
-    }
 
     private TextField methodName;
 
