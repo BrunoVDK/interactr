@@ -4,8 +4,6 @@ import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.ResultMessage;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.control.DialogWindow;
-import interactr.cs.kuleuven.be.ui.design.Colour;
-import interactr.cs.kuleuven.be.ui.design.Model;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
@@ -31,9 +29,7 @@ public class DialogResultMessage extends DialogWindow {
     @Override
     protected void generateModels() {
         super.generateModels();
-        Model model = generateTextField(20,5, getFrame().getWidth() - 40, message.getLabel() + "|");
-        model.setColour(Colour.BLUE);
-        models.add(model);
+        models.add(generateTextField(20,5, getFrame().getWidth() - 40, message.getLabel() + "|"));
     }
 
     @Override

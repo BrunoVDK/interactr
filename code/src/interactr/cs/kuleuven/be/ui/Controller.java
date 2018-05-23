@@ -41,6 +41,7 @@ public class Controller {
         if (record) {
             File file = new File(CanvasWindow.RECORDINGS_PATH + "new.txt");
             window.recordSession(file.getAbsolutePath());
+            System.out.println(file.getAbsolutePath());
         }
         java.awt.EventQueue.invokeLater(window::show);
     }

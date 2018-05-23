@@ -40,6 +40,44 @@ class SwitchDiagramType {
     }
 
     @Test
+    void switchSequenceToCommunicationThroughDialogMouse() {
+        // Precondition (creates new diagram)
+        Window.replayRecording("steps/createNewDiagram.txt", window);
+        DiagramWindow sw = (DiagramWindow) window.getEventHandler().getController().getActiveSubwindow();
+        assertNotNull(sw);
+        // Get the currently active view
+        DiagramView activeView = sw.getActiveView();
+        // Create Dialog
+        Window.replayRecording("steps/createDialog.txt", window);
+        // Click radioButton
+        Window.replayRecording("steps/dialogAt0x0SecondButton.txt", window);
+        // Get the active view
+        DiagramView newView = sw.getActiveView();
+        // Compare the newly active view with the previously active view
+        assertNotEquals(activeView, newView);
+    }
+
+
+    @Test
+    void switchSequenceToCommunicationThroughDialogKeyboard() {
+        // Precondition (creates new diagram)
+        Window.replayRecording("steps/createNewDiagram.txt", window);
+        DiagramWindow sw = (DiagramWindow) window.getEventHandler().getController().getActiveSubwindow();
+        assertNotNull(sw);
+        // Get the currently active view
+        DiagramView activeView = sw.getActiveView();
+        // Create Dialog
+        Window.replayRecording("steps/createDialog.txt", window);
+        // Select radioButton for communicationView
+        Window.replayRecording("steps/pressTabKey.txt", window);
+        Window.replayRecording("steps/pressSpace.txt", window);
+        // Get the active view
+        DiagramView newView = sw.getActiveView();
+        // Compare the newly active view with the previously active view
+        assertNotEquals(activeView, newView);
+    }
+
+    @Test
     void switchSequenceToCommunication(){
         Window.replayRecording("switchSequenceToCommunication.txt", window);
         assertEquals( true , getActiveView() instanceof CommunicationView);
