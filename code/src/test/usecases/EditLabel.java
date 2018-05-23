@@ -119,6 +119,7 @@ class EditLabel {
         assertEquals( "a:B", party.getLabel());
     }
 
+
     @Test
     void invalidClassnameThroughDialog(){
         Controller controller = window.getEventHandler().getController();
