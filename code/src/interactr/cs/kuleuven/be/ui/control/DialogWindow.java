@@ -6,7 +6,6 @@ import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.command.Command;
 import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
 import interactr.cs.kuleuven.be.ui.design.*;
-import interactr.cs.kuleuven.be.ui.geometry.Point;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 import java.util.ArrayList;
@@ -151,6 +150,7 @@ public abstract class DialogWindow extends SubWindow {
     @Override
     protected void displayView(PaintBoard paintBoard) {
         generateModels();
+        models.get(getFocusIndex()).setColour(Colour.BLUE);
         for (Model model : models)
             model.draw(paintBoard);
     }
@@ -194,10 +194,16 @@ public abstract class DialogWindow extends SubWindow {
         return "Diagram " + getDiagram().getSequenceNumber();
     }
 
+    /**
+     * Append the given char to the active label.
+     *
+     * @param c The char that is to be added.
+     */
     public void appendChar(char c){ throw new CommandNotProcessedException();}
 
+    /**
+     * Remove the last char from the active label.
+     */
     public void removeLastChar(){ throw new CommandNotProcessedException();}
-
-
 
 }
