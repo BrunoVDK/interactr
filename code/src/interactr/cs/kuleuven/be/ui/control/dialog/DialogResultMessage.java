@@ -5,6 +5,7 @@ import interactr.cs.kuleuven.be.domain.ResultMessage;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.control.DialogWindow;
 import interactr.cs.kuleuven.be.ui.design.Colour;
+import interactr.cs.kuleuven.be.ui.design.Model;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 /**
@@ -30,14 +31,17 @@ public class DialogResultMessage extends DialogWindow {
     @Override
     protected void generateModels() {
         super.generateModels();
-        models.add(generateTextField(0,0, getFrame().getWidth() - 30, message.getLabel()));
+        Model model = generateTextField(20,5, getFrame().getWidth() - 40, message.getLabel() + "|");
+        model.setColour(Colour.BLUE);
+        models.add(model);
     }
 
     @Override
     public void display(PaintBoard paintBoard) {
         if (!getDiagram().hasComponent(this.message))
             close();
-        paintBoard.setColour(Colour.BLUE);
+        else
+            super.display(paintBoard);
     }
 
     /**
@@ -45,9 +49,25 @@ public class DialogResultMessage extends DialogWindow {
      */
     private ResultMessage message;
 
+    /**
+     * Returns the default height for this diagram dialog.
+     *
+     * @return The height of the title bar plus 30 times the number of views in the associated diagram window.
+     */
+    private int getDefaultHeight() {
+        if (message == null)
+            return TITLE_BAR_HEIGHT;
+        return 50;
+    }
+
+    @Override
+    protected boolean canHaveAsFrame(Rectangle frame) {
+        return (message == null || (frame.getWidth() >= 350 && frame.getHeight() == 50));
+    }
+
     @Override
     protected Rectangle getDefaultFrame() {
-        return new Rectangle(0, 0, 270, 150);
+        return new Rectangle(0, 0, 350, 50);
     }
 
     @Override
@@ -57,7 +77,7 @@ public class DialogResultMessage extends DialogWindow {
 
     @Override
     public void appendChar(char c){
-        getDiagram().setLabelOfComponent(message, message.getLabel() + c );
+        getDiagram().setLabelOfComponent(message, message.getLabel() + c);
     }
 
     @Override
