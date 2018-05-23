@@ -2,6 +2,7 @@ package interactr.cs.kuleuven.be.ui.control.dialog;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.InvocationMessage;
+import interactr.cs.kuleuven.be.exceptions.InvalidActivateException;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.control.DialogWindow;
 import interactr.cs.kuleuven.be.ui.control.control.*;
@@ -51,17 +52,17 @@ public class DialogInvocationMessage extends DialogWindow {
 
     protected void generateModels() {
         models.clear();
+        models.add(this.getAddButton());
+        models.add(this.getDeleteButton());
+        models.add(this.getUpButton());
+        models.add(this.getDownButton());
+        models.add(this.getMethodNameField());
+        models.add(this.getArgumentTextField());
         models.add(this.getListBox());
         ArrayList<Label> argumentFields = this.getArgumentFields();
         for(Model model : argumentFields){
             models.add(model);
         }
-        models.add(this.getMethodNameField());
-        models.add(this.getArgumentTextField());
-        models.add(this.getAddButton());
-        models.add(this.getDeleteButton());
-        models.add(this.getUpButton());
-        models.add(this.getDownButton());
     }
 
     /**
@@ -137,6 +138,29 @@ public class DialogInvocationMessage extends DialogWindow {
         for (Model model : models)
             model.draw(paintBoard);
     }
+
+    @Override
+    public void activateFocus() throws InvalidActivateException {
+        if(this.getFocusIndex() == 0){
+            //addButton
+        }
+        else if(this.getFocusIndex() == 1){
+            //deleteButton
+        }
+        else if(this.getFocusIndex() == 2){
+            //upButton
+
+        }
+        else if(this.getFocusIndex() == 3){
+            //downButton
+        }
+    }
+
+    @Override
+    public void focus(int x, int y){
+
+    }
+
 
     @Override
     public void display(PaintBoard paintBoard) {

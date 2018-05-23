@@ -197,6 +197,4 @@ public abstract class DialogWindow extends SubWindow {
 
     public void removeLastChar(){ throw new CommandNotProcessedException();}
 
-
-
 }
