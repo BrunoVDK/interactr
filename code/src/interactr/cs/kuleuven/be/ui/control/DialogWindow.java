@@ -61,10 +61,8 @@ public abstract class DialogWindow extends SubWindow {
      * @param y The y coordinate where the element lies.
      */
     public void focus(int x, int y) {
-        x -= getFrame().getX();
-        y -= getFrame().getY() + TITLE_BAR_HEIGHT;
         for (int i=0 ; i<models.size() ; i++) {
-            if (models.get(i).isHit(x, y)) {
+            if (models.get(i).isHit(x - getFrame().getX(), y - getFrame().getY() - TITLE_BAR_HEIGHT) && canFocus(i)) {
                 setFocusIndex(i);
                 activateFocus();
                 return;
@@ -83,9 +81,19 @@ public abstract class DialogWindow extends SubWindow {
     }
 
     /**
+     * Returns whether or not the given index is a valid index of a model to focus on.
+     *
+     * @param index The index to check with.
+     * @return True if and only if the given index is the index of a model that can be focused on.
+     */
+    protected boolean canFocus(int index) {
+        return true;
+    }
+
+    /**
      * Focus on the next control.
      */
-    public void focusNext() {setFocusIndex((getFocusIndex() + 1) % models.size());}
+    public void focusNext() {do {setFocusIndex((getFocusIndex() + 1) % models.size());} while (!canFocus(getFocusIndex()));}
 
     /**
      * Registers the index of the element focused on by this dialog window.

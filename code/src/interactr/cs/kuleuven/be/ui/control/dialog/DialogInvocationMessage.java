@@ -30,6 +30,7 @@ public class DialogInvocationMessage extends DialogWindow implements DiagramObse
         setMessage(message);
         generateModels();
         getDiagram().registerObserver(this);
+        setFocusIndex(1);
     }
 
     /**
@@ -87,11 +88,8 @@ public class DialogInvocationMessage extends DialogWindow implements DiagramObse
     }
 
     @Override
-    protected  void setFocusIndex(int focusIndex) {
-        if (focusIndex == 0)
-            super.setFocusIndex(1);
-        else
-            super.setFocusIndex(focusIndex);
+    protected boolean canFocus(int index) {
+        return (index != 0);
     }
 
     @Override
@@ -108,17 +106,15 @@ public class DialogInvocationMessage extends DialogWindow implements DiagramObse
 
     @Override
     public void focus(int x, int y){
-        super.focus(x,y);
-        x -= getFrame().getX();
-        y -= getFrame().getY() + TITLE_BAR_HEIGHT;
         int i=0;
         for (Model child : generateListBox().getChildren()) {
-            if (child.isHit(x,y)) {
+            if (child.isHit(x - getFrame().getX(), y - getFrame().getY() - TITLE_BAR_HEIGHT)) {
                 selectedIndex = i;
                 break;
             }
             i++;
         }
+        super.focus(x,y);
     }
 
     /**
