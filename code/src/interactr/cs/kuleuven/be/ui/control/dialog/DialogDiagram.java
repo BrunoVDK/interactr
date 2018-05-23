@@ -85,6 +85,4 @@ public class DialogDiagram extends DialogWindow {
         return "Diagram Dialog - " + super.getTitle();
     }
 
-
-
 }
