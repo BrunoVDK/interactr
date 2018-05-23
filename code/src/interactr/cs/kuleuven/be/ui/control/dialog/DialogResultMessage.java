@@ -26,23 +26,17 @@ public class DialogResultMessage extends DialogWindow {
     DialogResultMessage(Diagram diagram, ResultMessage message) {
         super(diagram);
         this.message = message;
-        this.componentLabel = new TextField(message.getLabel(), "Label: ");
+
     }
 
     @Override
     protected void generateModels() {
-
+        super.generateModels();
+        models.add(generateTextField(0,0, 100, message.getLabel()));
     }
 
-    @Override
-    protected void displayView(PaintBoard paintBoard) {
-        componentLabel.display(paintBoard, 10 , ( getFrame().getHeight() * 1/2));
-    }
 
-    /**
-     * Registers the text fields for this party dialog
-     */
-    private TextField componentLabel;
+
     /**
      * Registers the invocation message associated with this dialog window.
      */
@@ -60,7 +54,7 @@ public class DialogResultMessage extends DialogWindow {
 
     @Override
     protected Rectangle getDefaultFrame() {
-        return new Rectangle(0, 0, 270, 150);
+        return new Rectangle(0, 0, 200, 100);
     }
 
     @Override
