@@ -31,7 +31,7 @@ public class DialogResultMessage extends DialogWindow {
     @Override
     protected void generateModels() {
         super.generateModels();
-        Model model = generateTextField(20,5, getFrame().getWidth() - 40, message.getLabel());
+        Model model = generateTextField(20,5, getFrame().getWidth() - 40, message.getLabel() + "|");
         model.setColour(Colour.BLUE);
         models.add(model);
     }
@@ -77,7 +77,7 @@ public class DialogResultMessage extends DialogWindow {
 
     @Override
     public void appendChar(char c){
-        getDiagram().setLabelOfComponent(message, message.getLabel() + c );
+        getDiagram().setLabelOfComponent(message, message.getLabel() + c);
     }
 
     @Override

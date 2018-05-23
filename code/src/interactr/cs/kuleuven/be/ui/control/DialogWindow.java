@@ -6,6 +6,7 @@ import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.command.Command;
 import interactr.cs.kuleuven.be.ui.command.CommandNotProcessedException;
 import interactr.cs.kuleuven.be.ui.design.*;
+import interactr.cs.kuleuven.be.ui.geometry.Point;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
 import java.util.ArrayList;
@@ -129,6 +130,13 @@ public abstract class DialogWindow extends SubWindow {
         return labelModel;
     }
 
+    /**
+     * Generates a button at the given coordinate , having the given string as its label.
+     * @param x The x coordinate of the button.
+     * @param y The y coordinate of the button.
+     * @param c The label for the new button.
+     * @return A button at the given coordinate having the given label.
+     */
     protected Box generateStringButton(int x, int y, String c){
         Box button = new Box(x,y,PaintBoard.charWidth, PaintBoard.charHeight);
         button.add(new Label(0,0, c));

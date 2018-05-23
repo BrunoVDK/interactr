@@ -11,6 +11,9 @@ import interactr.cs.kuleuven.be.ui.design.Label;
 import interactr.cs.kuleuven.be.ui.design.Model;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 /**
  * A class of dialog windows associated with invocation messages.
  *
@@ -49,10 +52,16 @@ public class DialogInvocationMessage extends DialogWindow {
     protected void generateModels() {
         models.clear();
         models.add(this.getListBox());
+        ArrayList<Label> argumentFields = this.getArgumentFields();
+        for(Model model : argumentFields){
+            models.add(model);
+        }
         models.add(this.getMethodNameField());
         models.add(this.getArgumentTextField());
         models.add(this.getAddButton());
         models.add(this.getDeleteButton());
+        models.add(this.getUpButton());
+        models.add(this.getDownButton());
     }
 
     /**
@@ -62,8 +71,20 @@ public class DialogInvocationMessage extends DialogWindow {
      */
     private Model getListBox(){
         Figure listBox = new Box(10,40,100,200);
-        String[] arguments = message.getArguments();
         return listBox;
+    }
+
+    private ArrayList<Label> getArgumentFields(){
+        String[] arguments = message.getArguments();
+        int offset = 200 / PaintBoard.charHeight;
+        int layer = 40;
+        ArrayList<Label> argumentFields = new ArrayList<Label>();
+        for(int i = 0; i < arguments.length; i++){
+            Label nextArgument = this.generateTextField(10,layer,100,arguments[i]);
+            argumentFields.add(nextArgument);
+            layer += offset;
+        }
+        return argumentFields;
     }
 
     /**
@@ -92,13 +113,23 @@ public class DialogInvocationMessage extends DialogWindow {
      * @return an add button
      */
     private Model getAddButton(){
-        Box addButton = this.generateStringButton(200,150,"+");
+        Box addButton = this.generateStringButton(190,150,"+");
         return addButton;
     }
 
     private Model getDeleteButton(){
         Box deleteButton = this.generateStringButton(60,260,"-");
         return deleteButton;
+    }
+
+    private Model getUpButton(){
+        Box upButton = this.generateStringButton(120,110, "\u2191");
+        return upButton;
+    }
+
+    private Model getDownButton(){
+        Box downButton = this.generateStringButton(120,130, "\u2193");
+        return downButton;
     }
 
     protected void displayView(PaintBoard paintBoard){
@@ -111,17 +142,6 @@ public class DialogInvocationMessage extends DialogWindow {
     public void display(PaintBoard paintBoard) {
         super.display(paintBoard);
     }
-
-    /*@Override
-    protected void displayView(PaintBoard paintBoard) {
-        methodName.display(paintBoard, 10, (getFrame().getHeight() * 1/12 ));
-        listBox.display(paintBoard, 10, (getFrame().getHeight() * 2/12 ));
-        buttonUp.display(paintBoard,(getFrame().getWidth() * 12/15), (getFrame().getHeight() * 4/12 ));
-        buttonDown.display(paintBoard,(getFrame().getWidth() * 12/15), (getFrame().getHeight() * 8/12 ));
-
-        buttonPlus.display(paintBoard,(getFrame().getWidth() * 1/3), (getFrame().getHeight() * 10/12 ));
-        buttonMinus.display(paintBoard,(getFrame().getWidth() * 2/3), (getFrame().getHeight() * 10/12 ));
-    }*/
 
     private TextField methodName;
 
