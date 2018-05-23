@@ -32,7 +32,7 @@ public class AppendCharCommand extends Command {
     public static boolean canHaveAsChar(char c) {
         return (Character.isLetter(c)
                 || Character.isDigit(c)
-                || ":();-_<>*&[]".contains(Character.toString(c)));
+                || ":();-,_<>*&[]".contains(Character.toString(c)));
     }
 
     /**
