@@ -2,6 +2,7 @@ package usecases;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
 import interactr.cs.kuleuven.be.domain.DiagramComponent;
+import interactr.cs.kuleuven.be.domain.Message;
 import interactr.cs.kuleuven.be.domain.Party;
 import interactr.cs.kuleuven.be.ui.Controller;
 import interactr.cs.kuleuven.be.ui.Window;
@@ -140,6 +141,22 @@ class EditLabel {
         assertEquals( "a:A", party.getLabel());
     }
 
+    @Test
+    void resultMessageThroughDialog() {
+        // set up parties and message
+        spawnTwoPartiesAndMessage();
+        // select resultMessage
+        Window.replayRecording("steps/selectResultMessage.txt", window);
+        // grab message for later
+        Message message = (Message) ((DiagramWindow) window.getEventHandler().getController().getActiveSubwindow()).getActiveView().getSelectedComponent();
+        // spawn dialog
+        Window.replayRecording("steps/createDialog.txt", window);
+        // type new label
+        Window.replayRecording("steps/typeb.txt", window);
+
+        assertEquals("b", message.getLabel());
+    }
+
     // Returns the currently active view for the scene
     //  Convenience method
     private DiagramView getActiveView() {
@@ -170,6 +187,20 @@ class EditLabel {
         Window.replayRecording("steps/pressEnter.txt", window);
         assertNull(getActiveView().getSelectedComponent());
         assertEquals(newParty.getLabel(), "a:A");
+    }
+
+    private void spawnTwoPartiesAndMessage() {
+        Window.replayRecording("steps/createNewDiagram.txt", window);
+        Window.replayRecording("steps/createPartyAt100.txt", window);
+        Window.replayRecording("steps/typePartyLabelaA.txt", window);
+        Window.replayRecording("steps/pressEnter.txt", window);
+        Window.replayRecording("steps/createPartyAt200.txt", window);
+        Window.replayRecording("steps/typePartyLabelbB.txt", window);
+        Window.replayRecording("steps/pressEnter.txt", window);
+        Window.replayRecording("steps/createMessageBetween100and200.txt", window);
+        Window.replayRecording("steps/typeb.txt", window);
+        Window.replayRecording("steps/typeParentheses.txt", window);
+        Window.replayRecording("steps/pressEnter.txt", window);
     }
 
 }
