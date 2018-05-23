@@ -142,7 +142,6 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
     public void selectComponentAt(int x, int y) throws NoSuchComponentException {
         if (isEditing()) throw new IllegalOperationException();
         selectComponent(getSelectableComponent(x,y));
-
     }
 
     /**
@@ -257,7 +256,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      *
      * @param component The new selected component of this diagram view.
      */
-    void setSelectedComponent(DiagramComponent component) {
+    private void setSelectedComponent(DiagramComponent component) {
         this.selectedComponent = component;
     }
 
@@ -466,7 +465,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @param component The component whose label is desired.
      * @return The label of the component, or the selected label if the component is selected.
      */
-    protected String getLabelOfComponent(DiagramComponent component) {
+    String getLabelOfComponent(DiagramComponent component) {
         if (component == getSelectedComponent() && isEditing())
             return (selectedLabel + (isEditing() ? "|" : ""));
         return component.getLabel();
@@ -478,7 +477,7 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      * @param component The component whose drawing colour is desired.
      * @return The colour to be used for drawing the component.
      */
-    protected Colour getColourOfComponent(DiagramComponent component) {
+    Colour getColourOfComponent(DiagramComponent component) {
         if (component == getSelectedComponent())
             return (isValidSelectedLabel() || !isEditing() ? Colour.BLUE : Colour.RED);
         return Colour.BLACK;
@@ -504,16 +503,6 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
                 }
             }
         }
-    }
-
-    /**
-     * Returns the start coordinate for the given message or a default coordinate if none was registered.
-     *
-     * @param message The message whose coordinate is desired.
-     * @return The coordinate for the given party.
-     */
-    Point getCoordinate(Message message) {
-        return null;
     }
 
     /**
@@ -557,21 +546,8 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
      *  This unregisters it as an observer.
      */
     public void close() {
-        isClosed = true;
         getDiagram().unregisterObserver(this);
     }
-
-    /**
-     * Returns whether or not this subwindow is closed.
-     */
-    public boolean isClosed() {
-        return isClosed;
-    }
-
-    /**
-     * Registers whether or not this subwindow is closed.
-     */
-    private boolean isClosed = false;
 
     @Override
     public void executeCommand(Command command) throws CommandNotProcessedException {
@@ -581,19 +557,6 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
     @Override
     public String toString() {
         return "Diagram " + getDiagram().getSequenceNumber();
-    }
-
-    @Override
-    public DiagramView clone() {
-        final DiagramView clone;
-        try {
-            clone = (DiagramView)super.clone();
-            clone.setDiagram(getDiagram());
-            for (Party party : partyCoordinates.keySet())
-                clone.setCoordinateForParty(party, getCoordinate(party));
-        }
-        catch (Exception e) {throw new RuntimeException("Failed to clone diagram view." + e.getClass().toString());}
-        return clone;
     }
 
     /**
@@ -607,6 +570,19 @@ public abstract class DiagramView implements Cloneable, CommandHandler, DiagramO
         selectedComponent = other.selectedComponent;
         selectedLabel = other.selectedLabel;
         isEditing = other.isEditing;
+    }
+
+    @Override
+    public DiagramView clone() {
+        final DiagramView clone;
+        try {
+            clone = (DiagramView)super.clone();
+            clone.setDiagram(getDiagram());
+            for (Party party : partyCoordinates.keySet())
+                clone.setCoordinateForParty(party, getCoordinate(party));
+        }
+        catch (Exception e) {throw new RuntimeException("Failed to clone diagram view." + e.getClass().toString());}
+        return clone;
     }
 
 }
