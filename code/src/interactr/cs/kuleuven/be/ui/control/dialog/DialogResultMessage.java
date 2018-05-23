@@ -62,4 +62,14 @@ public class DialogResultMessage extends DialogWindow {
         return "Result Message Dialog - " + super.getTitle();
     }
 
+    @Override
+    public void appendChar(char c){
+        getDiagram().setLabelOfComponent(message, message.getLabel() + c );
+    }
+
+    @Override
+    public void removeLastChar() {
+        getDiagram().setLabelOfComponent(message, message.getLabel().
+                substring(0, message.getLabel().length() -1) );
+    }
 }

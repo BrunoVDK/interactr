@@ -182,4 +182,10 @@ public abstract class DialogWindow extends SubWindow {
         return "Diagram " + getDiagram().getSequenceNumber();
     }
 
+    public void appendChar(char c){ throw new CommandNotProcessedException();}
+
+    public void removeLastChar(){ throw new CommandNotProcessedException();}
+
+
+
 }
