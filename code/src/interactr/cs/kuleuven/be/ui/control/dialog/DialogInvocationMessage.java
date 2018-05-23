@@ -6,6 +6,7 @@ import interactr.cs.kuleuven.be.ui.PaintBoard;
 import interactr.cs.kuleuven.be.ui.control.DialogWindow;
 import interactr.cs.kuleuven.be.ui.control.control.*;
 import interactr.cs.kuleuven.be.ui.design.Box;
+import interactr.cs.kuleuven.be.ui.design.Colour;
 import interactr.cs.kuleuven.be.ui.design.Figure;
 import interactr.cs.kuleuven.be.ui.design.Model;
 import interactr.cs.kuleuven.be.ui.geometry.Rectangle;
@@ -27,26 +28,61 @@ public class DialogInvocationMessage extends DialogWindow {
      */
     DialogInvocationMessage(Diagram diagram, InvocationMessage message) {
         super(diagram);
+        this.setInvocationMessage(message);
+        this.setFrame(getDefaultFrame());
+        generateModels();
+    }
+
+    /**
+     * Registers the invocation message associated with this dialog window.
+     */
+    private InvocationMessage message;
+
+    private void setInvocationMessage(InvocationMessage message){
         this.message = message;
-        this.listBox = new ListBox(message.getArguments());
-        this.methodName = new TextField(message.getMethodName() , "Method Name: ");
+    }
+
+    public InvocationMessage getInvocationMessage(){
+        return message;
     }
 
     protected void generateModels() {
-
+        models = models.minusAll(models);
+        models = models.plus(this.getListBox());
     }
 
     /**
      * Returns a list box for the parameters of the invocation message at the given index.
      *
-     * @param index The index for the list box
      * @return A list box that contains the parameters at the given index
      */
-    private Model getListBox(int index){
+    private Model getListBox(){
+        Figure listBox = new Box(10,50,100,200);
+        String[] arguments = message.getArguments();
+
+        return listBox;
+    }
+
+    private Model getMethodNameField(){
         return null;
     }
 
+    private Model getArgumentTextField(){
+        return null;
+    }
+
+    protected void displayView(PaintBoard paintBoard){
+        this.generateModels();
+        for (Model model : models)
+            model.draw(paintBoard);
+    }
+
     @Override
+    public void display(PaintBoard paintBoard) {
+        super.display(paintBoard);
+    }
+
+    /*@Override
     protected void displayView(PaintBoard paintBoard) {
         methodName.display(paintBoard, 10, (getFrame().getHeight() * 1/12 ));
         listBox.display(paintBoard, 10, (getFrame().getHeight() * 2/12 ));
@@ -55,7 +91,7 @@ public class DialogInvocationMessage extends DialogWindow {
 
         buttonPlus.display(paintBoard,(getFrame().getWidth() * 1/3), (getFrame().getHeight() * 10/12 ));
         buttonMinus.display(paintBoard,(getFrame().getWidth() * 2/3), (getFrame().getHeight() * 10/12 ));
-    }
+    }*/
 
     private TextField methodName;
 
@@ -80,11 +116,6 @@ public class DialogInvocationMessage extends DialogWindow {
      * The plus button of this dialog window
      */
     private ButtonPlus buttonPlus = new ButtonPlus();
-
-    /**
-     * Registers the invocation message associated with this dialog window.
-     */
-    private InvocationMessage message;
 
     @Override
     public void goUp() {
