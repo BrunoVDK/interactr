@@ -166,17 +166,29 @@ class EditLabel {
         Message message = (Message) ((DiagramWindow) window.getEventHandler().getController().getActiveSubwindow()).getActiveView().getSelectedComponent();
         // spawn dialog
         Window.replayRecording("steps/createDialog.txt", window);
-        // go to add argument field
-        Window.replayRecording("steps/pressTabKey.txt", window);
-        Window.replayRecording("steps/pressTabKey.txt", window);
-        // type new argument
-        Window.replayRecording("steps/typeb.txt", window);
-        // go to add argument button
-        Window.replayRecording("steps/pressTabKey.txt", window);
+        // add argument
+        addArgument();
+
+        assertEquals("b(b)", message.getLabel());
+    }
+
+    @Test
+    void removeArgumentToInvocationMessageThroughDialogTest() {
+        // set up parties and message
+        spawnTwoPartiesAndMessage();
+        // select InvocationMessage
+        Window.replayRecording("steps/selectInvocationMessage.txt", window);
+        // grab message for later
+        Message message = (Message) ((DiagramWindow) window.getEventHandler().getController().getActiveSubwindow()).getActiveView().getSelectedComponent();
+        // spawn dialog
+        Window.replayRecording("steps/createDialog.txt", window);
+        // add argument
+        addArgument();
+        // remove the argument
         Window.replayRecording("steps/pressTabKey.txt", window);
         Window.replayRecording("steps/pressSpace.txt", window);
 
-        assertEquals("b(b)", message.getLabel());
+        assertEquals("b()", message.getLabel());
     }
     
     
@@ -240,6 +252,19 @@ class EditLabel {
         Window.replayRecording("steps/typeb.txt", window);
         Window.replayRecording("steps/typeParentheses.txt", window);
         Window.replayRecording("steps/pressEnter.txt", window);
+    }
+
+    private void addArgument() {
+        // go to add argument field
+        Window.replayRecording("steps/pressTabKey.txt", window);
+        Window.replayRecording("steps/pressTabKey.txt", window);
+        // type new argument
+        Window.replayRecording("steps/typeb.txt", window);
+        // go to add argument button
+        Window.replayRecording("steps/pressTabKey.txt", window);
+        Window.replayRecording("steps/pressTabKey.txt", window);
+        // add argument
+        Window.replayRecording("steps/pressSpace.txt", window);
     }
 
 }
