@@ -1,21 +1,18 @@
 package usecases;
 
 import interactr.cs.kuleuven.be.domain.Diagram;
-import interactr.cs.kuleuven.be.domain.DiagramComponent;
 import interactr.cs.kuleuven.be.domain.Message;
 import interactr.cs.kuleuven.be.domain.Party;
 import interactr.cs.kuleuven.be.ui.Controller;
-import interactr.cs.kuleuven.be.ui.Window;
 import interactr.cs.kuleuven.be.ui.EventHandler;
 import interactr.cs.kuleuven.be.ui.PaintBoard;
+import interactr.cs.kuleuven.be.ui.Window;
 import interactr.cs.kuleuven.be.ui.control.DiagramWindow;
 import interactr.cs.kuleuven.be.ui.control.diagram.DiagramView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class EditLabel {
 
@@ -96,7 +93,7 @@ class EditLabel {
         Window.replayRecording("steps/pressBackSpace.txt", window);
         // type 'b'
         Window.replayRecording("steps/typeB.txt", window);
-        assertEquals(":A", party.getLabel());
+        assertEquals("b:A", party.getLabel());
     }
 
 
@@ -117,7 +114,7 @@ class EditLabel {
         Window.replayRecording("steps/pressBackSpace.txt", window);
         // type 'B'
         Window.replayRecording("steps/typeB.txt", window);
-        assertEquals( "a:B", party.getLabel());
+        assertEquals( "a:A", party.getLabel());
     }
 
 

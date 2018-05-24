@@ -30,6 +30,7 @@ public class DialogInvocationMessage extends DialogWindow implements DiagramObse
         setMessage(message);
         generateModels();
         getDiagram().registerObserver(this);
+        setFocusIndex(1);
     }
 
     /**
@@ -62,11 +63,11 @@ public class DialogInvocationMessage extends DialogWindow implements DiagramObse
         Box listBox = generateListBox();
         models.add(listBox);
         models.add(generateTextField(11,6, 270, methodNameLabel + (getFocusIndex() == 1 ? "|" : "")));
-        models.add(generateStringButton(290,5,"+"));
-        models.add(generateStringButton(320,5,"-"));
+        models.add(generateStringButton(290,5,"+", false));
+        models.add(generateStringButton(320,5,"-", selectedIndex < 0));
         models.add(generateTextField(11, 36,270, argumentLabel + (getFocusIndex() == 4 ? "|" : "")));
-        models.add(generateStringButton(290,35, "\u2193"));
-        models.add(generateStringButton(320,35, "\u2191"));
+        models.add(generateStringButton(290,35, "\u2193", selectedIndex < 0));
+        models.add(generateStringButton(320,35, "\u2191", selectedIndex < 0));
     }
 
     /**
@@ -87,11 +88,8 @@ public class DialogInvocationMessage extends DialogWindow implements DiagramObse
     }
 
     @Override
-    protected  void setFocusIndex(int focusIndex) {
-        if (focusIndex == 0)
-            super.setFocusIndex(1);
-        else
-            super.setFocusIndex(focusIndex);
+    protected boolean canFocus(int index) {
+        return (index != 0 && !(selectedIndex < 0 && (index == 3 || index == 5 || index == 6)));
     }
 
     @Override
@@ -101,24 +99,22 @@ public class DialogInvocationMessage extends DialogWindow implements DiagramObse
         else if (this.getFocusIndex() == 3)
             deleteSelectedArgument();
         else if (this.getFocusIndex() == 5)
-            goDown();
+            shiftDown();
         else if (this.getFocusIndex() == 6)
-            goUp();
+            shiftUp();
     }
 
     @Override
     public void focus(int x, int y){
-        super.focus(x,y);
-        x -= getFrame().getX();
-        y -= getFrame().getY() + TITLE_BAR_HEIGHT;
         int i=0;
         for (Model child : generateListBox().getChildren()) {
-            if (child.isHit(x,y)) {
+            if (child.isHit(x - getFrame().getX(), y - getFrame().getY() - TITLE_BAR_HEIGHT)) {
                 selectedIndex = i;
                 break;
             }
             i++;
         }
+        super.focus(x,y);
     }
 
     /**
@@ -140,18 +136,19 @@ public class DialogInvocationMessage extends DialogWindow implements DiagramObse
      * Deletes the selected argument from the associated message's argument list.
      */
     private void deleteSelectedArgument() {
-        if (!getMessage().canHaveAsArgument(argumentLabel))
-            return;
         String[] arguments = getMessage().getArguments();
         String[] newArguments = new String[arguments.length - 1];
         for (int i=0 ; i<arguments.length-1 ; i++)
             newArguments[i] = arguments[i + (i >= selectedIndex ? 1 : 0)];
         getDiagram().setLabelOfComponent(getMessage(), getActiveLabel(newArguments));
         selectedIndex = -1;
+        setFocusIndex(1);
     }
 
-    @Override
-    public void goUp() {
+    /**
+     * Shift the currently selected argument up in the list.
+     */
+    private void shiftUp() {
         if (selectedIndex > 0) {
             String[] arguments = getMessage().getArguments();
             String temp = arguments[selectedIndex-1];
@@ -162,8 +159,10 @@ public class DialogInvocationMessage extends DialogWindow implements DiagramObse
         }
     }
 
-    @Override
-    public void goDown() {
+    /**
+     * Shift the currently selected argument down in the list.
+     */
+    private void shiftDown() {
         String[] arguments = getMessage().getArguments();
         if (selectedIndex < arguments.length-1) {
             String temp = arguments[selectedIndex+1];
@@ -172,6 +171,20 @@ public class DialogInvocationMessage extends DialogWindow implements DiagramObse
             getDiagram().setLabelOfComponent(getMessage(), getActiveLabel(arguments));
             selectedIndex++;
         }
+    }
+
+    @Override
+    public void goUp() {
+        selectedIndex = selectedIndex - 1;
+        if (selectedIndex < 0)
+            selectedIndex = message.getArguments().length-1;
+    }
+
+    @Override
+    public void goDown() {
+        selectedIndex = selectedIndex + 1;
+        if (selectedIndex >= message.getArguments().length)
+            selectedIndex = 0;
     }
 
     @Override
