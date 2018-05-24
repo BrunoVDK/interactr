@@ -69,7 +69,7 @@ public class InvocationMessage extends Message {
         String[] parts = label.split("\\(");
         if (parts.length == 2) {
             if (parts[1].endsWith(")") && parts[1].length() > 1)
-                return parts[1].substring(0, parts[1].length() - 1).split(",");
+                return parts[1].substring(0, parts[1].length() - 1).split(",",-1);
         }
         return new String[0];
     }

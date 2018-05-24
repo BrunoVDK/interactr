@@ -9,7 +9,7 @@ package interactr.cs.kuleuven.be.ui.design;
 public class Circle extends Oval {
 
     /**
-     * Initialize this new circle with given x & y coordines, width and height.
+     * Initialize this new circle with given x and y coordines, width and height.
      *
      * @param x The x coordinate for this new circle.
      * @param y The y coordinate for this new circle.
