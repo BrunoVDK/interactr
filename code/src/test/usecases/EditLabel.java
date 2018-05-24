@@ -139,6 +139,23 @@ class EditLabel {
     }
 
     @Test
+    void invocationMessageThroughDialog() {
+        // set up parties and message
+        spawnTwoPartiesAndMessage();
+        // select InvocationMessage
+        Window.replayRecording("steps/selectInvocationMessage.txt", window);
+        // grab message for later
+        Message message = (Message) ((DiagramWindow) window.getEventHandler().getController().getActiveSubwindow()).getActiveView().getSelectedComponent();
+        // spawn dialog
+        Window.replayRecording("steps/createDialog.txt", window);
+        // type new label
+        Window.replayRecording("steps/typeb.txt", window);
+
+        assertEquals("b()", message.getLabel());
+    }
+    
+    
+    @Test
     void resultMessageThroughDialog() {
         // set up parties and message
         spawnTwoPartiesAndMessage();

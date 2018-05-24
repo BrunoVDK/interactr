@@ -38,7 +38,7 @@ public abstract class DialogWindow extends SubWindow {
                 && (frame.getHeight() >= getDefaultFrame().getHeight() && frame.getWidth() >= getDefaultFrame().getWidth());
     }
 
-    /**
+    /**@
      * Returns the index of the element for this dialog window.
      */
     public int getFocusIndex() {
