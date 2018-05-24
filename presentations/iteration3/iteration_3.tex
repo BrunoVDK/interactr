@@ -95,13 +95,13 @@
 \begin{frame}[fragile]{SubWindows - Diagram Windows \& Dialog Boxes/Windows}
 	\begin{center}
 	A \texttt{DiagramWindow} has two \texttt{DiagramView}s.
-	\\A \texttt{DialogWindow} is composed of \texttt{Control}s.
+	\\A \texttt{DialogWindow} aggregates \texttt{Model}s representing \textit{controls}.
 	
 	\vspace{0.5cm}
-	A \texttt{Diagram} is directly altered by \texttt{DiagramView}s and \texttt{DialogWindow}.
+	A \texttt{Diagram} is directly altered by \texttt{DiagramView}s and \texttt{DialogWindow}s.
 	
 	\vspace{0.5cm}
-	Synchronization is done with the \texttt{Observer} pattern. 
+	Synchronization is either done with the \texttt{Observer} pattern, or \textit{lazily} (update upon drawing).
 	\\ Since \texttt{Diagram} knows when it changes, it keeps a list of \texttt{DiagramObserver}s and notifies them (\texttt{Information Expert}).
 	\\$\rightarrow$ disadvantage : coordinates aren't synchronised (solved by `\textit{making room}' upon addition of a diagram component to a `DiagramView')
 	\end{center}
@@ -183,12 +183,12 @@
 	
 	\vspace{0.5cm} Disadvantages ; 
 	\begin{itemize}
-	\item many new types of \texttt{CommandHandler} 
+	\item many new types of \texttt{CommandHandler}?
 	\\ $\rightarrow$ bloated \texttt{Command} abstract class (\texttt{Visitor} pattern discussion)
 	\item if \texttt{Chain of Responsibility} is long
 	\\ $\rightarrow$ wasted processing (command goes down the whole chain before realising that it can't be handled)
 	\item if many new system operations for many different types of windows 
-	\\ $\rightarrow$ redesign necessary (example redesign : use of commands mapped to key/mouse events, translation of these commands at the last moment, use of singleton undo manager).
+	\\ $\rightarrow$ redesign probably warranted.
 	\end{itemize}
 	\end{center}
 \end{frame}
@@ -196,7 +196,9 @@
 \begin{frame}[fragile]{Extensibility - Model}
 	\begin{center}
 	Representation of various elements in the system can be done with the \texttt{Model} class.\\
-	$\rightarrow $ new elements in domain model and elsewhere is a matter of creating subclasses of \texttt{Model}, whenever necessary.
+	$\rightarrow $ new elements in domain model and elsewhere is a matter of creating subclasses of \texttt{Model}, whenever necessary.\\
+	\vspace{0.5cm}
+	More complex \texttt{Model}s can be made (and recycled) by composing them out of `primitives' (\texttt{Line}s, \texttt{Oval}s, ...).
 	\end{center}
 \end{frame}
 
@@ -221,11 +223,11 @@
 \item No \textit{duplicated code}.
 \item \textit{Moved methods} here and there.
 \item Addressed \textit{long methods} with \textit{extract method} \\
-$\rightarrow$ not the best metric ... but all methods `fit on the screen' (max. \circa 25 lines).
+$\rightarrow$ not the best metric ... but all methods (easily) `fit on the screen' (max. \circa 25 lines).
 \item If appropriate a \textit{temporary variable} was replaced with getters.
 \item Avoided \textit{message chains}.
-\item Virtually no \textit{switch statements} (only in \texttt{EventHandler}).
-\item \textit{Comments} virtually never necessary (maybe when drawing messages in \texttt{SequenceView}).
+\item Virtually no \textit{switch statements} (in \texttt{EventHandler}).
+\item \textit{Comments} never really necessary (maybe when drawing messages in \texttt{SequenceView}).
 \end{itemize}
 \end{frame}
 
@@ -233,7 +235,7 @@ $\rightarrow$ not the best metric ... but all methods `fit on the screen' (max. 
 	\includegraphics[width=1\textwidth]{refactoring}
 \end{frame}
 
-\begin{frame}[fragile]{Time management}
+\begin{frame}[fragile]{Time Management}
 \begin{itemize}
 \item weekly meeting with assistant
 \item +- 40 hours per person

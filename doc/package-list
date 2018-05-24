@@ -2,7 +2,9 @@ interactr.cs.kuleuven.be.domain
 interactr.cs.kuleuven.be.exceptions
 interactr.cs.kuleuven.be.purecollections
 interactr.cs.kuleuven.be.ui
+interactr.cs.kuleuven.be.ui.command
+interactr.cs.kuleuven.be.ui.control
+interactr.cs.kuleuven.be.ui.control.diagram
+interactr.cs.kuleuven.be.ui.control.dialog
+interactr.cs.kuleuven.be.ui.design
 interactr.cs.kuleuven.be.ui.geometry
-unit.domain
-unit.purecollections
-usecases
