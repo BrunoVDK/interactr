@@ -151,9 +151,9 @@ class EditLabel {
         // delete label
         Window.replayRecording("steps/pressBackSpace.txt", window);
         // type new label
-        Window.replayRecording("steps/typeb.txt", window);
+        Window.replayRecording("steps/typea.txt", window);
 
-        assertEquals("b()", message.getLabel());
+        assertEquals("a()", message.getLabel());
     }
     
     
