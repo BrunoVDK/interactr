@@ -190,7 +190,52 @@ class EditLabel {
 
         assertEquals("b()", message.getLabel());
     }
-    
+
+    @Test
+    void moveArgumentsThroughDialog() {
+        // set up parties and message
+        spawnTwoPartiesAndMessage();
+        // select InvocationMessage
+        Window.replayRecording("steps/selectInvocationMessage.txt", window);
+        // grab message for later
+        Message message = (Message) ((DiagramWindow) window.getEventHandler().getController().getActiveSubwindow()).getActiveView().getSelectedComponent();
+        // spawn dialog
+        Window.replayRecording("steps/createDialog.txt", window);
+        // setup args
+        // a
+        Window.replayRecording("steps/clickArgDialog.txt", window);
+        Window.replayRecording("steps/typea.txt", window);
+        Window.replayRecording("steps/clickPlus.txt", window);
+        // b
+        Window.replayRecording("steps/clickArgDialog.txt", window);
+        Window.replayRecording("steps/pressBackSpace.txt", window);
+        Window.replayRecording("steps/typeb.txt", window);
+        Window.replayRecording("steps/clickPlus.txt", window);
+        // c
+        Window.replayRecording("steps/clickArgDialog.txt", window);
+        Window.replayRecording("steps/pressBackSpace.txt", window);
+        Window.replayRecording("steps/typec.txt", window);
+        Window.replayRecording("steps/clickPlus.txt", window);
+        // d
+        Window.replayRecording("steps/clickArgDialog.txt", window);
+        Window.replayRecording("steps/pressBackSpace.txt", window);
+        Window.replayRecording("steps/typed.txt", window);
+        Window.replayRecording("steps/clickPlus.txt", window);
+        // make sure args are set up properly
+        assertEquals("b(a,b,c,d)", message.getLabel());
+
+        // click second arg (b)
+        Window.replayRecording("steps/clickArg2.txt", window);
+        // move it up
+        Window.replayRecording("steps/clickUp.txt", window);
+        assertEquals("b(b,a,c,d)", message.getLabel());
+
+        // click third arg (c)
+        Window.replayRecording("steps/clickArg3.txt", window);
+        // move it down
+        Window.replayRecording("steps/clickDown.txt", window);
+        assertEquals("b(b,a,d,c)", message.getLabel());
+    }
     
     @Test
     void resultMessageThroughDialog() {
