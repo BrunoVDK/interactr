@@ -247,10 +247,14 @@ class EditLabel {
         Message message = (Message) ((DiagramWindow) window.getEventHandler().getController().getActiveSubwindow()).getActiveView().getSelectedComponent();
         // spawn dialog
         Window.replayRecording("steps/createDialog.txt", window);
-        // type new label
+        // type new label 'a'
         Window.replayRecording("steps/typea.txt", window);
-
         assertEquals("a", message.getLabel());
+        // remove label
+        Window.replayRecording("steps/pressBackSpace.txt", window);
+        // type new label 'b'
+        Window.replayRecording("steps/typeb.txt", window);
+        assertEquals("b", message.getLabel());
     }
 
     // Returns the currently active view for the scene
