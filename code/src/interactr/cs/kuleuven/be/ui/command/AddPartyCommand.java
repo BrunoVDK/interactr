@@ -26,10 +26,14 @@ public class AddPartyCommand extends Command {
      */
     private final Point location;
 
+    private Point getLocation(){
+        return location;
+    }
+
     @Override
     public void executeDiagramView(DiagramView view) {
         try {
-            view.addParty(view.getRelativeCoordinates(location).getX(), view.getRelativeCoordinates(location).getY());
+            view.addParty(view.getRelativeCoordinates(this.getLocation()).getX(), view.getRelativeCoordinates(this.getLocation()).getY());
         }
         catch (Exception e) {throw new CommandNotProcessedException();}
     }

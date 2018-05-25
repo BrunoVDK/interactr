@@ -139,6 +139,105 @@ class EditLabel {
     }
 
     @Test
+    void invocationMessageThroughDialog() {
+        // set up parties and message
+        spawnTwoPartiesAndMessage();
+        // select InvocationMessage
+        Window.replayRecording("steps/selectInvocationMessage.txt", window);
+        // grab message for later
+        Message message = (Message) ((DiagramWindow) window.getEventHandler().getController().getActiveSubwindow()).getActiveView().getSelectedComponent();
+        // spawn dialog
+        Window.replayRecording("steps/createDialog.txt", window);
+        // delete label
+        Window.replayRecording("steps/pressBackSpace.txt", window);
+        // type new label
+        Window.replayRecording("steps/typea.txt", window);
+
+        assertEquals("a()", message.getLabel());
+    }
+
+    @Test
+    void addArgumentToInvocationMessageThroughDialogTest() {
+        // set up parties and message
+        spawnTwoPartiesAndMessage();
+        // select InvocationMessage
+        Window.replayRecording("steps/selectInvocationMessage.txt", window);
+        // grab message for later
+        Message message = (Message) ((DiagramWindow) window.getEventHandler().getController().getActiveSubwindow()).getActiveView().getSelectedComponent();
+        // spawn dialog
+        Window.replayRecording("steps/createDialog.txt", window);
+        // add argument
+        addArgument();
+
+        assertEquals("b(b)", message.getLabel());
+    }
+
+    @Test
+    void removeArgumentToInvocationMessageThroughDialogTest() {
+        // set up parties and message
+        spawnTwoPartiesAndMessage();
+        // select InvocationMessage
+        Window.replayRecording("steps/selectInvocationMessage.txt", window);
+        // grab message for later
+        Message message = (Message) ((DiagramWindow) window.getEventHandler().getController().getActiveSubwindow()).getActiveView().getSelectedComponent();
+        // spawn dialog
+        Window.replayRecording("steps/createDialog.txt", window);
+        // add argument
+        addArgument();
+        // remove the argument
+        Window.replayRecording("steps/pressTabKey.txt", window);
+        Window.replayRecording("steps/pressSpace.txt", window);
+
+        assertEquals("b()", message.getLabel());
+    }
+
+    @Test
+    void moveArgumentsThroughDialog() {
+        // set up parties and message
+        spawnTwoPartiesAndMessage();
+        // select InvocationMessage
+        Window.replayRecording("steps/selectInvocationMessage.txt", window);
+        // grab message for later
+        Message message = (Message) ((DiagramWindow) window.getEventHandler().getController().getActiveSubwindow()).getActiveView().getSelectedComponent();
+        // spawn dialog
+        Window.replayRecording("steps/createDialog.txt", window);
+        // setup args
+        // a
+        Window.replayRecording("steps/clickArgDialog.txt", window);
+        Window.replayRecording("steps/typea.txt", window);
+        Window.replayRecording("steps/clickPlus.txt", window);
+        // b
+        Window.replayRecording("steps/clickArgDialog.txt", window);
+        Window.replayRecording("steps/pressBackSpace.txt", window);
+        Window.replayRecording("steps/typeb.txt", window);
+        Window.replayRecording("steps/clickPlus.txt", window);
+        // c
+        Window.replayRecording("steps/clickArgDialog.txt", window);
+        Window.replayRecording("steps/pressBackSpace.txt", window);
+        Window.replayRecording("steps/typec.txt", window);
+        Window.replayRecording("steps/clickPlus.txt", window);
+        // d
+        Window.replayRecording("steps/clickArgDialog.txt", window);
+        Window.replayRecording("steps/pressBackSpace.txt", window);
+        Window.replayRecording("steps/typed.txt", window);
+        Window.replayRecording("steps/clickPlus.txt", window);
+        // make sure args are set up properly
+        assertEquals("b(a,b,c,d)", message.getLabel());
+
+        // click second arg (b)
+        Window.replayRecording("steps/clickArg2.txt", window);
+        // move it up
+        Window.replayRecording("steps/clickUp.txt", window);
+        assertEquals("b(b,a,c,d)", message.getLabel());
+
+        // click third arg (c)
+        Window.replayRecording("steps/clickArg3.txt", window);
+        // move it down
+        Window.replayRecording("steps/clickDown.txt", window);
+        assertEquals("b(b,a,d,c)", message.getLabel());
+    }
+    
+    @Test
     void resultMessageThroughDialog() {
         // set up parties and message
         spawnTwoPartiesAndMessage();
@@ -149,9 +248,9 @@ class EditLabel {
         // spawn dialog
         Window.replayRecording("steps/createDialog.txt", window);
         // type new label
-        Window.replayRecording("steps/typeb.txt", window);
+        Window.replayRecording("steps/typea.txt", window);
 
-        assertEquals("b", message.getLabel());
+        assertEquals("a", message.getLabel());
     }
 
     // Returns the currently active view for the scene
@@ -198,6 +297,19 @@ class EditLabel {
         Window.replayRecording("steps/typeb.txt", window);
         Window.replayRecording("steps/typeParentheses.txt", window);
         Window.replayRecording("steps/pressEnter.txt", window);
+    }
+
+    private void addArgument() {
+        // go to add argument field
+        Window.replayRecording("steps/pressTabKey.txt", window);
+        Window.replayRecording("steps/pressTabKey.txt", window);
+        // type new argument
+        Window.replayRecording("steps/typeb.txt", window);
+        // go to add argument button
+        Window.replayRecording("steps/pressTabKey.txt", window);
+        Window.replayRecording("steps/pressTabKey.txt", window);
+        // add argument
+        Window.replayRecording("steps/pressSpace.txt", window);
     }
 
 }

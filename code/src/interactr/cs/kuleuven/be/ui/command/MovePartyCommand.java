@@ -15,7 +15,8 @@ public class MovePartyCommand extends Command {
     /**
      * Initialize this new command with given source and end location.
      *
-     * @param fromLocation The point to
+     * @param fromLocation The source coordinates.
+     * @param toLocation The end coordinates.
      */
     public MovePartyCommand(Point fromLocation, Point toLocation) {
         this.fromLocation = fromLocation;
