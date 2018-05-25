@@ -449,7 +449,16 @@ public class Diagram {
      */
     public void registerObserver(DiagramObserver observer) {
         if (!observers.contains(observer))
-            observers = observers.plus(observer);
+            this.addObserver(observer);
+    }
+
+    /**
+     * Adds the given DiagramObserver to the list of registered observer of this diagram
+     *
+     * @param observer the observer that is to be added to the list of observers
+     */
+    private void addObserver(DiagramObserver observer){
+        observers = observers.plus(observer);
     }
 
     /**

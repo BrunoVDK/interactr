@@ -45,17 +45,6 @@ public class DialogResultMessage extends DialogWindow {
      */
     private ResultMessage message;
 
-    /**
-     * Returns the default height for this diagram dialog.
-     *
-     * @return The height of the title bar plus 30 times the number of views in the associated diagram window.
-     */
-    private int getDefaultHeight() {
-        if (message == null)
-            return TITLE_BAR_HEIGHT;
-        return 50;
-    }
-
     @Override
     protected boolean canHaveAsFrame(Rectangle frame) {
         return (message == null || (frame.getWidth() >= 350 && frame.getHeight() == 50));
