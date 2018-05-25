@@ -1,0 +1,2 @@
+Certain sequence diagrams reference another sequence diagram to enforce reusibility.
+These referenced use cases can be found in the folder named 'BASE'.
