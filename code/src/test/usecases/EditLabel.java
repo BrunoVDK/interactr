@@ -25,41 +25,41 @@ class EditLabel {
     }
 
     @Test
-    void stepByStep(){
-        Controller controller = window.getEventHandler().getController();
-        // Precondition
+    void stepByStep() {
+    Controller controller = window.getEventHandler().getController();
+    // Precondition
         Window.replayRecording("steps/createNewDiagram.txt", window);
-        // Add party at 100 x
+    // Add party at 100 x
         Window.replayRecording("steps/createPartyAt100.txt", window);
-        assertTrue(getDiagram().getParties().size() > 0);
-        // Assert that it is selected and editing
-        Party newParty = getDiagram().getParties().get(0);
-        assertEquals(getActiveView().getSelectedComponent(), newParty);
-        assertTrue(getActiveView().isEditing());
-        // Type label
+    assertTrue(getDiagram().getParties().size() > 0);
+    // Assert that it is selected and editing
+    Party newParty = getDiagram().getParties().get(0);
+    assertEquals(getActiveView().getSelectedComponent(), newParty);
+    assertTrue(getActiveView().isEditing());
+    // Type label
         Window.replayRecording("steps/typePartyLabelaA.txt", window);
-        assertEquals(getActiveView().getSelectedLabel(), "a:A");
-        assertEquals(newParty.getLabel(), "a:A");
-        // Press enter
+    assertEquals(getActiveView().getSelectedLabel(), "a:A");
+    assertEquals(newParty.getLabel(), "a:A");
+    // Press enter
         Window.replayRecording("steps/pressEnter.txt", window);
-        assertNull(getActiveView().getSelectedComponent());
-        assertEquals(newParty.getLabel(), "a:A");
-        // Start editing party at 100 x
+    assertNull(getActiveView().getSelectedComponent());
+    assertEquals(newParty.getLabel(), "a:A");
+    // Start editing party at 100 x
         Window.replayRecording("steps/selectPartyAt100.txt", window);
         Window.replayRecording("steps/selectPartyAt100.txt", window);
-        assertTrue(getActiveView().isEditing());
-        // Remove the current name
+    assertTrue(getActiveView().isEditing());
+    // Remove the current name
         Window.replayRecording("steps/pressBackSpace.txt", window);
         Window.replayRecording("steps/pressBackSpace.txt", window);
         Window.replayRecording("steps/pressBackSpace.txt", window);
-        assertEquals(getActiveView().getSelectedLabel(), "");
-        // Type b:B and check if component has that name
+    assertEquals(getActiveView().getSelectedLabel(), "");
+    // Type b:B and check if component has that name
         Window.replayRecording("steps/typePartyLabelbB.txt", window);
         Window.replayRecording("steps/pressEnter.txt", window);
         Window.replayRecording("steps/selectPartyAt100.txt", window);
-        assertEquals(getActiveView().getSelectedComponent().getLabel(), "b:B");
+    assertEquals(getActiveView().getSelectedComponent().getLabel(), "b:B");
 
-    }
+}
 
 
     @Test
