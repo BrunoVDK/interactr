@@ -22,8 +22,7 @@ public class Diagram {
      * Initialize this new diagram without any messages or parties.
      */
     public Diagram() {
-        nbOfDiagrams++;
-        sequenceNumber = nbOfDiagrams;
+        sequenceNumber = ++nbOfDiagrams;
     }
 
     /**
@@ -191,16 +190,6 @@ public class Diagram {
         if (index >= 0 && index < associatedMessageIndices.size())
             return associatedMessageIndices.get(index);
         return -1;
-    }
-
-    /**
-     * Returns the message associated with the given message.
-     *
-     * @param message The message whose associated message is desired.
-     * @return The message associated with the given message.
-     */
-    public Message getAssociatedMessage(Message message) {
-        return getMessageAtIndex(getIndexOfAssociatedMessage(getMessages().indexOf(message)));
     }
 
     /**

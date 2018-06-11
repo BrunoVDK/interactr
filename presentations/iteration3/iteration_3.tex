@@ -26,25 +26,35 @@
   \tableofcontents[hideallsubsections]
 \end{frame}
 
-\section{Design}
-
-\begin{frame}[fragile]{Domain Model - Overview}
+\begin{frame}[fragile]{Logical Architecture}
+Two layers (fully separated) :
 	\begin{center}
 	\begin{itemize}
-	\item \texttt{Low representational gap}
+	\item Domain Layer (lower)
+	\item UI Layer (higher)
+	\end{itemize}
+	\end{center}
+\end{frame}
+
+\section{Domain Layer}
+
+\begin{frame}[fragile]{Domain Layer - Overview}
+	\begin{center}
+	\begin{itemize}
+	\item \textit{Low representational gap} (domain model $\rightarrow$ software classes)
 	\item Main classes : \texttt{Diagram}, \texttt{Message}, \texttt{Party}
 	\item Business logic completely separate from UI
 	\end{itemize}
 	\end{center}
 \end{frame}
 
-\begin{frame}[fragile]{Domain Model - UML}
+\begin{frame}[fragile]{Domain Layer - UML}
 	\begin{center}
 	\includegraphics[width=0.6\textwidth]{domain}
 	\end{center}
 \end{frame}
 
-\begin{frame}[fragile]{Domain Model - Diagram Visitors}
+\begin{frame}[fragile]{Domain Layer - Diagram Visitors}
 	\begin{center}
 	Interface \texttt{DiagramVisitor} can be implemented by various visitors in other subsystems.\\
 	Every \texttt{DiagramComponent} can accept such a visitor.\\
@@ -55,7 +65,7 @@
 	\end{center}
 \end{frame}
 
-\begin{frame}[fragile]{Domain Model - Diagram Observers}
+\begin{frame}[fragile]{Domain Layer - Diagram Observers}
 	\begin{center}
 	Interface \texttt{DiagramObserver} represents an observer of a diagram. \\
 	\vspace{0.5cm}
@@ -65,6 +75,8 @@
 	\end{center}
 \end{frame}
 
+\section{UI Layer}
+
 \begin{frame}[fragile]{Entry Point - Controller}
 	\begin{center}
 	Everything starts in \underline{\texttt{Controller}} :
@@ -73,7 +85,7 @@
 	\\$\rightarrow$ associates the window with \texttt{PaintBoard} (draw events)
 	\\$\rightarrow$ associates the window with \texttt{EventHandler} (key/mouse events)
 	
-	\vspace{0.5cm} Both support \texttt{Protected Variations}. Both encapsulate \textit{awt} package.
+	\vspace{0.5cm} Both support \texttt{Protected Variations}. Both wrap around \textit{awt} package.
 	\end{center}
 \end{frame}
 
@@ -101,9 +113,9 @@
 	A \texttt{Diagram} is directly altered by \texttt{DiagramView}s and \texttt{DialogWindow}s.
 	
 	\vspace{0.5cm}
-	Synchronization is either done with the \texttt{Observer} pattern, or \textit{lazily} (update upon drawing).
-	\\ Since \texttt{Diagram} knows when it changes, it keeps a list of \texttt{DiagramObserver}s and notifies them (\texttt{Information Expert}).
-	\\$\rightarrow$ disadvantage : coordinates aren't synchronised (solved by `\textit{making room}' upon addition of a diagram component to a `DiagramView')
+	Synchronization is either done with the \texttt{Observer} pattern, or \textit{lazily} (update upon drawing).\\
+	\vspace{0.2cm} Since \texttt{Diagram} knows when it changes, it keeps a list of \texttt{DiagramObserver}s and notifies them (\texttt{Information Expert}).
+	\\$\rightarrow$ disadvantage : coordinates aren't synchronised (solved by `\textit{making room}' upon addition of a diagram component to a \texttt{DiagramView})
 	\end{center}
 \end{frame}
 
@@ -159,12 +171,11 @@
 	\begin{center}
 	Each class that displays something draws itself (\texttt{Information Expert}) :
 	\begin{itemize}
-	\item \texttt{SubWindow} draws title bar, close button, frame.
+	\item \texttt{SubWindow} draws title bar, close button, border.
 	\item \texttt{DiagramView} draws diagram with messages, parties, ...
-	\\$\rightarrow$ use of \texttt{Visitor} pattern to generate figures (representations) for these diagram components.
+	\\$\rightarrow$ use of \texttt{Visitor} pattern to generate \texttt{Figure}s (subclasses of \texttt{Model}) for these diagram components.
 	\\$\rightarrow$ these figures are \texttt{Flyweight}s.
-	\\$\rightarrow$ separation of UI / domain logic without use of type checking (i.e. \texttt{instanceof}).
-	\item Class hierarchy for \texttt{Model} (\texttt{Composite} pattern) used for representation/drawing of a variety of elements in the system (parties, messages, controls, ...).
+	\item Class hierarchy for \texttt{Model} (\texttt{Composite} pattern, eg. stick figure is a composite of 4 lines and a circle) used for representation/drawing of a variety of elements in the system (parties, messages, controls, ...).
 	\end{itemize}
 	\end{center}
 \end{frame}
@@ -179,16 +190,14 @@
 
 \begin{frame}[fragile]{Extensibility - Commands}
 	\begin{center}
-	\texttt{Command} pattern eases undoing, allows delayed processing, use by menu items, ... When using new types of events (eg. speech recognition) only \texttt{EventHandler} has to change.
+	\texttt{Command} pattern eases undoing, allows delayed processing, use by menu items, ... We wanted to avoid having the windows and views know about the type of events for now.\\	
 	
 	\vspace{0.5cm} Disadvantages ; 
 	\begin{itemize}
 	\item many new types of \texttt{CommandHandler}?
 	\\ $\rightarrow$ bloated \texttt{Command} abstract class (\texttt{Visitor} pattern discussion)
-	\item if \texttt{Chain of Responsibility} is long
-	\\ $\rightarrow$ wasted processing (command goes down the whole chain before realising that it can't be handled)
-	\item if many new system operations for many different types of windows 
-	\\ $\rightarrow$ redesign probably warranted.
+	\item if many new system operations for many different types of windows, or, say, a double-click can do 10 different things depending on the context and the subwindow in which it occurred.
+	\\ $\rightarrow$ redesign warranted.
 	\end{itemize}
 	\end{center}
 \end{frame}
@@ -198,7 +207,7 @@
 	Representation of various elements in the system can be done with the \texttt{Model} class.\\
 	$\rightarrow $ new elements in domain model and elsewhere is a matter of creating subclasses of \texttt{Model}, whenever necessary.\\
 	\vspace{0.5cm}
-	More complex \texttt{Model}s can be made (and recycled) by composing them out of `primitives' (\texttt{Line}s, \texttt{Oval}s, ...).
+	More complex \texttt{Model}s can be made (and recycled) by composing them out of \textit{primitives} (\texttt{Line}s, \texttt{Oval}s, ...).
 	\end{center}
 \end{frame}
 
@@ -222,12 +231,12 @@
 \begin{itemize}
 \item No \textit{duplicated code}.
 \item \textit{Moved methods} here and there.
-\item Addressed \textit{long methods} with \textit{extract method} \\
-$\rightarrow$ not the best metric ... but all methods (easily) `fit on the screen' (max. $\approx$ 25 lines).
 \item If appropriate a \textit{temporary variable} was replaced with getters.
 \item Avoided \textit{message chains}.
 \item Virtually no \textit{switch statements} (in \texttt{EventHandler}).
 \item \textit{Comments} never really necessary (maybe when drawing messages in \texttt{SequenceView}).
+\item Addressed \textit{long methods} with \textit{extract method} \\
+$\rightarrow$ not the best metric ... but all methods (easily) `fit on the screen' (max. $\approx$ 25 lines).
 \end{itemize}
 \end{frame}
 
@@ -239,7 +248,7 @@ $\rightarrow$ not the best metric ... but all methods (easily) `fit on the scree
 \begin{itemize}
 \item weekly meeting with assistant
 \item +- 40 hours per person
-\item designed, refactored, tested, redesigned, ... in no particular order
+\item designed, refactored, tested, redesigned, ... 
 \end{itemize}
 \end{frame}
 

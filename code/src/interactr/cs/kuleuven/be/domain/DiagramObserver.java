@@ -33,10 +33,7 @@ public interface DiagramObserver {
      * @param resultMessage The result message that was added.
      * @param row The row into which the messages were inserted.
      */
-    default void diagramDidAddMessages(Diagram diagram,
-                                       InvocationMessage invocationMessage,
-                                       ResultMessage resultMessage,
-                                       int row) {}
+    default void diagramDidAddMessages(Diagram diagram, InvocationMessage invocationMessage, ResultMessage resultMessage, int row) {}
 
     /**
      * Notify observers that the given party was removed from the given diagram.
@@ -53,7 +50,6 @@ public interface DiagramObserver {
      * @param message The message that was deleted.
      */
     default void diagramDidDeleteMessage(Diagram diagram, Message message) {}
-
 
     /**
      * Notify observers that the given component's label was edited.

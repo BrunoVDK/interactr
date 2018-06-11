@@ -257,8 +257,7 @@ public class DialogInvocationMessage extends DialogWindow implements DiagramObse
 
     @Override
     public Rectangle getFrame() {
-        Rectangle frame = super.getFrame();
-        return new Rectangle(frame.getX(), frame.getY(), 350, 100 + (message == null ? 0 : message.getArguments().length * LIST_BOX_ROW_HEIGHT));
+        return new Rectangle(super.getFrame().getX(), super.getFrame().getY(), 350, 100 + (message == null ? 0 : message.getArguments().length * LIST_BOX_ROW_HEIGHT));
     }
 
     @Override

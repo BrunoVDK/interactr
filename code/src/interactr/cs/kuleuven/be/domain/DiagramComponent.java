@@ -11,13 +11,6 @@ import interactr.cs.kuleuven.be.exceptions.InvalidLabelException;
 public abstract class DiagramComponent {
 
     /**
-     * Initialize this new diagram component with an empty label.
-     */
-    DiagramComponent() {
-        this("");
-    }
-
-    /**
      * Initialize this new diagram component with given label.
      *
      * @param label The label to initialize this component with.

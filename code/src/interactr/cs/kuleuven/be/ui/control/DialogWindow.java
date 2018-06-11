@@ -38,10 +38,10 @@ public abstract class DialogWindow extends SubWindow {
                 && (frame.getHeight() >= getDefaultFrame().getHeight() && frame.getWidth() >= getDefaultFrame().getWidth());
     }
 
-    /**@
+    /**
      * Returns the index of the element for this dialog window.
      */
-    public int getFocusIndex() {
+    protected int getFocusIndex() {
         return focusIndex;
     }
 
@@ -99,7 +99,6 @@ public abstract class DialogWindow extends SubWindow {
      * Registers the index of the element focused on by this dialog window.
      */
     private int focusIndex = 0;
-
 
     /**
      * Generate the models held by this dialog window.
